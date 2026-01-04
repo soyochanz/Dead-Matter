@@ -19,7 +19,7 @@ const VehicleMechanicsManager = ({ vehicleId, vehicleName, onClose }) => {
             setLoading(true);
             const { data: componentsData } = await supabase.from('vehicle_components').select('*').order('name');
             const { data: linkedData } = await supabase.from('vehicle_required_components').select('*').eq('vehicle_id', vehicleId);
-            
+
             setComponents(componentsData || []);
             setLinkedComponents(linkedData || []);
             setLoading(false);
@@ -66,11 +66,11 @@ const VehicleMechanicsManager = ({ vehicleId, vehicleName, onClose }) => {
                                 </div>
                                 <div className="flex items-center gap-2">
                                     {linked && (
-                                        <Input 
-                                            type="number" 
+                                        <Input
+                                            type="number"
                                             min="1"
-                                            className="w-20 bg-slate-800" 
-                                            value={linked.quantity} 
+                                            className="w-20 bg-slate-800"
+                                            value={linked.quantity}
                                             onChange={(e) => handleQuantityChange(component.id, e.target.value)}
                                         />
                                     )}
@@ -87,7 +87,7 @@ const VehicleMechanicsManager = ({ vehicleId, vehicleName, onClose }) => {
     );
 };
 
-const VehicleManager = () => {
+const VehicleManager = ({ sharedMetadata }) => {
     const [vehicles, setVehicles] = useState([]);
     const [editingItem, setEditingItem] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -97,8 +97,15 @@ const VehicleManager = () => {
 
     useEffect(() => {
         fetchData();
-        fetchMeta();
-    }, []);
+        // Filter subcategories for Vehicles category
+        if (sharedMetadata?.categories?.length && sharedMetadata?.subcategories?.length) {
+            const cat = sharedMetadata.categories.find(c => c.name === 'Vehicles');
+            if (cat) {
+                const subs = sharedMetadata.subcategories.filter(s => s.category_id === cat.id);
+                setSubcategories(subs);
+            }
+        }
+    }, [sharedMetadata]);
 
     const fetchData = async () => {
         setLoading(true);
@@ -108,13 +115,7 @@ const VehicleManager = () => {
         setLoading(false);
     };
 
-    const fetchMeta = async () => {
-        const { data: category } = await supabase.from('wiki_categories').select('id').eq('name', 'Vehicles').single();
-        if (category) {
-            const { data: subcategoriesData } = await supabase.from('wiki_subcategories').select('*').eq('category_id', category.id);
-            setSubcategories(subcategoriesData || []);
-        }
-    };
+
 
     const handleSave = async () => {
         const itemData = { ...editingItem };
@@ -135,7 +136,7 @@ const VehicleManager = () => {
             fetchData();
         }
     };
-    
+
     const handleDelete = async (id) => {
         await supabase.from('vehicle_required_components').delete().eq('vehicle_id', id);
         const { error } = await supabase.from('vehicles').delete().eq('id', id);
@@ -170,7 +171,7 @@ const VehicleManager = () => {
             <h3 className="text-2xl font-bold text-white">{editingItem.id ? 'Edit Vehicle' : 'Add New Vehicle'}</h3>
             <Input placeholder="Name" value={editingItem.name || ''} onChange={(e) => setEditingItem({ ...editingItem, name: e.target.value })} />
             <textarea placeholder="Description" value={editingItem.description || ''} onChange={(e) => setEditingItem({ ...editingItem, description: e.target.value })} className="w-full bg-white/5 backdrop-blur-sm border border-white/10 p-2 rounded" />
-            
+
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <select value={editingItem.subcategory_id || ''} onChange={(e) => setEditingItem({ ...editingItem, subcategory_id: e.target.value })} className="bg-white/5 backdrop-blur-sm border border-white/10 p-2 rounded h-10 col-span-2">
                     <option value="">Select Subcategory</option>
@@ -181,8 +182,8 @@ const VehicleManager = () => {
             </div>
 
             <div className="flex items-center gap-4">
-                <Input type="file" accept="image/*" onChange={handleImageUpload} className="flex-grow"/>
-                {editingItem.image_url && <img src={editingItem.image_url} alt="preview" className="w-20 h-20 object-contain rounded bg-slate-700"/>}
+                <Input type="file" accept="image/*" onChange={handleImageUpload} className="flex-grow" />
+                {editingItem.image_url && <img src={editingItem.image_url} alt="preview" className="w-20 h-20 object-contain rounded bg-slate-700" />}
             </div>
 
             <h4 className="text-lg font-semibold text-white border-t border-slate-700 pt-4 mt-4">Stats</h4>
@@ -196,12 +197,12 @@ const VehicleManager = () => {
             </div>
 
             <div className="border-t border-slate-700 pt-4 mt-4">
-                <CustomStatManager stats={editingItem.stats} setStats={stats => setEditingItem({...editingItem, stats})} />
+                <CustomStatManager stats={editingItem.stats} setStats={stats => setEditingItem({ ...editingItem, stats })} />
             </div>
 
             <div className="flex gap-4">
-                <Button onClick={handleSave}><Save className="w-4 h-4 mr-2"/>Save</Button>
-                <Button variant="outline" onClick={() => setEditingItem(null)}><X className="w-4 h-4 mr-2"/>Cancel</Button>
+                <Button onClick={handleSave}><Save className="w-4 h-4 mr-2" />Save</Button>
+                <Button variant="outline" onClick={() => setEditingItem(null)}><X className="w-4 h-4 mr-2" />Cancel</Button>
             </div>
         </div>
     );
@@ -211,36 +212,36 @@ const VehicleManager = () => {
             <div>
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="text-2xl font-bold text-white">Manage Vehicles</h2>
-                    <Button onClick={() => setEditingItem({})}><Plus className="w-4 h-4 mr-2"/>Add Vehicle</Button>
+                    <Button onClick={() => setEditingItem({})}><Plus className="w-4 h-4 mr-2" />Add Vehicle</Button>
                 </div>
 
                 {loading && <div className="flex justify-center p-8"><Loader2 className="animate-spin w-8 h-8 text-red-500" /></div>}
-                
+
                 {editingItem && renderForm()}
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {vehicles.map(item => (
                         <div key={item.id} className="bg-slate-800 rounded-lg p-4 flex flex-col justify-between">
                             <div>
-                                {item.image_url && <img src={item.image_url} alt={item.name} className="w-full h-32 object-contain rounded-md bg-slate-700 mb-2"/>}
+                                {item.image_url && <img src={item.image_url} alt={item.name} className="w-full h-32 object-contain rounded-md bg-slate-700 mb-2" />}
                                 <h3 className="font-bold text-white">{item.name}</h3>
                                 <p className="text-sm text-gray-400">{item.subcategory?.name}</p>
                             </div>
                             <div className="flex gap-2 mt-4">
-                                <Button size="icon" variant="outline" onClick={() => setEditingItem(item)}><Edit className="w-4 h-4"/></Button>
+                                <Button size="icon" variant="outline" onClick={() => setEditingItem(item)}><Edit className="w-4 h-4" /></Button>
                                 <DialogTrigger asChild>
-                                    <Button size="icon" variant="outline" onClick={() => setManagingMechanicsFor(item)}><Wrench className="w-4 h-4"/></Button>
+                                    <Button size="icon" variant="outline" onClick={() => setManagingMechanicsFor(item)}><Wrench className="w-4 h-4" /></Button>
                                 </DialogTrigger>
-                                <Button size="icon" variant="destructive" onClick={() => handleDelete(item.id)}><Trash2 className="w-4 h-4"/></Button>
+                                <Button size="icon" variant="destructive" onClick={() => handleDelete(item.id)}><Trash2 className="w-4 h-4" /></Button>
                             </div>
                         </div>
                     ))}
                 </div>
             </div>
-            
+
             {managingMechanicsFor && (
-                <VehicleMechanicsManager 
-                    vehicleId={managingMechanicsFor.id} 
+                <VehicleMechanicsManager
+                    vehicleId={managingMechanicsFor.id}
                     vehicleName={managingMechanicsFor.name}
                 />
             )}

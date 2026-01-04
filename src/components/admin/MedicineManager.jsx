@@ -5,7 +5,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/lib/customSupabaseClient';
 import { Input } from '@/components/ui/input';
 
-const MedicineForm = ({ item, onSave, onCancel }) => {
+const MedicineForm = ({ item, onSave, onCancel, sharedMetadata }) => {
     const defaultState = {
         name: '', description: '', image_url: '', image_path: '', subcategory_id: null,
         health: 0, price: 0, sell_price: 0, rarity_id: null, side_effects: {},
@@ -20,15 +20,18 @@ const MedicineForm = ({ item, onSave, onCancel }) => {
     const { toast } = useToast();
 
     useEffect(() => {
-        const fetchData = async () => {
-            const { data: subData } = await supabase.from('wiki_subcategories').select('id, name, wiki_categories(name)')
-                .eq('wiki_categories.name', 'Meds');
-            const { data: rarData } = await supabase.from('rarities').select('*');
-            setSubcategories(subData || []);
-            setRarities(rarData || []);
-        };
-        fetchData();
-    }, []);
+        if (!sharedMetadata) return;
+
+        // Filter subcategories for Meds category
+        if (sharedMetadata.categories?.length && sharedMetadata.subcategories?.length) {
+            const cat = sharedMetadata.categories.find(c => c.name === 'Meds');
+            if (cat) {
+                const subs = sharedMetadata.subcategories.filter(s => s.category_id === cat.id);
+                setSubcategories(subs);
+            }
+        }
+        setRarities(sharedMetadata.rarities || []);
+    }, [sharedMetadata]);
 
     useEffect(() => {
         if (item) {
@@ -72,7 +75,7 @@ const MedicineForm = ({ item, onSave, onCancel }) => {
 
     const formSelectClass = "w-full h-10 bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-red-500 backdrop-blur-sm";
     const formLabelClass = "block text-sm font-medium text-gray-300 mb-1";
-    
+
     return (
         <form onSubmit={handleSubmit} className="bg-white/5 border border-white/10 rounded-lg p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="md:col-span-2">
@@ -87,15 +90,15 @@ const MedicineForm = ({ item, onSave, onCancel }) => {
                 </select>
             </div>
             <div>
-                <label className={formLabelClass}><DollarSign className="inline mr-2 h-4 w-4"/>Buy Price</label>
+                <label className={formLabelClass}><DollarSign className="inline mr-2 h-4 w-4" />Buy Price</label>
                 <Input name="price" type="number" value={formData.price || 0} onChange={handleChange} />
             </div>
             <div>
-                <label className={formLabelClass}><DollarSign className="inline mr-2 h-4 w-4"/>Sell Price</label>
+                <label className={formLabelClass}><DollarSign className="inline mr-2 h-4 w-4" />Sell Price</label>
                 <Input name="sell_price" type="number" value={formData.sell_price || 0} onChange={handleChange} />
             </div>
-             <div className="md:col-span-2">
-                <label className={formLabelClass}><Gem className="inline mr-2 h-4 w-4"/>Rarity</label>
+            <div className="md:col-span-2">
+                <label className={formLabelClass}><Gem className="inline mr-2 h-4 w-4" />Rarity</label>
                 <select name="rarity_id" value={formData.rarity_id || ''} onChange={handleChange} className={formSelectClass}>
                     <option value="">Select Rarity</option>
                     {rarities.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
@@ -109,22 +112,22 @@ const MedicineForm = ({ item, onSave, onCancel }) => {
 
             <div className="grid grid-cols-3 gap-4 md:col-span-2">
                 <div>
-                     <label className={formLabelClass}><HeartPulse className="inline mr-2 h-4 w-4"/>Health</label>
-                     <Input name="health" type="number" value={formData.health || 0} onChange={handleChange} />
+                    <label className={formLabelClass}><HeartPulse className="inline mr-2 h-4 w-4" />Health</label>
+                    <Input name="health" type="number" value={formData.health || 0} onChange={handleChange} />
                 </div>
                 <div>
-                     <label className={formLabelClass}><Droplet className="inline mr-2 h-4 w-4"/>Hydration</label>
-                     <Input name="hydration" type="number" value={formData.hydration || 0} onChange={handleChange} />
+                    <label className={formLabelClass}><Droplet className="inline mr-2 h-4 w-4" />Hydration</label>
+                    <Input name="hydration" type="number" value={formData.hydration || 0} onChange={handleChange} />
                 </div>
                 <div>
-                     <label className={formLabelClass}><Sparkles className="inline mr-2 h-4 w-4"/>Energy</label>
-                     <Input name="energy" type="number" value={formData.energy || 0} onChange={handleChange} />
+                    <label className={formLabelClass}><Sparkles className="inline mr-2 h-4 w-4" />Energy</label>
+                    <Input name="energy" type="number" value={formData.energy || 0} onChange={handleChange} />
                 </div>
             </div>
-           
+
             <div className="md:col-span-2">
                 <label className={formLabelClass}>Side Effects (JSON)</label>
-                <textarea name="side_effects" placeholder='{ "Drowsiness": "Reduces stamina regeneration" }' value={typeof formData.side_effects === 'object' ? JSON.stringify(formData.side_effects, null, 2) : formData.side_effects} onChange={(e) => setFormData(p => ({...p, side_effects: e.target.value}))} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-red-500 backdrop-blur-sm min-h-[80px]" />
+                <textarea name="side_effects" placeholder='{ "Drowsiness": "Reduces stamina regeneration" }' value={typeof formData.side_effects === 'object' ? JSON.stringify(formData.side_effects, null, 2) : formData.side_effects} onChange={(e) => setFormData(p => ({ ...p, side_effects: e.target.value }))} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-red-500 backdrop-blur-sm min-h-[80px]" />
             </div>
 
             <div className="md:col-span-2 pt-4 border-t border-white/10">
@@ -146,7 +149,7 @@ const MedicineForm = ({ item, onSave, onCancel }) => {
     );
 };
 
-const MedicineManager = ({ onSaveCallback }) => {
+const MedicineManager = ({ onSaveCallback, sharedMetadata }) => {
     const [items, setItems] = useState([]);
     const [editingItem, setEditingItem] = useState(null);
     const [showForm, setShowForm] = useState(false);
@@ -169,14 +172,14 @@ const MedicineManager = ({ onSaveCallback }) => {
         const dataToSubmit = { ...itemData };
         if (dataToSubmit.subcategory_id === '') dataToSubmit.subcategory_id = null;
         if (dataToSubmit.rarity_id === '') dataToSubmit.rarity_id = null;
-        
+
         try {
             if (typeof dataToSubmit.side_effects === 'string' && dataToSubmit.side_effects.trim()) {
                 dataToSubmit.side_effects = JSON.parse(dataToSubmit.side_effects);
-            } else if (typeof dataToSubmit.side_effects === 'string' && !dataToSubmit.side_effects.trim()){
-                 dataToSubmit.side_effects = {};
+            } else if (typeof dataToSubmit.side_effects === 'string' && !dataToSubmit.side_effects.trim()) {
+                dataToSubmit.side_effects = {};
             }
-        } catch(e) { 
+        } catch (e) {
             toast({ title: "Invalid JSON", description: "Side Effects format is not valid JSON.", variant: "destructive" });
             return;
         }
@@ -191,10 +194,10 @@ const MedicineManager = ({ onSaveCallback }) => {
             setShowForm(false);
             setEditingItem(null);
             loadItems();
-            if(onSaveCallback) onSaveCallback();
+            if (onSaveCallback) onSaveCallback();
         }
     };
-    
+
     const handleDelete = async (item) => {
         if (item.image_path) {
             await supabase.storage.from('Items').remove([item.image_path]);
@@ -204,7 +207,7 @@ const MedicineManager = ({ onSaveCallback }) => {
         else {
             toast({ title: "Deleted!", description: "Medicine deleted." });
             loadItems();
-             if(onSaveCallback) onSaveCallback();
+            if (onSaveCallback) onSaveCallback();
         }
     };
 
@@ -216,7 +219,7 @@ const MedicineManager = ({ onSaveCallback }) => {
                     <Plus className="h-4 w-4" /> New Medicine
                 </Button>
             </div>
-            {showForm && <MedicineForm item={editingItem} onSave={handleSave} onCancel={() => setShowForm(false)} />}
+            {showForm && <MedicineForm item={editingItem} onSave={handleSave} onCancel={() => setShowForm(false)} sharedMetadata={sharedMetadata} />}
             {loading ? <Loader2 className="h-8 w-8 animate-spin text-red-500" /> : (
                 <div className="grid gap-4">
                     {items.map(item => (
@@ -225,11 +228,11 @@ const MedicineManager = ({ onSaveCallback }) => {
                                 {item.image_url && <img src={item.image_url} alt={item.name} className="h-12 w-12 object-cover rounded-md" />}
                                 <div>
                                     <span className="font-bold text-xl text-white">{item.name}</span>
-                                    {item.rarity && item.rarity.name && <span className="text-xs ml-2 px-2 py-1 rounded" style={{backgroundColor: item.rarity.color || '#888'}}>{item.rarity.name}</span>}
+                                    {item.rarity && item.rarity.name && <span className="text-xs ml-2 px-2 py-1 rounded" style={{ backgroundColor: item.rarity.color || '#888' }}>{item.rarity.name}</span>}
                                 </div>
                             </div>
                             <div className="flex gap-2">
-                                <Button onClick={() => { setEditingItem(item); setShowForm(true);}} variant="outline" size="icon"><Edit className="h-4 w-4" /></Button>
+                                <Button onClick={() => { setEditingItem(item); setShowForm(true); }} variant="outline" size="icon"><Edit className="h-4 w-4" /></Button>
                                 <Button onClick={() => handleDelete(item)} variant="destructive" size="icon"><Trash2 className="h-4 w-4" /></Button>
                             </div>
                         </div>

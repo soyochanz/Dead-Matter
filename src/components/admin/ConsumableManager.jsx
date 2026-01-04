@@ -6,7 +6,7 @@ import { supabase } from '@/lib/customSupabaseClient';
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from '@/components/ui/input';
 
-const ConsumableForm = ({ item, onSave, onCancel, filterType }) => {
+const ConsumableForm = ({ item, onSave, onCancel, filterType, sharedMetadata }) => {
     const defaultState = {
         name: '', description: '', image_url: '', image_path: '', subcategory_id: null,
         type: filterType || 'food', hydration: 0, energy: 0, health: 0, is_refillable: false,
@@ -24,17 +24,25 @@ const ConsumableForm = ({ item, onSave, onCancel, filterType }) => {
     const { toast } = useToast();
 
     useEffect(() => {
-        const fetchData = async () => {
-            const { data: subData } = await supabase.from('wiki_subcategories').select('id, name, wiki_categories(name)')
-                .eq('wiki_categories.name', 'Consumables');
-            const { data: conData } = await supabase.from('consumables').select('id, name');
-            const { data: rarData } = await supabase.from('rarities').select('*');
-            setSubcategories(subData || []);
-            setAllConsumables(conData || []);
-            setRarities(rarData || []);
+        if (!sharedMetadata) return;
+
+        // Filter subcategories for Consumables category
+        if (sharedMetadata.categories?.length && sharedMetadata.subcategories?.length) {
+            const cat = sharedMetadata.categories.find(c => c.name === 'Consumables');
+            if (cat) {
+                const subs = sharedMetadata.subcategories.filter(s => s.category_id === cat.id);
+                setSubcategories(subs);
+            }
+        }
+        setRarities(sharedMetadata.rarities || []);
+
+        // Items list is still needed for "Cooked Version" selection
+        const fetchItems = async () => {
+            const { data } = await supabase.from('consumables').select('id, name');
+            setAllConsumables(data || []);
         };
-        fetchData();
-    }, []);
+        fetchItems();
+    }, [sharedMetadata]);
 
     useEffect(() => {
         const initialState = { ...defaultState, type: filterType || 'food' };
@@ -77,9 +85,9 @@ const ConsumableForm = ({ item, onSave, onCancel, filterType }) => {
         e.preventDefault();
         const dataToSave = { ...formData };
         if (dataToSave.type === 'drink') {
-             dataToSave.requires_can_opener = false;
-             dataToSave.is_safe_to_eat_raw = true;
-             dataToSave.cooked_version_id = null;
+            dataToSave.requires_can_opener = false;
+            dataToSave.is_safe_to_eat_raw = true;
+            dataToSave.cooked_version_id = null;
         }
         if (dataToSave.type === 'food' && dataToSave.is_safe_to_eat_raw) {
             dataToSave.cooked_version_id = null;
@@ -89,7 +97,7 @@ const ConsumableForm = ({ item, onSave, onCancel, filterType }) => {
 
     const formSelectClass = "w-full h-10 bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-red-500 backdrop-blur-sm";
     const formLabelClass = "block text-sm font-medium text-gray-300 mb-1";
-    
+
     return (
         <form onSubmit={handleSubmit} className="bg-white/5 border border-white/10 rounded-lg p-6 grid grid-cols-1 md:grid-cols-4 gap-4">
             {/* Basic Info */}
@@ -104,7 +112,7 @@ const ConsumableForm = ({ item, onSave, onCancel, filterType }) => {
                     <option value="drink">Drink</option>
                 </select>
             </div>)}
-             <div className={filterType ? "md:col-span-2" : "md:col-span-1"}>
+            <div className={filterType ? "md:col-span-2" : "md:col-span-1"}>
                 <label className={formLabelClass}>Subcategory (Optional)</label>
                 <select name="subcategory_id" value={formData.subcategory_id || ''} onChange={handleChange} className={formSelectClass}>
                     <option value="">Select Subcategory</option>
@@ -112,15 +120,15 @@ const ConsumableForm = ({ item, onSave, onCancel, filterType }) => {
                 </select>
             </div>
             <div className="md:col-span-1">
-                <label className={formLabelClass}><DollarSign className="inline mr-2 h-4 w-4"/>Buy Price</label>
+                <label className={formLabelClass}><DollarSign className="inline mr-2 h-4 w-4" />Buy Price</label>
                 <Input name="price" type="number" value={formData.price} onChange={handleChange} />
             </div>
             <div className="md:col-span-1">
-                <label className={formLabelClass}><DollarSign className="inline mr-2 h-4 w-4"/>Sell Price</label>
+                <label className={formLabelClass}><DollarSign className="inline mr-2 h-4 w-4" />Sell Price</label>
                 <Input name="sell_price" type="number" value={formData.sell_price} onChange={handleChange} />
             </div>
-             <div className="md:col-span-2">
-                <label className={formLabelClass}><Gem className="inline mr-2 h-4 w-4"/>Rarity</label>
+            <div className="md:col-span-2">
+                <label className={formLabelClass}><Gem className="inline mr-2 h-4 w-4" />Rarity</label>
                 <select name="rarity_id" value={formData.rarity_id || ''} onChange={handleChange} className={formSelectClass}>
                     <option value="">Select Rarity</option>
                     {rarities.filter(r => r).map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
@@ -132,20 +140,20 @@ const ConsumableForm = ({ item, onSave, onCancel, filterType }) => {
                 <textarea name="description" placeholder="Item description..." value={formData.description || ''} onChange={handleChange} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-red-500 backdrop-blur-sm min-h-[80px]" />
             </div>
 
-             {/* Stats */}
+            {/* Stats */}
             <div className="md:col-span-4 grid grid-cols-3 gap-4 border-t border-white/10 pt-4">
-                <div><label className={formLabelClass}><Droplet className="inline mr-2 h-4 w-4"/>Hydration</label><Input name="hydration" type="number" value={formData.hydration} onChange={handleChange} /></div>
-                <div><label className={formLabelClass}><Sparkles className="inline mr-2 h-4 w-4"/>Energy</label><Input name="energy" type="number" value={formData.energy} onChange={handleChange} /></div>
-                <div><label className={formLabelClass}><HeartPulse className="inline mr-2 h-4 w-4"/>Health</label><Input name="health" type="number" value={formData.health} onChange={handleChange} /></div>
+                <div><label className={formLabelClass}><Droplet className="inline mr-2 h-4 w-4" />Hydration</label><Input name="hydration" type="number" value={formData.hydration} onChange={handleChange} /></div>
+                <div><label className={formLabelClass}><Sparkles className="inline mr-2 h-4 w-4" />Energy</label><Input name="energy" type="number" value={formData.energy} onChange={handleChange} /></div>
+                <div><label className={formLabelClass}><HeartPulse className="inline mr-2 h-4 w-4" />Health</label><Input name="health" type="number" value={formData.health} onChange={handleChange} /></div>
             </div>
             <div className="md:col-span-4">
                 <label className={formLabelClass}>Side Effects (JSON)</label>
-                <textarea name="side_effects" placeholder='{ "Drowsiness": "Reduces stamina regeneration" }' value={typeof formData.side_effects === 'object' ? JSON.stringify(formData.side_effects, null, 2) : formData.side_effects} onChange={(e) => setFormData(p => ({...p, side_effects: e.target.value}))} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-red-500 backdrop-blur-sm min-h-[80px]" />
+                <textarea name="side_effects" placeholder='{ "Drowsiness": "Reduces stamina regeneration" }' value={typeof formData.side_effects === 'object' ? JSON.stringify(formData.side_effects, null, 2) : formData.side_effects} onChange={(e) => setFormData(p => ({ ...p, side_effects: e.target.value }))} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-red-500 backdrop-blur-sm min-h-[80px]" />
             </div>
 
             {/* Type Specific Fields */}
             {formData.type === 'drink' && (
-                 <div className="md:col-span-4 flex items-center gap-2 pt-4 border-t border-white/10 text-white">
+                <div className="md:col-span-4 flex items-center gap-2 pt-4 border-t border-white/10 text-white">
                     <Checkbox id="is_refillable" name="is_refillable" checked={formData.is_refillable} onCheckedChange={(checked) => handleChange({ target: { name: 'is_refillable', type: 'checkbox', checked } })} />
                     <label htmlFor="is_refillable">Is Refillable?</label>
                 </div>
@@ -156,19 +164,19 @@ const ConsumableForm = ({ item, onSave, onCancel, filterType }) => {
                         <Checkbox id="requires_can_opener" name="requires_can_opener" checked={formData.requires_can_opener} onCheckedChange={(checked) => handleChange({ target: { name: 'requires_can_opener', type: 'checkbox', checked } })} />
                         <label htmlFor="requires_can_opener"><FileKey className="inline mr-2 h-4 w-4" />Requires Can Opener?</label>
                     </div>
-                     <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2">
                         <Checkbox id="is_safe_to_eat_raw" name="is_safe_to_eat_raw" checked={formData.is_safe_to_eat_raw} onCheckedChange={(checked) => handleChange({ target: { name: 'is_safe_to_eat_raw', type: 'checkbox', checked } })} />
                         <label htmlFor="is_safe_to_eat_raw"><ShieldAlert className="inline mr-2 h-4 w-4" />Safe to Eat Raw?</label>
                     </div>
-                     {!formData.is_safe_to_eat_raw && (
+                    {!formData.is_safe_to_eat_raw && (
                         <div className="md:col-span-2">
-                             <label className={formLabelClass}>Cooked Version</label>
-                             <select name="cooked_version_id" value={formData.cooked_version_id || ''} onChange={handleChange} className={formSelectClass}>
-                                 <option value="">Select Cooked Item</option>
-                                 {allConsumables.filter(c => c && c.id !== item?.id).map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                             </select>
-                         </div>
-                     )}
+                            <label className={formLabelClass}>Cooked Version</label>
+                            <select name="cooked_version_id" value={formData.cooked_version_id || ''} onChange={handleChange} className={formSelectClass}>
+                                <option value="">Select Cooked Item</option>
+                                {allConsumables.filter(c => c && c.id !== item?.id).map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                            </select>
+                        </div>
+                    )}
                 </div>
             )}
 
@@ -192,7 +200,7 @@ const ConsumableForm = ({ item, onSave, onCancel, filterType }) => {
     );
 };
 
-const ConsumableManager = ({ onSaveCallback }) => {
+const ConsumableManager = ({ onSaveCallback, sharedMetadata }) => {
     const [items, setItems] = useState([]);
     const [editingItem, setEditingItem] = useState(null);
     const [showForm, setShowForm] = useState(false);
@@ -202,7 +210,7 @@ const ConsumableManager = ({ onSaveCallback }) => {
     const loadItems = useCallback(async () => {
         setLoading(true);
         let query = supabase.from('consumables').select('*, subcategory:wiki_subcategories(name), rarity:rarities(name, color)').order('created_at').or('type.eq.food,type.eq.drink');
-        
+
         const { data, error } = await query;
 
         if (error) toast({ title: "Error", description: "Could not load consumables.", variant: "destructive" });
@@ -217,14 +225,14 @@ const ConsumableManager = ({ onSaveCallback }) => {
         const dataToSubmit = { ...itemData };
         if (dataToSubmit.subcategory_id === '') dataToSubmit.subcategory_id = null;
         if (dataToSubmit.rarity_id === '') dataToSubmit.rarity_id = null;
-        
+
         try {
             if (typeof dataToSubmit.side_effects === 'string' && dataToSubmit.side_effects.trim()) {
                 dataToSubmit.side_effects = JSON.parse(dataToSubmit.side_effects);
-            } else if (typeof dataToSubmit.side_effects === 'string' && !dataToSubmit.side_effects.trim()){
-                 dataToSubmit.side_effects = null;
+            } else if (typeof dataToSubmit.side_effects === 'string' && !dataToSubmit.side_effects.trim()) {
+                dataToSubmit.side_effects = null;
             }
-        } catch(e) { 
+        } catch (e) {
             toast({ title: "Invalid JSON", description: "Side Effects format is not valid JSON.", variant: "destructive" });
             return;
         }
@@ -239,10 +247,10 @@ const ConsumableManager = ({ onSaveCallback }) => {
             setShowForm(false);
             setEditingItem(null);
             loadItems();
-            if(onSaveCallback) onSaveCallback();
+            if (onSaveCallback) onSaveCallback();
         }
     };
-    
+
     const handleDelete = async (item) => {
         if (item.image_path) {
             await supabase.storage.from('Items').remove([item.image_path]);
@@ -252,7 +260,7 @@ const ConsumableManager = ({ onSaveCallback }) => {
         else {
             toast({ title: "Deleted!", description: "Consumable deleted." });
             loadItems();
-             if(onSaveCallback) onSaveCallback();
+            if (onSaveCallback) onSaveCallback();
         }
     };
 
@@ -264,7 +272,7 @@ const ConsumableManager = ({ onSaveCallback }) => {
                     <Plus className="h-4 w-4" /> New Consumable
                 </Button>
             </div>
-            {showForm && <ConsumableForm item={editingItem} onSave={handleSave} onCancel={() => setShowForm(false)} />}
+            {showForm && <ConsumableForm item={editingItem} onSave={handleSave} onCancel={() => setShowForm(false)} sharedMetadata={sharedMetadata} />}
             {loading ? <Loader2 className="h-8 w-8 animate-spin text-red-500" /> : (
                 <div className="grid gap-4">
                     {items.filter(i => i).map(item => (
@@ -274,11 +282,11 @@ const ConsumableManager = ({ onSaveCallback }) => {
                                 <div>
                                     <span className="font-bold text-xl text-white">{item.name}</span>
                                     <span className={`text-xs ml-2 px-2 py-1 rounded ${item.type === 'food' ? 'bg-orange-500' : 'bg-blue-500'}`}>{item.type}</span>
-                                    {item.rarity && item.rarity.name && <span className="text-xs ml-2 px-2 py-1 rounded" style={{backgroundColor: item.rarity.color || '#888'}}>{item.rarity.name}</span>}
+                                    {item.rarity && item.rarity.name && <span className="text-xs ml-2 px-2 py-1 rounded" style={{ backgroundColor: item.rarity.color || '#888' }}>{item.rarity.name}</span>}
                                 </div>
                             </div>
                             <div className="flex gap-2">
-                                <Button onClick={() => { setEditingItem(item); setShowForm(true);}} variant="outline" size="icon"><Edit className="h-4 w-4" /></Button>
+                                <Button onClick={() => { setEditingItem(item); setShowForm(true); }} variant="outline" size="icon"><Edit className="h-4 w-4" /></Button>
                                 <Button onClick={() => handleDelete(item)} variant="destructive" size="icon"><Trash2 className="h-4 w-4" /></Button>
                             </div>
                         </div>

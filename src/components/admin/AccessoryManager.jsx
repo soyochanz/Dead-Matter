@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 
 const accessoryTypes = ['Sights', 'Muzzle', 'Grip', 'Magazine', 'Stock', 'Other'];
 
-const AccessoryForm = ({ item, onSave, onCancel }) => {
+const AccessoryForm = ({ item, onSave, onCancel, sharedMetadata }) => {
     const defaultState = { name: '', type: accessoryTypes[0], image_url: '', image_path: '', rarity_id: null, price: 0, sell_price: 0, damage_modifier: 0, rate_of_fire_modifier: 0, accuracy_modifier: 0, capacity_modifier: 0 };
     const [formData, setFormData] = useState(defaultState);
     const [rarities, setRarities] = useState([]);
@@ -16,12 +16,8 @@ const AccessoryForm = ({ item, onSave, onCancel }) => {
     const { toast } = useToast();
 
     useEffect(() => {
-        const fetchRarities = async () => {
-            const { data } = await supabase.from('rarities').select('*');
-            setRarities(data || []);
-        };
-        fetchRarities();
-    }, []);
+        if (sharedMetadata?.rarities) setRarities(sharedMetadata.rarities);
+    }, [sharedMetadata]);
 
     useEffect(() => {
         if (item) setFormData({ ...defaultState, ...item });
@@ -50,20 +46,20 @@ const AccessoryForm = ({ item, onSave, onCancel }) => {
     };
 
     const handleSubmit = (e) => { e.preventDefault(); onSave(formData); };
-    
+
     const formSelectClass = "w-full h-10 bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-red-500 backdrop-blur-sm";
     const formLabelClass = "block text-sm font-medium text-gray-300 mb-1";
 
     return (
         <form onSubmit={handleSubmit} className="bg-white/5 p-6 rounded-lg space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div><label className={formLabelClass}>Name</label><Input name="name" value={formData.name} onChange={handleChange} required/></div>
+                <div><label className={formLabelClass}>Name</label><Input name="name" value={formData.name} onChange={handleChange} required /></div>
                 <div><label className={formLabelClass}>Type</label><select name="type" value={formData.type} onChange={handleChange} className={formSelectClass}>{accessoryTypes.map(type => <option key={type} value={type}>{type}</option>)}</select></div>
-                <div><label className={formLabelClass}><DollarSign className="inline-block mr-1 h-4 w-4"/>Buy Price</label><Input name="price" type="number" value={formData.price || 0} onChange={handleChange} /></div>
-                <div><label className={formLabelClass}><DollarSign className="inline-block mr-1 h-4 w-4"/>Sell Price</label><Input name="sell_price" type="number" value={formData.sell_price || 0} onChange={handleChange} /></div>
-                <div className="md:col-span-2"><label className={formLabelClass}><Gem className="inline-block mr-1 h-4 w-4"/>Rarity</label><select name="rarity_id" value={formData.rarity_id || ''} onChange={handleChange} className={formSelectClass}><option value="">Select Rarity</option>{rarities.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}</select></div>
+                <div><label className={formLabelClass}><DollarSign className="inline-block mr-1 h-4 w-4" />Buy Price</label><Input name="price" type="number" value={formData.price || 0} onChange={handleChange} /></div>
+                <div><label className={formLabelClass}><DollarSign className="inline-block mr-1 h-4 w-4" />Sell Price</label><Input name="sell_price" type="number" value={formData.sell_price || 0} onChange={handleChange} /></div>
+                <div className="md:col-span-2"><label className={formLabelClass}><Gem className="inline-block mr-1 h-4 w-4" />Rarity</label><select name="rarity_id" value={formData.rarity_id || ''} onChange={handleChange} className={formSelectClass}><option value="">Select Rarity</option>{rarities.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}</select></div>
             </div>
-             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-white/10">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-white/10">
                 <div><label className={formLabelClass}>Damage</label><Input name="damage_modifier" type="number" value={formData.damage_modifier || 0} onChange={handleChange} /></div>
                 <div><label className={formLabelClass}>Rate of Fire</label><Input name="rate_of_fire_modifier" type="number" value={formData.rate_of_fire_modifier || 0} onChange={handleChange} /></div>
                 <div><label className={formLabelClass}>Accuracy</label><Input name="accuracy_modifier" type="number" value={formData.accuracy_modifier || 0} onChange={handleChange} /></div>
@@ -83,7 +79,7 @@ const AccessoryForm = ({ item, onSave, onCancel }) => {
 };
 
 
-const AccessoryManager = () => {
+const AccessoryManager = ({ sharedMetadata }) => {
     const [items, setItems] = useState([]);
     const [editingItem, setEditingItem] = useState(null);
     const [showForm, setShowForm] = useState(false);
@@ -105,7 +101,7 @@ const AccessoryManager = () => {
         if (error) toast({ title: "Error", description: error.message, variant: "destructive" });
         else { toast({ title: "Saved!", description: "Accessory saved." }); setShowForm(false); setEditingItem(null); loadItems(); }
     };
-    
+
     const handleDelete = async (item) => {
         if (item.image_path) await supabase.storage.from('Items').remove([item.image_path]);
         await supabase.from('weapon_attachments').delete().eq('accessory_id', item.id);
@@ -117,7 +113,7 @@ const AccessoryManager = () => {
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center"><h2 className="text-2xl font-bold text-white">Manage Accessories</h2><Button onClick={() => { setEditingItem(null); setShowForm(true); }}><Plus className="mr-2 h-4 w-4" /> New Accessory</Button></div>
-            {showForm && <AccessoryForm item={editingItem} onSave={handleSave} onCancel={() => setShowForm(false)} />}
+            {showForm && <AccessoryForm item={editingItem} onSave={handleSave} onCancel={() => setShowForm(false)} sharedMetadata={sharedMetadata} />}
             {loading ? <Loader2 className="h-8 w-8 animate-spin" /> : (
                 <div className="grid gap-4">{items.map(item => (
                     <div key={item.id} className="bg-white/5 p-4 rounded-lg flex justify-between items-center">
@@ -130,7 +126,7 @@ const AccessoryManager = () => {
                             </div>
                         </div>
                         <div className="flex gap-2">
-                            <Button onClick={() => { setEditingItem(item); setShowForm(true);}} variant="outline" size="icon"><Edit className="h-4 w-4" /></Button>
+                            <Button onClick={() => { setEditingItem(item); setShowForm(true); }} variant="outline" size="icon"><Edit className="h-4 w-4" /></Button>
                             <Button onClick={() => handleDelete(item)} variant="destructive" size="icon"><Trash2 className="h-4 w-4" /></Button>
                         </div>
                     </div>

@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Loader2, Plus, Edit, Trash2, Save, X } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 
-const NpcManager = () => {
+const NpcManager = ({ sharedMetadata }) => {
     const [npcs, setNpcs] = useState([]);
     const [editingNpc, setEditingNpc] = useState(null);
     const [missions, setMissions] = useState([]);
@@ -16,8 +16,14 @@ const NpcManager = () => {
 
     useEffect(() => {
         fetchNpcs();
-        fetchAllItems();
     }, []);
+
+    // Only fetch item lists when starting to edit or manage inventory
+    useEffect(() => {
+        if (editingNpc && allItems.weapons.length === 0) {
+            fetchAllItems();
+        }
+    }, [editingNpc]);
 
     const fetchNpcs = async () => {
         setLoading(true);
@@ -52,7 +58,7 @@ const NpcManager = () => {
 
     const handleEdit = async (npc) => {
         setEditingNpc(npc);
-        
+
         const [missionsRes, inventoryRes] = await Promise.all([
             supabase.from('missions').select('*').eq('npc_id', npc.id),
             supabase.from('npc_inventory').select('*').eq('npc_id', npc.id)
@@ -85,7 +91,7 @@ const NpcManager = () => {
         if (error) toast({ title: "Error", description: error.message, variant: "destructive" });
         else { toast({ title: "Success", description: "NPC saved successfully" }); fetchNpcs(); }
     };
-    
+
     const handleAddMission = async () => {
         if (!editingNpc?.id) return;
 
@@ -185,8 +191,8 @@ const NpcManager = () => {
                     <h3 className="text-2xl font-bold text-white">{editingNpc.id ? 'Edit NPC' : 'New NPC'}</h3>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <Input placeholder="NPC Name" value={editingNpc.name} onChange={(e) => setEditingNpc({ ...editingNpc, name: e.target.value })}/>
-                        <Input placeholder="Location" value={editingNpc.location} onChange={(e) => setEditingNpc({ ...editingNpc, location: e.target.value })}/>
+                        <Input placeholder="NPC Name" value={editingNpc.name} onChange={(e) => setEditingNpc({ ...editingNpc, name: e.target.value })} />
+                        <Input placeholder="Location" value={editingNpc.location} onChange={(e) => setEditingNpc({ ...editingNpc, location: e.target.value })} />
                     </div>
 
                     <div>
@@ -204,11 +210,11 @@ const NpcManager = () => {
                                 <div className="flex justify-between items-center mb-4"><h4 className="text-xl font-bold text-white">Missions</h4><Button size="sm" onClick={handleAddMission}><Plus className="w-4 h-4 mr-2" />Add Mission</Button></div>
                                 <div className="space-y-4">{missions.map(mission => (
                                     <div key={mission.id} className="bg-black/20 p-4 rounded-lg space-y-3">
-                                        <Input placeholder="Mission Title" value={mission.title} onChange={(e) => setMissions(missions.map(m => m.id === mission.id ? { ...m, title: e.target.value } : m))}/>
+                                        <Input placeholder="Mission Title" value={mission.title} onChange={(e) => setMissions(missions.map(m => m.id === mission.id ? { ...m, title: e.target.value } : m))} />
                                         <select className={selectClass} value={mission.difficulty} onChange={(e) => setMissions(missions.map(m => m.id === mission.id ? { ...m, difficulty: e.target.value } : m))}>
                                             <option value="Easy">Easy</option><option value="Medium">Medium</option><option value="Hard">Hard</option>
                                         </select>
-                                        <textarea className="w-full bg-white/5 backdrop-blur-sm border border-white/10 p-2 rounded" rows={4} placeholder="Mission Content (HTML supported)" value={mission.content_html || mission.content || ''} onChange={(e) => setMissions(missions.map(m => m.id === mission.id ? { ...m, content_html: e.target.value, content: e.target.value } : m))}/>
+                                        <textarea className="w-full bg-white/5 backdrop-blur-sm border border-white/10 p-2 rounded" rows={4} placeholder="Mission Content (HTML supported)" value={mission.content_html || mission.content || ''} onChange={(e) => setMissions(missions.map(m => m.id === mission.id ? { ...m, content_html: e.target.value, content: e.target.value } : m))} />
                                         <div className="flex gap-2"><Button size="sm" onClick={() => handleUpdateMission(mission)}><Save className="w-4 h-4 mr-2" />Save</Button><Button size="sm" variant="destructive" onClick={() => handleDeleteMission(mission.id)}><Trash2 className="w-4 h-4 mr-2" />Delete</Button></div>
                                     </div>
                                 ))}</div>
@@ -233,7 +239,7 @@ const NpcManager = () => {
                                         const itemDetails = getInventoryItemDetails(invItem.item_type, invItem.item_id);
                                         return (
                                             <div key={idx} className="bg-black/20 p-2 rounded flex flex-col items-center text-center">
-                                                {itemDetails?.image_url && <img src={itemDetails.image_url} alt={itemDetails.name} className="w-16 h-16 object-contain mb-2"/>}
+                                                {itemDetails?.image_url && <img src={itemDetails.image_url} alt={itemDetails.name} className="w-16 h-16 object-contain mb-2" />}
                                                 <span className="text-white text-sm truncate w-full">{itemDetails?.name || invItem.item_id}</span>
                                                 <span className="text-gray-400 text-xs capitalize">{invItem.item_type.slice(0, -1)}</span>
                                                 <Button size="sm" variant="destructive" className="mt-2 w-full" onClick={() => handleRemoveInventoryItem(invItem.item_type, invItem.item_id)}><Trash2 className="w-4 h-4" /></Button>
@@ -254,8 +260,8 @@ const NpcManager = () => {
                         <h3 className="font-bold text-white">{npc.name}</h3>
                         <p className="text-sm text-gray-400">{npc.location}</p>
                         <div className="flex gap-2 mt-2">
-                           <Button size="icon" variant="outline" onClick={() => handleEdit(npc)}><Edit className="w-4 h-4" /></Button>
-                           <Button size="icon" variant="destructive" onClick={() => handleDelete(npc.id)}><Trash2 className="w-4 h-4" /></Button>
+                            <Button size="icon" variant="outline" onClick={() => handleEdit(npc)}><Edit className="w-4 h-4" /></Button>
+                            <Button size="icon" variant="destructive" onClick={() => handleDelete(npc.id)}><Trash2 className="w-4 h-4" /></Button>
                         </div>
                     </div>
                 ))}

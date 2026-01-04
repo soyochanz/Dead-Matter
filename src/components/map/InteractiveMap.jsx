@@ -195,9 +195,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
             });
         }
 
-        if (category?.name.toLowerCase() === 'vehicles' || category?.id === 'vehicles') {
-            return createCustomIcon('https://cdn-icons-png.flaticon.com/512/741/741407.png', [32, 32]);
-        }
+
 
         if (iconUrl) {
             let size = [30, 30];

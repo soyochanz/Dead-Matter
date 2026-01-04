@@ -14,8 +14,8 @@ const DiseaseForm = ({ item, onSave, onCancel }) => {
     const fileInputRef = useRef(null);
     const { toast } = useToast();
     const formInputClass = "w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-red-500";
-    
-    useEffect(() => { if (item) setFormData({...defaultState, ...item}); else setFormData(defaultState); }, [item]);
+
+    useEffect(() => { if (item) setFormData({ ...defaultState, ...item }); else setFormData(defaultState); }, [item]);
 
     const handleFileChange = async (event) => {
         const file = event.target.files[0];
@@ -34,16 +34,16 @@ const DiseaseForm = ({ item, onSave, onCancel }) => {
     };
 
     const handleSubmit = (e) => { e.preventDefault(); onSave(formData); };
-    
+
     return (
         <form onSubmit={handleSubmit} className="bg-white/5 p-6 rounded-lg space-y-4">
             <h3 className="text-xl font-bold text-white">{item ? 'Edit' : 'New'} Disease</h3>
-            <div><label className="text-sm text-gray-300">Name</label><input type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className={formInputClass} required /></div>
-            <div><label className="text-sm text-gray-300">Description</label><textarea value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} className={formInputClass} /></div>
+            <div><label className="text-sm text-gray-300">Name</label><input type="text" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} className={formInputClass} required /></div>
+            <div><label className="text-sm text-gray-300">Description</label><textarea value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })} className={formInputClass} /></div>
             <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2 text-white"><Checkbox id="is_lethal" checked={formData.is_lethal} onCheckedChange={c => setFormData({...formData, is_lethal:c})} /><label htmlFor="is_lethal">Is Lethal?</label></div>
+                <div className="flex items-center gap-2 text-white"><Checkbox id="is_lethal" checked={formData.is_lethal} onCheckedChange={c => setFormData({ ...formData, is_lethal: c })} /><label htmlFor="is_lethal">Is Lethal?</label></div>
             </div>
-             <div>
+            <div>
                 <label className="text-sm text-gray-300">Image</label>
                 <div className="flex items-center gap-4">
                     <Button type="button" onClick={() => fileInputRef.current.click()} disabled={uploading}>
@@ -91,15 +91,15 @@ const LinkerContent = ({ item, onLinkChange }) => {
         if (isLinked) {
             const { error } = await supabase.from('medicine_treats_disease').delete().match(linkData);
             if (!error) {
-                 setLinkedItems(prev => prev.filter(id => id !== targetId));
-                 if(onLinkChange) onLinkChange();
+                setLinkedItems(prev => prev.filter(id => id !== targetId));
+                if (onLinkChange) onLinkChange();
             }
             else toast({ title: "Error", description: error.message, variant: "destructive" });
         } else {
             const { error } = await supabase.from('medicine_treats_disease').insert(linkData);
             if (!error) {
                 setLinkedItems(prev => [...prev, targetId]);
-                if(onLinkChange) onLinkChange();
+                if (onLinkChange) onLinkChange();
             }
             else toast({ title: "Error", description: error.message, variant: "destructive" });
         }
@@ -122,7 +122,7 @@ const LinkerContent = ({ item, onLinkChange }) => {
     );
 };
 
-const DiseaseManager = () => {
+const DiseaseManager = ({ sharedMetadata }) => {
     const [diseases, setDiseases] = useState([]);
     const [medicines, setMedicines] = useState([]);
     const [relations, setRelations] = useState([]);
@@ -151,7 +151,7 @@ const DiseaseManager = () => {
         if (error) toast({ title: "Error", description: error.message, variant: "destructive" });
         else { toast({ title: "Saved!", description: "Disease saved." }); setShowDiseaseForm(false); setEditingItem(null); loadData(); }
     };
-    
+
     const handleDelete = async (item, type) => {
         if (item.image_path) await supabase.storage.from('Items').remove([item.image_path]);
 
@@ -161,18 +161,18 @@ const DiseaseManager = () => {
             if (error) toast({ title: "Error", description: error.message, variant: "destructive" });
             else { toast({ title: "Deleted!", description: "Disease deleted." }); loadData(); }
         } else { // medicine
-             await supabase.from('medicine_treats_disease').delete().eq('medicine_id', item.id);
-             const { error } = await supabase.from('medicines').delete().eq('id', item.id);
-             if (error) toast({ title: "Error", description: error.message, variant: "destructive" });
-             else { toast({ title: "Deleted!", description: "Medicine deleted." }); loadData(); }
+            await supabase.from('medicine_treats_disease').delete().eq('medicine_id', item.id);
+            const { error } = await supabase.from('medicines').delete().eq('id', item.id);
+            if (error) toast({ title: "Error", description: error.message, variant: "destructive" });
+            else { toast({ title: "Deleted!", description: "Medicine deleted." }); loadData(); }
         }
     };
-    
+
     if (showMedicineManager) {
         return (
             <div>
-                 <Button onClick={() => {setShowMedicineManager(false); loadData();}} className="mb-4">Back to Diseases/Medicines</Button>
-                 <MedicineManager onSaveCallback={loadData} />
+                <Button onClick={() => { setShowMedicineManager(false); loadData(); }} className="mb-4">Back to Diseases/Medicines</Button>
+                <MedicineManager onSaveCallback={loadData} sharedMetadata={sharedMetadata} />
             </div>
         )
     }
@@ -196,18 +196,19 @@ const DiseaseManager = () => {
                                     </div>
                                     <div className="flex gap-2">
                                         <DialogTrigger asChild><Button variant="outline" size="icon"><Link /></Button></DialogTrigger>
-                                        <Button onClick={() => { setEditingItem(item); setShowDiseaseForm(true);}} variant="outline" size="icon"><Edit /></Button>
+                                        <Button onClick={() => { setEditingItem(item); setShowDiseaseForm(true); }} variant="outline" size="icon"><Edit /></Button>
                                         <Button onClick={() => handleDelete(item, 'disease')} variant="destructive" size="icon"><Trash2 /></Button>
                                     </div>
                                 </div>
                                 <DialogContent className="bg-slate-900 border-slate-700 text-white"><LinkerContent item={item} onLinkChange={loadData} /></DialogContent>
                             </div>
-                        )})}
+                        )
+                    })}
                     </div>}
                 </div>
 
                 {/* Medicines Box */}
-                 <div className="bg-white/5 p-6 rounded-lg">
+                <div className="bg-white/5 p-6 rounded-lg">
                     <div className="flex justify-between items-center mb-4"><h2 className="text-2xl font-bold text-white">Medicines</h2><Button onClick={() => setShowMedicineManager(true)} className="gap-2"><Plus /> New/Edit Medicine</Button></div>
                     {loading ? <Loader2 className="h-8 w-8 animate-spin" /> : <div className="space-y-4">{medicines.map(item => {
                         const treatsCount = relations.filter(r => r.medicine_id === item.id).length;
@@ -218,9 +219,9 @@ const DiseaseManager = () => {
                                         {item.image_url && <img src={item.image_url} alt={item.name} className="h-10 w-10 object-cover rounded-md" />}
                                         <div>
                                             <span className="font-bold text-white">{item.name}</span>
-                                            {item.rarity && <span className="text-xs ml-2 px-2 py-1 rounded" style={{backgroundColor: item.rarity.color || '#888'}}>{item.rarity.name}</span>}
+                                            {item.rarity && <span className="text-xs ml-2 px-2 py-1 rounded" style={{ backgroundColor: item.rarity.color || '#888' }}>{item.rarity.name}</span>}
                                         </div>
-                                         <span className="text-xs text-gray-400">(treats {treatsCount} {treatsCount === 1 ? 'disease' : 'diseases'})</span>
+                                        <span className="text-xs text-gray-400">(treats {treatsCount} {treatsCount === 1 ? 'disease' : 'diseases'})</span>
                                     </div>
                                     <div className="flex gap-2">
                                         <DialogTrigger asChild><Button variant="outline" size="icon"><Link /></Button></DialogTrigger>
@@ -229,7 +230,8 @@ const DiseaseManager = () => {
                                 </div>
                                 <DialogContent className="bg-slate-900 border-slate-700 text-white"><LinkerContent item={item} onLinkChange={loadData} /></DialogContent>
                             </div>
-                        )})}
+                        )
+                    })}
                     </div>}
                 </div>
             </div>

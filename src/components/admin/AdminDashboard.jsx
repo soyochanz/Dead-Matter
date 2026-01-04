@@ -13,6 +13,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
+import { supabase } from '@/lib/customSupabaseClient';
+
+// Shared Metadata Cache
+let metadataCache = null;
 
 // Lazy load manager components
 const UpdatesManager = lazy(() => import('@/components/admin/UpdatesManager'));
@@ -100,6 +104,35 @@ const AdminDashboard = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [metadata, setMetadata] = useState(metadataCache || { rarities: [], categories: [], subcategories: [], loading: !metadataCache });
+
+  useEffect(() => {
+    if (metadataCache) return;
+
+    const fetchMetadata = async () => {
+      try {
+        const [raritiesRes, categoriesRes, subcategoriesRes] = await Promise.all([
+          supabase.from('rarities').select('*'),
+          supabase.from('wiki_categories').select('*'),
+          supabase.from('wiki_subcategories').select('*')
+        ]);
+
+        const data = {
+          rarities: raritiesRes.data || [],
+          categories: categoriesRes.data || [],
+          subcategories: subcategoriesRes.data || [],
+          loading: false
+        };
+
+        metadataCache = data;
+        setMetadata(data);
+      } catch (err) {
+        setMetadata(prev => ({ ...prev, loading: false }));
+      }
+    };
+
+    fetchMetadata();
+  }, []);
 
   const activeTabId = searchParams.get('tab') || 'updates';
 
@@ -173,6 +206,14 @@ const AdminDashboard = () => {
                     <button
                       key={item.id}
                       onClick={() => handleTabChange(item.id)}
+                      onMouseEnter={() => {
+                        // Pre-fetch the component source on hover
+                        if (typeof item.component._load === 'function') {
+                          item.component._load();
+                        } else if (item.component.render?._load) {
+                          item.component.render._load();
+                        }
+                      }}
                       className={cn(
                         "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all group relative",
                         activeTabId === item.id
@@ -238,12 +279,16 @@ const AdminDashboard = () => {
         <div className="flex-1 overflow-y-auto p-6 lg:p-10 bg-gradient-to-b from-transparent to-black/40">
           <div className="max-w-7xl mx-auto">
             <Suspense fallback={
-              <div className="flex flex-col items-center justify-center h-[60vh] gap-4">
-                <Loader2 className="w-8 h-8 text-red-500 animate-spin" />
-                <p className="text-sm text-slate-400 font-medium">Initializing {activeTab.label}...</p>
+              <div className="space-y-6">
+                <div className="h-10 w-48 bg-white/5 rounded-lg animate-pulse" />
+                <div className="space-y-4">
+                  {[...Array(6)].map((_, i) => (
+                    <div key={i} className="h-20 w-full bg-white/5 rounded-xl animate-pulse" />
+                  ))}
+                </div>
               </div>
             }>
-              {activeTab && <activeTab.component />}
+              {activeTab && <activeTab.component sharedMetadata={metadata} />}
             </Suspense>
           </div>
         </div>

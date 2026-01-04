@@ -117,22 +117,22 @@ const BasebuildingForm = ({ item, onSave, onCancel, rarities }) => {
         <form onSubmit={handleSubmit} className="space-y-4 max-h-[80vh] overflow-y-auto p-2">
             <Input name="name" placeholder="Item Name" value={formData.name || ''} onChange={handleChange} required />
             <Input name="description" placeholder="Description" value={formData.description || ''} onChange={handleChange} />
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <ImageUploader 
-                    label="Image (Packed)" 
-                    imageUrl={formData.image_url} 
-                    onUpload={(url, path) => setFormData(p => ({...p, image_url: url, image_path: path}))}
+                <ImageUploader
+                    label="Image (Packed)"
+                    imageUrl={formData.image_url}
+                    onUpload={(url, path) => setFormData(p => ({ ...p, image_url: url, image_path: path }))}
                 />
                 {isTent && (
-                    <ImageUploader 
-                        label="Image (Unpacked)" 
-                        imageUrl={formData.image_unpacked_url} 
-                        onUpload={(url, path) => setFormData(p => ({...p, image_unpacked_url: url, image_unpacked_path: path}))}
+                    <ImageUploader
+                        label="Image (Unpacked)"
+                        imageUrl={formData.image_unpacked_url}
+                        onUpload={(url, path) => setFormData(p => ({ ...p, image_unpacked_url: url, image_unpacked_path: path }))}
                     />
                 )}
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <Label>Category</Label>
@@ -140,7 +140,7 @@ const BasebuildingForm = ({ item, onSave, onCancel, rarities }) => {
                         {CATEGORIES.map(cat => <option key={cat} value={cat}>{cat}</option>)}
                     </select>
                 </div>
-                 <div>
+                <div>
                     <Label>Rarity</Label>
                     <select name="rarity_id" value={formData.rarity_id || ''} onChange={handleChange} className="w-full h-10 rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm text-white ring-offset-slate-900 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
                         <option value="">Select Rarity</option>
@@ -156,7 +156,7 @@ const BasebuildingForm = ({ item, onSave, onCancel, rarities }) => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                 <Input name="health" type="number" placeholder="Health" value={formData.health || ''} onChange={handleChange} />
+                <Input name="health" type="number" placeholder="Health" value={formData.health || ''} onChange={handleChange} />
                 {isStorage && <Input name="slots" type="number" placeholder="Inventory Slots" value={formData.slots || ''} onChange={handleChange} />}
                 {isItems && <Input name="use" placeholder="Use (e.g., 'Generates Power')" value={formData.use || ''} onChange={handleChange} />}
             </div>
@@ -172,7 +172,7 @@ const BasebuildingForm = ({ item, onSave, onCancel, rarities }) => {
 };
 
 
-const BasebuildingManager = () => {
+const BasebuildingManager = ({ sharedMetadata }) => {
     const [items, setItems] = useState([]);
     const [rarities, setRarities] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -189,15 +189,15 @@ const BasebuildingManager = () => {
             setItems(itemsData);
         }
 
-        const { data: raritiesData, error: raritiesError } = await supabase.from('rarities').select('*');
-        if (raritiesError) {
-            toast({ title: 'Error fetching rarities', description: raritiesError.message, variant: 'destructive' });
+        if (sharedMetadata?.rarities) {
+            setRarities(sharedMetadata.rarities);
         } else {
-            setRarities(raritiesData);
+            const { data: raritiesData } = await supabase.from('rarities').select('*');
+            setRarities(raritiesData || []);
         }
 
         setLoading(false);
-    }, [toast]);
+    }, [toast, sharedMetadata]);
 
     useEffect(() => {
         fetchItems();
@@ -205,7 +205,7 @@ const BasebuildingManager = () => {
 
     const handleSave = async (formData) => {
         const { id, rarity, ...updateData } = formData;
-        
+
         // Ensure null for empty string rarity_id
         if (updateData.rarity_id === '') {
             updateData.rarity_id = null;
@@ -214,7 +214,7 @@ const BasebuildingManager = () => {
         const { data, error } = id
             ? await supabase.from('basebuilding_items').update(updateData).eq('id', id).select()
             : await supabase.from('basebuilding_items').insert(updateData).select();
-        
+
         if (error) {
             toast({ title: 'Error saving item', description: error.message, variant: 'destructive' });
         } else {
@@ -227,7 +227,7 @@ const BasebuildingManager = () => {
 
     const handleDelete = async (item) => {
         if (!window.confirm("Are you sure you want to delete this item?")) return;
-        
+
         const pathsToRemove = [item.image_path, item.image_unpacked_path].filter(Boolean);
         if (pathsToRemove.length > 0) {
             await supabase.storage.from('Items').remove(pathsToRemove);
@@ -260,9 +260,9 @@ const BasebuildingManager = () => {
                     <DialogHeader>
                         <DialogTitle>{editingItem ? 'Edit' : 'Add'} Basebuilding Item</DialogTitle>
                     </DialogHeader>
-                    <BasebuildingForm 
-                        item={editingItem} 
-                        onSave={handleSave} 
+                    <BasebuildingForm
+                        item={editingItem}
+                        onSave={handleSave}
                         onCancel={() => { setIsFormOpen(false); setEditingItem(null); }}
                         rarities={rarities}
                     />
@@ -273,7 +273,7 @@ const BasebuildingManager = () => {
                 {items.map(item => (
                     <div key={item.id} className="bg-gray-800/50 p-4 rounded-lg flex flex-col justify-between" style={{ borderBottom: `2px solid ${item.rarity?.color || 'transparent'}` }}>
                         <div>
-                           <img src={item.image_url} alt={item.name} className="w-full h-32 object-contain mb-2 rounded bg-black/20" />
+                            <img src={item.image_url} alt={item.name} className="w-full h-32 object-contain mb-2 rounded bg-black/20" />
                             <h3 className="font-bold">{item.name}</h3>
                             <p className="text-sm text-gray-400">{item.category}</p>
                             <p className="text-sm" style={{ color: item.rarity?.color }}>{item.rarity?.name || 'Common'}</p>

@@ -6,7 +6,7 @@ import { Loader2, Plus, Edit, Trash2, Save, X } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { CustomStatManager } from '@/components/admin/CustomStatManager';
 
-const ToolbeltManager = () => {
+const ToolbeltManager = ({ sharedMetadata }) => {
     const [toolbelts, setToolbelts] = useState([]);
     const [editingItem, setEditingItem] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -15,8 +15,8 @@ const ToolbeltManager = () => {
 
     useEffect(() => {
         fetchData();
-        fetchRarities();
-    }, []);
+        if (sharedMetadata?.rarities) setRarities(sharedMetadata.rarities);
+    }, [sharedMetadata]);
 
     const fetchData = async () => {
         setLoading(true);
@@ -26,10 +26,7 @@ const ToolbeltManager = () => {
         setLoading(false);
     };
 
-    const fetchRarities = async () => {
-        const { data } = await supabase.from('rarities').select('*');
-        setRarities(data || []);
-    };
+
 
     const handleSave = async () => {
         const itemData = { ...editingItem };
@@ -60,7 +57,7 @@ const ToolbeltManager = () => {
             fetchData();
         }
     };
-    
+
     const handleImageUpload = async (e) => {
         const file = e.target.files[0];
         if (!file) return;
@@ -85,7 +82,7 @@ const ToolbeltManager = () => {
             <h3 className="text-2xl font-bold text-white">{editingItem.id ? 'Edit Toolbelt' : 'Add New Toolbelt'}</h3>
             <Input placeholder="Name" value={editingItem.name || ''} onChange={(e) => setEditingItem({ ...editingItem, name: e.target.value })} />
             <textarea placeholder="Description" value={editingItem.description || ''} onChange={(e) => setEditingItem({ ...editingItem, description: e.target.value })} className="w-full bg-slate-800 p-2 rounded" />
-            
+
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <Input type="number" placeholder="Buy Price" value={editingItem.price || ''} onChange={(e) => setEditingItem({ ...editingItem, price: parseInt(e.target.value) || null })} />
                 <Input type="number" placeholder="Sell Price" value={editingItem.sell_price || ''} onChange={(e) => setEditingItem({ ...editingItem, sell_price: parseInt(e.target.value) || null })} />
@@ -98,19 +95,19 @@ const ToolbeltManager = () => {
                     {rarities.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
                 </select>
             </div>
-            
+
             <div className="flex items-center gap-4">
-                <Input type="file" accept="image/*" onChange={handleImageUpload} className="bg-slate-800 flex-grow"/>
-                {editingItem.image_url && <img src={editingItem.image_url} alt="preview" className="w-20 h-20 object-contain rounded bg-slate-700"/>}
+                <Input type="file" accept="image/*" onChange={handleImageUpload} className="bg-slate-800 flex-grow" />
+                {editingItem.image_url && <img src={editingItem.image_url} alt="preview" className="w-20 h-20 object-contain rounded bg-slate-700" />}
             </div>
-            
+
             <div className="border-t border-slate-700 pt-4 mt-4">
-                <CustomStatManager stats={editingItem.stats} setStats={stats => setEditingItem({...editingItem, stats})} />
+                <CustomStatManager stats={editingItem.stats} setStats={stats => setEditingItem({ ...editingItem, stats })} />
             </div>
 
             <div className="flex gap-4">
-                <Button onClick={handleSave}><Save className="w-4 h-4 mr-2"/>Save</Button>
-                <Button variant="outline" onClick={() => setEditingItem(null)}><X className="w-4 h-4 mr-2"/>Cancel</Button>
+                <Button onClick={handleSave}><Save className="w-4 h-4 mr-2" />Save</Button>
+                <Button variant="outline" onClick={() => setEditingItem(null)}><X className="w-4 h-4 mr-2" />Cancel</Button>
             </div>
         </div>
     );
@@ -119,7 +116,7 @@ const ToolbeltManager = () => {
         <div>
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-2xl font-bold text-white">Manage Toolbelts</h2>
-                <Button onClick={() => setEditingItem({})}><Plus className="w-4 h-4 mr-2"/>Add Toolbelt</Button>
+                <Button onClick={() => setEditingItem({})}><Plus className="w-4 h-4 mr-2" />Add Toolbelt</Button>
             </div>
 
             {loading && <Loader2 className="animate-spin" />}
@@ -129,13 +126,13 @@ const ToolbeltManager = () => {
                 {toolbelts.map(item => (
                     <div key={item.id} className="bg-slate-800 rounded-lg p-4 flex flex-col justify-between">
                         <div>
-                            {item.image_url && <img src={item.image_url} alt={item.name} className="w-full h-32 object-contain rounded-md bg-slate-700 mb-2"/>}
+                            {item.image_url && <img src={item.image_url} alt={item.name} className="w-full h-32 object-contain rounded-md bg-slate-700 mb-2" />}
                             <h3 className="font-bold text-white">{item.name}</h3>
-                            <p className="text-sm" style={{color: item.rarity?.color}}>{item.rarity?.name}</p>
+                            <p className="text-sm" style={{ color: item.rarity?.color }}>{item.rarity?.name}</p>
                         </div>
                         <div className="flex gap-2 mt-4">
-                            <Button size="icon" variant="outline" onClick={() => setEditingItem(item)}><Edit className="w-4 h-4"/></Button>
-                            <Button size="icon" variant="destructive" onClick={() => handleDelete(item.id)}><Trash2 className="w-4 h-4"/></Button>
+                            <Button size="icon" variant="outline" onClick={() => setEditingItem(item)}><Edit className="w-4 h-4" /></Button>
+                            <Button size="icon" variant="destructive" onClick={() => handleDelete(item.id)}><Trash2 className="w-4 h-4" /></Button>
                         </div>
                     </div>
                 ))}

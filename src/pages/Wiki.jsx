@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { motion } from 'framer-motion';
-import { Loader2, ArrowRight } from 'lucide-react';
-import { supabase } from '@/lib/customSupabaseClient';
+import { Loader2, ArrowRight, Sword, Car, Backpack, Hammer, Soup, Stethoscope, Users, Package, HelpCircle } from 'lucide-react';
+import { supabase } from '@/lib/mySupabaseClient';
 import * as Icons from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -12,112 +12,59 @@ const WikiCategoryCard = ({ category, itemCount, index }) => {
   const isDisabled = itemCount === 0 && !isTool;
   const path = `/wiki/${category.name.toLowerCase().replace(' ', '-')}`;
 
-  // Colores temáticos para cada categoría
-  const getCategoryColor = (categoryName) => {
+  const getCategoryColor = (name) => {
     const colors = {
-      'Weapons': 'from-red-600 to-orange-600',
-      'Gear': 'from-blue-600 to-cyan-600',
-      'Toolbelts': 'from-yellow-600 to-amber-600',
-      'Consumables': 'from-green-600 to-emerald-600',
-      'Accessories': 'from-purple-600 to-pink-600',
-      'Keys': 'from-gray-600 to-slate-600',
-      'Meds': 'from-green-500 to-teal-500',
-      'Vehicles': 'from-orange-600 to-red-600',
-      'Perks': 'from-purple-600 to-indigo-600',
-      'NPCs': 'from-rose-600 to-pink-600',
-      'Basebuilding': 'from-stone-600 to-neutral-600'
+      'Weapons': 'text-red-500',
+      'Vehicles': 'text-blue-500',
+      'Gear': 'text-emerald-500',
+      'Basebuilding': 'text-orange-500',
+      'Consumables': 'text-yellow-500',
+      'Meds': 'text-pink-500',
+      'NPCs': 'text-purple-500',
+      'Keys': 'text-slate-400',
     };
-    return colors[categoryName] || 'from-gray-600 to-slate-600';
+    return colors[name] || 'text-slate-400';
   };
 
   const cardContent = (
     <motion.div
-      initial={{ opacity: 0, y: 20, scale: 0.95 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      whileHover={{
-        y: -8,
-        scale: 1.02,
-        transition: { duration: 0.3, ease: "easeOut" }
-      }}
-      transition={{
-        duration: 0.5,
-        delay: index * 0.05,
-        type: "spring",
-        stiffness: 100
-      }}
-      className={`relative overflow-hidden group cursor-pointer ${isDisabled ? 'opacity-50 cursor-not-allowed' : ''
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.05 }}
+      whileHover={!isDisabled ? { y: -5, scale: 1.02 } : {}}
+      className={`relative group flex flex-col h-full p-6 rounded-2xl bg-slate-900/50 border border-white/5 transition-all duration-300 ${isDisabled ? 'opacity-40 cursor-not-allowed' : 'hover:bg-white/5 hover:border-white/10'
         }`}
     >
-      {/* Efecto de fondo con gradiente */}
-      <div className={`absolute inset-0 bg-gradient-to-br ${getCategoryColor(category.name)} opacity-20 group-hover:opacity-30 transition-opacity duration-300 rounded-2xl`} />
-
-      {/* Efecto de borde luminoso */}
-      <div className={`absolute inset-0 bg-gradient-to-r ${getCategoryColor(category.name)} opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl blur-sm group-hover:blur-md`} />
-
-      <div className="relative bg-gray-900/90 border border-white/10 backdrop-blur-sm rounded-2xl group-hover:border-white/20 transition-all duration-300 h-full">
-        {/* Partícula decorativa */}
-        <div className={`absolute top-4 right-4 w-3 h-3 bg-gradient-to-r ${getCategoryColor(category.name)} rounded-full opacity-60 group-hover:scale-150 group-hover:opacity-100 transition-all duration-300`} />
-
-        <div className="p-8 flex flex-col items-center text-center h-full justify-between">
-          {/* Icono con efecto */}
-          <div className={`relative mb-6 p-4 rounded-2xl bg-gradient-to-br ${getCategoryColor(category.name)} shadow-lg group-hover:shadow-xl transition-all duration-300`}>
-            <IconComponent
-              className="w-16 h-16 text-white"
-              strokeWidth={1.5}
-            />
-            {/* Efecto de brillo en el icono */}
-            <div className="absolute inset-0 bg-white/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          </div>
-
-          {/* Contenido de texto */}
-          <div className="flex-1 flex flex-col justify-center">
-            <h3 className="text-2xl font-bold text-white mb-3 tracking-tight">
-              {category.name}
-            </h3>
-
-            {/* Badge de cantidad */}
-            <div className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold mb-4 ${isDisabled
-                ? 'bg-gray-700/50 text-gray-400'
-                : `bg-gradient-to-r ${getCategoryColor(category.name)} text-white shadow-lg`
-              }`}>
-              <span className="flex items-center gap-2">
-                {isTool ? (
-                  <>
-                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-                    Available
-                  </>
-                ) : itemCount > 0 ? (
-                  <>
-                    <div className="w-2 h-2 bg-red-400 rounded-full" />
-                    {itemCount} {itemCount === 1 ? 'item' : 'items'}
-                  </>
-                ) : (
-                  'No items'
-                )}
-              </span>
-            </div>
-          </div>
-
-          {/* Botón de acción */}
-          {!isDisabled && (
-            <motion.div
-              initial={{ opacity: 0, x: -10 }}
-              whileHover={{ opacity: 1, x: 0 }}
-              className="flex items-center justify-center mt-4 text-white/80 group-hover:text-white transition-colors duration-300"
-            >
-              <span className="text-sm font-semibold mr-2">Explore</span>
-              <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300" />
-            </motion.div>
-          )}
+      <div className="flex flex-col items-center gap-4 text-center h-full">
+        <div className={`p-4 rounded-xl bg-white/5 group-hover:scale-110 transition-transform duration-300 ${getCategoryColor(category.name)}`}>
+          <IconComponent size={32} />
         </div>
 
-        {/* Efecto de hover en la parte inferior */}
-        <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r ${getCategoryColor(category.name)} transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left`} />
-      </div>
+        <div className="flex-1">
+          <h3 className="text-xl font-bold text-white mb-2 group-hover:text-red-500 transition-colors uppercase tracking-tight">
+            {category.name}
+          </h3>
 
-      {/* Efecto de sombra exterior */}
-      <div className={`absolute inset-0 rounded-2xl shadow-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${isDisabled ? '' : `shadow-${getCategoryColor(category.name).split('-')[1]}-900/50`
-        }`} />
+          <div className={`text-xs font-bold uppercase tracking-wider ${isDisabled ? 'text-slate-500' : 'text-slate-400'}`}>
+            {isTool ? (
+              <span className="flex items-center justify-center gap-1.5">
+                <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+                Available
+              </span>
+            ) : itemCount > 0 ? (
+              <span>{itemCount} {itemCount === 1 ? 'item' : 'items'}</span>
+            ) : (
+              'Coming Soon'
+            )}
+          </div>
+        </div>
+
+        {!isDisabled && (
+          <div className="mt-4 flex items-center gap-1.5 text-red-500 text-[10px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+            Explore <ArrowRight size={10} />
+          </div>
+        )}
+      </div>
     </motion.div>
   );
 
@@ -240,31 +187,31 @@ const Wiki = () => {
 
   return (
     <>
-<Helmet>
-  <title>Dead Matter Items | Weapons, Gear, Consumables, Vehicles, NPCs & Full Wiki Database</title>
+      <Helmet>
+        <title>Dead Matter Items | Weapons, Gear, Consumables, Vehicles, NPCs & Full Wiki Database</title>
 
-  <meta
-    name="description"
-    content="Explore the complete Dead Matter item database: weapons, gear, consumables, crafting items, accessories, toolbelts, vehicles, NPCs, perks, basebuilding items and more. All categories from the Dead Matter wiki in one place."
-  />
+        <meta
+          name="description"
+          content="Explore the complete Dead Matter item database: weapons, gear, consumables, crafting items, accessories, toolbelts, vehicles, NPCs, perks, basebuilding items and more. All categories from the Dead Matter wiki in one place."
+        />
 
-  <link rel="canonical" href="https://deadmatterwiki.com/wiki" />
-</Helmet>
+        <link rel="canonical" href="https://deadmatterwiki.com/wiki" />
+      </Helmet>
 
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="max-w-7xl mx-auto px-4 py-12 md:py-24">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          {/* Header mejorado */}
-          <div className="text-center mb-12">
-            <h1 className="text-5xl font-bold text-white mb-4 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
-              Dead Matter Item Categories
+          {/* Header estilo Home Hero */}
+          <div className="text-center mb-24 space-y-6">
+            <h1 className="text-5xl md:text-7xl font-black text-white tracking-tighter uppercase">
+              SURVIVAL <span className="text-red-500">DATABASE</span>
             </h1>
 
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-              Browse every category in the Dead Matter Wiki including weapons, gear, consumables, toolbelts, accessories, vehicles, NPCs, perks and more.
+            <p className="text-xl text-slate-400 font-medium max-w-3xl mx-auto leading-relaxed">
+              Explore the most comprehensive technical resource for the Dead Matter universe. From weapons and gear to survival mechanics and NPC data.
             </p>
           </div>
 
