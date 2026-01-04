@@ -1,393 +1,449 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Helmet } from 'react-helmet';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
-  BookOpen, MapPin, Image as ImageIcon, ArrowRight, Bell, X,
-  GitCommit, Sword, Car, Backpack, Hammer, Soup,
-  Stethoscope, Users, Package, Play, ExternalLink,
-  ChevronRight, Sparkles, Trophy, Newspaper
-} from 'lucide-react';
+import { BookOpen, MapPin, Image as ImageIcon, ArrowRight, Bell, X, Calendar, Tag, GitCommit, Shield, Car, Backpack, Hammer, ThumbsUp, User, UserCircle, Star, Zap, Video, ExternalLink, Radio, ChevronDown, ChevronUp, Loader2, Sword, Soup, Stethoscope, Users, Package } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { supabase } from '@/lib/mySupabaseClient';
 import { Button } from '@/components/ui/button';
 import UpdateCard from '@/components/UpdateCard';
 
-// --- Components ---
+// Skeleton Components
+const SkeletonPulse = () => (
+  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-shimmer" style={{ backgroundSize: '200% 100%' }} />
+);
 
-const SectionHeader = ({ icon: Icon, title, subtitle, link, linkText }) => (
-  <div className="flex justify-between items-end mb-8">
-    <div className="space-y-1">
-      <div className="flex items-center gap-2 text-red-500">
-        <Icon size={20} />
-        <span className="text-xs font-black uppercase tracking-[0.2em]">{title}</span>
+const SkeletonCard = ({ type = 'standard' }) => (
+  <div className="relative overflow-hidden bg-gray-900/50 border border-white/5 rounded-2xl p-6 h-full min-h-[150px]">
+    <SkeletonPulse />
+    <div className="space-y-4">
+      <div className="h-6 bg-white/5 rounded w-3/4" />
+      <div className="h-4 bg-white/5 rounded w-full" />
+      <div className="h-4 bg-white/5 rounded w-5/6" />
+      <div className="flex justify-between mt-auto">
+        <div className="h-4 bg-white/5 rounded w-1/4" />
+        <div className="h-4 bg-white/5 rounded w-1/4" />
       </div>
-      <h2 className="text-3xl font-bold text-white tracking-tight">{subtitle}</h2>
     </div>
-    {link && (
-      <Link to={link} className="group flex items-center gap-2 text-sm font-bold text-slate-400 hover:text-white transition-colors">
-        {linkText || 'VIEW ALL'} <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
-      </Link>
-    )}
   </div>
 );
 
-const GlassCard = ({ children, className = "" }) => (
-  <div className={`glass-card glass-card-hover rounded-3xl p-6 relative overflow-hidden ${className}`}>
-    {children}
-  </div>
-);
+// Componente Twitch Stream Manager
+const TwitchStreamManager = () => {
+  const [isLive, setIsLive] = useState(false);
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
+  const [streams, setStreams] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [selectedStream, setSelectedStream] = useState(null);
 
-const ShortcutCard = ({ name, icon: Icon, path, color }) => (
-  <Link to={path} className="group relative flex flex-col items-center gap-4 p-6 rounded-3xl bg-slate-950/50 border border-white/5 hover:bg-red-500/5 hover:border-red-500/20 transition-all duration-300">
-    <div className={`p-4 rounded-2xl bg-slate-900 border border-white/5 group-hover:scale-110 group-hover:bg-red-500/10 group-hover:border-red-500/20 transition-all duration-500 ${color}`}>
-      <Icon size={28} />
-    </div>
-    <span className="text-sm font-bold text-slate-400 group-hover:text-white tracking-wide transition-colors">{name}</span>
-  </Link>
-);
+  const TWITCH_CLIENT_ID = 'tu_client_id_aqui';
+  const TWITCH_CLIENT_SECRET = 'tu_client_secret_aqui';
+  const GAME_ID = '511224';
+
+  const fetchTwitchToken = async () => {
+    // Check if keys are placeholders
+    if (TWITCH_CLIENT_ID === 'tu_client_id_aqui') return null;
+    try {
+      const response = await fetch('https://id.twitch.tv/oauth2/token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `client_id=${TWITCH_CLIENT_ID}&client_secret=${TWITCH_CLIENT_SECRET}&grant_type=client_credentials`,
+      });
+      return await response.json();
+    } catch (error) {
+      return null;
+    }
+  };
+
+  const fetchLiveStreams = async () => {
+    if (TWITCH_CLIENT_ID === 'tu_client_id_aqui') return;
+    setLoading(true);
+    try {
+      const tokenData = await fetchTwitchToken();
+      if (!tokenData?.access_token) return;
+
+      const response = await fetch(
+        `https://api.twitch.tv/helix/streams?game_id=${GAME_ID}&first=5`,
+        {
+          headers: {
+            'Authorization': `Bearer ${tokenData.access_token}`,
+            'Client-Id': TWITCH_CLIENT_ID,
+          },
+        }
+      );
+      const data = await response.json();
+      if (data.data && data.data.length > 0) {
+        setIsLive(true);
+        setStreams(data.data);
+        setSelectedStream(data.data[0]);
+      } else {
+        setIsLive(false);
+      }
+    } catch (error) {
+      setIsLive(false);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchLiveStreams();
+    const interval = setInterval(fetchLiveStreams, 60000); // 60s instead of 30s to save resources
+    return () => clearInterval(interval);
+  }, []);
+
+  if (TWITCH_CLIENT_ID === 'tu_client_id_aqui') return null;
+
+  return (
+    <>
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="fixed bottom-6 right-6 z-40">
+        <motion.button
+          onClick={() => isLive ? setIsPanelOpen(!isPanelOpen) : fetchLiveStreams()}
+          whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
+          className="relative group"
+        >
+          {isLive && (
+            <motion.div
+              animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.2, 0.5] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className="absolute -inset-2 bg-red-500 rounded-full blur-lg"
+            />
+          )}
+          <div className={`relative flex items-center justify-center gap-2 px-5 py-3 rounded-full font-bold text-white shadow-2xl transition-all duration-300 ${isLive ? 'bg-gradient-to-r from-red-600 to-purple-600' : 'bg-gray-800'
+            }`}>
+            <Radio className="w-5 h-5" />
+            <span className="font-bold">{isLive ? 'LIVE' : 'OFFLINE'}</span>
+            {isLive && !loading && (
+              <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${isPanelOpen ? 'rotate-180' : ''}`} />
+            )}
+          </div>
+        </motion.button>
+      </motion.div>
+
+      <AnimatePresence>
+        {isPanelOpen && isLive && streams.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            className="fixed bottom-24 right-6 w-96 z-50"
+          >
+            <div className="relative bg-[#0f172a]/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl overflow-hidden">
+              {/* Simplified Twitch Content for brevity */}
+              <div className="p-4 border-b border-white/10 flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                  <Radio className="w-4 h-4 text-red-500" />
+                  <span className="font-bold text-white">Live Streams</span>
+                </div>
+                <button onClick={() => setIsPanelOpen(false)}><X className="w-4 h-4 text-gray-400" /></button>
+              </div>
+              <div className="p-4 max-h-96 overflow-y-auto">
+                {streams.map(stream => (
+                  <a key={stream.id} href={`https://twitch.tv/${stream.user_login}`} target="_blank" rel="noreferrer" className="flex gap-3 p-2 hover:bg-white/5 rounded-lg">
+                    <img src={stream.thumbnail_url.replace('{width}', '80').replace('{height}', '45')} className="rounded h-10 w-20 object-cover" alt="" />
+                    <div className="min-w-0">
+                      <p className="text-sm font-bold text-white truncate">{stream.user_name}</p>
+                      <p className="text-xs text-slate-400 truncate">{stream.viewer_count} viewers</p>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+};
 
 const GuideCard = ({ guide, index }) => (
   <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    transition={{ delay: index * 0.1 }}
+    initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+    whileHover={{ y: -5 }} transition={{ delay: index * 0.1 }}
+    className="relative bg-slate-900/50 border border-white/5 rounded-2xl overflow-hidden h-full flex flex-col group cursor-pointer"
   >
-    <Link to={`/guides/${guide.slug || guide.id}`} className="group block h-full">
-      <GlassCard className="h-full flex flex-col p-0">
-        <div className="aspect-[16/10] overflow-hidden relative">
-          <img
-            src={guide.image_url || "https://images.unsplash.com/photo-1467746474745-41dd2c7524ce"}
-            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-            alt={guide.title}
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-80" />
-          <div className="absolute top-4 left-4">
-            <span className="px-3 py-1 rounded-full bg-red-500 text-[10px] font-black uppercase tracking-widest text-white">HOT</span>
-          </div>
+    <Link to={`/guides/${guide.slug || guide.id}`} className="block h-full">
+      <div className="aspect-video overflow-hidden relative">
+        <img src={guide.image_url || "https://images.unsplash.com/photo-1467746474745-41dd2c7524ce"} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" alt="" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent opacity-60" />
+      </div>
+      <div className="p-5 flex-1 flex flex-col gap-3">
+        <h4 className="font-bold text-white leading-tight group-hover:text-red-400 transition-colors line-clamp-2">{guide.title}</h4>
+        <div className="mt-auto flex justify-between items-center pt-3 border-t border-white/5">
+          <span className="text-xs text-slate-400 truncate flex items-center gap-1.5"><UserCircle size={14} className="text-red-500" /> {guide.author?.username || 'Member'}</span>
+          <span className="text-xs text-slate-400 flex items-center gap-1"><ThumbsUp size={12} className="text-green-500" /> {guide.likes_count}</span>
         </div>
-        <div className="p-6 flex-1 flex flex-col justify-between">
-          <h4 className="font-bold text-lg text-white group-hover:text-red-400 transition-colors line-clamp-2 leading-snug mb-4">
-            {guide.title}
-          </h4>
-          <div className="flex items-center justify-between text-[11px] font-bold text-slate-500 tracking-wider uppercase">
-            <span className="flex items-center gap-2"><Sparkles size={12} className="text-yellow-500" /> {guide.author?.username || 'Survivor'}</span>
-            <span className="flex items-center gap-2 bg-white/5 px-2 py-1 rounded-md">⭐ {guide.likes_count}</span>
-          </div>
-        </div>
-      </GlassCard>
+      </div>
     </Link>
   </motion.div>
 );
 
-const Home = () => {
-  const [data, setData] = useState({
-    update: null,
-    media: [],
-    commits: [],
-    guides: [],
-    loading: true
-  });
-  const [selectedUpdate, setSelectedUpdate] = useState(null);
+const MediaCard = ({ item, index }) => (
+  <motion.div
+    initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
+    transition={{ delay: index * 0.1 }}
+    className="group relative h-48 rounded-xl overflow-hidden bg-slate-900"
+  >
+    <Link to="/media" className="block h-full w-full">
+      <img src={item.thumbnail} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" alt="" />
+      <div className="absolute inset-0 bg-gradient-to-t from-slate-950 to-transparent" />
+      <div className="absolute bottom-3 left-3 right-3">
+        <p className="text-sm font-bold text-white line-clamp-1">{item.title}</p>
+        <div className="flex items-center gap-2 mt-1">
+          {item.type === 'video' ? <Video size={12} className="text-red-500" /> : <ImageIcon size={12} className="text-blue-500" />}
+          <span className="text-[10px] uppercase font-bold text-slate-400">{item.type}</span>
+        </div>
+      </div>
+    </Link>
+  </motion.div>
+);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [guidesRes, updateRes, commitsRes, mediaRes] = await Promise.all([
-          supabase.from('guides').select('id, title, likes_count, image_url, slug, author:profiles(username)').eq('status', 'approved').order('likes_count', { ascending: false }).limit(4),
-          supabase.from('updates').select('*').order('date', { ascending: false }).limit(1),
-          supabase.from('micro_changes').select('*').order('created_at', { ascending: false }).limit(6),
-          supabase.from('media_items').select('*').order('created_at', { ascending: false }).limit(3)
-        ]);
+const VersionTag = ({ version }) => (
+  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-500/10 border border-red-500/20 text-red-500 text-[10px] font-bold uppercase tracking-wider">
+    <Tag size={10} /> {version || 'Latest'}
+  </div>
+);
 
-        setData({
-          guides: guidesRes.data || [],
-          update: updateRes.data?.[0] || null,
-          commits: commitsRes.data || [],
-          media: mediaRes.data || [],
-          loading: false
-        });
-      } catch (error) {
-        console.error("Error fetching home data:", error);
-        setData(prev => ({ ...prev, loading: false }));
-      }
-    };
-    fetchData();
-  }, []);
-
-  const shortcuts = [
+const WikiShortcuts = () => {
+  const categories = [
     { name: 'Weapons', icon: Sword, color: 'text-red-500', path: '/wiki/weapons' },
     { name: 'Vehicles', icon: Car, color: 'text-blue-500', path: '/wiki/vehicles' },
     { name: 'Gear', icon: Backpack, color: 'text-emerald-500', path: '/wiki/gear' },
     { name: 'Basebuilding', icon: Hammer, color: 'text-orange-500', path: '/wiki/basebuilding' },
-    { name: 'Medical', icon: Stethoscope, color: 'text-pink-500', path: '/wiki/meds' },
     { name: 'Consumables', icon: Soup, color: 'text-yellow-500', path: '/wiki/consumables' },
+    { name: 'Medical', icon: Stethoscope, color: 'text-pink-500', path: '/wiki/meds' },
     { name: 'NPCs', icon: Users, color: 'text-purple-500', path: '/wiki/npcs' },
     { name: 'Keys', icon: Package, color: 'text-slate-400', path: '/wiki/keys' },
   ];
 
   return (
-    <div className="min-h-screen bg-[#030712] selection:bg-red-500 selection:text-white">
+    <section className="py-12">
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
+        {categories.map((cat, i) => (
+          <motion.div
+            key={cat.name}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.05 }}
+          >
+            <Link
+              to={cat.path}
+              className="group flex flex-col items-center gap-3 p-6 rounded-2xl bg-slate-900/50 border border-white/5 hover:bg-white/5 hover:border-white/10 transition-all duration-300"
+            >
+              <div className={`p-3 rounded-xl bg-white/5 group-hover:scale-110 transition-transform duration-300 ${cat.color}`}>
+                <cat.icon size={24} />
+              </div>
+              <span className="text-xs font-bold text-slate-400 group-hover:text-white transition-colors">{cat.name}</span>
+            </Link>
+          </motion.div>
+        ))}
+      </div>
+    </section>
+  );
+};
+
+const Home = () => {
+  const [latestUpdate, setLatestUpdate] = useState(null);
+  const [latestMedia, setLatestMedia] = useState([]);
+  const [latestCommits, setLatestCommits] = useState([]);
+  const [topGuides, setTopGuides] = useState([]);
+  const [loading, setLoading] = useState({ update: true, media: true, commits: true, guides: true });
+  const [selectedUpdate, setSelectedUpdate] = useState(null);
+
+  const extractYouTubeId = (url) => {
+    if (!url) return null;
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
+  };
+
+  useEffect(() => {
+    // 1. Fetch Guides
+    supabase.from('guides')
+      .select('id, title, likes_count, image_url, slug, hashtags, author:profiles(username)')
+      .eq('status', 'approved').order('likes_count', { ascending: false }).limit(4)
+      .then(res => {
+        if (res.data) setTopGuides(res.data);
+        setLoading(prev => ({ ...prev, guides: false }));
+      });
+
+    // 2. Fetch Latest Update
+    supabase.from('updates').select('*').order('date', { ascending: false }).limit(1)
+      .then(res => {
+        if (res.data?.[0]) setLatestUpdate(res.data[0]);
+        setLoading(prev => ({ ...prev, update: false }));
+      });
+
+    // 3. Fetch Commits
+    supabase.from('micro_changes').select('*').order('created_at', { ascending: false }).limit(8)
+      .then(res => {
+        if (res.data) setLatestCommits(res.data);
+        setLoading(prev => ({ ...prev, commits: false }));
+      });
+
+    // 4. Fetch Media
+    supabase.from('media_items').select('*').order('created_at', { ascending: false }).limit(3)
+      .then(res => {
+        if (res.data) {
+          const processed = res.data.map(item => ({
+            ...item,
+            thumbnail: item.thumbnail || (item.type === 'video' ? `https://img.youtube.com/vi/${extractYouTubeId(item.url)}/hqdefault.jpg` : item.url)
+          }));
+          setLatestMedia(processed);
+        }
+        setLoading(prev => ({ ...prev, media: false }));
+      });
+  }, []);
+
+  return (
+    <>
       <Helmet>
-        <title>Dead Matter | Final Survival Wiki</title>
+        <title>Dead Matter Wiki | Interactive Map & Guides</title>
       </Helmet>
 
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-20 overflow-hidden">
-        {/* Cinematic Background */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-7xl">
-          <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-red-900/20 blur-[120px] rounded-full" />
-          <div className="absolute bottom-0 right-[-5%] w-[30%] h-[30%] bg-blue-900/10 blur-[100px] rounded-full" />
-        </div>
+      <TwitchStreamManager />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-6 text-center">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-xs font-black tracking-widest text-slate-400 mb-8"
-          >
-            <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-            ALPHA ACCESS GUIDE
-          </motion.div>
-
+      <div className="max-w-7xl mx-auto px-4 py-12 md:py-24 space-y-24">
+        {/* Hero Section */}
+        <section className="text-center space-y-8 max-w-4xl mx-auto">
           <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-7xl md:text-9xl font-black text-white tracking-tighter mb-8 text-gradient"
+            initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
+            className="text-6xl md:text-8xl font-black text-white tracking-tighter"
           >
-            DEAD MATTER <span className="text-red-500 glow-red">WIKI</span>
+            DEAD MATTER <span className="text-red-500">WIKI</span>
           </motion.h1>
-
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="text-xl md:text-2xl text-slate-400 max-w-3xl mx-auto leading-relaxed font-medium"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
+            className="text-xl text-slate-400 font-medium leading-relaxed"
           >
-            Master the Canadian wilderness. The most comprehensive technical database for weapons, medical survival, and community-driven intel.
+            The definitive technical guide for the survival in the Canadian Rockies. Databases for weapons, vehicles, survival mechanics and community guides.
           </motion.p>
-
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="flex flex-wrap justify-center gap-6 mt-12"
+            initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.4 }}
+            className="flex flex-wrap justify-center gap-4 pt-8"
           >
-            <Button asChild size="xl" className="h-16 px-10 bg-red-600 hover:bg-red-500 text-white rounded-2xl text-lg font-black tracking-tight group overflow-hidden relative">
-              <Link to="/map">
-                <span className="relative z-10 flex items-center gap-3">
-                  <MapPin size={22} strokeWidth={2.5} /> EXPLORE MAP
-                </span>
-                <motion.div
-                  className="absolute inset-0 bg-white/20 -translate-x-full group-hover:translate-x-full transition-transform duration-500"
-                  style={{ skewX: '-20deg' }}
-                />
-              </Link>
+            <Button asChild size="lg" className="bg-red-600 hover:bg-red-500 text-white rounded-full px-8">
+              <Link to="/map"><MapPin className="mr-2 h-4 w-4" /> Interactive Map</Link>
             </Button>
-            <Button asChild variant="outline" size="xl" className="h-16 px-10 border-white/10 hover:bg-white/5 text-white rounded-2xl text-lg font-black tracking-tight">
-              <Link to="/wiki"><BookOpen size={22} className="mr-3 text-red-500" /> BROWSE WIKI</Link>
+            <Button asChild variant="outline" size="lg" className="rounded-full px-8 border-white/10 hover:bg-white/5">
+              <Link to="/wiki"><BookOpen className="mr-2 h-4 w-4" /> Wiki</Link>
             </Button>
           </motion.div>
-        </div>
-      </section>
+        </section>
 
-      <div className="max-w-7xl mx-auto px-6 space-y-32 pb-32">
-        {/* Shortcuts Grid */}
-        <section>
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
-            {shortcuts.map((cat, i) => (
-              <motion.div
-                key={cat.name}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.05 }}
-              >
-                <ShortcutCard {...cat} />
-              </motion.div>
-            ))}
+        <WikiShortcuts />
+
+        {/* Guides Section */}
+        <section className="space-y-8">
+          <div className="flex justify-between items-end">
+            <div>
+              <h2 className="text-3xl font-bold text-white">Top Community Guides</h2>
+              <p className="text-slate-500 mt-1">Learner from the experts</p>
+            </div>
+            <Link to="/guides" className="text-red-500 text-sm font-bold flex items-center hover:translate-x-1 transition-transform">VIEW ALL <ArrowRight size={14} className="ml-1" /></Link>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {loading.guides ? Array(4).fill(0).map((_, i) => <SkeletonCard key={i} />) :
+              topGuides.map((guide, i) => <GuideCard key={guide.id} guide={guide} index={i} />)}
           </div>
         </section>
 
-        {/* Dynamic Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
-          {/* Main Content Column */}
-          <div className="lg:col-span-8 space-y-24">
-            {/* Patch Notes Section */}
-            <section>
-              <SectionHeader
-                icon={Bell}
-                title="SITUATION REPORT"
-                subtitle="Latest Patch Notes"
-                link="/updates"
-              />
-              {data.loading ? (
-                <div className="w-full h-64 bg-slate-900 animate-pulse rounded-3xl" />
-              ) : data.update && (
-                <div className="relative group">
-                  <UpdateCard
-                    update={data.update}
-                    onReadMore={setSelectedUpdate}
-                    versionTag={
-                      <div className="flex items-center gap-2 px-3 py-1 bg-red-500/10 border border-red-500/20 rounded-full text-red-500 text-[10px] font-black tracking-widest uppercase">
-                        V.{data.update.version}
-                      </div>
-                    }
-                  />
-                  <div className="absolute -inset-4 bg-red-500/5 blur-2xl rounded-[40px] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
-                </div>
-              )}
-            </section>
-
-            {/* Guides Grid */}
-            <section>
-              <SectionHeader
-                icon={Trophy}
-                title="COMMUNITY INTEL"
-                subtitle="Expert Survival Guides"
-                link="/guides"
-              />
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                {data.loading ?
-                  Array(2).fill(0).map((_, i) => <div key={i} className="aspect-video bg-slate-900 rounded-3xl animate-pulse" />) :
-                  data.guides.map((guide, i) => <GuideCard key={guide.id} guide={guide} index={i} />)
-                }
-              </div>
-            </section>
+        {/* Two Column Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+          {/* Left: Latest Update */}
+          <div className="lg:col-span-8 space-y-8">
+            <div className="flex items-center gap-3">
+              <Bell size={24} className="text-red-500" />
+              <h2 className="text-3xl font-bold text-white">Latest Patch Notes</h2>
+            </div>
+            {loading.update ? <SkeletonCard /> : latestUpdate && (
+              <UpdateCard update={latestUpdate} onReadMore={setSelectedUpdate} versionTag={<VersionTag version={latestUpdate.version} />} />
+            )}
           </div>
 
-          {/* Sidebar Column */}
-          <div className="lg:col-span-4 space-y-16">
-            {/* Micro Changes Sidebar */}
-            <section>
-              <SectionHeader
-                icon={GitCommit}
-                title="DEV LOG"
-                subtitle="Recent Commits"
-              />
-              <GlassCard className="p-0 border-white/5 bg-slate-950/20">
-                <div className="divide-y divide-white/5 max-h-[500px] overflow-y-auto custom-scrollbar">
-                  {data.loading ?
-                    Array(4).fill(0).map((_, i) => <div key={i} className="p-6 h-20 bg-slate-900 animate-pulse" />) :
-                    data.commits.map((c, i) => (
-                      <div key={c.id} className="p-6 hover:bg-white/[0.02] transition-colors group">
-                        <p className="text-sm text-slate-300 font-medium line-clamp-2 leading-relaxed mb-3 group-hover:text-white transition-colors">
-                          {c.message}
-                        </p>
-                        <div className="flex items-center justify-between">
-                          <span className="text-[10px] font-black text-slate-600 uppercase tracking-widest">
-                            {new Date(c.created_at).toLocaleDateString()}
-                          </span>
-                          <span className="text-[10px] font-mono text-red-500/60 bg-red-500/5 px-2 py-0.5 rounded">
-                            #{c.id.substring(0, 6)}
-                          </span>
-                        </div>
-                      </div>
-                    ))
-                  }
-                </div>
-              </GlassCard>
-            </section>
-
-            {/* Media Highlight */}
-            <section>
-              <SectionHeader
-                icon={ImageIcon}
-                title="GALLERY"
-                subtitle="World Snapshots"
-                link="/media"
-              />
-              <div className="space-y-4">
-                {data.loading ?
-                  <div className="aspect-square bg-slate-900 rounded-3xl animate-pulse" /> :
-                  data.media.slice(0, 2).map((item, i) => (
-                    <motion.div
-                      key={item.id}
-                      initial={{ opacity: 0, x: 20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: i * 0.1 }}
-                    >
-                      <Link to="/media" className="group block relative aspect-video rounded-3xl overflow-hidden border border-white/5">
-                        <img src={item.url} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="" />
-                        <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                          <Play className="text-white fill-white" size={32} />
-                        </div>
-                      </Link>
-                    </motion.div>
-                  ))
-                }
+          {/* Right: Commits */}
+          <div className="lg:col-span-4 space-y-8">
+            <div className="flex items-center gap-3">
+              <GitCommit size={24} className="text-blue-500" />
+              <h2 className="text-2xl font-bold text-white">Micro Changes</h2>
+            </div>
+            <div className="bg-slate-900/40 border border-white/5 rounded-2xl p-6 relative overflow-hidden">
+              {loading.commits && <SkeletonPulse />}
+              <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                {latestCommits.map((c, i) => (
+                  <div key={c.id} className="p-3 bg-white/5 rounded-xl border border-white/5">
+                    <p className="text-sm text-slate-300 line-clamp-2">{c.message}</p>
+                    <div className="flex justify-between items-center mt-2">
+                      <span className="text-[10px] uppercase font-bold text-slate-500">{new Date(c.created_at).toLocaleDateString()}</span>
+                      <span className="text-[10px] font-mono text-blue-400">#{c.id.substring(0, 6)}</span>
+                    </div>
+                  </div>
+                ))}
               </div>
-            </section>
+            </div>
           </div>
         </div>
 
-        {/* Trailer Section */}
-        <section>
-          <GlassCard className="p-0 rounded-[40px] bg-black group shadow-2xl overflow-hidden border-white/10">
-            <div className="aspect-video w-full relative">
-              <iframe
-                width="100%"
-                height="100%"
-                src="https://www.youtube.com/embed/8R0fkYHOpzA?modestbranding=1&rel=0"
-                title="Dead Matter Official Trailer"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="absolute inset-0 grayscale-[0.2] group-hover:grayscale-0 transition-all duration-700"
-              />
-            </div>
-            <div className="p-8 flex items-center justify-between bg-slate-950/80 backdrop-blur-md">
-              <div className="flex items-center gap-4">
-                <div className="p-4 rounded-2xl bg-red-600 text-white glow-red">
-                  <Play size={24} fill="currentColor" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-black text-white tracking-tight">OFFICIAL TRAILER</h3>
-                  <p className="text-slate-500 text-sm font-bold tracking-wide uppercase">Developed by Qi Software</p>
-                </div>
-              </div>
-              <Button asChild variant="outline" className="border-white/10 rounded-xl hover:bg-white/5 font-bold">
-                <a href="https://store.steampowered.com/app/1113910/Dead_Matter/" target="_blank" rel="noreferrer">
-                  VIEW ON STEAM
-                </a>
-              </Button>
-            </div>
-          </GlassCard>
+        {/* Media Section */}
+        <section className="space-y-8">
+          <div className="flex items-center gap-3">
+            <ImageIcon size={24} className="text-purple-500" />
+            <h2 className="text-3xl font-bold text-white">Latest Media Highlights</h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            {loading.media ? Array(3).fill(0).map((_, i) => <SkeletonCard key={i} />) :
+              latestMedia.map((item, i) => <MediaCard key={item.id} item={item} index={i} />)}
+          </div>
+        </section>
+
+        {/* Official Trailer Section */}
+        <section className="space-y-8">
+          <div className="flex items-center gap-3">
+            <Video size={24} className="text-red-500" />
+            <h2 className="text-3xl font-bold text-white">Official Trailer</h2>
+          </div>
+          <div className="aspect-video w-full rounded-2xl overflow-hidden border border-white/5 bg-slate-900 shadow-2xl">
+            <iframe
+              width="100%"
+              height="100%"
+              src="https://www.youtube.com/embed/8R0fkYHOpzA"
+              title="Dead Matter Official Trailer"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="w-full h-full"
+            ></iframe>
+          </div>
         </section>
       </div>
 
-      {/* Modal for Updates */}
-      <AnimatePresence>
-        {selectedUpdate && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-slate-950/90 backdrop-blur-xl" onClick={() => setSelectedUpdate(null)}>
+      {selectedUpdate && (
+        <AnimatePresence>
+          <div className="fixed inset-0 z-[6000] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md" onClick={() => setSelectedUpdate(null)}>
             <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="bg-slate-900 border border-white/10 p-10 rounded-[40px] max-w-3xl w-full max-h-[85vh] overflow-y-auto shadow-2xl custom-scrollbar"
-              onClick={e => e.stopPropagation()}
+              initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
+              className="bg-[#0f172a] border border-white/10 p-8 rounded-3xl max-w-2xl w-full max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}
             >
-              <div className="flex justify-between items-start mb-10">
-                <div className="space-y-4">
-                  <div className="px-3 py-1 inline-block bg-red-500/10 border border-red-500/20 rounded-full text-red-500 text-[10px] font-black tracking-widest uppercase">
-                    PATCH {selectedUpdate.version}
-                  </div>
-                  <h3 className="text-4xl font-black text-white tracking-tighter leading-none">{selectedUpdate.title}</h3>
-                </div>
-                <button
-                  onClick={() => setSelectedUpdate(null)}
-                  className="p-3 rounded-full bg-white/5 border border-white/5 text-slate-400 hover:text-white hover:bg-white/10 transition-all"
-                >
-                  <X size={20} />
-                </button>
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-3xl font-bold text-white">{selectedUpdate.title}</h3>
+                <button onClick={() => setSelectedUpdate(null)}><X className="text-slate-400" /></button>
               </div>
-              <div className="prose prose-invert max-w-none prose-p:text-slate-400 prose-headings:text-white prose-strong:text-red-400 prose-a:text-red-500 leading-relaxed text-lg" dangerouslySetInnerHTML={{ __html: selectedUpdate.content }} />
+              <div className="prose prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: selectedUpdate.content }} />
             </motion.div>
           </div>
-        )}
-      </AnimatePresence>
-    </div>
+        </AnimatePresence>
+      )}
+
+      <style>{`
+        @keyframes shimmer {
+          0% { transform: translateX(-100%) }
+          100% { transform: translateX(100%) }
+        }
+        .animate-shimmer {
+          animation: shimmer 2s infinite linear;
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 20px }
+      `}</style>
+    </>
   );
 };
 
