@@ -393,7 +393,25 @@ const Home = () => {
           </div>
         </section>
 
-        {/* Official Trailer Section - Temporarily Removed */}
+        {/* Official Trailer Section */}
+        <section className="space-y-8">
+          <div className="flex items-center gap-3">
+            <Video size={24} className="text-red-500" />
+            <h2 className="text-3xl font-bold text-white">Official Trailer</h2>
+          </div>
+          <div className="aspect-video w-full rounded-2xl overflow-hidden border border-white/5 bg-slate-900 shadow-2xl">
+            <iframe
+              width="100%"
+              height="100%"
+              src="https://www.youtube.com/embed/8R0fkYHOpzA"
+              title="Dead Matter Official Trailer"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="w-full h-full"
+            ></iframe>
+          </div>
+        </section>
       </div>
 
       {selectedUpdate && (
