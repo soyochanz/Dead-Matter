@@ -175,10 +175,30 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
     ];
 
     const getIconForMarker = (marker) => {
-        // ... existing logic ...
+        // Find category
         const category = categories.find(c => c.id === marker.category_id);
-        const iconUrl = category?.icon_url;
         const isLoot = (marker.title.toLowerCase().includes('loot') || category?.name.toLowerCase().includes('loot'));
+
+        // Custom Black Icons for Vehicles/Trailers
+        if (category?.name === 'Vehicles') {
+            const carSvg = `<svg viewBox="0 0 24 24" fill="#000000" stroke="#000000" stroke-width="1"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/></svg>`;
+            return L.divIcon({
+                html: `<div style="width: 32px; height: 32px; filter: drop-shadow(0 0 4px rgba(255,255,255,0.5)); transform: translate(-4px, -4px);">${carSvg}</div>`,
+                className: 'vehicle-marker',
+                iconSize: [24, 24],
+                iconAnchor: [12, 12]
+            });
+        }
+
+        if (category?.name === 'Trailers') {
+            const trailerSvg = `<svg viewBox="0 0 24 24" fill="#000000" stroke="#000000" stroke-width="1"><path d="M2 11h16v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-6zm16 2h4v1h-4v-1z"/><circle cx="5" cy="18" r="2"/><circle cx="15" cy="18" r="2"/></svg>`;
+            return L.divIcon({
+                html: `<div style="width: 32px; height: 32px; filter: drop-shadow(0 0 4px rgba(255,255,255,0.5)); transform: translate(-4px, -4px);">${trailerSvg}</div>`,
+                className: 'trailer-marker',
+                iconSize: [24, 24],
+                iconAnchor: [12, 12]
+            });
+        }
 
         if (category?.group_name === 'military' && isLoot) return createDivIcon('red-icon');
         if (category?.group_name === 'industrial' && isLoot) return createDivIcon('orange-icon');
@@ -195,7 +215,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
             });
         }
 
-
+        const iconUrl = category?.icon_url;
 
         if (iconUrl) {
             let size = [30, 30];
