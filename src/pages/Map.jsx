@@ -1,6 +1,6 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
-import InteractiveMap from '@/components/Map/InteractiveMap';
+import InteractiveMap from '@/components/map/InteractiveMap';
 
 const MapPage = () => {
     return (

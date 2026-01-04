@@ -16,7 +16,7 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog";
 import { useMapData } from '@/hooks/useMapData';
-import InteractiveMap from '@/components/Map/InteractiveMap';
+import InteractiveMap from '@/components/map/InteractiveMap';
 
 // Tag options configuration
 const TAG_OPTIONS = [
