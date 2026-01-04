@@ -155,7 +155,6 @@ const DeadMatterMap = ({ onMapClick, adminMode = false, setMapInstance, setCoord
                 maxZoom={mapConfig.maxZoom}
                 scrollWheelZoom={true}
                 className="w-full h-full"
-                className="w-full h-full"
             >
                 <LayersControl position="topright">
                     <LayersControl.BaseLayer checked name="Terrain">
