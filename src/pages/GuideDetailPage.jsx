@@ -36,7 +36,7 @@ const GuideDetailPage = () => {
 
   const [reportReason, setReportReason] = useState('');
   const [isReportDialogOpen, setReportDialogOpen] = useState(false);
-  
+
   const [captchaToken, setCaptchaToken] = useState('');
 
   const fetchGuideAndComments = useCallback(async () => {
@@ -108,12 +108,12 @@ const GuideDetailPage = () => {
 
     if (!newComment.trim()) return;
     if (!user || !guide) {
-        toast({ variant: 'destructive', title: 'Login required' });
-        return;
+      toast({ variant: 'destructive', title: 'Login required' });
+      return;
     }
-    
+
     if (!captchaToken) {
-        return toast({ variant: 'destructive', title: 'CAPTCHA Required', description: 'Please complete the CAPTCHA.' });
+      return toast({ variant: 'destructive', title: 'CAPTCHA Required', description: 'Please complete the CAPTCHA.' });
     }
 
     const { error } = await supabase.from('guide_comments').insert({
@@ -135,8 +135,8 @@ const GuideDetailPage = () => {
   const handleReportSubmit = async () => {
     if (!reportReason.trim()) return;
     if (!user || !guide) {
-        toast({ variant: "destructive", title: "Login required" });
-        return;
+      toast({ variant: "destructive", title: "Login required" });
+      return;
     }
 
     const { error } = await supabase.from('guide_reports').insert({
@@ -227,12 +227,12 @@ const GuideDetailPage = () => {
           className="relative"
         >
           <div className={`absolute inset-0 bg-gradient-to-br ${getGuideColor(guide.title)} opacity-10 rounded-3xl -z-10`} />
-          
+
           <div className="relative overflow-hidden rounded-2xl mb-8">
             {guide.image_url && (
               <div className="relative aspect-video overflow-hidden rounded-2xl">
                 <div className={`absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/50 to-transparent z-10`} />
-                <img 
+                <img
                   className="w-full h-full object-cover"
                   alt={guide.title}
                   src={guide.image_url}
@@ -242,7 +242,7 @@ const GuideDetailPage = () => {
             )}
 
             <div className="relative z-30 px-8 -mt-20">
-              <div className="bg-gray-900/90 backdrop-blur-sm border border-white/10 rounded-2xl p-8">
+              <div className="bg-[#0a0a0c]/90 backdrop-blur-3xl border border-white/5 rounded-[2rem] p-8 shadow-2xl">
                 <h1 className="text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight">
                   {guide.title}
                 </h1>
@@ -252,17 +252,17 @@ const GuideDetailPage = () => {
                     <User size={16} className="text-red-400" />
                     <span className="font-medium">{guide.author?.username || 'Anonymous'}</span>
                   </div>
-                  
+
                   <div className="flex items-center gap-2 bg-white/5 px-3 py-1.5 rounded-full">
                     <Calendar size={16} className="text-blue-400" />
                     <span>{new Date(guide.created_at).toLocaleDateString()}</span>
                   </div>
-                  
+
                   <div className="flex items-center gap-2 bg-white/5 px-3 py-1.5 rounded-full">
                     <ThumbsUp size={16} className="text-green-400" />
                     <span>{likeCount} likes</span>
                   </div>
-                  
+
                   <div className="flex items-center gap-2 bg-white/5 px-3 py-1.5 rounded-full">
                     <MessageSquare size={16} className="text-purple-400" />
                     <span>{comments.length} comments</span>
@@ -271,14 +271,14 @@ const GuideDetailPage = () => {
 
                 {/* Hashtags Display */}
                 {guide.hashtags && Array.isArray(guide.hashtags) && guide.hashtags.length > 0 && (
-                   <div className="flex flex-wrap gap-2 mb-4">
-                       {guide.hashtags.map((tag, idx) => (
-                           <span key={idx} className="flex items-center gap-1 px-3 py-1 bg-blue-600/20 text-blue-400 rounded-full text-sm font-medium border border-blue-500/20">
-                               <Hash className="w-3 h-3" />
-                               {tag}
-                           </span>
-                       ))}
-                   </div>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {guide.hashtags.map((tag, idx) => (
+                      <span key={idx} className="flex items-center gap-1 px-3 py-1 bg-blue-600/20 text-blue-400 rounded-full text-sm font-medium border border-blue-500/20">
+                        <Hash className="w-3 h-3" />
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
                 )}
 
                 {guide.description && (
@@ -294,10 +294,10 @@ const GuideDetailPage = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-2xl p-8 mb-8"
+            className="bg-[#0a0a0c]/50 backdrop-blur-3xl border border-white/5 rounded-[2rem] p-8 mb-8 shadow-xl"
           >
             <div className="prose prose-invert prose-lg max-w-none">
-              <div 
+              <div
                 className="guide-content"
                 dangerouslySetInnerHTML={{ __html: guide.content_html }}
               />
@@ -308,15 +308,14 @@ const GuideDetailPage = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="flex flex-wrap justify-between items-center gap-4 mb-12 p-6 bg-gray-800/50 border border-white/10 rounded-2xl"
+            className="flex flex-wrap justify-between items-center gap-4 mb-12 p-8 bg-[#0a0a0c] border border-white/5 rounded-[2rem] shadow-xl"
           >
             <Button
               onClick={handleLike}
-              className={`flex items-center gap-3 ${
-                isLiked 
-                  ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white' 
+              className={`flex items-center gap-3 ${isLiked
+                  ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white'
                   : 'bg-white/10 hover:bg-white/20 text-white border border-white/20'
-              }`}
+                }`}
             >
               <ThumbsUp size={20} />
               <span>{isLiked ? 'Liked' : 'Like This Guide'} ({likeCount})</span>
@@ -377,7 +376,7 @@ const GuideDetailPage = () => {
                       {comment.author?.username?.charAt(0).toUpperCase() || 'A'}
                     </div>
 
-                    <div className="flex-1 bg-white/5 border border-white/10 rounded-2xl p-6 group-hover:border-white/20 transition-all duration-300">
+                    <div className="flex-1 bg-[#0a0a0c] border border-white/5 rounded-[1.5rem] p-6 group-hover:border-white/20 transition-all duration-300 shadow-lg">
                       <div className="flex justify-between items-center mb-3">
                         <span className="font-bold text-white">{comment.author?.username || 'Anonymous'}</span>
                         <span className="text-xs text-gray-500 flex items-center gap-1">
@@ -412,7 +411,7 @@ const GuideDetailPage = () => {
                   placeholder="Share your thoughts, ask questions, or provide feedback..."
                   className="bg-transparent border-0 focus-visible:ring-0 p-0 text-white placeholder:text-gray-400 text-lg min-h-[120px] resize-none"
                 />
-                
+
                 <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-4 border-t border-white/10">
                   <Turnstile
                     ref={turnstileRef}
@@ -420,8 +419,8 @@ const GuideDetailPage = () => {
                     onSuccess={setCaptchaToken}
                     onExpire={() => setCaptchaToken('')}
                   />
-                  <Button 
-                    type="submit" 
+                  <Button
+                    type="submit"
                     className="bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 border-0 shadow-lg"
                     disabled={!captchaToken}
                   >

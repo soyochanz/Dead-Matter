@@ -40,121 +40,93 @@ export function UserNav() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <div className="relative group cursor-pointer">
-          {/* Efecto de halo luminoso */}
-          <div className="absolute -inset-1 bg-gradient-to-r from-red-600 via-purple-600 to-blue-600 rounded-full blur-lg opacity-0 group-hover:opacity-70 transition-opacity duration-500"></div>
-          
-          {/* Avatar más grande con efectos modernos */}
-          <Button 
-            variant="ghost" 
-            className="relative h-16 w-16 rounded-full p-0 hover:scale-105 transition-all duration-300 border-2 border-white/20 bg-gradient-to-br from-gray-900 to-black shadow-2xl hover:shadow-red-500/30 group"
-          >
-            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-red-600/20 via-purple-600/20 to-blue-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            
-            <Avatar className="h-14 w-14 border-2 border-white/30 group-hover:border-red-500/50 transition-colors duration-300">
-              <AvatarImage src={avatarUrl} alt={username} className="group-hover:scale-105 transition-transform duration-300" />
-              <AvatarFallback className="bg-gradient-to-br from-red-900 to-purple-900 text-white text-lg font-bold">
+        <button className="relative group outline-none">
+          <div className="relative h-10 w-10 rounded-full overflow-hidden border border-white/10 group-hover:border-white/30 transition-all duration-300">
+            <Avatar className="h-full w-full">
+              <AvatarImage src={avatarUrl} alt={username} className="object-cover" />
+              <AvatarFallback className="bg-white/5 text-white/50 text-xs font-bold">
                 {initials}
               </AvatarFallback>
             </Avatar>
-            
-            {/* Indicador de estado online */}
-            <div className="absolute bottom-1 right-1 w-3.5 h-3.5 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full border-2 border-gray-900 shadow-lg">
-              <div className="absolute inset-0 rounded-full bg-green-400 animate-ping opacity-30"></div>
-            </div>
-            
-            {/* Icono de flecha */}
-            <ChevronDown className="absolute -bottom-2 -right-2 w-6 h-6 p-1 bg-gray-900 rounded-full border border-white/10 text-white/70 group-hover:text-red-400 transition-all duration-300" />
-          </Button>
-          
-          {/* Efecto de pulso sutil */}
-          <div className="absolute inset-0 rounded-full bg-red-500/10 animate-pulse opacity-0 group-hover:opacity-100"></div>
-        </div>
+            {/* Scanline effect overlay */}
+            <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-white/5 to-black/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+          </div>
+
+          {/* Online Indicator */}
+          <div className="absolute -bottom-0.5 -right-0.5 h-3 w-3 bg-[#0a0a0c] rounded-full flex items-center justify-center p-0.5">
+            <div className="w-full h-full rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.6)]" />
+          </div>
+        </button>
       </DropdownMenuTrigger>
-      
-      <DropdownMenuContent 
-        className="w-64 bg-gray-900/95 backdrop-blur-xl border-gray-800 text-white shadow-2xl animate-in fade-in-0 zoom-in-95"
-        align="end" 
+
+      <DropdownMenuContent
+        className="w-72 bg-[#0a0a0c]/95 backdrop-blur-2xl border border-white/10 text-white shadow-2xl p-0 overflow-hidden"
+        align="end"
         forceMount
       >
-        {/* Header con gradiente */}
-        <div className="relative overflow-hidden rounded-t-lg">
-          <div className="absolute inset-0 bg-gradient-to-r from-red-600/20 via-purple-600/20 to-blue-600/20"></div>
-          <DropdownMenuLabel className="font-normal bg-transparent relative z-10">
-            <div className="flex items-center space-x-3 p-2">
-              <div className="relative">
-                <div className="absolute -inset-1 bg-gradient-to-r from-red-600 to-purple-600 rounded-full blur opacity-40"></div>
-                <Avatar className="h-12 w-12 border-2 border-white/20">
-                  <AvatarImage src={avatarUrl} alt={username} />
-                  <AvatarFallback className="bg-gradient-to-br from-red-900 to-purple-900">
-                    {initials}
-                  </AvatarFallback>
-                </Avatar>
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <p className="text-sm font-semibold leading-none text-white truncate">
-                    {username}
-                  </p>
-                  {isAdmin && (
-                    <span className="px-1.5 py-0.5 text-[10px] bg-gradient-to-r from-red-600/30 to-purple-600/30 text-red-300 rounded-full border border-red-500/30">
-                      ADMIN
-                    </span>
-                  )}
-                </div>
-                <p className="text-xs leading-none text-gray-400 truncate mt-1">
-                  {userEmail}
-                </p>
-              </div>
+        {/* Technical Header */}
+        <div className="relative p-4 border-b border-white/5 bg-white/[0.02]">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.05),transparent_60%)]" />
+
+          <div className="relative flex items-center gap-3">
+            <div className="h-10 w-10 rounded-full border border-white/10 overflow-hidden">
+              <Avatar className="h-full w-full">
+                <AvatarImage src={avatarUrl} alt={username} />
+                <AvatarFallback className="bg-white/10 text-xs">{initials}</AvatarFallback>
+              </Avatar>
             </div>
-          </DropdownMenuLabel>
-        </div>
-        
-        <DropdownMenuSeparator className="bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-        
-        <DropdownMenuGroup>
-          <DropdownMenuItem asChild className="focus:bg-white/5 focus:text-white cursor-pointer py-3 hover:pl-4 transition-all duration-200 group">
-            <Link to="/profile/edit" className="flex items-center">
-              <div className="mr-3 p-1.5 bg-gray-800/50 rounded-lg group-hover:bg-red-500/20 transition-colors">
-                <User className="h-4 w-4 text-gray-400 group-hover:text-red-400" />
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-sm text-white truncate">{username}</span>
+                {isAdmin && (
+                  <span className="px-1.5 py-0.5 rounded text-[9px] font-black uppercase tracking-wider bg-red-500/10 text-red-500 border border-red-500/20">
+                    CMD
+                  </span>
+                )}
               </div>
-              <span className="font-medium">Profile</span>
-            </Link>
-          </DropdownMenuItem>
-          
-          {/* Admin Access Link - Only visible for admins */}
-          {isAdmin && (
-            <DropdownMenuItem asChild className="focus:bg-red-900/30 focus:text-red-200 cursor-pointer py-3 hover:pl-4 transition-all duration-200 group">
-              <Link to="/tutucucu" className="flex items-center">
-                <div className="mr-3 p-1.5 bg-red-900/30 rounded-lg group-hover:bg-red-500/40 transition-colors">
-                  <ShieldAlert className="h-4 w-4 text-red-400 group-hover:text-red-300" />
+              <p className="text-[10px] text-gray-500 font-mono truncate">{userEmail}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="p-2 space-y-1">
+          <DropdownMenuGroup>
+            <DropdownMenuItem asChild className="focus:bg-white/5 focus:text-white cursor-pointer py-2.5 px-3 rounded-lg flex items-center gap-3 group transition-colors">
+              <Link to="/profile/edit" className="w-full flex items-center gap-3">
+                <User className="h-4 w-4 text-gray-500 group-hover:text-white transition-colors" />
+                <div className="flex flex-col">
+                  <span className="text-sm font-medium text-gray-300 group-hover:text-white">Profile Settings</span>
                 </div>
-                <span className="font-medium text-red-400 group-hover:text-red-300">Admin Dashboard</span>
-                <Sparkles className="ml-auto h-3.5 w-3.5 text-yellow-400 animate-pulse" />
               </Link>
             </DropdownMenuItem>
-          )}
-        </DropdownMenuGroup>
-        
-        <DropdownMenuSeparator className="bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-        
-        <DropdownMenuItem 
-          className="focus:bg-red-900/30 focus:text-red-200 cursor-pointer py-3 hover:pl-4 transition-all duration-200 group" 
-          onClick={() => signOut()}
-        >
-          <div className="flex items-center">
-            <div className="mr-3 p-1.5 bg-red-900/20 rounded-lg group-hover:bg-red-500/30 transition-colors">
-              <LogOut className="h-4 w-4 text-red-500 group-hover:text-red-400" />
-            </div>
-            <span className="font-medium text-red-500 group-hover:text-red-400">Log out</span>
-          </div>
-        </DropdownMenuItem>
-        
-        {/* Footer con versión */}
-        <div className="px-2 py-1.5 border-t border-white/5">
-          <p className="text-xs text-gray-500 text-center">
-            v1.0.0 • {new Date().getFullYear()}
-          </p>
+
+            {isAdmin && (
+              <DropdownMenuItem asChild className="focus:bg-red-500/5 focus:text-red-400 cursor-pointer py-2.5 px-3 rounded-lg flex items-center gap-3 group transition-colors mt-1">
+                <Link to="/tutucucu" className="w-full flex items-center gap-3">
+                  <ShieldAlert className="h-4 w-4 text-gray-500 group-hover:text-red-500 transition-colors" />
+                  <div className="flex flex-col">
+                    <span className="text-sm font-medium text-gray-300 group-hover:text-red-400">Admin Dashboard</span>
+                  </div>
+                </Link>
+              </DropdownMenuItem>
+            )}
+          </DropdownMenuGroup>
+
+          <div className="my-1 h-px bg-white/5" />
+
+          <DropdownMenuItem
+            className="focus:bg-red-500/10 focus:text-red-400 cursor-pointer py-2.5 px-3 rounded-lg flex items-center gap-3 group transition-colors"
+            onSelect={() => signOut()}
+          >
+            <LogOut className="h-4 w-4 text-gray-500 group-hover:text-red-500 transition-colors" />
+            <span className="text-sm font-medium text-gray-300 group-hover:text-red-400">Disconnect</span>
+          </DropdownMenuItem>
+        </div>
+
+        {/* Footer info */}
+        <div className="px-4 py-2 border-t border-white/5 bg-white/[0.02] flex justify-between items-center">
+          <span className="text-[9px] text-gray-600 uppercase tracking-widest font-black">System ID</span>
+          <span className="text-[9px] font-mono text-gray-500">USER-{session.user.id.slice(0, 4)}</span>
         </div>
       </DropdownMenuContent>
     </DropdownMenu>

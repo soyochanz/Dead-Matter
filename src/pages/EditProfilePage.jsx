@@ -561,147 +561,58 @@ const EditProfilePage = () => {
   }
 
   return (
-    <>
+    <div className="min-h-screen pt-24 pb-12 relative overflow-hidden">
+      {/* Technical Background */}
+      <div className="fixed inset-0 pointer-events-none opacity-[0.02] bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:40px_40px] z-0" />
+      <div className="fixed inset-0 pointer-events-none bg-gradient-to-b from-black via-transparent to-black z-0 opacity-50" />
+
       <Helmet>
         <title>Edit Profile - Dead Matter Wiki</title>
       </Helmet>
 
-      <div className="max-w-3xl mx-auto px-4">
+      <div className="max-w-4xl mx-auto px-4 relative z-10">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="relative mb-8"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="mb-8"
         >
           <Button
             variant="ghost"
-            className="absolute left-0 top-0 text-gray-400 hover:text-white group"
+            className="text-gray-500 hover:text-white hover:bg-white/5 -ml-4"
             onClick={() => navigate(-1)}
           >
-            <ArrowLeft className="h-5 w-5 mr-2 group-hover:-translate-x-1 transition-transform" />
-            Back
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Return to Dashboard
           </Button>
-          <div className="text-center pt-8">
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
-              Edit Profile
-            </h1>
-            <p className="text-gray-400 text-lg">Update your account information</p>
-          </div>
         </motion.div>
 
-        {/* Mostrar errores de validación */}
-        {validationErrors.length > 0 && (
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Sidebar / User Info Card */}
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-6 p-4 bg-red-900/30 border border-red-500/30 rounded-lg"
+            className="lg:col-span-4"
           >
-            <div className="flex items-center gap-2 text-red-300 mb-2">
-              <AlertCircle className="w-5 h-5" />
-              <span className="font-semibold">Security Validation Failed</span>
-            </div>
-            <ul className="text-sm text-red-300 space-y-1">
-              {validationErrors.map((error, index) => (
-                <li key={index}>• {error}</li>
-              ))}
-            </ul>
-          </motion.div>
-        )}
+            <div className="bg-[#0a0a0c] border border-white/5 rounded-2xl overflow-hidden sticky top-24">
+              <div className="h-24 bg-white/5 border-b border-white/5 relative">
+                <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.02)_50%,transparent_75%,transparent_100%)] bg-[length:20px_20px]" />
+              </div>
 
-        {/* Mostrar advertencias */}
-        {validationWarnings.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-6 p-4 bg-yellow-900/20 border border-yellow-500/30 rounded-lg"
-          >
-            <div className="flex items-center gap-2 text-yellow-300 mb-2">
-              <AlertCircle className="w-5 h-5" />
-              <span className="font-semibold">Image Notes</span>
-            </div>
-            <ul className="text-sm text-yellow-300 space-y-1">
-              {validationWarnings.map((warning, index) => (
-                <li key={index}>• {warning}</li>
-              ))}
-            </ul>
-          </motion.div>
-        )}
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="relative"
-        >
-          <div className="absolute inset-0 bg-gradient-to-br from-red-600/10 via-gray-900/50 to-orange-600/10 rounded-3xl" />
-
-          <div className="relative bg-gray-900/90 backdrop-blur-sm border border-white/10 rounded-3xl overflow-hidden">
-            <div className="bg-gradient-to-r from-red-600/20 to-orange-600/20 border-b border-white/10 p-8">
-              <div className="flex flex-col items-center">
-                <motion.div
-                  className="relative"
-                  whileHover={{ scale: 1.05 }}
-                  onHoverStart={() => setIsHovering(true)}
-                  onHoverEnd={() => setIsHovering(false)}
-                >
-                  <div className="relative">
-                    <Avatar className="h-32 w-32 border-4 border-white/20 shadow-2xl">
-                      <AvatarImage src={avatarPreview} alt={username} />
-                      <AvatarFallback className="bg-gradient-to-br from-red-600 to-orange-600 text-white text-4xl font-bold">
+              <div className="px-6 pb-6 -mt-12 text-center">
+                <div className="relative inline-block group">
+                  <div className="h-24 w-24 rounded-full border-4 border-[#0a0a0c] overflow-hidden bg-black relative">
+                    <Avatar className="h-full w-full">
+                      <AvatarImage src={avatarPreview} alt={username} className="object-cover" />
+                      <AvatarFallback className="bg-white/10 text-xl font-bold text-white/50">
                         {username?.charAt(0).toUpperCase() || 'U'}
                       </AvatarFallback>
                     </Avatar>
 
-                    {/* Indicador de progreso */}
-                    {uploadProgress > 0 && uploadProgress < 100 && (
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-full">
-                        <div className="relative w-20 h-20">
-                          <svg className="w-full h-full" viewBox="0 0 100 100">
-                            <circle
-                              cx="50"
-                              cy="50"
-                              r="45"
-                              fill="none"
-                              stroke="rgba(255,255,255,0.1)"
-                              strokeWidth="8"
-                            />
-                            <circle
-                              cx="50"
-                              cy="50"
-                              r="45"
-                              fill="none"
-                              stroke="#10B981"
-                              strokeWidth="8"
-                              strokeLinecap="round"
-                              strokeDasharray={`${uploadProgress * 2.83} 283`}
-                              transform="rotate(-90 50 50)"
-                            />
-                          </svg>
-                          <span className="absolute inset-0 flex items-center justify-center text-white text-sm font-bold">
-                            {uploadProgress}%
-                          </span>
-                        </div>
-                      </div>
-                    )}
-
-                    <AnimatePresence>
-                      {isHovering && (
-                        <motion.div
-                          initial={{ opacity: 0, scale: 0.8 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          exit={{ opacity: 0, scale: 0.8 }}
-                          className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-full"
-                        >
-                          <Camera className="h-8 w-8 text-white" />
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-
                     <Label
                       htmlFor="avatar-upload"
-                      className="absolute -bottom-2 -right-2 bg-gradient-to-r from-red-600 to-orange-600 p-2 rounded-full cursor-pointer hover:shadow-lg hover:shadow-red-500/30 transition-all"
+                      className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-all cursor-pointer"
                     >
-                      <Camera className="h-5 w-5 text-white" />
+                      <Camera className="h-6 w-6 text-white" />
                       <input
                         id="avatar-upload"
                         type="file"
@@ -710,267 +621,119 @@ const EditProfilePage = () => {
                         className="hidden"
                       />
                     </Label>
-                  </div>
 
-                  {/* Información de seguridad */}
-                  <div className="mt-4 text-center">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-gray-800/50 rounded-full">
-                      <Shield className="h-3 w-3 text-green-400" />
-                      <span className="text-xs text-gray-400">Secure upload enabled</span>
-                    </div>
-                  </div>
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="mt-6 text-center"
-                >
-                  <h2 className="text-2xl font-bold text-white mb-2">
-                    {profile?.username || 'Anonymous'}
-                  </h2>
-                  <p className="text-gray-400 flex items-center justify-center gap-2">
-                    <Shield className="h-4 w-4 text-red-400" />
-                    Member since {profile?.created_at ? new Date(profile.created_at).getFullYear() : '2024'}
-                  </p>
-                </motion.div>
-              </div>
-            </div>
-
-            <form onSubmit={handleSubmit} className="p-8 space-y-8">
-
-
-              {/* Campo de Usuario */}
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.2 }}
-                className="space-y-4"
-              >
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="p-2 rounded-lg bg-gradient-to-r from-red-600/20 to-orange-600/20">
-                    <User className="h-5 w-5 text-red-400" />
-                  </div>
-                  <Label htmlFor="username" className="text-white text-lg font-semibold">
-                    Username
-                  </Label>
-                </div>
-                <Input
-                  id="username"
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  required
-                  className="bg-gray-800/50 border-white/10 text-white placeholder-gray-500 h-12 text-lg rounded-xl hover:border-white/20 focus:border-red-500 transition-colors"
-                  placeholder="Enter your username"
-                />
-                <p className="text-sm text-gray-500">
-                  This will be displayed to other users
-                </p>
-              </motion.div>
-
-              {/* Campo de Email */}
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.3 }}
-                className="space-y-4"
-              >
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="p-2 rounded-lg bg-gradient-to-r from-blue-600/20 to-cyan-600/20">
-                    <Mail className="h-5 w-5 text-blue-400" />
-                  </div>
-                  <Label htmlFor="email" className="text-white text-lg font-semibold">
-                    Email Address
-                  </Label>
-                </div>
-                <Input
-                  id="email"
-                  type="email"
-                  value={user?.email || ''}
-                  disabled
-                  className="bg-gray-800/50 border-white/10 text-gray-400 h-12 text-lg rounded-xl cursor-not-allowed"
-                />
-                <p className="text-sm text-gray-500">
-                  Contact support to change your email
-                </p>
-              </motion.div>
-
-              {/* Campo de Avatar File */}
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.4 }}
-                className="space-y-4"
-              >
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="p-2 rounded-lg bg-gradient-to-r from-purple-600/20 to-pink-600/20">
-                    <Camera className="h-5 w-5 text-purple-400" />
-                  </div>
-                  <Label htmlFor="avatar" className="text-white text-lg font-semibold">
-                    Profile Picture
-                  </Label>
-                </div>
-                <div className="space-y-3">
-                  <Input
-                    id="avatar"
-                    type="file"
-                    accept={SECURITY_CONFIG.AVATAR.ALLOWED_TYPES.join(',')}
-                    onChange={handleAvatarChange}
-                    className="bg-gray-800/50 border-white/10 text-white file:bg-gradient-to-r file:from-red-600 file:to-orange-600 file:border-0 file:rounded-lg file:px-4 file:py-2 file:text-white file:font-medium file:cursor-pointer hover:file:bg-gradient-to-r hover:file:from-red-700 hover:file:to-orange-700 transition-colors rounded-xl"
-                  />
-                  {avatarFile && (
-                    <div className="flex items-center justify-between p-3 bg-gray-800/30 rounded-lg">
-                      <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 bg-gradient-to-r from-green-600 to-emerald-600 rounded flex items-center justify-center">
-                          <Check className="w-4 h-4 text-white" />
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium text-white">
-                            {AvatarSecurityUtils.sanitizeFilename(avatarFile.name)}
-                          </p>
-                          <p className="text-xs text-gray-400">
-                            Ready for upload • {Math.round(avatarFile.size / 1024)} KB
-                          </p>
-                        </div>
+                    {/* Progress Indicator */}
+                    {uploadProgress > 0 && uploadProgress < 100 && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/80 z-20">
+                        <span className="text-[10px] font-bold text-emerald-500">{uploadProgress}%</span>
                       </div>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => {
-                          setAvatarFile(null);
-                          setAvatarPreview(profile?.avatar_url || '');
-                          setValidationErrors([]);
-                          setValidationWarnings([]);
-                        }}
-                        className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
-                      >
-                        <X className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  )}
-                </div>
-                <p className="text-sm text-gray-500">
-                  Recommended: Square image, {SECURITY_CONFIG.AVATAR.MIN_DIMENSION}x{SECURITY_CONFIG.AVATAR.MIN_DIMENSION}px or larger, max {SECURITY_CONFIG.AVATAR.MAX_SIZE / 1024 / 1024}MB
-                </p>
-              </motion.div>
-
-              {/* Botones de acción */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-                className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-white/10"
-              >
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="flex-1 h-12 text-lg rounded-xl border-white/10 hover:border-white/30 hover:bg-white/5"
-                  onClick={() => navigate(-1)}
-                  disabled={loading}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  type="submit"
-                  className="flex-1 h-12 text-lg rounded-xl bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 shadow-lg hover:shadow-red-500/30 transition-all relative overflow-hidden"
-                  disabled={loading}
-                >
-                  {loading ? (
-                    <>
-                      <Loader2 className="mr-3 h-5 w-5 animate-spin" />
-                      <span className="flex items-center gap-2">
-                        Securing & Saving...
-                        <Shield className="w-4 h-4" />
-                      </span>
-                    </>
-                  ) : (
-                    <>
-                      <Check className="mr-3 h-5 w-5" />
-                      Save Changes
-                      <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-                    </>
-                  )}
-                </Button>
-              </motion.div>
-            </form>
-
-            {/* Pie de página con info de seguridad */}
-            <div className="px-8 py-6 bg-gray-900/50 border-t border-white/10">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="flex items-center gap-2 text-sm text-gray-500">
-                  <Shield className="h-4 w-4 text-green-400" />
-                  <div>
-                    <p className="font-medium">Security Status</p>
-                    <p className="text-xs">All uploads validated & scanned</p>
+                    )}
+                  </div>
+                  <div className="absolute bottom-0 right-0 p-1.5 bg-[#0a0a0c] rounded-full border border-white/10">
+                    <UserCog className="h-3 w-3 text-gray-400" />
                   </div>
                 </div>
-                <div className="text-sm text-gray-500">
-                  <p>
-                    Last updated: {profile?.updated_at ?
-                      new Date(profile.updated_at).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                      }) :
-                      'Never'
-                    }
-                  </p>
+
+                <h2 className="text-xl font-bold text-white mt-3">{profile?.username || 'Anonymous'}</h2>
+                <div className="flex items-center justify-center gap-2 mt-1">
+                  <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-white/5 text-gray-500 border border-white/5">
+                    Operative
+                  </span>
+                </div>
+
+                <div className="mt-6 pt-6 border-t border-white/5 flex flex-col gap-2 text-left">
+                  <div className="flex justify-between items-center text-xs">
+                    <span className="text-gray-500">Security Level</span>
+                    <span className="text-emerald-500 font-mono">CLEARED</span>
+                  </div>
+                  <div className="flex justify-between items-center text-xs">
+                    <span className="text-gray-500">Member Since</span>
+                    <span className="text-gray-300 font-mono">{profile?.created_at ? new Date(profile.created_at).getFullYear() : '2024'}</span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
 
-        {/* Información adicional de seguridad */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.6 }}
-          className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6"
-        >
-          <div className="bg-gradient-to-br from-red-600/5 to-transparent border border-white/10 rounded-2xl p-6">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="p-2 rounded-lg bg-red-600/20">
-                <Shield className="h-5 w-5 text-red-400" />
+          {/* Main Form Area */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="lg:col-span-8"
+          >
+            <div className="bg-[#0a0a0c] border border-white/5 rounded-2xl p-8">
+              <div className="mb-8">
+                <h1 className="text-2xl font-bold text-white mb-2">Account Settings</h1>
+                <p className="text-sm text-gray-500">Manage your personal information and security preferences.</p>
               </div>
-              <h3 className="font-semibold text-white">Multi-Layer Security</h3>
-            </div>
-            <p className="text-sm text-gray-400">
-              Files are validated for type, size, content, and scanned for malware before upload.
-            </p>
-          </div>
 
-          <div className="bg-gradient-to-br from-blue-600/5 to-transparent border border-white/10 rounded-2xl p-6">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="p-2 rounded-lg bg-blue-600/20">
-                <User className="h-5 w-5 text-blue-400" />
-              </div>
-              <h3 className="font-semibold text-white">Automatic Optimization</h3>
-            </div>
-            <p className="text-sm text-gray-400">
-              Avatars are automatically cropped to square and compressed for optimal performance.
-            </p>
-          </div>
+              {/* Validation Errors */}
+              {validationErrors.length > 0 && (
+                <div className="mb-6 p-4 bg-red-500/5 border border-red-500/20 rounded-xl">
+                  <div className="flex items-center gap-2 text-red-400 mb-2">
+                    <AlertCircle className="w-4 h-4" />
+                    <span className="text-sm font-bold uppercase">Validation Error</span>
+                  </div>
+                  <ul className="text-xs text-red-300/80 space-y-1 list-disc pl-4">
+                    {validationErrors.map((error, index) => (
+                      <li key={index}>{error}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
 
-          <div className="bg-gradient-to-br from-green-600/5 to-transparent border border-white/10 rounded-2xl p-6">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="p-2 rounded-lg bg-green-600/20">
-                <Camera className="h-5 w-5 text-green-400" />
-              </div>
-              <h3 className="font-semibold text-white">Real-time Validation</h3>
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="space-y-2">
+                  <Label htmlFor="username" className="text-xs font-bold text-gray-400 uppercase tracking-wider">DisplayName</Label>
+                  <div className="relative">
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-600" />
+                    <Input
+                      id="username"
+                      type="text"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      required
+                      className="pl-10 bg-white/[0.02] border-white/10 text-white focus:bg-white/5 focus:border-red-500/50 transition-all h-11"
+                      placeholder="Enter your username"
+                    />
+                  </div>
+                  <p className="text-[10px] text-gray-600">Visible to other operatives in the network.</p>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="email" className="text-xs font-bold text-gray-400 uppercase tracking-wider">Email Address</Label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-600" />
+                    <Input
+                      id="email"
+                      type="email"
+                      value={user?.email || ''}
+                      disabled
+                      className="pl-10 bg-black/40 border-white/5 text-gray-500 cursor-not-allowed h-11"
+                    />
+                  </div>
+                  <p className="text-[10px] text-gray-600">Managed by Supabase Auth. Contact admin to change.</p>
+                </div>
+
+                <div className="pt-6 border-t border-white/5 flex items-center justify-end gap-4">
+                  <Button type="button" variant="ghost" onClick={() => navigate(-1)} className="text-gray-400 hover:text-white">Cancel</Button>
+                  <Button type="submit" disabled={loading} className="bg-red-600 hover:bg-red-500 text-white min-w-[140px]">
+                    {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Check className="h-4 w-4 mr-2" />}
+                    Save Changes
+                  </Button>
+                </div>
+              </form>
             </div>
-            <p className="text-sm text-gray-400">
-              Files are checked immediately upon selection. No waiting for upload to fail.
-            </p>
-          </div>
-        </motion.div>
+          </motion.div>
+        </div>
       </div>
-    </>
+
+      {/* Hidden footer buffer */}
+      <div className="h-20" />
+    </div>
   );
+
 };
 
 export default React.memo(EditProfilePage);

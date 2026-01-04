@@ -4,15 +4,15 @@ import { supabase } from '@/lib/mySupabaseClient';
 import { Loader2 } from 'lucide-react';
 import BasebuildingCard from '@/components/wiki/BasebuildingCard';
 import BasebuildingDetailModal from '@/components/wiki/BasebuildingDetailModal';
-import NpcDetailModal from '@/pages/NpcsPage';
+import NpcDetailModal from '@/components/wiki/NpcDetailModal';
 import { AnimatePresence } from 'framer-motion';
 import WikiCategoryLayout from '@/components/wiki/WikiCategoryLayout';
 
 const CATEGORIES = [
-    { id: "Items", name: "Items" }, 
+    { id: "Items", name: "Items" },
     { id: "Storage", name: "Storage" },
     { id: "Walls", name: "Walls" },
-    { id: "Doors", name: "Doors" }, 
+    { id: "Doors", name: "Doors" },
     { id: "Window", name: "Window" },
     { id: "Lighting", name: "Lighting" },
     { id: "Tents", name: "Tents" }
@@ -25,14 +25,14 @@ const BasebuildingPage = () => {
     const [selectedNpc, setSelectedNpc] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [activeCategory, setActiveCategory] = useState('all');
-    
+
     const fetchItems = useCallback(async () => {
         setLoading(true);
         const { data, error } = await supabase
             .from('basebuilding_items')
             .select('*, rarity:rarities(name, color)')
             .order('name');
-        
+
         if (error) {
             console.error("Error fetching basebuilding items:", error);
         } else {
@@ -52,10 +52,10 @@ const BasebuildingPage = () => {
             return matchesCategory && matchesSearch;
         });
     }, [items, activeCategory, searchTerm]);
-    
+
     const handleNpcSelect = (npc) => {
-        setSelectedItem(null); 
-        setSelectedNpc(npc); 
+        setSelectedItem(null);
+        setSelectedNpc(npc);
     };
 
     return (
@@ -74,16 +74,16 @@ const BasebuildingPage = () => {
             >
                 {loading ? (
                     <div className="flex justify-center items-center h-64">
-                      <Loader2 className="w-12 h-12 text-red-500 animate-spin" />
+                        <Loader2 className="w-12 h-12 text-red-500 animate-spin" />
                     </div>
                 ) : (
                     <>
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
                             {filteredItems.map((item, index) => (
-                                <BasebuildingCard 
-                                    key={item.id} 
-                                    item={item} 
-                                    index={index} 
+                                <BasebuildingCard
+                                    key={item.id}
+                                    item={item}
+                                    index={index}
                                     onClick={() => setSelectedItem(item)}
                                 />
                             ))}
@@ -97,9 +97,9 @@ const BasebuildingPage = () => {
                     </>
                 )}
             </WikiCategoryLayout>
-            
+
             {selectedItem && (
-                <BasebuildingDetailModal 
+                <BasebuildingDetailModal
                     item={selectedItem}
                     onClose={() => setSelectedItem(null)}
                     onNpcSelect={handleNpcSelect}

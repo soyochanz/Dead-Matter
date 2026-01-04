@@ -1,4 +1,4 @@
-import React, { useState, useMemo, Suspense, lazy } from 'react';
+import React, { useState, useEffect, useMemo, Suspense, lazy } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import {
   Home, LogOut, Search, ChevronRight,
@@ -7,7 +7,7 @@ import {
   Sword, Crosshair, Shirt, Package,
   Soup, Key, Sprout, Car, Wrench,
   Stethoscope, UserCircle, Layers, Star,
-  Menu, X, Loader2
+  Menu, X, Loader2, Shield
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -164,138 +164,136 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="flex h-screen bg-[#020617] text-slate-200 overflow-hidden font-sans">
+    <div className="flex h-screen bg-black text-white overflow-hidden font-sans">
+      {/* Technical Background (Global for dashboard) */}
+      <div className="fixed inset-0 pointer-events-none opacity-[0.02] bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:40px_40px] z-0" />
+
       {/* Sidebar */}
       <aside className={cn(
-        "fixed inset-y-0 left-0 z-50 w-72 bg-slate-900/50 backdrop-blur-xl border-r border-white/5 transition-transform duration-300 lg:relative lg:translate-x-0",
+        "fixed inset-y-0 left-0 z-50 w-72 bg-[#0a0a0c] border-r border-white/5 transition-transform duration-300 lg:relative lg:translate-x-0 flex flex-col",
         !isSidebarOpen && "-translate-x-full lg:hidden"
       )}>
-        <div className="flex flex-col h-full">
-          {/* Sidebar Header */}
-          <div className="p-6 border-b border-white/5 flex items-center justify-between">
-            <h1 className="text-xl font-bold bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">
-              ADMIN CENTER
-            </h1>
-            <Button variant="ghost" size="icon" className="lg:hidden" onClick={toggleSidebar}>
-              <X className="w-5 h-5" />
-            </Button>
-          </div>
-
-          {/* Sidebar Search */}
-          <div className="px-6 py-4">
-            <div className="relative group">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-red-400 transition-colors" />
-              <Input
-                placeholder="Search tools..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9 bg-slate-800/50 border-white/5 focus-visible:ring-red-500/50 h-9 text-sm"
-              />
+        {/* Sidebar Header */}
+        <div className="p-6 border-b border-white/5 flex items-center justify-between bg-white/[0.01]">
+          <div className="flex items-center gap-3">
+            <div className="h-8 w-8 bg-red-600 rounded flex items-center justify-center">
+              <Shield className="h-5 w-5 text-white" />
+            </div>
+            <div>
+              <h1 className="text-md font-bold text-white tracking-wide">ADMIN CMD</h1>
+              <p className="text-[10px] text-gray-500 font-mono tracking-widest uppercase">Dead Matter Wiki</p>
             </div>
           </div>
+          <Button variant="ghost" size="icon" className="lg:hidden hover:bg-white/5 text-gray-400" onClick={toggleSidebar}>
+            <X className="w-5 h-5" />
+          </Button>
+        </div>
 
-          {/* Navigation Items */}
-          <nav className="flex-1 overflow-y-auto px-4 py-2 space-y-6 scrollbar-hide">
-            {filteredCategories.map(category => (
-              <div key={category.id} className="space-y-1">
-                <h3 className="px-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">
-                  {category.label}
-                </h3>
-                <div className="space-y-[2px]">
-                  {category.items.map(item => (
-                    <button
-                      key={item.id}
-                      onClick={() => handleTabChange(item.id)}
-                      onMouseEnter={() => {
-                        // Pre-fetch the component source on hover
-                        if (typeof item.component._load === 'function') {
-                          item.component._load();
-                        } else if (item.component.render?._load) {
-                          item.component.render._load();
-                        }
-                      }}
-                      className={cn(
-                        "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all group relative",
-                        activeTabId === item.id
-                          ? "bg-red-500/10 text-red-400 border border-red-500/20 shadow-[0_0_15px_-5px_rgba(239,68,68,0.3)]"
-                          : "text-slate-400 hover:text-slate-100 hover:bg-white/5 border border-transparent"
-                      )}
-                    >
-                      <item.icon className={cn(
-                        "w-4 h-4 transition-colors",
-                        activeTabId === item.id ? "text-red-400" : "text-slate-500 group-hover:text-slate-300"
-                      )} />
-                      {item.label}
-                      {activeTabId === item.id && (
-                        <ChevronRight className="w-3 h-3 ml-auto opacity-50" />
-                      )}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </nav>
-
-          {/* Sidebar Footer */}
-          <div className="p-4 border-t border-white/5 bg-black/20">
-            <Button
-              variant="ghost"
-              className="w-full justify-start text-slate-400 hover:text-red-400 hover:bg-red-500/10 gap-3"
-              onClick={signOut}
-            >
-              <LogOut className="w-4 h-4" />
-              Logout Session
-            </Button>
+        {/* Sidebar Search */}
+        <div className="px-6 py-4">
+          <div className="relative group">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-600 group-focus-within:text-red-500 transition-colors" />
+            <Input
+              placeholder="Search tools..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-9 bg-white/[0.02] border-white/5 focus-visible:ring-red-500/50 h-10 text-sm focus:bg-white/5 transition-all"
+            />
           </div>
+        </div>
+
+        {/* Navigation Items */}
+        <nav className="flex-1 overflow-y-auto px-4 py-2 space-y-6 scrollbar-hide">
+          {filteredCategories.map(category => (
+            <div key={category.id} className="space-y-1">
+              <h3 className="px-2 text-[10px] font-bold text-gray-600 uppercase tracking-widest mb-2 flex items-center gap-2">
+                <span className="w-1 h-1 rounded-full bg-red-600/50" />
+                {category.label}
+              </h3>
+              <div className="space-y-[2px]">
+                {category.items.map(item => (
+                  <button
+                    key={item.id}
+                    onClick={() => handleTabChange(item.id)}
+                    className={cn(
+                      "w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-all group relative border border-transparent",
+                      activeTabId === item.id
+                        ? "bg-white/5 text-white border-white/5"
+                        : "text-gray-500 hover:text-gray-200 hover:bg-white/[0.02]"
+                    )}
+                  >
+                    <item.icon className={cn(
+                      "w-4 h-4 transition-colors opacity-70",
+                      activeTabId === item.id ? "text-red-500 opacity-100" : "group-hover:text-white"
+                    )} />
+                    {item.label}
+                    {activeTabId === item.id && (
+                      <div className="absolute right-2 w-1.5 h-1.5 rounded-full bg-red-500" />
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))}
+        </nav>
+
+        {/* Sidebar Footer */}
+        <div className="p-4 border-t border-white/5 bg-white/[0.01]">
+          <Button
+            variant="ghost"
+            className="w-full justify-start text-gray-500 hover:text-white hover:bg-red-500/10 gap-3"
+            onClick={signOut}
+          >
+            <LogOut className="w-4 h-4" />
+            Disconnect
+          </Button>
         </div>
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col min-w-0 overflow-hidden relative">
+      <main className="flex-1 flex flex-col min-w-0 overflow-hidden relative z-10">
         {/* Header */}
-        <header className="h-16 border-b border-white/5 bg-slate-900/30 backdrop-blur-md px-6 flex items-center justify-between z-10">
+        <header className="h-16 border-b border-white/5 bg-[#0a0a0c]/80 backdrop-blur-md px-6 flex items-center justify-between z-10">
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="icon" className="lg:hidden" onClick={toggleSidebar}>
-              <Menu className="w-5 h-5" />
+              <Menu className="w-5 h-5 text-gray-400" />
             </Button>
             <div className="flex items-center gap-2 text-sm">
-              <span className="text-slate-500">Dashboard</span>
-              <ChevronRight className="w-3 h-3 text-slate-600" />
-              <span className="font-semibold text-slate-200">{activeTab.label}</span>
+              <div className="px-2 py-1 rounded bg-white/5 border border-white/5 text-xs font-mono text-gray-500 uppercase">
+                {activeTab?.icon ? <activeTab.icon className="w-3 h-3 inline mr-1" /> : null}
+                CMD
+              </div>
+              <ChevronRight className="w-3 h-3 text-gray-700" />
+              <span className="font-semibold text-white tracking-tight">{activeTab.label}</span>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
-            <Button asChild variant="outline" size="sm" className="hidden sm:flex border-white/10 bg-white/5 hover:bg-white/10">
+            <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-full border border-white/5">
+              <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+              <span className="text-xs font-mono text-emerald-500/80">ONLINE</span>
+            </div>
+            <Button asChild variant="ghost" size="sm" className="hidden sm:flex text-gray-500 hover:text-white hover:bg-white/5">
               <Link to="/">
                 <Home className="w-4 h-4 mr-2" />
-                Live Site
+                Return to Site
               </Link>
             </Button>
           </div>
         </header>
 
         {/* Content Area */}
-        <div className="flex-1 overflow-y-auto p-6 lg:p-10 bg-gradient-to-b from-transparent to-black/40">
+        <div className="flex-1 overflow-y-auto bg-black p-6 lg:p-8 relative">
           <div className="max-w-7xl mx-auto">
             <Suspense fallback={
-              <div className="space-y-6">
-                <div className="h-10 w-48 bg-white/5 rounded-lg animate-pulse" />
-                <div className="space-y-4">
-                  {[...Array(6)].map((_, i) => (
-                    <div key={i} className="h-20 w-full bg-white/5 rounded-xl animate-pulse" />
-                  ))}
-                </div>
+              <div className="flex justify-center items-center h-64">
+                <Loader2 className="h-8 w-8 text-red-600 animate-spin" />
               </div>
             }>
               {activeTab && <activeTab.component sharedMetadata={metadata} />}
             </Suspense>
           </div>
         </div>
-
-        {/* Floating background blobs */}
-        <div className="absolute top-0 right-0 -z-10 w-[500px] h-[500px] bg-red-500/5 rounded-full blur-[120px]" />
-        <div className="absolute bottom-0 left-0 -z-10 w-[400px] h-[400px] bg-blue-500/5 rounded-full blur-[100px]" />
       </main>
     </div>
   );

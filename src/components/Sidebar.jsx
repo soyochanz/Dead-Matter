@@ -31,7 +31,7 @@ const Sidebar = ({
     };
     fetchSettings();
     checkDevStreamStatus();
-    const interval = setInterval(checkDevStreamStatus, 180000);
+    const interval = setInterval(checkDevStreamStatus, 600000); // Check every 10 minutes for performance
     return () => clearInterval(interval);
   }, []);
   const checkDevStreamStatus = async () => {
@@ -62,307 +62,263 @@ const Sidebar = ({
   };
   const StreamStatus = () => {
     if (isLoading) {
-      return <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-800/50 border border-gray-700">
-        <div className="w-2 h-2 bg-gray-500 rounded-full animate-pulse" />
-        <span className="text-xs text-gray-400">Checking status...</span>
-      </div>;
-    }
-    if (isDevLive) {
-      return <motion.a href={TWITCH_CHANNEL_URL} target="_blank" rel="noopener noreferrer" initial={{
-        opacity: 0,
-        y: 10
-      }} animate={{
-        opacity: 1,
-        y: 0
-      }} whileHover={{
-        scale: 1.02
-      }} whileTap={{
-        scale: 0.98
-      }} className="block p-3 rounded-xl bg-gradient-to-r from-purple-600/20 to-pink-600/20 border border-purple-500/30 relative overflow-hidden cursor-pointer group">
-        {/* Pulsing background effect */}
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-600/10 to-pink-600/10 animate-pulse" />
-
-        {/* Live indicator header */}
-        <div className="flex items-center justify-between mb-2 relative z-10">
-          <div className="flex items-center gap-2">
-            <div className="relative">
-              <Radio className="h-4 w-4 text-purple-400" />
-              <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full animate-ping" />
-              <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full" />
-            </div>
-            <span className="text-xs font-semibold text-purple-300 uppercase tracking-wide">
-              LIVE NOW!
-            </span>
-          </div>
-          <ExternalLink className="h-3 w-3 text-purple-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+      return (
+        <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 border border-white/10 animate-pulse">
+          <div className="w-2 h-2 bg-gray-600 rounded-full" />
+          <div className="h-3 w-24 bg-gray-700 rounded-full" />
         </div>
+      );
+    }
 
-        {/* Streamer info */}
-        <div className="space-y-2 relative z-10">
-          <div className="flex items-center gap-2">
-            <div className="flex-shrink-0 relative">
-              <img src={DEV_AVATAR_URL} alt="JohnsonGuitarDev Avatar" className="w-8 h-8 rounded-full border-2 border-purple-400/80 object-cover" />
-              <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-gray-900 animate-pulse" />
+    if (isDevLive) {
+      return (
+        <motion.a
+          href={TWITCH_CHANNEL_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          whileHover={{ scale: 1.02, y: -2 }}
+          whileTap={{ scale: 0.98 }}
+          className="relative block p-4 rounded-2xl overflow-hidden group cursor-pointer border border-purple-500/50"
+        >
+          {/* Animated Gradient Background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-600/20 via-pink-600/20 to-orange-600/20 group-hover:opacity-100 transition-opacity duration-500" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(168,85,247,0.3),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+
+          {/* Pulsing "LIVE" indicator */}
+          <div className="flex items-center justify-between mb-3 relative z-10">
+            <div className="flex items-center gap-2 px-2 py-0.5 rounded-full bg-red-500/20 border border-red-500/30">
+              <div className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.8)]" />
+              <span className="text-[10px] font-black text-red-500 uppercase tracking-tighter">LIVE NOW</span>
+            </div>
+            <ExternalLink className="h-3 w-3 text-white/50 group-hover:text-white transition-colors" />
+          </div>
+
+          {/* Streamer details */}
+          <div className="flex gap-3 relative z-10">
+            <div className="relative flex-shrink-0">
+              <div className="absolute -inset-1 bg-gradient-to-tr from-purple-500 to-pink-500 rounded-full opacity-70 blur-[2px] group-hover:blur-[4px] transition-all" />
+              <img src={DEV_AVATAR_URL} alt="Avatar" className="relative w-10 h-10 rounded-full border border-white/20 object-cover" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-xs text-white font-semibold truncate">
-                JohnsonGuitarDev
-              </p>
-              <p className="text-xs text-purple-300 mt-0.5">
-                Is now live
-              </p>
+              <p className="text-sm font-bold text-white truncate group-hover:text-purple-300 transition-colors">JohnsonGuitarDev</p>
+              <div className="flex items-center gap-1.5">
+                <Radio className="h-3 w-3 text-purple-400" />
+                <span className="text-[10px] text-purple-300/80 font-medium">Streaming Dead Matter</span>
+              </div>
             </div>
           </div>
 
-          {/* Stream details */}
-          {streamData && <div className="bg-black/20 rounded-lg p-2">
-            <p className="text-xs text-white/90 font-medium leading-tight">
-              {streamData.title}
-            </p>
-            <div className="flex items-center justify-between mt-1">
-              <span className="text-xs text-purple-300">{streamData.game_name}</span>
-              <span className="text-xs text-green-400 font-medium flex items-center gap-1">
-                <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse" />
-                Live
-              </span>
-            </div>
-          </div>}
-        </div>
-
-        {/* Hover effect */}
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl" />
-
-        {/* Click hint */}
-        <div className="absolute bottom-2 right-2 text-xs text-purple-400 opacity-0 group-hover:opacity-100 transition-opacity">
-          Click to watch →
-        </div>
-      </motion.a>;
+          {/* Hover Clue */}
+          <div className="mt-3 flex items-center justify-center py-1.5 rounded-lg bg-white/5 border border-white/5 group-hover:bg-purple-500/20 group-hover:border-purple-500/30 transition-all relative z-10">
+            <span className="text-[10px] font-bold text-white/40 group-hover:text-white uppercase tracking-widest">Watch Development →</span>
+          </div>
+        </motion.a>
+      );
     }
-    return <motion.a href={TWITCH_CHANNEL_URL} target="_blank" rel="noopener noreferrer" whileHover={{
-      scale: 1.02
-    }} whileTap={{
-      scale: 0.98
-    }} className="block p-3 rounded-xl bg-gray-800/30 border border-gray-700/50 hover:bg-gray-700/40 hover:border-gray-600/60 transition-all duration-300 group cursor-pointer">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="flex-shrink-0 relative">
-            <img src={DEV_AVATAR_URL} alt="JohnsonGuitarDev Avatar" className="w-10 h-10 rounded-full border-2 border-gray-600/50 object-cover" />
-            <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-gray-500 rounded-full border-2 border-gray-800" />
-          </div>
-          <div>
-            <p className="text-xs font-semibold text-gray-300 group-hover:text-white">
-              JohnsonGuitarDev
-            </p>
-            <p className="text-xs text-gray-500 group-hover:text-gray-400 mt-0.5">
-              Is not streaming
-            </p>
-          </div>
-        </div>
 
-        <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-gray-700/50 group-hover:bg-gray-600/50">
-            <div className="w-2 h-2 bg-gray-500 rounded-full" />
-            <span className="text-xs text-gray-400">Off</span>
+    return (
+      <motion.a
+        href={TWITCH_CHANNEL_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        whileHover={{ x: 4 }}
+        className="block p-4 rounded-2xl bg-white/5 border border-white/5 hover:border-white/10 transition-all duration-300 group"
+      >
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="relative">
+              <img src={DEV_AVATAR_URL} alt="Avatar" className="w-10 h-10 rounded-full border border-white/10 grayscale group-hover:grayscale-0 transition-all duration-500" />
+              <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-gray-700 rounded-full border-2 border-gray-900 group-hover:bg-gray-500" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-sm font-bold text-gray-400 group-hover:text-white truncate">JohnsonGuitarDev</p>
+              <p className="text-[10px] text-gray-500 font-medium italic">Currently handling tech...</p>
+            </div>
           </div>
-          <ExternalLink className="h-3 w-3 text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+          <ExternalLink className="h-3.5 w-3.5 text-gray-600 group-hover:text-gray-400 transition-colors" />
         </div>
-      </div>
-
-      {/* Click hint */}
-      <div className="mt-2 text-center text-xs text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity">
-        Click to follow on Twitch
-      </div>
-    </motion.a>;
+      </motion.a>
+    );
   };
+
   const navItems = [{
     path: '/',
     label: 'Home',
     icon: 'Home',
-    gradient: 'from-red-600 to-orange-600',
+    gradient: 'from-orange-500 to-red-600',
     description: 'Main dashboard'
   }, {
     path: '/wiki',
     label: 'Wiki',
-    icon: 'BookOpen',
-    gradient: 'from-blue-600 to-cyan-600',
+    icon: 'Database',
+    gradient: 'from-blue-500 to-indigo-600',
     description: 'Game knowledge base'
   }, {
     path: '/guides',
     label: 'Guides',
-    icon: 'ClipboardList',
-    gradient: 'from-green-600 to-emerald-600',
+    icon: 'ShieldCheck',
+    gradient: 'from-emerald-500 to-teal-600',
     description: 'Tips and strategies'
   }, {
     path: '/updates',
     label: 'Updates',
-    icon: 'Bell',
-    gradient: 'from-purple-600 to-violet-600',
+    icon: 'Terminal',
+    gradient: 'from-violet-500 to-fuchsia-600',
     description: 'Latest patches & news'
   }, {
     path: '/map',
     label: 'Map',
-    icon: 'MapPin',
-    gradient: 'from-yellow-600 to-amber-600',
+    icon: 'Compass',
+    gradient: 'from-amber-400 to-orange-500',
     description: 'Interactive world map'
   }, {
     path: '/media',
     label: 'Media',
-    icon: 'Image',
-    gradient: 'from-pink-600 to-rose-600',
+    icon: 'Camera',
+    gradient: 'from-rose-500 to-pink-600',
     description: 'Screenshots & videos'
   }];
+
   if (location.pathname.startsWith('/tutucucu')) {
     return null;
   }
-  return <>
-    {/* Mobile Overlay */}
-    <AnimatePresence>
-      {isOpen && <motion.div initial={{
-        opacity: 0
-      }} animate={{
-        opacity: 1
-      }} exit={{
-        opacity: 0
-      }} onClick={toggleSidebar} className="fixed inset-0 bg-black/60 backdrop-blur-sm z-30 lg:hidden" />}
-    </AnimatePresence>
 
-    {/* Sidebar Container */}
-    <motion.aside initial={false} animate={{
-      x: isOpen ? 0 : -320
-    }} transition={{
-      type: "spring",
-      damping: 30,
-      stiffness: 300
-    }} className="fixed left-0 top-0 h-screen w-80 bg-gray-900/95 backdrop-blur-xl border-r border-white/10 z-40 flex flex-col shadow-2xl shadow-black/50">
-      {/* Toggle Button - Bookmark Style */}
-      <button onClick={toggleSidebar} className="absolute -right-8 top-1/2 -translate-y-1/2 w-8 h-24 bg-gray-900/95 border-y border-r border-white/10 rounded-r-xl flex items-center justify-center cursor-pointer hover:bg-gray-800 transition-colors group shadow-lg z-50 outline-none focus:outline-none" aria-label={isOpen ? "Close sidebar" : "Open sidebar"}>
-        {/* Vertical line decoration */}
-        <div className={`absolute left-0 top-2 bottom-2 w-[2px] rounded-full transition-colors duration-300 ${isOpen ? 'bg-red-500/50 group-hover:bg-red-500' : 'bg-green-500/50 group-hover:bg-green-500'}`} />
+  return (
+    <>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={toggleSidebar}
+            className="fixed inset-0 bg-black/80 backdrop-blur-md z-30 lg:hidden"
+          />
+        )}
+      </AnimatePresence>
 
-        {/* Icon */}
-        <div className="text-gray-400 group-hover:text-white transition-colors">
-          {isOpen ? <ChevronLeft className="h-5 w-5" /> : <ChevronRight className="h-5 w-5" />}
-        </div>
-      </button>
+      <motion.aside
+        initial={false}
+        animate={{ x: isOpen ? 0 : -320 }}
+        transition={{ type: "spring", damping: 30, stiffness: 300 }}
+        className="fixed left-0 top-0 h-screen w-80 bg-[#0a0a0c]/95 backdrop-blur-2xl border-r border-white/5 z-40 flex flex-col shadow-[20px_0_40px_-15px_rgba(0,0,0,0.5)]"
+      >
+        {/* Toggle Button */}
+        <button
+          onClick={toggleSidebar}
+          className="absolute -right-12 top-1/2 -translate-y-1/2 w-12 h-20 bg-[#0a0a0c] border border-l-0 border-white/5 rounded-r-2xl flex items-center justify-center cursor-pointer hover:bg-gray-900 transition-all group z-50 shadow-xl"
+        >
+          <div className={`w-1 h-8 rounded-full transition-all duration-300 ${isOpen ? 'bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.8)]' : 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]'}`} />
+          <div className="flex flex-col items-center gap-1 text-gray-600 group-hover:text-white">
+            {isOpen ? <ChevronLeft className="h-5 w-5" /> : <ChevronRight className="h-5 w-5" />}
+          </div>
+        </button>
 
-      {/* Header with clean logo - Movido más arriba */}
-      <div className="relative p-6 border-b border-white/10">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/10" />
-
-        <div className="relative z-10">
-          <Link to="/" className="flex flex-col items-center group">
-            <h1 className="text-2xl font-black text-white tracking-tighter leading-none">
-              DEAD MATTER <span className="text-red-500 group-hover:text-red-400 transition-colors">WIKI</span>
+        {/* Branding */}
+        <div className="p-8 border-b border-white/5 relative overflow-hidden group">
+          <div className="absolute inset-0 bg-gradient-to-br from-red-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+          <Link to="/" className="relative z-10 block">
+            <h1 className="text-3xl font-black text-white tracking-tight leading-none uppercase">
+              DEAD<span className="text-red-600">MATTER</span> WIKI
             </h1>
-
-            <div className="flex items-center gap-2 mt-2">
-              <Sparkles className="h-3 w-3 text-red-500 group-hover:animate-pulse" />
-              <span className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Community Resource</span>
+            <div className="flex items-center gap-2 mt-1 px-1">
+              <div className="h-[1px] flex-1 bg-gradient-to-r from-red-600/50 to-transparent" />
+              <span className="text-[9px] text-gray-500 font-bold uppercase tracking-[0.3em]">Community Resource</span>
             </div>
           </Link>
         </div>
-      </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 px-4 py-4 space-y-2 overflow-y-auto custom-scrollbar">
-        {navItems.map(item => {
-          const IconComponent = Icons[item.icon] || Icons.HelpCircle;
-          const isActive = location.pathname === item.path;
-          return <motion.div key={item.path} onHoverStart={() => setActiveHover(item.path)} onHoverEnd={() => setActiveHover(null)} whileHover={{
-            x: 4
-          }} className="relative">
-            <NavLink to={item.path} className={({
-              isActive
-            }) => `relative flex items-center gap-4 px-4 py-3 rounded-2xl transition-all duration-300 group overflow-hidden ${isActive ? `bg-gradient-to-r ${item.gradient} text-white shadow-lg` : 'text-gray-300 hover:text-white hover:bg-white/5'}`}>
-              {/* Background effects */}
-              <div className={`absolute inset-0 bg-gradient-to-r ${item.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
+        {/* Main Nav */}
+        <nav className="flex-1 px-4 py-6 space-y-1.5 overflow-y-auto custom-scrollbar">
+          {navItems.map((item) => {
+            const IconComponent = Icons[item.icon] || Icons.HelpCircle;
+            const isActive = location.pathname === item.path;
+            return (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                className={({ isActive }) => `
+                  relative flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-500 group overflow-hidden
+                  ${isActive ? 'bg-white/5 text-white' : 'text-gray-500 hover:text-gray-200'}
+                `}
+              >
+                {/* Active Indicator Bar */}
+                {isActive && (
+                  <motion.div
+                    layoutId="activeNav"
+                    className="absolute left-0 top-2 bottom-2 w-1 bg-red-600 rounded-r-full shadow-[0_0_15px_rgba(220,38,38,0.8)]"
+                  />
+                )}
 
-              {/* Icon with effect */}
-              <div className={`relative z-10 p-2 rounded-xl ${isActive ? 'bg-white/20' : 'bg-white/5 group-hover:bg-white/10'} transition-all duration-300`}>
-                <IconComponent className="h-5 w-5" />
-              </div>
+                {/* Icon Container */}
+                <div className={`
+                  relative z-10 p-2.5 rounded-xl transition-all duration-500
+                  ${isActive ? `bg-gradient-to-br ${item.gradient} text-white shadow-lg` : 'bg-white/[0.03] group-hover:bg-white/[0.08] group-hover:scale-110'}
+                `}>
+                  <IconComponent className="h-5 w-5" strokeWidth={1.5} />
+                </div>
 
-              {/* Text and description */}
-              <div className="relative z-10 flex-1 min-w-0">
-                <span className="font-semibold text-sm block leading-tight">
-                  {item.label}
-                </span>
-                <span className={`text-xs mt-0.5 block transition-all duration-300 ${isActive ? 'text-white/80' : 'text-gray-500 group-hover:text-gray-400'}`}>
-                  {item.description}
-                </span>
-              </div>
+                {/* Label & Description */}
+                <div className="relative z-10 flex-1 min-w-0">
+                  <span className={`font-bold text-sm tracking-tight block ${isActive ? 'text-white' : 'text-gray-300'}`}>
+                    {item.label}
+                  </span>
+                  <span className="text-[10px] font-medium text-gray-600 group-hover:text-gray-400 transition-colors uppercase tracking-wider mt-0.5">
+                    {item.description}
+                  </span>
+                </div>
+              </NavLink>
+            );
+          })}
+        </nav>
 
-              {/* Active indicator/chevron */}
-              <div className="relative z-10">
-                {isActive ? <div className="w-2 h-2 bg-white rounded-full animate-pulse" /> : <ChevronRight className="h-4 w-4 text-gray-400 group-hover:text-white transform group-hover:translate-x-1 transition-all duration-300" />}
-              </div>
+        {/* Footer Actions */}
+        <div className="p-6 bg-black/40 border-t border-white/5 space-y-4">
+          <div className="space-y-3">
+            <h3 className="text-[10px] font-black text-gray-600 uppercase tracking-[0.2em] px-1">Status Transmission</h3>
+            <StreamStatus />
+            {/* Discord Button */}
+            {discordUrl && (
+              <motion.a
+                href={discordUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ scale: 1.02, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+                className="relative flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 group overflow-hidden bg-[#5865F2]/10 border border-[#5865F2]/20 hover:bg-[#5865F2]/20 shadow-[0_10px_30px_-10px_rgba(88,101,242,0.3)]"
+              >
+                <div className="relative z-10 w-10 h-10 flex items-center justify-center bg-[#5865F2] rounded-xl shadow-[0_0_15px_rgba(88,101,242,0.5)]">
+                  <img
+                    src="https://pngimg.com/d/discord_PNG3.png"
+                    alt="Discord"
+                    className="w-6 h-6 object-contain brightness-0 invert"
+                  />
+                </div>
+                <div className="relative z-10 flex flex-col leading-none">
+                  <span className="text-[10px] font-black text-[#5865F2] uppercase tracking-[0.22em] mb-1">Official Link</span>
+                  <span className="text-sm font-black text-white tracking-tight">Join Official Discord</span>
+                </div>
 
-              {/* Hover glow effect */}
-              <div className="absolute inset-0 bg-gradient-to-r from-white/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            </NavLink>
+                {/* Animated Shine */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-shine" />
+              </motion.a>
+            )}
+          </div>
 
-            {/* Decorative line on hover */}
-            <motion.div initial={{
-              scaleX: 0
-            }} animate={{
-              scaleX: activeHover === item.path && !isActive ? 1 : 0
-            }} className="absolute left-0 top-1/2 w-1 h-8 bg-gradient-to-b from-red-600 to-orange-600 rounded-r-full -translate-y-1/2 origin-left" />
-          </motion.div>;
-        })}
-      </nav>
-
-      {/* Developer Status Section */}
-      <div className="px-4 py-3 border-t border-white/10 space-y-3 bg-gray-900/50">
-        <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider px-2">
-          Twitch Status
-        </h3>
-        <StreamStatus />
-
-        {/* Discord Button Moderno y más pequeño */}
-        {discordUrl && <motion.a href={discordUrl} target="_blank" rel="noopener noreferrer" whileHover={{
-          scale: 1.02
-        }} whileTap={{
-          scale: 0.98
-        }} className="relative flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-300 group overflow-hidden bg-gradient-to-r from-[#5865F2] to-[#4752C4] text-white shadow-md hover:shadow-lg hover:shadow-[#5865F2]/20 border border-[#5865F2]/30">
-          {/* Background effect */}
-          <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-          {/* Logo de Discord */}
-          <div className="relative z-10 flex-shrink-0">
-            <div className="w-8 h-8 flex items-center justify-center bg-white/10 rounded-lg">
-              <img src="https://pngimg.com/d/discord_PNG3.png" alt="Discord Logo" className="w-5 h-5 filter brightness-0 invert" />
+          {/* Version Info */}
+          <div className="flex items-center justify-between pt-2">
+            <div className="flex items-center gap-2">
+              <div className="h-[4px] w-[4px] bg-red-600 rounded-full animate-ping" />
+              <span className="text-[10px] font-black text-white/20 uppercase tracking-[0.2em]">Alpha Database</span>
+            </div>
+            <div className="px-2 py-0.5 rounded-md bg-white/5 border border-white/5">
+              <span className="text-[10px] font-mono font-bold text-red-600">v0.12.2</span>
             </div>
           </div>
-
-          {/* Text compacto */}
-          <div className="relative z-10 flex-1 min-w-0">
-            <span className="font-semibold text-sm block truncate">Join Discord</span>
-            <span className="text-white/70 text-xs block truncate">Community & Support</span>
-          </div>
-
-          {/* Flecha pequeña */}
-          <div className="relative z-10">
-            <ChevronRight className="h-3.5 w-3.5 text-white/70 transform group-hover:translate-x-0.5 transition-transform duration-300" />
-          </div>
-
-          {/* Glow effect */}
-          <div className="absolute inset-0 bg-gradient-to-r from-white/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-        </motion.a>}
-
-        {/* Footer info compacto - CON VERSIÓN DEL JUEGO (quitado "Online") */}
-        <div className="flex items-center justify-between px-1 pt-2 border-t border-white/10">
-          <span className="text-xs text-gray-500">Dead Matter Wiki</span>
-          <div className="flex items-center gap-1">
-            <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse" />
-            <span className="text-xs text-blue-400 font-medium">v0.12.2</span>
-          </div>
         </div>
-      </div>
-
-      {/* Global decorative effects */}
-      <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-red-600 via-orange-600 to-transparent opacity-20 pointer-events-none" />
-      <div className="absolute top-0 right-0 w-1 h-full bg-gradient-to-b from-transparent via-white/5 to-transparent pointer-events-none" />
-    </motion.aside>
-  </>;
+      </motion.aside>
+    </>
+  );
 };
+
 export default Sidebar;

@@ -44,10 +44,10 @@ const UpdatesList = ({ updates }) => {
                 animate={{ opacity: 1, scale: 1 }}
                 className="text-center py-16"
             >
-                <div className="bg-gray-800/50 border border-white/10 rounded-2xl p-12 max-w-md mx-auto">
-                    <Star className="w-16 h-16 text-gray-500 mx-auto mb-4" />
-                    <h3 className="text-xl font-bold text-white mb-2">No Updates Found</h3>
-                    <p className="text-gray-400">Check back later for new updates.</p>
+                <div className="bg-[#0a0a0c] border border-white/5 rounded-[2rem] p-12 max-w-md mx-auto shadow-2xl">
+                    <Star className="w-16 h-16 text-gray-700 mx-auto mb-6" />
+                    <h3 className="text-2xl font-black text-white mb-2 uppercase tracking-tight">No Transmission Found</h3>
+                    <p className="text-gray-500 font-medium">Monitoring for new sector updates...</p>
                 </div>
             </motion.div>
         );
@@ -60,11 +60,11 @@ const UpdatesList = ({ updates }) => {
             className="space-y-6"
         >
             {updates.map((update, index) => (
-                <UpdateCard 
-                    key={update.id} 
-                    update={update} 
-                    index={index} 
-                    versionTag={<VersionTag version={update.version} />} 
+                <UpdateCard
+                    key={update.id}
+                    update={update}
+                    index={index}
+                    versionTag={<VersionTag version={update.version} />}
                 />
             ))}
         </motion.div>
@@ -117,7 +117,7 @@ const Updates = () => {
         },
         hotfixes: {
             icon: Wrench,
-            title: "Hotfixes", 
+            title: "Hotfixes",
             count: hotfixes.length,
             gradient: "from-blue-600 to-cyan-600"
         },
@@ -135,7 +135,7 @@ const Updates = () => {
                 <title>Updates - Dead Matter Wiki</title>
                 <meta name="description" content="Latest news and updates for Dead Matter" />
             </Helmet>
-            
+
             <div className="max-w-7xl mx-auto px-4">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
@@ -148,15 +148,15 @@ const Updates = () => {
                             <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
                             Back to Home
                         </Link>
-                        
+
                         <div className="text-center mb-8">
-                            <motion.h1 
+                            <motion.h1
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.6, delay: 0.1 }}
-                                className="text-4xl md:text-5xl font-bold text-white bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent mb-4"
+                                className="text-5xl md:text-8xl font-black text-white tracking-tighter uppercase mb-4"
                             >
-                                Game Updates
+                                SECTOR <span className="text-red-500">PATCHES</span>
                             </motion.h1>
                             <motion.p
                                 initial={{ opacity: 0, y: 10 }}
@@ -182,10 +182,10 @@ const Updates = () => {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.6, delay: 0.3 }}
                         >
-                           <Tabs defaultValue="major" className="w-full">
-                                <TabsList className="grid w-full grid-cols-3 mb-8 bg-white/5 border border-white/10 rounded-2xl p-1 relative h-14">
+                            <Tabs defaultValue="major" className="w-full">
+                                <TabsList className="grid w-full grid-cols-3 mb-12 bg-[#0a0a0c] border border-white/5 rounded-2xl p-1 relative h-16 shadow-xl">
                                     {Object.entries(tabConfigs).map(([key, config]) => (
-                                        <TabsTrigger 
+                                        <TabsTrigger
                                             key={key}
                                             value={key}
                                             className="relative data-[state=active]:text-white transition-all duration-300 rounded-lg py-3 mx-0.5 z-10"
@@ -206,15 +206,15 @@ const Updates = () => {
                                         transition={{ type: "spring", stiffness: 300, damping: 30 }}
                                     />
                                 </TabsList>
-                                
+
                                 <TabsContent value="major" className="mt-0">
                                     <UpdatesList updates={majorUpdates} />
                                 </TabsContent>
-                                
+
                                 <TabsContent value="hotfixes" className="mt-0">
                                     <UpdatesList updates={hotfixes} />
                                 </TabsContent>
-                                
+
                                 <TabsContent value="nightlies" className="mt-0">
                                     <UpdatesList updates={nightlies} />
                                 </TabsContent>

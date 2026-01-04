@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Helmet } from 'react-helmet';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, MapPin, Image as ImageIcon, ArrowRight, Bell, X, Calendar, Tag, GitCommit, Shield, Car, Backpack, Hammer, ThumbsUp, User, UserCircle, Star, Zap, Video, ExternalLink, Radio, ChevronDown, ChevronUp, Loader2, Sword, Soup, Stethoscope, Users, Package } from 'lucide-react';
+import { BookOpen, MapPin, Image as ImageIcon, ArrowRight, Bell, X, Calendar, Tag, GitCommit, Shield, Car, Backpack, Hammer, ThumbsUp, User, UserCircle, Zap, Video, ExternalLink, ChevronUp, Loader2, Sword, Soup, Stethoscope, Users, Package } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { supabase } from '@/lib/mySupabaseClient';
 import { Button } from '@/components/ui/button';
@@ -9,11 +9,11 @@ import UpdateCard from '@/components/UpdateCard';
 
 // Skeleton Components
 const SkeletonPulse = () => (
-  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-shimmer" style={{ backgroundSize: '200% 100%' }} />
+  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.03] to-transparent animate-shimmer" style={{ backgroundSize: '200% 100%' }} />
 );
 
 const SkeletonCard = ({ type = 'standard' }) => (
-  <div className="relative overflow-hidden bg-gray-900/50 border border-white/5 rounded-2xl p-6 h-full min-h-[150px]">
+  <div className="relative overflow-hidden bg-[#0a0a0c] border border-white/5 rounded-2xl p-6 h-full min-h-[150px]">
     <SkeletonPulse />
     <div className="space-y-4">
       <div className="h-6 bg-white/5 rounded w-3/4" />
@@ -27,142 +27,16 @@ const SkeletonCard = ({ type = 'standard' }) => (
   </div>
 );
 
-// Componente Twitch Stream Manager
-const TwitchStreamManager = () => {
-  const [isLive, setIsLive] = useState(false);
-  const [isPanelOpen, setIsPanelOpen] = useState(false);
-  const [streams, setStreams] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [selectedStream, setSelectedStream] = useState(null);
-
-  const TWITCH_CLIENT_ID = 'tu_client_id_aqui';
-  const TWITCH_CLIENT_SECRET = 'tu_client_secret_aqui';
-  const GAME_ID = '511224';
-
-  const fetchTwitchToken = async () => {
-    // Check if keys are placeholders
-    if (TWITCH_CLIENT_ID === 'tu_client_id_aqui') return null;
-    try {
-      const response = await fetch('https://id.twitch.tv/oauth2/token', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: `client_id=${TWITCH_CLIENT_ID}&client_secret=${TWITCH_CLIENT_SECRET}&grant_type=client_credentials`,
-      });
-      return await response.json();
-    } catch (error) {
-      return null;
-    }
-  };
-
-  const fetchLiveStreams = async () => {
-    if (TWITCH_CLIENT_ID === 'tu_client_id_aqui') return;
-    setLoading(true);
-    try {
-      const tokenData = await fetchTwitchToken();
-      if (!tokenData?.access_token) return;
-
-      const response = await fetch(
-        `https://api.twitch.tv/helix/streams?game_id=${GAME_ID}&first=5`,
-        {
-          headers: {
-            'Authorization': `Bearer ${tokenData.access_token}`,
-            'Client-Id': TWITCH_CLIENT_ID,
-          },
-        }
-      );
-      const data = await response.json();
-      if (data.data && data.data.length > 0) {
-        setIsLive(true);
-        setStreams(data.data);
-        setSelectedStream(data.data[0]);
-      } else {
-        setIsLive(false);
-      }
-    } catch (error) {
-      setIsLive(false);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchLiveStreams();
-    const interval = setInterval(fetchLiveStreams, 60000); // 60s instead of 30s to save resources
-    return () => clearInterval(interval);
-  }, []);
-
-  if (TWITCH_CLIENT_ID === 'tu_client_id_aqui') return null;
-
-  return (
-    <>
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="fixed bottom-6 right-6 z-40">
-        <motion.button
-          onClick={() => isLive ? setIsPanelOpen(!isPanelOpen) : fetchLiveStreams()}
-          whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
-          className="relative group"
-        >
-          {isLive && (
-            <motion.div
-              animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.2, 0.5] }}
-              transition={{ duration: 2, repeat: Infinity }}
-              className="absolute -inset-2 bg-red-500 rounded-full blur-lg"
-            />
-          )}
-          <div className={`relative flex items-center justify-center gap-2 px-5 py-3 rounded-full font-bold text-white shadow-2xl transition-all duration-300 ${isLive ? 'bg-gradient-to-r from-red-600 to-purple-600' : 'bg-gray-800'
-            }`}>
-            <Radio className="w-5 h-5" />
-            <span className="font-bold">{isLive ? 'LIVE' : 'OFFLINE'}</span>
-            {isLive && !loading && (
-              <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${isPanelOpen ? 'rotate-180' : ''}`} />
-            )}
-          </div>
-        </motion.button>
-      </motion.div>
-
-      <AnimatePresence>
-        {isPanelOpen && isLive && streams.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed bottom-24 right-6 w-96 z-50"
-          >
-            <div className="relative bg-[#0f172a]/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl overflow-hidden">
-              {/* Simplified Twitch Content for brevity */}
-              <div className="p-4 border-b border-white/10 flex justify-between items-center">
-                <div className="flex items-center gap-2">
-                  <Radio className="w-4 h-4 text-red-500" />
-                  <span className="font-bold text-white">Live Streams</span>
-                </div>
-                <button onClick={() => setIsPanelOpen(false)}><X className="w-4 h-4 text-gray-400" /></button>
-              </div>
-              <div className="p-4 max-h-96 overflow-y-auto">
-                {streams.map(stream => (
-                  <a key={stream.id} href={`https://twitch.tv/${stream.user_login}`} target="_blank" rel="noreferrer" className="flex gap-3 p-2 hover:bg-white/5 rounded-lg">
-                    <img src={stream.thumbnail_url.replace('{width}', '80').replace('{height}', '45')} className="rounded h-10 w-20 object-cover" alt="" />
-                    <div className="min-w-0">
-                      <p className="text-sm font-bold text-white truncate">{stream.user_name}</p>
-                      <p className="text-xs text-slate-400 truncate">{stream.viewer_count} viewers</p>
-                    </div>
-                  </a>
-                ))}
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
-  );
-};
-
 const GuideCard = ({ guide, index }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
     whileHover={{ y: -5 }} transition={{ delay: index * 0.1 }}
-    className="relative bg-slate-900/50 border border-white/5 rounded-2xl overflow-hidden h-full flex flex-col group cursor-pointer"
+    className="relative bg-[#0a0a0c] border border-white/5 rounded-2xl overflow-hidden h-full flex flex-col group cursor-pointer hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.5)] transition-all duration-300"
   >
     <Link to={`/guides/${guide.slug || guide.id}`} className="block h-full">
       <div className="aspect-video overflow-hidden relative">
         <img src={guide.image_url || "https://images.unsplash.com/photo-1467746474745-41dd2c7524ce"} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" alt="" />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent opacity-60" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-60" />
       </div>
       <div className="p-5 flex-1 flex flex-col gap-3">
         <h4 className="font-bold text-white leading-tight group-hover:text-red-400 transition-colors line-clamp-2">{guide.title}</h4>
@@ -179,16 +53,24 @@ const MediaCard = ({ item, index }) => (
   <motion.div
     initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
     transition={{ delay: index * 0.1 }}
-    className="group relative h-48 rounded-xl overflow-hidden bg-slate-900"
+    className="group relative h-48 rounded-xl overflow-hidden bg-[#0a0a0c] border border-white/5"
   >
     <Link to="/media" className="block h-full w-full">
       <img src={item.thumbnail} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" alt="" />
-      <div className="absolute inset-0 bg-gradient-to-t from-slate-950 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
       <div className="absolute bottom-3 left-3 right-3">
-        <p className="text-sm font-bold text-white line-clamp-1">{item.title}</p>
-        <div className="flex items-center gap-2 mt-1">
-          {item.type === 'video' ? <Video size={12} className="text-red-500" /> : <ImageIcon size={12} className="text-blue-500" />}
-          <span className="text-[10px] uppercase font-bold text-slate-400">{item.type}</span>
+        <p className="text-sm font-bold text-white line-clamp-1 mb-1">{item.title}</p>
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            {item.type === 'video' ? <Video size={12} className="text-red-500" /> : <ImageIcon size={12} className="text-blue-500" />}
+            <span className="text-[10px] uppercase font-bold text-gray-400">{item.type}</span>
+          </div>
+          {item.author?.username && (
+            <span className="text-[10px] text-gray-400 flex items-center gap-1.5">
+              <UserCircle size={12} className="text-gray-500" />
+              {item.author.username}
+            </span>
+          )}
         </div>
       </div>
     </Link>
@@ -225,7 +107,7 @@ const WikiShortcuts = () => {
           >
             <Link
               to={cat.path}
-              className="group flex flex-col items-center gap-3 p-6 rounded-2xl bg-slate-900/50 border border-white/5 hover:bg-white/5 hover:border-white/10 transition-all duration-300"
+              className="group flex flex-col items-center gap-3 p-6 rounded-2xl bg-[#0a0a0c] border border-white/5 hover:bg-white/5 hover:border-white/10 transition-all duration-300 hover:shadow-2xl"
             >
               <div className={`p-3 rounded-xl bg-white/5 group-hover:scale-110 transition-transform duration-300 ${cat.color}`}>
                 <cat.icon size={24} />
@@ -298,7 +180,6 @@ const Home = () => {
         <title>Dead Matter Wiki | Interactive Map & Guides</title>
       </Helmet>
 
-      <TwitchStreamManager />
 
       <div className="max-w-7xl mx-auto px-4 py-12 md:py-24 space-y-24">
         {/* Hero Section */}
@@ -364,11 +245,11 @@ const Home = () => {
               <GitCommit size={24} className="text-blue-500" />
               <h2 className="text-2xl font-bold text-white">Micro Changes</h2>
             </div>
-            <div className="bg-slate-900/40 border border-white/5 rounded-2xl p-6 relative overflow-hidden">
+            <div className="bg-[#0a0a0c] border border-white/5 rounded-2xl p-6 relative overflow-hidden">
               {loading.commits && <SkeletonPulse />}
               <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
                 {latestCommits.map((c, i) => (
-                  <div key={c.id} className="p-3 bg-white/5 rounded-xl border border-white/5">
+                  <div key={c.id} className="p-3 bg-white/[0.02] rounded-xl border border-white/5">
                     <p className="text-sm text-slate-300 line-clamp-2">{c.message}</p>
                     <div className="flex justify-between items-center mt-2">
                       <span className="text-[10px] uppercase font-bold text-slate-500">{new Date(c.created_at).toLocaleDateString()}</span>

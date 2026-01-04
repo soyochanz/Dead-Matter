@@ -32,9 +32,10 @@ const WikiCategoryCard = ({ category, itemCount, index }) => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05 }}
       whileHover={!isDisabled ? { y: -5, scale: 1.02 } : {}}
-      className={`relative group flex flex-col h-full p-6 rounded-2xl bg-slate-900/50 border border-white/5 transition-all duration-300 ${isDisabled ? 'opacity-40 cursor-not-allowed' : 'hover:bg-white/5 hover:border-white/10'
+      className={`relative group flex flex-col h-full p-8 rounded-[2.5rem] bg-[#0a0a0c] border border-white/5 transition-all duration-500 ${isDisabled ? 'opacity-40 cursor-not-allowed' : 'hover:bg-white/5 hover:border-white/10 hover:shadow-[0_20px_50px_-15px_rgba(0,0,0,0.5)]'
         }`}
     >
+      <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
       <div className="flex flex-col items-center gap-4 text-center h-full">
         <div className={`p-4 rounded-xl bg-white/5 group-hover:scale-110 transition-transform duration-300 ${getCategoryColor(category.name)}`}>
           <IconComponent size={32} />
@@ -206,7 +207,7 @@ const Wiki = () => {
         >
           {/* Header estilo Home Hero */}
           <div className="text-center mb-24 space-y-6">
-            <h1 className="text-5xl md:text-7xl font-black text-white tracking-tighter uppercase">
+            <h1 className="text-5xl md:text-8xl font-black text-white tracking-tighter uppercase">
               SURVIVAL <span className="text-red-500">DATABASE</span>
             </h1>
 

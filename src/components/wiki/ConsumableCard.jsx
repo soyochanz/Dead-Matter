@@ -1,224 +1,139 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Droplet, Sparkles, HeartPulse, RefreshCw, Flame, Utensils, Coffee, ArrowRight } from 'lucide-react';
+import { Droplet, Sparkles, HeartPulse, RefreshCw, Flame, Utensils, Coffee } from 'lucide-react';
 import CanOpenerIcon from '@/components/icons/CanOpenerIcon';
 
 const ConsumableCard = ({ consumable, index, onClick }) => {
     if (!consumable) {
-        return null; 
+        return null;
     }
 
     // Función para obtener los colores basados en el tipo de consumible
-    const getConsumableStyles = (type, rarityName) => {
-        const baseStyles = {
-            'food': {
-                gradient: 'from-orange-600 to-amber-600',
-                shadow: 'shadow-orange-900/50',
-                icon: Utensils
-            },
-            'drink': {
-                gradient: 'from-blue-600 to-cyan-600',
-                shadow: 'shadow-blue-900/50', 
-                icon: Coffee
-            }
+    // Función para obtener los colores basados en la rareza (estilo premium)
+    const getRarityColor = (rarityName) => {
+        const colors = {
+            'Common': '#94a3b8',
+            'Uncommon': '#22c55e',
+            'Rare': '#3b82f6',
+            'Epic': '#a855f7',
+            'Legendary': '#f59e0b',
+            'Mythic': '#ef4444'
         };
-
-        // Si es raro, usar gradientes de rareza
-        const rarityStyles = {
-            'Common': {
-                gradient: 'from-gray-600 to-slate-600',
-                shadow: 'shadow-gray-900/50'
-            },
-            'Uncommon': {
-                gradient: 'from-green-600 to-emerald-600',
-                shadow: 'shadow-green-900/50'
-            },
-            'Rare': {
-                gradient: 'from-blue-600 to-cyan-600',
-                shadow: 'shadow-blue-900/50'
-            },
-            'Epic': {
-                gradient: 'from-purple-600 to-violet-600',
-                shadow: 'shadow-purple-900/50'
-            },
-            'Legendary': {
-                gradient: 'from-orange-600 to-amber-600',
-                shadow: 'shadow-orange-900/50'
-            },
-            'Mythic': {
-                gradient: 'from-red-600 to-rose-600',
-                shadow: 'shadow-red-900/50'
-            }
-        };
-
-        const baseStyle = baseStyles[type] || baseStyles['food'];
-        const rarityStyle = rarityStyles[rarityName] || rarityStyles['Common'];
-        
-        // Priorizar rareza sobre tipo para colores más llamativos
-        return rarityName !== 'Common' ? {
-            ...rarityStyle,
-            icon: baseStyle.icon
-        } : baseStyle;
+        return colors[rarityName] || colors['Common'];
     };
 
     const rarityName = consumable.rarity?.name || 'Common';
+    const rarityColor = getRarityColor(rarityName);
     const type = consumable.type || 'food';
-    const { gradient, shadow, icon: ConsumableIcon } = getConsumableStyles(type, rarityName);
+    const ConsumableIcon = type === 'drink' ? Coffee : Utensils;
     const needsCooking = consumable.type === 'food' && !consumable.is_safe_to_eat_raw;
 
     // Stats válidos para mostrar
     const validStats = [
-        consumable.hydration > 0 && {
-            icon: Droplet,
-            value: consumable.hydration,
-            color: 'text-blue-400',
-            label: 'Hydration'
-        },
-        consumable.energy > 0 && {
-            icon: Sparkles,
-            value: consumable.energy,
-            color: 'text-yellow-400',
-            label: 'Energy'
-        },
-        consumable.health > 0 && {
-            icon: HeartPulse,
-            value: consumable.health,
-            color: 'text-green-400',
-            label: 'Health'
-        }
+        consumable.hydration > 0 && { icon: Droplet, value: consumable.hydration, color: 'text-blue-400', label: 'Hydration' },
+        consumable.energy > 0 && { icon: Sparkles, value: consumable.energy, color: 'text-yellow-400', label: 'Energy' },
+        consumable.health > 0 && { icon: HeartPulse, value: consumable.health, color: 'text-green-400', label: 'Health' }
     ].filter(Boolean);
 
     return (
         <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            whileHover={{ 
-                y: -8, 
-                scale: 1.02,
-                transition: { duration: 0.3, ease: "easeOut" }
-            }}
-            transition={{ 
-                duration: 0.5, 
-                delay: index * 0.05,
-                type: "spring",
-                stiffness: 100
-            }}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            whileHover={{ y: -5 }}
             onClick={onClick}
-            className="relative overflow-hidden group cursor-pointer h-full"
+            className="relative group cursor-pointer h-full"
         >
-            {/* Efecto de fondo con gradiente */}
-            <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-20 group-hover:opacity-30 transition-opacity duration-300 rounded-2xl`} />
-            
-            {/* Efecto de borde luminoso */}
-            <div className={`absolute inset-0 bg-gradient-to-r ${gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl blur-sm group-hover:blur-md`} />
-            
-            <div className="relative bg-gray-900/90 border border-white/10 backdrop-blur-sm rounded-2xl group-hover:border-white/20 transition-all duration-300 h-full flex flex-col">
-                
-                {/* Imagen del consumible */}
-                <div className="relative h-40 bg-black/20 flex items-center justify-center p-6 overflow-hidden">
-                    {/* Overlay de gradiente */}
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-gray-900/20 to-gray-900/40 z-10" />
-                    
+            {/* Card Interior */}
+            <div className="relative bg-[#0a0a0c] border border-white/5 rounded-[2rem] overflow-hidden transition-all duration-500 group-hover:border-red-500/30 group-hover:shadow-[0_20px_50px_-15px_rgba(239,68,68,0.15)] h-full flex flex-col shadow-2xl backdrop-blur-3xl">
+
+                {/* Image Section */}
+                <div className="relative h-44 bg-black/40 flex items-center justify-center p-8 overflow-hidden group-hover:bg-black/60 transition-colors">
+                    {/* Rarity Aura */}
+                    <div
+                        className="absolute inset-0 opacity-10 group-hover:opacity-20 blur-[60px] transition-opacity duration-500"
+                        style={{ backgroundColor: rarityColor }}
+                    />
+
+                    {/* Scanline Effect */}
+                    <div className="absolute inset-0 opacity-5 pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay" />
+
                     {consumable.image_url ? (
-                        <img 
-                            className="relative z-20 max-h-full max-w-full object-contain group-hover:scale-110 transition-transform duration-500 drop-shadow-2xl"
+                        <img
+                            className="relative z-10 max-h-full max-w-full object-contain group-hover:scale-110 transition-transform duration-700 drop-shadow-[0_15px_15px_rgba(0,0,0,0.5)]"
                             alt={consumable.name}
-                            src={consumable.image_url} 
+                            src={consumable.image_url}
                         />
                     ) : (
-                        <div className={`relative z-20 p-4 rounded-2xl bg-gradient-to-br ${gradient} shadow-lg`}>
-                            <ConsumableIcon className="w-16 h-16 text-white" strokeWidth={1.5} />
+                        <div className="relative z-10 p-5 rounded-2xl bg-white/5 border border-white/5 group-hover:border-red-500/30 transition-colors">
+                            <ConsumableIcon className="w-12 h-12 text-gray-500 group-hover:text-red-500 transition-colors" />
                         </div>
                     )}
-                    
-                    {/* Efecto de brillo en hover */}
-                    <div className="absolute inset-0 bg-white/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-15" />
 
-                    {/* Badges de estado */}
-                    <div className="absolute top-3 right-3 z-20 flex flex-col gap-2">
+                    {/* Badges */}
+                    <div className="absolute top-4 right-4 z-20 flex flex-col items-end gap-2">
                         {consumable.is_refillable && (
-                            <div className="p-1.5 bg-blue-900/80 backdrop-blur-sm text-blue-300 rounded-full border border-blue-500/50 shadow-lg" title="Refillable">
-                                <RefreshCw size={14} />
-                            </div>
-                        )}
-                        {consumable.requires_can_opener && (
-                            <div className="p-1.5 bg-yellow-900/80 backdrop-blur-sm text-yellow-300 rounded-full border border-yellow-500/50 shadow-lg" title="Requires Can Opener">
-                                <CanOpenerIcon className="w-3.5 h-3.5" />
+                            <div className="flex items-center gap-2 px-3 py-1 rounded-lg bg-black/80 border border-blue-500/30 text-blue-500 text-[9px] font-black tracking-widest uppercase shadow-lg backdrop-blur-md">
+                                <RefreshCw size={10} />
+                                <span>REFILLABLE</span>
                             </div>
                         )}
                         {needsCooking && (
-                            <div className="p-1.5 bg-red-900/80 backdrop-blur-sm text-red-300 rounded-full border border-red-500/50 shadow-lg" title="Needs to be cooked">
-                                <Flame size={14} />
+                            <div className="flex items-center gap-2 px-3 py-1 rounded-lg bg-black/80 border border-red-500/30 text-red-500 text-[9px] font-black tracking-widest uppercase shadow-lg backdrop-blur-md">
+                                <Flame size={10} />
+                                <span>UNCOOKED</span>
+                            </div>
+                        )}
+                        {consumable.requires_can_opener && (
+                            <div className="flex items-center gap-2 px-3 py-1 rounded-lg bg-black/80 border border-yellow-500/30 text-yellow-500 text-[9px] font-black tracking-widest uppercase shadow-lg backdrop-blur-md">
+                                <CanOpenerIcon className="w-2.5 h-2.5" />
+                                <span>SEALED</span>
                             </div>
                         )}
                     </div>
+
                 </div>
 
-                {/* Contenido de la tarjeta */}
-                <div className="p-6 flex-grow flex flex-col">
-                    {/* Nombre y rareza */}
+                {/* Content Section */}
+                <div className="p-6 flex-grow flex flex-col relative">
                     <div className="flex-grow">
-                        <h3 className="text-xl font-bold text-white mb-3 line-clamp-2 leading-tight group-hover:text-red-400 transition-colors">
+                        <div className="flex items-center gap-3 mb-3">
+                            <span
+                                className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded border transition-colors"
+                                style={{
+                                    borderColor: `${rarityColor}30`,
+                                    color: rarityColor,
+                                    backgroundColor: `${rarityColor}10`
+                                }}
+                            >
+                                {rarityName}
+                            </span>
+                            <span className="text-[9px] font-black uppercase tracking-widest text-gray-600">ID: {consumable.id.substring(0, 6)}</span>
+                        </div>
+
+                        <h3 className="text-lg font-medium text-white leading-tight uppercase tracking-tight group-hover:text-red-500 transition-colors duration-300">
                             {consumable.name}
                         </h3>
-                        
-                        {/* Badge de tipo y rareza */}
-                        <div className="flex items-center gap-2 mb-4">
-                            <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-gradient-to-r ${gradient} text-white shadow-lg`}>
-                                <div className="w-2 h-2 bg-white rounded-full mr-2" />
-                                {type.charAt(0).toUpperCase() + type.slice(1)}
-                            </div>
-                            {rarityName !== 'Common' && (
-                                <span className="text-xs font-bold px-2 py-1 rounded-full bg-white/10 text-white/80">
-                                    {rarityName}
-                                </span>
-                            )}
-                        </div>
                     </div>
 
-                    {/* Stats del consumible */}
-                    <div className="flex items-center justify-between mt-4 pt-4 border-t border-white/10 min-h-[3rem]">
-                        <div className="flex items-center gap-2">
-                            {validStats.length > 0 ? (
-                                validStats.map((stat, index) => (
-                                    <div 
-                                        key={index}
-                                        className="flex items-center gap-1.5 text-sm text-white bg-white/10 px-3 py-1.5 rounded-full"
-                                        title={stat.label}
-                                    >
-                                        <stat.icon size={14} className={stat.color} />
-                                        <span className="font-semibold">{stat.value}</span>
-                                    </div>
-                                ))
-                            ) : (
-                                // Espacio reservado para mantener la altura consistente
-                                <div className="opacity-0">
-                                    <div className="flex items-center gap-1.5 text-sm px-3 py-1.5">
-                                        <Droplet size={14} />
-                                        <span>0</span>
-                                    </div>
+                    {/* Stats Footer */}
+                    <div className="mt-6 flex items-center justify-between pt-5 border-t border-white/5">
+                        <div className="flex flex-wrap gap-2">
+                            {validStats.map((stat, i) => (
+                                <div key={i} className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/5 border border-white/5 group-hover:border-white/20 transition-all duration-300" title={stat.label}>
+                                    <stat.icon size={12} className={`${stat.color} opacity-80`} />
+                                    <span className="text-[10px] font-mono font-bold text-white tracking-widest">{stat.value}</span>
                                 </div>
-                            )}
+                            ))}
                         </div>
-                        
-                        {/* Indicador de acción */}
-                        <motion.div
-                            initial={{ opacity: 0, x: -10 }}
-                            whileHover={{ opacity: 1, x: 0 }}
-                            className="flex items-center text-white/80 group-hover:text-white transition-colors duration-300"
-                        >
-                            <span className="text-sm font-semibold mr-2">View</span>
-                            <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300" />
-                        </motion.div>
                     </div>
                 </div>
 
-                {/* Efecto de hover en la parte inferior */}
-                <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r ${gradient} transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left`} />
+                {/* Interactive Bottom Bar */}
+                <div className="h-1 bg-red-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left opacity-0 group-hover:opacity-100" />
             </div>
 
             {/* Efecto de sombra exterior */}
-            <div 
+            <div
                 className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                 style={{
                     boxShadow: `

@@ -16,10 +16,10 @@ const UpdateDetailPage = () => {
   useEffect(() => {
     const fetchUpdate = async () => {
       if (!slug) return;
-      
+
       setLoading(true);
       setError(null);
-      
+
       try {
         const { data, error } = await supabase
           .from('updates')
@@ -83,10 +83,10 @@ const UpdateDetailPage = () => {
         >
           {/* Header Navigation */}
           <div className="flex items-center justify-between mb-8">
-            <Button 
-                asChild 
-                variant="ghost" 
-                className="text-gray-400 hover:text-white hover:bg-white/5 gap-2 pl-0"
+            <Button
+              asChild
+              variant="ghost"
+              className="text-gray-400 hover:text-white hover:bg-white/5 gap-2 pl-0"
             >
               <Link to="/updates">
                 <ArrowLeft className="h-4 w-4" />
@@ -96,61 +96,61 @@ const UpdateDetailPage = () => {
           </div>
 
           {/* Main Content Card */}
-          <div className="bg-gray-900/50 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
-             {/* Hero / Header Section */}
-             <div className="relative p-8 md:p-12 border-b border-white/10 overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-red-600/10 to-orange-600/5 z-0" />
-                <div className="relative z-10">
-                    <div className="flex flex-wrap items-center gap-3 mb-6">
-                        <span className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-sm text-gray-300">
-                            <Calendar className="h-3.5 w-3.5 text-red-400" />
-                            {new Date(update.date).toLocaleDateString('en-US', { 
-                                year: 'numeric', 
-                                month: 'long', 
-                                day: 'numeric' 
-                            })}
-                        </span>
-                        {update.version && (
-                            <span className="flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r from-blue-600/20 to-cyan-600/20 border border-blue-500/30 text-sm text-blue-400 font-medium">
-                                <Tag className="h-3.5 w-3.5" />
-                                {update.version}
-                            </span>
-                        )}
-                        {update.category && (
-                             <span className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-sm text-gray-400 capitalize">
-                                {update.category}
-                            </span>
-                        )}
-                    </div>
-
-                    <h1 className="text-3xl md:text-5xl font-bold text-white leading-tight mb-4">
-                        {update.title}
-                    </h1>
+          <div className="bg-[#0a0a0c]/95 backdrop-blur-3xl border border-white/5 rounded-[2.5rem] overflow-hidden shadow-[0_30px_60px_-15px_rgba(0,0,0,0.8)]">
+            {/* Hero / Header Section */}
+            <div className="relative p-8 md:p-12 border-b border-white/5 overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-red-600/10 via-transparent to-transparent z-0" />
+              <div className="relative z-10">
+                <div className="flex flex-wrap items-center gap-3 mb-6">
+                  <span className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-sm text-gray-300">
+                    <Calendar className="h-3.5 w-3.5 text-red-400" />
+                    {new Date(update.date).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}
+                  </span>
+                  {update.version && (
+                    <span className="flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r from-blue-600/20 to-cyan-600/20 border border-blue-500/30 text-sm text-blue-400 font-medium">
+                      <Tag className="h-3.5 w-3.5" />
+                      {update.version}
+                    </span>
+                  )}
+                  {update.category && (
+                    <span className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-sm text-gray-400 capitalize">
+                      {update.category}
+                    </span>
+                  )}
                 </div>
-             </div>
 
-             {/* Content Body */}
-             <div className="p-8 md:p-12 bg-black/20">
-                <div 
-                    className="prose prose-invert prose-headings:text-white prose-p:text-gray-300 prose-a:text-red-400 prose-li:text-gray-300 prose-strong:text-white prose-img:rounded-xl prose-video:rounded-xl max-w-none prose-lg leading-relaxed"
-                    dangerouslySetInnerHTML={{ __html: update.content }}
-                />
-             </div>
+                <h1 className="text-3xl md:text-5xl font-bold text-white leading-tight mb-4">
+                  {update.title}
+                </h1>
+              </div>
+            </div>
 
-             {/* Footer Actions */}
-             <div className="p-6 border-t border-white/10 bg-white/5 flex justify-center">
-                 <Button 
-                    variant="outline" 
-                    className="gap-2 border-white/20 hover:bg-white/10"
-                    onClick={() => {
-                        navigator.clipboard.writeText(window.location.href);
-                        // Could add a toast here if imported
-                    }}
-                >
-                    <Share2 className="h-4 w-4" />
-                    Share Update
-                 </Button>
-             </div>
+            {/* Content Body */}
+            <div className="p-8 md:p-12 bg-black/40">
+              <div
+                className="prose prose-invert prose-headings:text-white prose-p:text-gray-300 prose-a:text-red-400 prose-li:text-gray-300 prose-strong:text-white prose-img:rounded-xl prose-video:rounded-xl max-w-none prose-lg leading-relaxed"
+                dangerouslySetInnerHTML={{ __html: update.content }}
+              />
+            </div>
+
+            {/* Footer Actions */}
+            <div className="p-6 border-t border-white/10 bg-white/5 flex justify-center">
+              <Button
+                variant="outline"
+                className="gap-2 border-white/20 hover:bg-white/10"
+                onClick={() => {
+                  navigator.clipboard.writeText(window.location.href);
+                  // Could add a toast here if imported
+                }}
+              >
+                <Share2 className="h-4 w-4" />
+                Share Update
+              </Button>
+            </div>
           </div>
         </motion.div>
       </div>

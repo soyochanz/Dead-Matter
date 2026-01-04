@@ -13,10 +13,10 @@ const MediaModal = ({ item, onClose }) => {
     if (!item) return null;
 
     const extractYouTubeId = (url) => {
-      if (!url) return null;
-      const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-      const match = url.match(regExp);
-      return (match && match[2].length === 11) ? match[2] : null;
+        if (!url) return null;
+        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+        const match = url.match(regExp);
+        return (match && match[2].length === 11) ? match[2] : null;
     };
 
     const isYouTubeVideo = item.type === 'video' && extractYouTubeId(item.url);
@@ -27,7 +27,7 @@ const MediaModal = ({ item, onClose }) => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="fixed inset-0 bg-black/90 backdrop-blur-lg z-50 flex items-center justify-center p-4"
+                className="fixed inset-0 bg-black/95 backdrop-blur-3xl z-50 flex items-center justify-center p-4"
                 onClick={onClose}
             >
                 <motion.div
@@ -41,7 +41,7 @@ const MediaModal = ({ item, onClose }) => {
                     {/* Efectos de fondo */}
                     <div className="absolute inset-0 bg-gradient-to-br from-orange-600/10 to-red-600/10 rounded-3xl" />
 
-                    <div className="relative bg-gray-900/95 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden flex flex-col h-full">
+                    <div className="relative bg-[#0a0a0c] backdrop-blur-3xl border border-white/5 rounded-[2.5rem] overflow-hidden flex flex-col h-full shadow-[0_50px_100px_-20px_rgba(0,0,0,1)]">
                         {/* Header */}
                         <div className="flex-shrink-0 flex justify-between items-center p-6 border-b border-white/10 bg-gray-900/80 backdrop-blur-sm">
                             <div className="flex items-center gap-4">
@@ -134,14 +134,14 @@ const MediaModal = ({ item, onClose }) => {
                                     </div>
                                 )}
                                 {isYouTubeVideo && (
-                                    <a 
-                                      href={item.video_url || item.url} 
-                                      target="_blank" 
-                                      rel="noopener noreferrer"
-                                      className="flex items-center gap-2 text-red-400 hover:text-red-300"
+                                    <a
+                                        href={item.video_url || item.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex items-center gap-2 text-red-400 hover:text-red-300"
                                     >
-                                      <ExternalLink className="h-4 w-4" />
-                                      Watch on YouTube
+                                        <ExternalLink className="h-4 w-4" />
+                                        Watch on YouTube
                                     </a>
                                 )}
                             </div>
@@ -164,223 +164,223 @@ const MediaModal = ({ item, onClose }) => {
 
 // Componente Formulario para Admin
 const MediaForm = ({ item, onSave, onCancel }) => {
-  const { profile } = useAuth();
-  const [formData, setFormData] = useState(
-    item || { 
-      title: '', 
-      type: 'image', 
-      url: '', 
-      description: '', 
-      image_path: '', 
-      meta_name: '', 
-      author: profile?.username || '', 
-      thumbnail: '' 
-    }
-  );
-  const [uploading, setUploading] = useState(false);
-  const fileInputRef = React.useRef(null);
-  const { toast } = useToast();
-  
-  const formInputClass = "w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-red-500";
+    const { profile } = useAuth();
+    const [formData, setFormData] = useState(
+        item || {
+            title: '',
+            type: 'image',
+            url: '',
+            description: '',
+            image_path: '',
+            meta_name: '',
+            author: profile?.username || '',
+            thumbnail: ''
+        }
+    );
+    const [uploading, setUploading] = useState(false);
+    const fileInputRef = React.useRef(null);
+    const { toast } = useToast();
 
-  // Extraer ID de video de YouTube
-  const extractYouTubeId = (url) => {
-    if (!url) return null;
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-    const match = url.match(regExp);
-    return (match && match[2].length === 11) ? match[2] : null;
-  };
+    const formInputClass = "w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-red-500";
 
-  // Generar thumbnail de YouTube
-  const getYouTubeThumbnail = (url) => {
-    const videoId = extractYouTubeId(url);
-    if (!videoId) return '';
-    return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
-  };
+    // Extraer ID de video de YouTube
+    const extractYouTubeId = (url) => {
+        if (!url) return null;
+        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+        const match = url.match(regExp);
+        return (match && match[2].length === 11) ? match[2] : null;
+    };
 
-  const handleSubmit = (e) => { 
-    e.preventDefault(); 
-    
-    // Si es video de YouTube, extraer ID y generar thumbnail
-    if (formData.type === 'video') {
-      const videoId = extractYouTubeId(formData.url);
-      if (videoId) {
-        const embedUrl = `https://www.youtube.com/embed/${videoId}`;
-        const thumbnail = getYouTubeThumbnail(formData.url);
-        
-        const processedData = {
-          ...formData,
-          url: embedUrl, // URL de embed para iframe
-          video_url: formData.url, // Guardar URL original
-          video_id: videoId,
-          thumbnail: formData.thumbnail || thumbnail // Usar custom o auto-generado
-        };
-        
-        onSave(processedData);
-        return;
-      } else {
-        toast({ 
-          title: "Invalid YouTube URL", 
-          description: "Please enter a valid YouTube URL", 
-          variant: "destructive" 
-        });
-        return;
-      }
-    }
-    
-    onSave(formData); 
-  };
-  
-  const handleFileChange = async (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
-    setUploading(true);
-    const fileName = `${Date.now()}_${file.name}`;
-    const filePath = `public/${fileName}`;
-    const { error } = await supabase.storage.from('Items').upload(filePath, file);
-    if (error) {
-        toast({ title: "Upload Error", description: error.message, variant: "destructive" });
-    } else {
-        const { data: { publicUrl } } = supabase.storage.from('Items').getPublicUrl(filePath);
-        setFormData(prev => ({ 
-          ...prev, 
-          url: publicUrl, 
-          image_path: filePath,
-          thumbnail: file.type.startsWith('video/') ? '' : publicUrl
+    // Generar thumbnail de YouTube
+    const getYouTubeThumbnail = (url) => {
+        const videoId = extractYouTubeId(url);
+        if (!videoId) return '';
+        return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        // Si es video de YouTube, extraer ID y generar thumbnail
+        if (formData.type === 'video') {
+            const videoId = extractYouTubeId(formData.url);
+            if (videoId) {
+                const embedUrl = `https://www.youtube.com/embed/${videoId}`;
+                const thumbnail = getYouTubeThumbnail(formData.url);
+
+                const processedData = {
+                    ...formData,
+                    url: embedUrl, // URL de embed para iframe
+                    video_url: formData.url, // Guardar URL original
+                    video_id: videoId,
+                    thumbnail: formData.thumbnail || thumbnail // Usar custom o auto-generado
+                };
+
+                onSave(processedData);
+                return;
+            } else {
+                toast({
+                    title: "Invalid YouTube URL",
+                    description: "Please enter a valid YouTube URL",
+                    variant: "destructive"
+                });
+                return;
+            }
+        }
+
+        onSave(formData);
+    };
+
+    const handleFileChange = async (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+        setUploading(true);
+        const fileName = `${Date.now()}_${file.name}`;
+        const filePath = `public/${fileName}`;
+        const { error } = await supabase.storage.from('Items').upload(filePath, file);
+        if (error) {
+            toast({ title: "Upload Error", description: error.message, variant: "destructive" });
+        } else {
+            const { data: { publicUrl } } = supabase.storage.from('Items').getPublicUrl(filePath);
+            setFormData(prev => ({
+                ...prev,
+                url: publicUrl,
+                image_path: filePath,
+                thumbnail: file.type.startsWith('video/') ? '' : publicUrl
+            }));
+        }
+        setUploading(false);
+    };
+
+    const handleUrlChange = (url) => {
+        let thumbnail = '';
+
+        // Si es YouTube URL, generar thumbnail automáticamente
+        if (formData.type === 'video' && (url.includes('youtube.com') || url.includes('youtu.be'))) {
+            thumbnail = getYouTubeThumbnail(url);
+        }
+
+        setFormData(prev => ({
+            ...prev,
+            url: url,
+            thumbnail: thumbnail || prev.thumbnail
         }));
-    }
-    setUploading(false);
-  };
+    };
 
-  const handleUrlChange = (url) => {
-    let thumbnail = '';
-    
-    // Si es YouTube URL, generar thumbnail automáticamente
-    if (formData.type === 'video' && (url.includes('youtube.com') || url.includes('youtu.be'))) {
-      thumbnail = getYouTubeThumbnail(url);
-    }
-    
-    setFormData(prev => ({ 
-      ...prev, 
-      url: url,
-      thumbnail: thumbnail || prev.thumbnail
-    }));
-  };
-
-  return (
-    <form onSubmit={handleSubmit} className="bg-white/5 border border-white/10 rounded-lg p-6 space-y-4">
-      <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">Title</label>
-        <input type="text" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} className={formInputClass} required />
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">Meta Name</label>
-        <input type="text" value={formData.meta_name} onChange={(e) => setFormData({ ...formData, meta_name: e.target.value })} className={formInputClass} />
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">Author</label>
-        <input type="text" value={formData.author} onChange={(e) => setFormData({ ...formData, author: e.target.value })} className={formInputClass} />
-      </div>
-      
-      <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">Type</label>
-        <select value={formData.type} onChange={(e) => setFormData({ ...formData, type: e.target.value, url: '', thumbnail: '' })} className={formInputClass}>
-          <option value="image">Image</option>
-          <option value="video">Video</option>
-        </select>
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">Media</label>
-        {formData.type === 'image' && (
-            <div className="flex items-center gap-4 mb-2">
-                <Button type="button" onClick={() => fileInputRef.current.click()} disabled={uploading} className="gap-2"><Upload /> Upload Image</Button>
-                <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept="image/*" />
-                {uploading && <Loader2 className="h-5 w-5 animate-spin"/>}
+    return (
+        <form onSubmit={handleSubmit} className="bg-white/5 border border-white/10 rounded-lg p-6 space-y-4">
+            <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Title</label>
+                <input type="text" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} className={formInputClass} required />
             </div>
-        )}
-        
-        {formData.type === 'video' && (
-          <div className="mb-3">
-            <p className="text-sm text-gray-400 mb-2">Paste YouTube URL (e.g., https://youtube.com/watch?v=... or https://youtu.be/...)</p>
-          </div>
-        )}
-        
-        <input 
-          type="url" 
-          placeholder={
-            formData.type === 'image' 
-              ? "Or paste image URL" 
-              : "Paste YouTube URL"
-          } 
-          value={formData.url} 
-          onChange={(e) => handleUrlChange(e.target.value)} 
-          className={formInputClass} 
-          required 
-        />
-        
-        {/* Vista previa */}
-        {(formData.url || formData.thumbnail) && (
-          <div className="mt-4">
-            <label className="block text-sm font-medium text-gray-300 mb-2">Preview</label>
-            {formData.type === 'image' ? (
-              <img 
-                src={formData.url} 
-                alt="Preview" 
-                className="h-48 w-auto object-cover rounded-md bg-gray-700 border border-white/10" 
-              />
-            ) : formData.type === 'video' && formData.thumbnail ? (
-              <div className="relative">
-                <img 
-                  src={formData.thumbnail} 
-                  alt="Video Thumbnail" 
-                  className="h-48 w-full object-cover rounded-md bg-gray-700 border border-white/10" 
+
+            <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Meta Name</label>
+                <input type="text" value={formData.meta_name} onChange={(e) => setFormData({ ...formData, meta_name: e.target.value })} className={formInputClass} />
+            </div>
+
+            <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Author</label>
+                <input type="text" value={formData.author} onChange={(e) => setFormData({ ...formData, author: e.target.value })} className={formInputClass} />
+            </div>
+
+            <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Type</label>
+                <select value={formData.type} onChange={(e) => setFormData({ ...formData, type: e.target.value, url: '', thumbnail: '' })} className={formInputClass}>
+                    <option value="image">Image</option>
+                    <option value="video">Video</option>
+                </select>
+            </div>
+
+            <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Media</label>
+                {formData.type === 'image' && (
+                    <div className="flex items-center gap-4 mb-2">
+                        <Button type="button" onClick={() => fileInputRef.current.click()} disabled={uploading} className="gap-2"><Upload /> Upload Image</Button>
+                        <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept="image/*" />
+                        {uploading && <Loader2 className="h-5 w-5 animate-spin" />}
+                    </div>
+                )}
+
+                {formData.type === 'video' && (
+                    <div className="mb-3">
+                        <p className="text-sm text-gray-400 mb-2">Paste YouTube URL (e.g., https://youtube.com/watch?v=... or https://youtu.be/...)</p>
+                    </div>
+                )}
+
+                <input
+                    type="url"
+                    placeholder={
+                        formData.type === 'image'
+                            ? "Or paste image URL"
+                            : "Paste YouTube URL"
+                    }
+                    value={formData.url}
+                    onChange={(e) => handleUrlChange(e.target.value)}
+                    className={formInputClass}
+                    required
                 />
-                <div className="mt-2 text-sm text-gray-400">
-                  YouTube video detected: {extractYouTubeId(formData.url) || 'Invalid URL'}
-                </div>
-              </div>
-            ) : formData.type === 'video' && formData.url ? (
-              <div className="h-48 bg-gray-800 rounded-md border border-white/10 flex items-center justify-center">
-                <div className="text-gray-400 text-center">
-                  <Video className="w-12 h-12 mx-auto mb-2" />
-                  <p>Video URL entered</p>
-                  <p className="text-xs mt-1">(Preview will show after saving)</p>
-                </div>
-              </div>
-            ) : null}
-          </div>
-        )}
-      </div>
 
-      {/* Campo para thumbnail personalizado (opcional) */}
-      <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">
-          Thumbnail URL (Optional)
-          <span className="text-xs text-gray-400 ml-2">Override auto-generated thumbnail</span>
-        </label>
-        <input 
-          type="url" 
-          value={formData.thumbnail} 
-          onChange={(e) => setFormData({ ...formData, thumbnail: e.target.value })} 
-          className={formInputClass} 
-          placeholder="Custom thumbnail URL"
-        />
-      </div>
+                {/* Vista previa */}
+                {(formData.url || formData.thumbnail) && (
+                    <div className="mt-4">
+                        <label className="block text-sm font-medium text-gray-300 mb-2">Preview</label>
+                        {formData.type === 'image' ? (
+                            <img
+                                src={formData.url}
+                                alt="Preview"
+                                className="h-48 w-auto object-cover rounded-md bg-gray-700 border border-white/10"
+                            />
+                        ) : formData.type === 'video' && formData.thumbnail ? (
+                            <div className="relative">
+                                <img
+                                    src={formData.thumbnail}
+                                    alt="Video Thumbnail"
+                                    className="h-48 w-full object-cover rounded-md bg-gray-700 border border-white/10"
+                                />
+                                <div className="mt-2 text-sm text-gray-400">
+                                    YouTube video detected: {extractYouTubeId(formData.url) || 'Invalid URL'}
+                                </div>
+                            </div>
+                        ) : formData.type === 'video' && formData.url ? (
+                            <div className="h-48 bg-gray-800 rounded-md border border-white/10 flex items-center justify-center">
+                                <div className="text-gray-400 text-center">
+                                    <Video className="w-12 h-12 mx-auto mb-2" />
+                                    <p>Video URL entered</p>
+                                    <p className="text-xs mt-1">(Preview will show after saving)</p>
+                                </div>
+                            </div>
+                        ) : null}
+                    </div>
+                )}
+            </div>
 
-      <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">Description</label>
-        <textarea value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} className={`${formInputClass} min-h-[100px]`} />
-      </div>
+            {/* Campo para thumbnail personalizado (opcional) */}
+            <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                    Thumbnail URL (Optional)
+                    <span className="text-xs text-gray-400 ml-2">Override auto-generated thumbnail</span>
+                </label>
+                <input
+                    type="url"
+                    value={formData.thumbnail}
+                    onChange={(e) => setFormData({ ...formData, thumbnail: e.target.value })}
+                    className={formInputClass}
+                    placeholder="Custom thumbnail URL"
+                />
+            </div>
 
-      <div className="flex gap-2">
-        <Button type="submit" className="bg-red-600 hover:bg-red-700">{item ? 'Update' : 'Create'}</Button>
-        <Button type="button" onClick={onCancel} variant="outline">Cancel</Button>
-      </div>
-    </form>
-  );
+            <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Description</label>
+                <textarea value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} className={`${formInputClass} min-h-[100px]`} />
+            </div>
+
+            <div className="flex gap-2">
+                <Button type="submit" className="bg-red-600 hover:bg-red-700">{item ? 'Update' : 'Create'}</Button>
+                <Button type="button" onClick={onCancel} variant="outline">Cancel</Button>
+            </div>
+        </form>
+    );
 };
 
 // Componente principal Media
@@ -402,80 +402,80 @@ const Media = () => {
     ];
 
     const extractYouTubeId = (url) => {
-      if (!url) return null;
-      const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-      const match = url.match(regExp);
-      return (match && match[2].length === 11) ? match[2] : null;
+        if (!url) return null;
+        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+        const match = url.match(regExp);
+        return (match && match[2].length === 11) ? match[2] : null;
     };
 
     // Función para cargar items
     const loadItems = React.useCallback(async () => {
-      setLoading(true);
-      const { data, error } = await supabase
-        .from('media_items')
-        .select('*')
-        .order('created_at', { ascending: false });
+        setLoading(true);
+        const { data, error } = await supabase
+            .from('media_items')
+            .select('*')
+            .order('created_at', { ascending: false });
 
-      if (error) {
-        console.error('Error fetching media items:', error);
-        toast({ title: "Error", description: "Could not load media items.", variant: "destructive" });
-      } else {
-        // Procesar items para asegurar thumbnails
-        const processedItems = (data || []).map(item => {
-          // Si es video de YouTube y no tiene thumbnail, generarlo
-          if (item.type === 'video' && !item.thumbnail) {
-            const videoId = extractYouTubeId(item.url);
-            if (videoId) {
-              return {
-                ...item,
-                thumbnail: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
-                author: item.author || 'Community Member',
-              };
-            }
-          }
-          
-          return {
-            ...item,
-            author: item.author || 'Community Member',
-            thumbnail: item.thumbnail || (item.type === 'image' ? item.url : '')
-          };
-        });
-        
-        setMediaItems(processedItems);
-        setFilteredItems(processedItems);
-      }
-      setLoading(false);
+        if (error) {
+            console.error('Error fetching media items:', error);
+            toast({ title: "Error", description: "Could not load media items.", variant: "destructive" });
+        } else {
+            // Procesar items para asegurar thumbnails
+            const processedItems = (data || []).map(item => {
+                // Si es video de YouTube y no tiene thumbnail, generarlo
+                if (item.type === 'video' && !item.thumbnail) {
+                    const videoId = extractYouTubeId(item.url);
+                    if (videoId) {
+                        return {
+                            ...item,
+                            thumbnail: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
+                            author: item.author || 'Community Member',
+                        };
+                    }
+                }
+
+                return {
+                    ...item,
+                    author: item.author || 'Community Member',
+                    thumbnail: item.thumbnail || (item.type === 'image' ? item.url : '')
+                };
+            });
+
+            setMediaItems(processedItems);
+            setFilteredItems(processedItems);
+        }
+        setLoading(false);
     }, [toast]);
 
     // Función para guardar items
     const handleSave = async (item) => {
-      const { id, ...itemData } = item;
-      const { error } = id ? 
-          await supabase.from('media_items').update(itemData).eq('id', id) : 
-          await supabase.from('media_items').insert(itemData);
+        const { id, ...itemData } = item;
+        const { error } = id ?
+            await supabase.from('media_items').update(itemData).eq('id', id) :
+            await supabase.from('media_items').insert(itemData);
 
-      if (error) {
-        toast({ title: "Error", description: error.message, variant: "destructive" });
-      } else {
-        toast({ title: "Saved!", description: `Media item ${id ? 'updated' : 'created'}.` });
-        setShowForm(false);
-        setEditingItem(null);
-        loadItems();
-      }
+        if (error) {
+            toast({ title: "Error", description: error.message, variant: "destructive" });
+        } else {
+            toast({ title: "Saved!", description: `Media item ${id ? 'updated' : 'created'}.` });
+            setShowForm(false);
+            setEditingItem(null);
+            loadItems();
+        }
     };
 
     // Función para eliminar items
     const handleDelete = async (item) => {
-      if (item.image_path) {
-          await supabase.storage.from('Items').remove([item.image_path]);
-      }
-      const { error } = await supabase.from('media_items').delete().eq('id', item.id);
-      if (error) {
-        toast({ title: "Error", description: error.message, variant: "destructive" });
-      } else {
-        toast({ title: "Deleted!", description: "Media item deleted successfully" });
-        loadItems();
-      }
+        if (item.image_path) {
+            await supabase.storage.from('Items').remove([item.image_path]);
+        }
+        const { error } = await supabase.from('media_items').delete().eq('id', item.id);
+        if (error) {
+            toast({ title: "Error", description: error.message, variant: "destructive" });
+        } else {
+            toast({ title: "Deleted!", description: "Media item deleted successfully" });
+            loadItems();
+        }
     };
 
     useEffect(() => {
@@ -514,10 +514,10 @@ const Media = () => {
 
     const cardVariants = {
         hidden: { opacity: 0, y: 20 },
-        visible: (i) => ({ 
-            opacity: 1, 
+        visible: (i) => ({
+            opacity: 1,
             y: 0,
-            transition: { 
+            transition: {
                 delay: i * 0.1,
                 duration: 0.5
             }
@@ -532,7 +532,7 @@ const Media = () => {
     // Componente de tarjeta de media integrado
     const MediaCard = ({ item, index }) => {
         const isYouTubeVideo = item.type === 'video' && extractYouTubeId(item.url);
-        
+
         return (
             <motion.div
                 custom={index}
@@ -541,7 +541,7 @@ const Media = () => {
                 animate="visible"
                 whileHover="hover"
                 onClick={() => setSelectedMedia(item)}
-                className="group cursor-pointer bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-orange-500/50 hover:shadow-2xl hover:shadow-orange-500/10 transition-all duration-300 backdrop-blur-sm"
+                className="group cursor-pointer bg-[#0a0a0c] border border-white/5 rounded-[2rem] overflow-hidden hover:border-red-500/30 hover:shadow-[0_20px_50px_-15px_rgba(239,68,68,0.15)] transition-all duration-500 backdrop-blur-3xl shadow-xl"
             >
                 {/* Thumbnail Container - SIN ICONO DE PLAY GRANDE */}
                 <div className="relative aspect-video bg-gradient-to-br from-gray-900 to-black overflow-hidden">
@@ -569,14 +569,13 @@ const Media = () => {
                             </div>
                         </div>
                     )}
-                    
+
                     {/* Badge SOLO con "Video" */}
                     <div className="absolute top-3 left-3">
-                        <div className={`px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1 ${
-                            item.type === 'image' 
-                                ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30' 
+                        <div className={`px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1 ${item.type === 'image'
+                                ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
                                 : 'bg-red-500/20 text-red-300 border border-red-500/30'
-                        }`}>
+                            }`}>
                             {item.type === 'image' ? <Image className="w-3 h-3" /> : <Video className="w-3 h-3" />}
                             <span className="capitalize">{item.type}</span>
                         </div>
@@ -588,32 +587,32 @@ const Media = () => {
                     <h3 className="text-lg font-bold text-white mb-2 line-clamp-1 group-hover:text-orange-400 transition-colors">
                         {item.title}
                     </h3>
-                    
+
                     {item.author && (
                         <div className="flex items-center gap-2 text-sm text-gray-400 mb-3">
                             <User className="w-4 h-4" />
                             <span className="line-clamp-1">by {item.author}</span>
                         </div>
                     )}
-                    
+
                     {item.description && (
                         <p className="text-gray-400 text-sm mb-4 line-clamp-2">
                             {item.description}
                         </p>
                     )}
-                    
+
                     {/* Metadata - YouTube solo aparece abajo */}
                     <div className="flex items-center justify-between text-xs text-gray-500 pt-3 border-t border-white/10">
                         <div className="flex items-center gap-1">
                             <Calendar className="w-3 h-3" />
                             <span>{item.created_at ? new Date(item.created_at).toLocaleDateString() : 'No date'}</span>
                         </div>
-                        
+
                         {/* SOLO muestra YouTube si es video de YouTube */}
                         {isYouTubeVideo && (
                             <div className="flex items-center gap-1 text-red-400">
                                 <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
+                                    <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z" />
                                 </svg>
                                 <span>YouTube</span>
                             </div>
@@ -649,9 +648,9 @@ const Media = () => {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.6, delay: 0.1 }}
-                                className="text-4xl md:text-5xl font-bold text-white bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent mb-4"
+                                className="text-5xl md:text-8xl font-black text-white tracking-tighter uppercase mb-4"
                             >
-                                Media Gallery
+                                MEDIA <span className="text-red-500">GALLERY</span>
                             </motion.h1>
                             <motion.p
                                 initial={{ opacity: 0, y: 10 }}
@@ -664,7 +663,7 @@ const Media = () => {
                         </div>
                     </div>
 
-                    
+
 
                     {/* Filtros y Búsqueda */}
                     <motion.div
@@ -680,32 +679,30 @@ const Media = () => {
                                 placeholder="Search media by title, description or author..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent backdrop-blur-sm"
+                                className="w-full bg-[#0a0a0c] border border-white/5 rounded-[2rem] px-8 py-5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent backdrop-blur-3xl shadow-2xl transition-all duration-300"
                             />
-                            <Filter className="absolute right-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                            <Filter className="absolute right-6 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                         </div>
 
                         {/* Filtros */}
-                        <div className="flex flex-wrap justify-center gap-4">
+                        <div className="flex flex-wrap justify-center gap-6">
                             {filters.map((filter) => (
                                 <motion.button
                                     key={filter.key}
-                                    whileHover={{ scale: 1.05 }}
+                                    whileHover={{ scale: 1.05, y: -2 }}
                                     whileTap={{ scale: 0.95 }}
                                     onClick={() => setActiveFilter(filter.key)}
-                                    className={`flex items-center gap-3 px-6 py-3 rounded-2xl font-semibold transition-all duration-300 ${
-                                        activeFilter === filter.key
-                                            ? 'bg-gradient-to-r from-orange-600 to-red-600 text-white shadow-lg shadow-orange-500/25'
-                                            : 'bg-white/5 text-gray-300 hover:bg-white/10 border border-white/10'
-                                    }`}
+                                    className={`flex items-center gap-4 px-8 py-4 rounded-[1.5rem] font-black uppercase tracking-wider text-xs transition-all duration-500 shadow-xl border ${activeFilter === filter.key
+                                            ? 'bg-gradient-to-r from-red-600 to-rose-700 text-white border-transparent shadow-red-900/40 ring-2 ring-red-500/20'
+                                            : 'bg-[#0a0a0c] text-gray-500 hover:text-white hover:bg-[#121214] border-white/5'
+                                        }`}
                                 >
                                     <filter.icon className="h-5 w-5" />
                                     <span>{filter.label}</span>
-                                    <span className={`px-2 py-1 rounded-full text-xs ${
-                                        activeFilter === filter.key
+                                    <span className={`px-2 py-1 rounded-full text-xs ${activeFilter === filter.key
                                             ? 'bg-white/20'
                                             : 'bg-white/10'
-                                    }`}>
+                                        }`}>
                                         {filter.count}
                                     </span>
                                 </motion.button>

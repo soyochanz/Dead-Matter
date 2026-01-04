@@ -4,74 +4,67 @@ import { Key } from 'lucide-react';
 
 const KeyCard = ({ item, index, onClick }) => {
     const rarityColor = item.rarity?.color || '#4b5563';
-    
+
     return (
         <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            whileHover={{ 
-                y: -8, 
-                scale: 1.02,
-                transition: { duration: 0.3, ease: "easeOut" }
-            }}
-            transition={{ duration: 0.4, delay: index * 0.05 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            whileHover={{ y: -4 }}
+            transition={{ duration: 0.3, delay: index * 0.05 }}
             onClick={onClick}
-            className="relative overflow-hidden group cursor-pointer h-full bg-gray-900/90 border border-white/10 rounded-2xl"
+            className="group relative h-full bg-[#0a0a0c] border border-white/5 hover:border-white/20 rounded-xl overflow-hidden cursor-pointer transition-colors duration-300"
         >
-             {/* Rarity colored border bottom */}
-             <div 
-                className="absolute bottom-0 left-0 right-0 h-1 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left z-20"
+            {/* Rarity Line */}
+            <div
+                className="absolute top-0 left-0 w-full h-[1px] opacity-50 group-hover:opacity-100 transition-opacity duration-300"
                 style={{ backgroundColor: rarityColor }}
             />
 
-            {/* Background gradient effect */}
-            <div 
-                className="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity duration-300"
+            {/* Subtle Gradient Glow (Reduced) */}
+            <div
+                className="absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-500 pointer-events-none"
                 style={{
-                    background: `linear-gradient(to bottom right, ${rarityColor}40, transparent)`
+                    background: `radial-gradient(circle at center, ${rarityColor}, transparent 70%)`
                 }}
             />
 
-            <div className="relative h-40 bg-black/20 flex items-center justify-center p-6 overflow-hidden">
-                 <div className="absolute inset-0 bg-gradient-to-b from-transparent via-gray-900/20 to-gray-900/40 z-10" />
-                 
-                 {item.image_url ? (
-                    <img 
-                        src={item.image_url} 
-                        alt={item.name} 
-                        className="relative z-20 max-h-full max-w-full object-contain group-hover:scale-110 transition-transform duration-500 drop-shadow-2xl" 
-                    />
-                 ) : (
-                    <div className="relative z-20 p-4 rounded-2xl bg-white/5 shadow-lg backdrop-blur-sm">
-                        <Key className="w-16 h-16 text-gray-400 group-hover:text-white transition-colors" strokeWidth={1.5} />
-                    </div>
-                 )}
-                 
-                 {/* Hover shine effect */}
-                 <div className="absolute inset-0 bg-white/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-15" />
-            </div>
+            <div className="relative h-40 bg-black/40 flex items-center justify-center p-6 overflow-hidden">
+                {/* Technical Grid Background */}
+                <div className="absolute inset-0 opacity-[0.03] bg-[linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:20px_20px]" />
 
-            <div className="p-6 relative z-10">
-                <h3 className="text-xl font-bold text-white mb-2 truncate group-hover:text-white transition-colors">
-                    {item.name}
-                </h3>
-                {item.rarity && (
-                    <span 
-                        className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-white/10 border border-white/10"
-                        style={{ color: rarityColor, borderColor: `${rarityColor}40` }}
-                    >
-                        {item.rarity.name}
-                    </span>
+                {item.image_url ? (
+                    <img
+                        src={item.image_url}
+                        alt={item.name}
+                        className="relative z-10 max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-500 drop-shadow-2xl"
+                    />
+                ) : (
+                    <div className="relative z-10 p-4 rounded-xl bg-white/5 border border-white/5">
+                        <Key className="w-12 h-12 text-gray-600 group-hover:text-gray-400 transition-colors" strokeWidth={1.5} />
+                    </div>
                 )}
             </div>
-            
-            {/* Outer shadow on hover */}
-            <div 
-                className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-                style={{
-                    boxShadow: `0 10px 40px -10px ${rarityColor}40`
-                }}
-            />
+
+            <div className="p-4 border-t border-white/5 relative z-10">
+                <div className="flex items-start justify-between gap-3">
+                    <h3 className="text-lg font-medium text-white group-hover:text-blue-200 transition-colors tracking-tight leading-snug">
+                        {item.name}
+                    </h3>
+                    {item.rarity && (
+                        <div
+                            className="flex-shrink-0 w-1.5 h-1.5 rounded-full mt-2"
+                            style={{ backgroundColor: rarityColor }}
+                        />
+                    )}
+                </div>
+
+                <div className="mt-3 flex items-center justify-between text-xs text-gray-500 font-mono uppercase tracking-wider">
+                    <span>Key Item</span>
+                    <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-x-2 group-hover:translate-x-0">
+                        View Data
+                    </span>
+                </div>
+            </div>
         </motion.div>
     );
 };

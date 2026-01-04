@@ -1,16 +1,17 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Shield, FileText, Cookie } from 'lucide-react';
 
 const PrivacyPolicyContent = () => (
-    <div className="text-sm text-gray-400 space-y-4 max-h-[60vh] overflow-y-auto pr-4">
+    <div className="text-sm text-gray-400 space-y-4 max-h-[60vh] overflow-y-auto pr-4 custom-scrollbar">
         <h3 className="font-bold text-lg text-white">Privacy Policy</h3>
         <p>This website is a fan-made project and is not affiliated with the official Dead Matter development team. Our commitment is to protect your privacy.</p>
         <p>We collect information you provide directly to us when you create a user account for administrative purposes or save a character build preset. This may include your email address and any build configurations you choose to save locally in your browser.</p>
@@ -23,7 +24,7 @@ const PrivacyPolicyContent = () => (
 );
 
 const TermsOfServiceContent = () => (
-    <div className="text-sm text-gray-400 space-y-4 max-h-[60vh] overflow-y-auto pr-4">
+    <div className="text-sm text-gray-400 space-y-4 max-h-[60vh] overflow-y-auto pr-4 custom-scrollbar">
         <h3 className="font-bold text-lg text-white">Terms of Service</h3>
         <p>By using Deadmatterwiki.com, you agree to these terms. This is a community-driven wiki for the game Dead Matter. All content is provided for informational purposes.</p>
         <h3 className="font-bold text-lg text-white">Content Accuracy</h3>
@@ -36,7 +37,7 @@ const TermsOfServiceContent = () => (
 );
 
 const CookiePolicyContent = () => (
-    <div className="text-sm text-gray-400 space-y-4 max-h-[60vh] overflow-y-auto pr-4">
+    <div className="text-sm text-gray-400 space-y-4 max-h-[60vh] overflow-y-auto pr-4 custom-scrollbar">
         <h3 className="font-bold text-lg text-white">Cookie Policy</h3>
         <p>We use modern browser technologies to enhance your experience. This site utilizes browser Local Storage and authentication tokens from our backend provider (Supabase).</p>
         <h3 className="font-bold text-lg text-white">Local Storage</h3>
@@ -50,38 +51,55 @@ const CookiePolicyContent = () => (
 
 
 const Footer = () => {
-  return (
-    <footer className="bg-slate-900 text-gray-400 py-8 mt-16 border-t border-white/10">
-      <div className="max-w-7xl mx-auto px-4 text-center relative flex justify-between items-center">
-        <p className="text-sm">
-          © 2026 Deadmatterwiki.com. All Rights Reserved. Made with love ❤️ by <a href="https://ignaciomartin.site" target="_blank" rel="noopener noreferrer" className="text-red-400 hover:underline">ignaciomartin.site</a>
-        </p>
+    return (
+        <footer className="relative mt-24 border-t border-white/5 py-12 overflow-hidden">
+            {/* Technical Background */}
+            <div className="absolute inset-0 pointer-events-none opacity-[0.02]"
+                style={{
+                    backgroundImage: `linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)`,
+                    backgroundSize: '40px 40px'
+                }}
+            />
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
-        <div className="flex items-center gap-4">
-            <Dialog>
-                <DialogTrigger asChild>
-                    <Button variant="outline" size="sm">Legal & Privacy</Button>
-                </DialogTrigger>
-                <DialogContent className="bg-slate-900 border-slate-700 text-white max-w-2xl">
-                    <DialogHeader>
-                        <DialogTitle className="text-2xl">Legal Information</DialogTitle>
-                    </DialogHeader>
-                    <Tabs defaultValue="privacy" className="w-full mt-4">
-                        <TabsList>
-                            <TabsTrigger value="privacy">Privacy Policy</TabsTrigger>
-                            <TabsTrigger value="terms">Terms of Service</TabsTrigger>
-                            <TabsTrigger value="cookies">Cookie Policy</TabsTrigger>
-                        </TabsList>
-                        <TabsContent value="privacy" className="pt-4"><PrivacyPolicyContent /></TabsContent>
-                        <TabsContent value="terms" className="pt-4"><TermsOfServiceContent /></TabsContent>
-                        <TabsContent value="cookies" className="pt-4"><CookiePolicyContent /></TabsContent>
-                    </Tabs>
-                </DialogContent>
-            </Dialog>
-        </div>
-      </div>
-    </footer>
-  );
+            <div className="relative max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6 z-10">
+                <div className="text-center md:text-left">
+                    <p className="text-xs text-gray-500 font-medium tracking-wide">
+                        © 2026 <span className="text-white">Deadmatterwiki.com</span>. All Rights Reserved.
+                    </p>
+                    <p className="text-[10px] text-gray-600 mt-1 uppercase tracking-wider">
+                        Made with <span className="text-red-500 animate-pulse">❤</span> by <a href="https://ignaciomartin.site" target="_blank" rel="noopener noreferrer" className="text-red-400/80 hover:text-red-400 transition-colors font-bold hover:underline decoration-red-500/30 underline-offset-4">ignaciomartin.site</a>
+                    </p>
+                </div>
+
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <Button variant="ghost" size="sm" className="bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white border border-white/5 rounded-xl text-xs font-bold uppercase tracking-wider px-4">
+                            <Shield className="mr-2 h-3 w-3 text-gray-500" />
+                            Legal & Privacy
+                        </Button>
+                    </DialogTrigger>
+                    <DialogContent className="bg-[#0a0a0c] border border-white/10 text-white max-w-2xl shadow-2xl">
+                        <DialogHeader className="border-b border-white/5 pb-4">
+                            <DialogTitle className="text-2xl font-black uppercase tracking-tighter">Legal Information</DialogTitle>
+                        </DialogHeader>
+                        <Tabs defaultValue="privacy" className="w-full mt-4">
+                            <TabsList className="bg-white/5 border border-white/5">
+                                <TabsTrigger value="privacy" className="data-[state=active]:bg-white/10 data-[state=active]:text-white text-gray-400">Privacy</TabsTrigger>
+                                <TabsTrigger value="terms" className="data-[state=active]:bg-white/10 data-[state=active]:text-white text-gray-400">Terms</TabsTrigger>
+                                <TabsTrigger value="cookies" className="data-[state=active]:bg-white/10 data-[state=active]:text-white text-gray-400">Cookies</TabsTrigger>
+                            </TabsList>
+                            <div className="mt-4 bg-white/[0.02] border border-white/5 rounded-xl p-4">
+                                <TabsContent value="privacy" className="mt-0 focus-visible:outline-none"><PrivacyPolicyContent /></TabsContent>
+                                <TabsContent value="terms" className="mt-0 focus-visible:outline-none"><TermsOfServiceContent /></TabsContent>
+                                <TabsContent value="cookies" className="mt-0 focus-visible:outline-none"><CookiePolicyContent /></TabsContent>
+                            </div>
+                        </Tabs>
+                    </DialogContent>
+                </Dialog>
+            </div>
+        </footer>
+    );
 };
 
 export default Footer;

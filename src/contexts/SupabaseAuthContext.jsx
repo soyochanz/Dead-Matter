@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [authLoaded, setAuthLoaded] = useState(false);
-  
+
   // Use a ref to track mount status to avoid state updates on unmounted component
   const isMounted = useRef(true);
 
@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }) => {
         console.warn('Error fetching profile:', error.message);
         return null;
       }
-      
+
       if (isMounted.current) {
         setProfile(data);
       }
@@ -54,19 +54,19 @@ export const AuthProvider = ({ children }) => {
         // Check if session is expired
         const expiresAt = currentSession.expires_at;
         const now = Math.floor(Date.now() / 1000);
-        
+
         if (expiresAt && expiresAt < now) {
-           console.log('Session expired, attempting refresh...');
-           const { data: { session: refreshedSession }, error } = await supabase.auth.refreshSession();
-           if (error || !refreshedSession) {
-             throw new Error('Session refresh failed');
-           }
-           currentSession = refreshedSession;
+          console.log('Session expired, attempting refresh...');
+          const { data: { session: refreshedSession }, error } = await supabase.auth.refreshSession();
+          if (error || !refreshedSession) {
+            throw new Error('Session refresh failed');
+          }
+          currentSession = refreshedSession;
         }
 
         safeSetState(setSession, currentSession);
         safeSetState(setUser, currentSession?.user ?? null);
-        
+
         if (currentSession?.user) {
           await fetchProfile(currentSession.user.id);
         }
@@ -107,7 +107,7 @@ export const AuthProvider = ({ children }) => {
 
         // 2. Get the initial session
         const { data, error } = await supabase.auth.getSession();
-        
+
         if (error) {
           throw error;
         }
@@ -118,22 +118,22 @@ export const AuthProvider = ({ children }) => {
         // 4. Set up the auth state listener
         const { data: listener } = supabase.auth.onAuthStateChange(async (event, newSession) => {
           console.log(`Auth event: ${event}`);
-          
+
           if (event === 'TOKEN_REFRESHED' || event === 'SIGNED_IN') {
             await handleSession(newSession);
           } else if (event === 'SIGNED_OUT') {
             await handleSession(null);
           } else if (event === 'USER_UPDATED') {
-             if (isMounted.current) {
-                safeSetState(setUser, newSession?.user ?? null);
-                safeSetState(setSession, newSession);
-             }
+            if (isMounted.current) {
+              safeSetState(setUser, newSession?.user ?? null);
+              safeSetState(setSession, newSession);
+            }
           } else if (event === 'INITIAL_SESSION') {
-             // handled by getSession usually, but good fallback
-             await handleSession(newSession);
+            // handled by getSession usually, but good fallback
+            await handleSession(newSession);
           }
         });
-        
+
         authListener = listener.subscription;
 
       } catch (error) {
@@ -205,18 +205,26 @@ export const AuthProvider = ({ children }) => {
 
   const signOut = useCallback(async () => {
     try {
+      console.log('Initiating sign out protocol...');
       safeSetState(setLoading, true);
       const { error } = await supabase.auth.signOut();
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase sign out error:', error);
+        throw error;
+      }
+      console.log('Sign out successful, cleaning up session.');
       // State update handled by onAuthStateChange -> SIGNED_OUT
+      // But we call handleSession(null) as extra safety to ensure UI updates immediately
+      await handleSession(null);
     } catch (error) {
-      console.error("Sign out error:", error);
+      console.error("Sign out process failed:", error);
       toast({
         variant: "destructive",
         title: "Sign out Failed",
         description: error.message,
       });
-      // Force local cleanup if network signout fails
+      // Force local cleanup if network signout fails to ensure user isn't stuck "logged in"
+      console.log('Forcing local session termination after error.');
       await handleSession(null);
     } finally {
       if (isMounted.current) safeSetState(setLoading, false);

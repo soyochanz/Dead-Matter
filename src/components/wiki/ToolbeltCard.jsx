@@ -1,110 +1,103 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Wrench, Info, ArrowRight, Zap, Package } from 'lucide-react';
+import { Wrench, Package, Zap } from 'lucide-react';
 
 const ToolbeltCard = ({ item, index, onClick }) => {
     // Función para obtener los colores basados en la rareza
-    const getRarityStyles = (rarityName) => {
-        const styles = {
-            'Common': {
-                gradient: 'from-gray-600 to-slate-600',
-                shadow: 'shadow-gray-900/50'
-            },
-            'Uncommon': {
-                gradient: 'from-green-600 to-emerald-600',
-                shadow: 'shadow-green-900/50'
-            },
-            'Rare': {
-                gradient: 'from-blue-600 to-cyan-600',
-                shadow: 'shadow-blue-900/50'
-            },
-            'Epic': {
-                gradient: 'from-purple-600 to-violet-600',
-                shadow: 'shadow-purple-900/50'
-            },
-            'Legendary': {
-                gradient: 'from-orange-600 to-amber-600',
-                shadow: 'shadow-orange-900/50'
-            },
-            'Mythic': {
-                gradient: 'from-red-600 to-rose-600',
-                shadow: 'shadow-red-900/50'
-            }
+    const getRarityColor = (rarityName) => {
+        const colors = {
+            'Common': '#94a3b8',
+            'Uncommon': '#22c55e',
+            'Rare': '#3b82f6',
+            'Epic': '#a855f7',
+            'Legendary': '#f59e0b',
+            'Mythic': '#ef4444'
         };
-        
-        return styles[rarityName] || styles['Common'];
+        return colors[rarityName] || colors['Common'];
     };
 
     const rarityName = item.rarity?.name || 'Common';
-    const { gradient, shadow } = getRarityStyles(rarityName);
+    const rarityColor = getRarityColor(rarityName);
 
     return (
         <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: index * 0.05 }}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            whileHover={{ y: -5 }}
             onClick={onClick}
-            className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden group cursor-pointer transition-all duration-300 hover:border-red-500/50 relative"
+            className="relative group cursor-pointer h-full"
         >
-            {/* Badges superiores similares a los vehicles */}
-            <div className="absolute top-2 left-2 right-2 z-20 flex flex-wrap gap-2">
-                {/* Badge de rareza */}
-                <div className={`flex items-center gap-1.5 text-xs text-white bg-gradient-to-r ${gradient} backdrop-blur-sm px-2 py-1 rounded-full border border-white/20`} title="Rarity">
-                    <Zap size={12} />
-                    <span>{rarityName}</span>
-                </div>
-                
-                {/* Badge de inventory slots si existe */}
-                {item.inventory_slots > 0 && (
-                    <div className="flex items-center gap-1.5 text-xs text-sky-300 bg-sky-900/50 backdrop-blur-sm px-2 py-1 rounded-full border border-sky-500/50" title="Inventory Slots">
-                        <Package size={12} />
-                        <span>{item.inventory_slots} Slots</span>
-                    </div>
-                )}
-            </div>
-            
-            {/* Imagen del toolbelt */}
-            <div className="h-48 bg-black/20 flex items-center justify-center overflow-hidden p-4 relative z-10">
-                {item.image_url ? (
-                    <img 
-                        className="max-h-full max-w-full object-contain group-hover:scale-110 transition-transform duration-300"
-                        alt={item.name}
-                        src={item.image_url} 
+            {/* Card Interior */}
+            <div className="relative bg-[#0a0a0c] border border-white/5 rounded-[2rem] overflow-hidden transition-all duration-500 group-hover:border-red-500/30 group-hover:shadow-[0_20px_50px_-15px_rgba(239,68,68,0.15)] h-full flex flex-col shadow-2xl backdrop-blur-3xl">
+
+                {/* Image Section */}
+                <div className="relative h-48 bg-black/40 flex items-center justify-center p-8 overflow-hidden group-hover:bg-black/60 transition-colors">
+                    {/* Rarity Aura */}
+                    <div
+                        className="absolute inset-0 opacity-10 group-hover:opacity-20 blur-[60px] transition-opacity duration-500"
+                        style={{ backgroundColor: rarityColor }}
                     />
-                ) : (
-                    <Wrench className="w-24 h-24 text-gray-500 group-hover:scale-110 transition-transform"/>
-                )}
-            </div>
 
-            {/* Contenido de la tarjeta */}
-            <div className="p-4 relative z-10">
-                <h3 className="text-lg font-bold text-white truncate mb-2">{item.name}</h3>
-                
-                {/* Sección use_function con el mismo estilo que use_case en vehicles */}
-                {item.use_function && (
-                    <div className="flex items-start gap-2 text-xs text-purple-300 mt-2 mb-3">
-                        <Wrench size={14} className="flex-shrink-0 mt-px text-purple-400" />
-                        <p className="line-clamp-2">{item.use_function}</p>
-                    </div>
-                )}
+                    {/* Scanline Effect */}
+                    <div className="absolute inset-0 opacity-5 pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay" />
 
-                {/* Footer */}
-                <div className="flex items-center justify-between mt-2">
-                    <span className="text-xs text-gray-400">Toolbelt</span>
-                    <div className="flex items-center gap-3">
-                        {/* Puedes agregar más información aquí si es necesario */}
-                        {item.capacity && (
-                            <div className="flex items-center gap-1.5 text-sm text-gray-300 bg-white/10 px-2 py-1 rounded-full" title="Capacity">
-                                <Package size={14} />
-                                <span>{item.capacity}</span>
+                    {item.image_url ? (
+                        <img
+                            className="relative z-10 max-h-full max-w-full object-contain group-hover:scale-110 transition-transform duration-700 drop-shadow-[0_15px_15px_rgba(0,0,0,0.5)]"
+                            alt={item.name}
+                            src={item.image_url}
+                        />
+                    ) : (
+                        <div className="relative z-10 p-5 rounded-2xl bg-white/5 border border-white/5 group-hover:border-red-500/30 transition-colors">
+                            <Wrench className="w-12 h-12 text-gray-500 group-hover:text-red-500 transition-colors" />
+                        </div>
+                    )}
+
+                    {/* Badges */}
+                    <div className="absolute top-4 right-4 z-20 flex flex-col items-end gap-2">
+                        {item.inventory_slots > 0 && (
+                            <div className="flex items-center gap-2 px-3 py-1 rounded-lg bg-black/80 border border-blue-500/30 text-blue-500 text-[10px] font-black tracking-widest uppercase shadow-lg backdrop-blur-md">
+                                <Package size={12} />
+                                <span>{item.inventory_slots} SLOTS</span>
                             </div>
                         )}
                     </div>
                 </div>
-            </div>
 
-            {/* Efecto de hover en la parte inferior */}
-            <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r ${gradient} transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left`} />
+                {/* Content Section */}
+                <div className="p-6 flex-grow flex flex-col relative">
+                    <div className="flex-grow">
+                        <div className="flex items-center gap-3 mb-3">
+                            <span
+                                className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded border transition-colors"
+                                style={{
+                                    borderColor: `${rarityColor}30`,
+                                    color: rarityColor,
+                                    backgroundColor: `${rarityColor}10`
+                                }}
+                            >
+                                {rarityName}
+                            </span>
+                            <span className="text-[9px] font-black uppercase tracking-widest text-gray-600">ID: {item.id.substring(0, 6)}</span>
+                        </div>
+
+                        <h3 className="text-lg font-medium text-white leading-tight uppercase tracking-tight group-hover:text-red-500 transition-colors duration-300">
+                            {item.name}
+                        </h3>
+                    </div>
+
+                    {/* Footer Stats summary if needed */}
+                    {item.use_function && (
+                        <div className="mt-4 pt-4 border-t border-white/5 flex items-start gap-2">
+                            <Zap size={14} className="text-yellow-500/50 mt-0.5" />
+                            <p className="text-[10px] text-gray-500 font-medium uppercase tracking-tight line-clamp-1">{item.use_function}</p>
+                        </div>
+                    )}
+                </div>
+
+                {/* Interactive Bottom Bar */}
+                <div className="h-1 bg-red-600/0 group-hover:bg-red-600 transition-all duration-500" />
+            </div>
         </motion.div>
     );
 };
