@@ -1,53 +1,125 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { MapPin, Navigation, Link as LinkIcon } from 'lucide-react';
+import { supabase } from '@/lib/customSupabaseClient';
 
 const MapPopup = ({ marker, tags }) => {
+
     const infectedColors = {
-        high: '#ff3b3b',
-        medium: '#ffb341',
-        low: '#4aff4f',
-        none: '#ccc'
+        high: '#ef4444',   // red-500
+        medium: '#f97316', // orange-500
+        low: '#22c55e',    // green-500
+        none: '#94a3b8'    // slate-400
     };
-    const infectedColor = infectedColors[marker.infected_level?.toLowerCase()] || '#ccc';
+    const infectedLevel = marker.infected_level?.toLowerCase() || 'none';
+    const infectedColor = infectedColors[infectedLevel] || infectedColors.none;
+
+    // Format infected text
+    const infectedText = infectedLevel === 'none' ? 'Empty' : (infectedLevel.charAt(0).toUpperCase() + infectedLevel.slice(1));
+
+    const hasImage = !!marker.image_url;
+
+
 
     return (
-        <div className="w-80 max-w-[90vw] text-white font-sans">
-            {marker.image_url && (
-                <img
-                    src={marker.image_url}
-                    alt={marker.title}
-                    className="w-full rounded-xl mb-3 object-cover max-h-48"
-                />
-            )}
-            <h3 className="text-xl font-extrabold mb-2 text-white">{marker.title}</h3>
-            {marker.description && (
-                <p className="text-sm mb-3 text-gray-300 leading-relaxed">
-                    {marker.description}
-                </p>
+        <div className="flex flex-col text-white font-sans bg-[#0e1116] rounded-[15px] overflow-hidden min-w-[300px]">
+            {/* Hero Image Section */}
+            {hasImage && (
+                <div className="relative w-full h-48 group bg-black/40 overflow-hidden">
+                    {/* Blurred Background Layer */}
+                    <img
+                        src={marker.image_url}
+                        alt=""
+                        className="absolute inset-0 w-full h-full object-cover blur-md opacity-30 scale-110"
+                    />
+
+                    {/* Main Image Layer (Fully Visible) */}
+                    <img
+                        src={marker.image_url}
+                        alt={marker.title}
+                        className="relative w-full h-full object-contain transition-transform duration-500 group-hover:scale-105 z-10"
+                    />
+
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0e1116] via-transparent to-transparent opacity-60 z-20" />
+
+                    {/* Floating Title on Image */}
+                    <div className="absolute bottom-3 left-4 right-4">
+                        <h3 className="text-xl font-bold leading-tight text-white drop-shadow-md">{marker.title}</h3>
+                    </div>
+                </div>
             )}
 
-            {(tags && tags.length > 0) && (
-                <div className="mb-3">
-                    <h4 className="font-bold mb-2 text-white">Loot</h4>
-                    {tags.map((tag) => (
-                        <div key={tag.id} className="flex items-center gap-2 mb-1.5 text-sm">
-                            <span
-                                className="w-4 h-4 rounded border-2 border-white/30"
-                                style={{ backgroundColor: tag.color || '#ffffff' }}
-                            />
-                            {tag.label}
+            {/* Content Body */}
+            <div className={`px-4 pb-4 ${hasImage ? 'pt-1' : 'pt-4'}`}>
+                {/* Title (if no image) */}
+                {!hasImage && (
+                    <h3 className="text-xl font-bold mb-2 text-white">{marker.title}</h3>
+                )}
+
+                {/* Description */}
+                {marker.description && (
+                    <p className="text-sm text-gray-400 leading-relaxed mb-4">
+                        {marker.description}
+                    </p>
+                )}
+
+                {/* Tags & Linked Items Grid */}
+                <div className="space-y-4">
+
+                    {/* Loot Tags */}
+                    {tags && tags.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5">
+                            {tags.map((tag) => (
+                                <span
+                                    key={tag.id}
+                                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] uppercase tracking-wider font-semibold bg-white/5 border border-white/10 text-gray-200"
+                                >
+                                    <span
+                                        className="w-1.5 h-1.5 rounded-full shadow-[0_0_8px_currentColor]"
+                                        style={{ backgroundColor: tag.color || '#ffffff', color: tag.color || '#ffffff' }}
+                                    />
+                                    {tag.label}
+                                </span>
+                            ))}
                         </div>
-                    ))}
-                </div>
-            )}
+                    )}
 
-            {marker.infected_level && (
-                <div className="mt-3 text-sm font-bold text-white">
-                    <strong>Infected: </strong>
-                    <span style={{ color: infectedColor, textTransform: 'capitalize' }}>
-                        {marker.infected_level} pop
-                    </span>
+
+
+                    {/* Stats Row */}
+                    <div className="flex items-center justify-between pt-3 border-t border-white/10">
+                        {/* Infected Indicator */}
+                        {marker.infected_level && (
+                            <div className="flex items-center gap-2" title={`Infection Level: ${marker.infected_level}`}>
+                                <div className="flex gap-0.5">
+                                    {[1, 2, 3].map(i => {
+                                        let active = false;
+                                        if (infectedLevel === 'low' && i <= 1) active = true;
+                                        if (infectedLevel === 'medium' && i <= 2) active = true;
+                                        if (infectedLevel === 'high' && i <= 3) active = true;
+
+                                        return (
+                                            <div
+                                                key={i}
+                                                className={`w-1 h-3 rounded-full transition-all ${active ? '' : 'opacity-20'}`}
+                                                style={{ backgroundColor: active ? infectedColor : '#fff' }}
+                                            />
+                                        );
+                                    })}
+                                </div>
+                                <span className="text-xs font-bold text-gray-400 uppercase tracking-wide">
+                                    Infected Population: <span style={{ color: infectedColor }}>{infectedText}</span>
+                                </span>
+                            </div>
+                        )}
+
+                        {/* Coords */}
+                        <div className="flex items-center gap-1.5 text-xs text-gray-500 font-mono bg-black/20 px-2 py-1 rounded ml-auto">
+                            <MapPin className="w-3 h-3" />
+                            {marker.lat?.toFixed(4)}, {marker.lng?.toFixed(4)}
+                        </div>
+                    </div>
                 </div>
-            )}
+            </div>
         </div>
     );
 };

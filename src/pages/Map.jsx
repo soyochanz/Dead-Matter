@@ -13,7 +13,7 @@ const MapPage = () => {
                 />
             </Helmet>
 
-            <div className="h-screen w-full overflow-hidden">
+            <div className="h-screen w-full overflow-hidden relative">
                 <InteractiveMap />
             </div>
         </>

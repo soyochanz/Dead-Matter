@@ -89,7 +89,7 @@ const ClickHelper = ({ setClickedCoords, adminMode, onMapClick, onContextMenu })
     return null;
 };
 
-const InteractiveMap = ({ adminMode = false, onMapClick, onMarkerClick, refreshTrigger = 0 }) => {
+const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMarkerClick, refreshTrigger = 0 }) => {
     // Note: refreshTrigger increments after save, triggering re-fetch in hook
     const [internalRefresh, setInternalRefresh] = useState(0);
     const combinedRefresh = refreshTrigger + internalRefresh;
@@ -195,6 +195,10 @@ const InteractiveMap = ({ adminMode = false, onMapClick, onMarkerClick, refreshT
             });
         }
 
+        if (category?.name.toLowerCase() === 'vehicles' || category?.id === 'vehicles') {
+            return createCustomIcon('https://cdn-icons-png.flaticon.com/512/741/741407.png', [32, 32]);
+        }
+
         if (iconUrl) {
             let size = [30, 30];
             if (category.group_name === 'landmarks') size = [37, 37];
@@ -278,7 +282,7 @@ const InteractiveMap = ({ adminMode = false, onMapClick, onMarkerClick, refreshT
                     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
                     padding: 0 !important;
                 }
-                .leaflet-popup-content { margin: 16px !important; width: auto !important; }
+                .leaflet-popup-content { margin: 0 !important; width: 320px !important; }
                 .leaflet-popup-tip { background: rgba(14, 17, 22, 0.95) !important; border: 1px solid rgba(255, 255, 255, 0.15); }
                 .leaflet-container { background: #0f0f0f; font-family: 'Inter', sans-serif; }
                 .leaflet-control-attribution { background: rgba(0,0,0,0.5) !important; color: #aaa !important; }
@@ -293,104 +297,108 @@ const InteractiveMap = ({ adminMode = false, onMapClick, onMarkerClick, refreshT
             `}</style>
 
             {/* --- SIDEBAR: MY MARKERS --- */}
-            <div className={`fixed top-0 left-0 h-full w-[300px] z-[4500] bg-[#0e1116] border-r border-white/10 shadow-2xl transition-transform duration-300 flex flex-col ${isMyMarkersOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-                <div className="p-5 border-b border-white/10 flex justify-between items-center bg-black/20 shrink-0">
-                    <h2 className="text-lg font-bold flex items-center gap-2">
-                        <span className="text-blue-500">⭐</span> My Markers
-                    </h2>
-                    <button onClick={() => setIsMyMarkersOpen(false)} className="bg-white/5 hover:bg-white/10 p-1.5 rounded-lg transition-colors"><Menu className="w-5 h-5 rotate-180" /></button>
-                </div>
+            {!disableUI && (
+                <div className={`fixed top-0 left-0 h-full w-[300px] z-[4500] bg-[#0e1116] border-r border-white/10 shadow-2xl transition-transform duration-300 flex flex-col ${isMyMarkersOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+                    <div className="p-5 border-b border-white/10 flex justify-between items-center bg-black/20 shrink-0">
+                        <h2 className="text-lg font-bold flex items-center gap-2">
+                            <span className="text-blue-500">⭐</span> My Markers
+                        </h2>
+                        <button onClick={() => setIsMyMarkersOpen(false)} className="bg-white/5 hover:bg-white/10 p-1.5 rounded-lg transition-colors"><Menu className="w-5 h-5 rotate-180" /></button>
+                    </div>
 
-                <div className="flex-1 overflow-y-auto p-4 space-y-6">
-                    {/* Markers List */}
-                    <div>
-                        <h3 className="text-xs font-bold text-neutral-500 uppercase mb-3">Your Locations</h3>
-                        <div className="space-y-3">
-                            {personalMarkers.length === 0 ? (
-                                <div className="text-center text-neutral-500 py-4 text-sm bg-white/5 rounded-lg">
-                                    <p>No markers yet.</p>
-                                    <p className="mt-1 text-xs">Right-click map to add.</p>
-                                </div>
-                            ) : (
-                                personalMarkers.map(pm => {
-                                    const IconObj = personalIcons[pm.icon_name] || personalIcons.star;
-                                    const groupName = pm.group_id ? groups.find(g => g.id === pm.group_id)?.name : null;
+                    <div className="flex-1 overflow-y-auto p-4 space-y-6">
+                        {/* Markers List */}
+                        <div>
+                            <h3 className="text-xs font-bold text-neutral-500 uppercase mb-3">Your Locations</h3>
+                            <div className="space-y-3">
+                                {personalMarkers.length === 0 ? (
+                                    <div className="text-center text-neutral-500 py-4 text-sm bg-white/5 rounded-lg">
+                                        <p>No markers yet.</p>
+                                        <p className="mt-1 text-xs">Right-click map to add.</p>
+                                    </div>
+                                ) : (
+                                    personalMarkers.map(pm => {
+                                        const IconObj = personalIcons[pm.icon_name] || personalIcons.star;
+                                        const groupName = pm.group_id ? groups.find(g => g.id === pm.group_id)?.name : null;
 
-                                    return (
-                                        <div key={pm.id} onClick={() => handleFlyToMarker(pm)} className="group flex items-center justify-between p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/20 cursor-pointer transition-all">
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-black/40 text-black border border-white/10" style={{ color: pm.color }}>
-                                                    <div dangerouslySetInnerHTML={{ __html: IconObj.svg }} className="w-5 h-5" />
+                                        return (
+                                            <div key={pm.id} onClick={() => handleFlyToMarker(pm)} className="group flex items-center justify-between p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/20 cursor-pointer transition-all">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-black/40 text-black border border-white/10" style={{ color: pm.color }}>
+                                                        <div dangerouslySetInnerHTML={{ __html: IconObj.svg }} className="w-5 h-5" />
+                                                    </div>
+                                                    <div className="flex flex-col items-start text-left">
+                                                        <span className="font-semibold text-sm text-gray-200 group-hover:text-white truncate max-w-[140px]">{pm.title}</span>
+                                                        <span className="text-[10px] text-gray-500 uppercase tracking-wide flex items-center gap-1">
+                                                            {IconObj.label}
+                                                            {groupName && <span className="text-blue-400 bg-blue-500/10 px-1 rounded ml-1">{groupName}</span>}
+                                                        </span>
+                                                    </div>
                                                 </div>
-                                                <div className="flex flex-col items-start text-left">
-                                                    <span className="font-semibold text-sm text-gray-200 group-hover:text-white truncate max-w-[140px]">{pm.title}</span>
-                                                    <span className="text-[10px] text-gray-500 uppercase tracking-wide flex items-center gap-1">
-                                                        {IconObj.label}
-                                                        {groupName && <span className="text-blue-400 bg-blue-500/10 px-1 rounded ml-1">{groupName}</span>}
-                                                    </span>
-                                                </div>
+                                                <button
+                                                    onClick={(e) => { e.stopPropagation(); handleDeletePersonal(pm.id); }}
+                                                    className="opacity-0 group-hover:opacity-100 p-1.5 text-red-500 hover:bg-red-500/20 rounded transition-all"
+                                                    title="Delete"
+                                                >
+                                                    <Loader2 className="w-4 h-4" style={{ display: 'none' }} />
+                                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                                </button>
                                             </div>
-                                            <button
-                                                onClick={(e) => { e.stopPropagation(); handleDeletePersonal(pm.id); }}
-                                                className="opacity-0 group-hover:opacity-100 p-1.5 text-red-500 hover:bg-red-500/20 rounded transition-all"
-                                                title="Delete"
-                                            >
-                                                <Loader2 className="w-4 h-4" style={{ display: 'none' }} />
-                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                            </button>
-                                        </div>
-                                    );
-                                })
-                            )}
+                                        );
+                                    })
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Group Manager */}
+                        <div className="pt-4 border-t border-white/10">
+                            <h3 className="text-xs font-bold text-neutral-500 uppercase mb-3">Groups</h3>
+                            <GroupManager
+                                currentUser={currentUser}
+                                groups={groups}
+                                onGroupUpdate={() => setInternalRefresh(prev => prev + 1)}
+                            />
                         </div>
                     </div>
-
-                    {/* Group Manager */}
-                    <div className="pt-4 border-t border-white/10">
-                        <h3 className="text-xs font-bold text-neutral-500 uppercase mb-3">Groups</h3>
-                        <GroupManager
-                            currentUser={currentUser}
-                            groups={groups}
-                            onGroupUpdate={() => setInternalRefresh(prev => prev + 1)}
-                        />
-                    </div>
                 </div>
-            </div>
+            )}
 
             {/* --- TOP MENU (Floating Island) --- */}
-            <div className="fixed top-6 left-1/2 -translate-x-1/2 w-[90%] max-w-5xl z-[3000] flex items-center gap-3 pointer-events-none">
-                <div className="flex-1 bg-[#0e1116]/90 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl p-2 flex items-center gap-4 pointer-events-auto">
-                    <div className="flex items-center gap-3 pl-3 pr-2 border-r border-white/10">
-                        <div className="w-8 h-8 bg-red-600 rounded-lg flex items-center justify-center text-white">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+            {!disableUI && (
+                <div className="fixed top-6 left-1/2 -translate-x-1/2 w-[90%] max-w-5xl z-[3000] flex items-center gap-3 pointer-events-none">
+                    <div className="flex-1 bg-[#0e1116]/90 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl p-2 flex items-center gap-4 pointer-events-auto">
+                        <div className="flex items-center gap-3 pl-3 pr-2 border-r border-white/10">
+                            <div className="w-8 h-8 bg-red-600 rounded-lg flex items-center justify-center text-white">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+                            </div>
+                            <span className="hidden md:inline text-white font-bold text-sm tracking-wide">MAP</span>
                         </div>
-                        <span className="hidden md:inline text-white font-bold text-sm tracking-wide">MAP</span>
-                    </div>
 
-                    {/* My Markers Button */}
-                    <button
-                        onClick={() => setIsMyMarkersOpen(!isMyMarkersOpen)}
-                        className={`flex lg:hidden xl:flex items-center gap-2 px-3 py-2 rounded-lg transition-all font-semibold text-xs uppercase tracking-wide border
+                        {/* My Markers Button */}
+                        <button
+                            onClick={() => setIsMyMarkersOpen(!isMyMarkersOpen)}
+                            className={`flex lg:hidden xl:flex items-center gap-2 px-3 py-2 rounded-lg transition-all font-semibold text-xs uppercase tracking-wide border
                             ${isMyMarkersOpen
-                                ? 'bg-blue-500 text-white border-blue-500 shadow-lg shadow-blue-500/20'
-                                : 'bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 border-blue-500/20'
-                            }`}
-                    >
-                        ⭐ <span className="hidden sm:inline">My Markers</span>
-                    </button>
+                                    ? 'bg-blue-500 text-white border-blue-500 shadow-lg shadow-blue-500/20'
+                                    : 'bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 border-blue-500/20'
+                                }`}
+                        >
+                            ⭐ <span className="hidden sm:inline">My Markers</span>
+                        </button>
 
-                    <div className="flex-1">
-                        <MapSearch markers={markers} onLocationSelect={setSelectedLocation} />
+                        <div className="flex-1">
+                            <MapSearch markers={markers} onLocationSelect={setSelectedLocation} />
+                        </div>
+                        <button onClick={() => setIsFilterOpen(!isFilterOpen)} className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm transition-all duration-300 ${isFilterOpen ? 'bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.3)]' : 'bg-white/5 text-white hover:bg-white/10 border border-white/10'}`}>
+                            <Menu className="w-4 h-4" />
+                            <span className="hidden sm:inline">Filters</span>
+                        </button>
                     </div>
-                    <button onClick={() => setIsFilterOpen(!isFilterOpen)} className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm transition-all duration-300 ${isFilterOpen ? 'bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.3)]' : 'bg-white/5 text-white hover:bg-white/10 border border-white/10'}`}>
-                        <Menu className="w-4 h-4" />
-                        <span className="hidden sm:inline">Filters</span>
-                    </button>
                 </div>
-            </div>
+            )}
 
             {/* --- MAP --- */}
-            <div className="w-full h-full mt-[70px] relative z-0">
+            <div className="w-full h-full absolute inset-0 z-0">
                 <MapContainer center={[0.01221, 0.01914]} zoom={16} minZoom={17} maxZoom={20} style={{ height: '100%', width: '100%', background: '#1a1a1a' }} zoomControl={false}>
                     <ZoomControl position="bottomright" />
                     <LayersControl position="topright">
@@ -418,8 +426,9 @@ const InteractiveMap = ({ adminMode = false, onMapClick, onMarkerClick, refreshT
                     {/* Standard Markers */}
                     {visibleMarkers.map(marker => {
                         const markerTags = lootTags.filter(t => t.marker_id === marker.id);
+
                         return (
-                            <Marker key={marker.id} position={[marker.lat, marker.lng]} icon={getIconForMarker(marker)} eventHandlers={{ click: (e) => { if (adminMode && onMarkerClick) { L.DomEvent.stopPropagation(e); onMarkerClick(marker); } } }}>
+                            <Marker key={marker.id} position={[marker.lat, marker.lng]} icon={getIconForMarker(marker)} eventHandlers={{ click: (e) => { if (adminMode && onMarkerClick) { L.DomEvent.stopPropagation(e.originalEvent || e); onMarkerClick(marker); } } }}>
                                 {!adminMode && (
                                     <Popup closeButton={false} offset={[0, -10]}>
                                         <MapPopup marker={marker} tags={markerTags} />
@@ -531,9 +540,20 @@ const InteractiveMap = ({ adminMode = false, onMapClick, onMarkerClick, refreshT
                     </div>
                 )}
 
-                <MapFilters categories={categories} activeFilters={activeFilters} onToggleFilter={handleToggleFilter} isOpen={isFilterOpen} onClose={() => setIsFilterOpen(false)} />
+                {!disableUI && (
+                    <MapFilters categories={categories} activeFilters={activeFilters} onToggleFilter={handleToggleFilter} isOpen={isFilterOpen} onClose={() => setIsFilterOpen(false)} />
+                )}
                 {dataLoading && (
                     <div className="absolute inset-0 z-[5000] flex items-center justify-center bg-black/50 backdrop-blur-sm"><Loader2 className="w-12 h-12 text-red-500 animate-spin" /></div>
+                )}
+
+                {/* --- VERSION LABEL --- */}
+                {!disableUI && (
+                    <div className="fixed bottom-4 right-4 z-[4000] bg-black/60 backdrop-blur-md border border-white/10 px-3 py-1.5 rounded-full pointer-events-none">
+                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                            Game Version: <span className="text-red-500">0.12.2</span>
+                        </span>
+                    </div>
                 )}
             </div>
         </div>

@@ -6,6 +6,7 @@ import { Loader2, Plus, MapPin, Trash2, Edit } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
     Dialog,
     DialogContent,
@@ -14,7 +15,18 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
+import { useMapData } from '@/hooks/useMapData';
 import InteractiveMap from '@/components/Map/InteractiveMap';
+
+// Tag options configuration
+const TAG_OPTIONS = [
+    { label: 'Military', color: '#ef4444' },   // Red-500
+    { label: 'Industrial', color: '#f97316' }, // Orange-500
+    { label: 'Civilian', color: '#22c55e' },   // Green-500
+    { label: 'Medical', color: '#a855f7' },    // Purple-500
+    { label: 'Food', color: '#eab308' },       // Yellow-500
+    { label: 'Calculated', color: '#3b82f6' }  // Blue-500
+];
 
 const MapManager = () => {
     const [loading, setLoading] = useState(false);
@@ -22,28 +34,48 @@ const MapManager = () => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [refreshTrigger, setRefreshTrigger] = useState(0);
 
-    // State
-    const [categories, setCategories] = useState([]);
-    const [editingMarker, setEditingMarker] = useState(null); // null = creating new
-    const [markerPos, setMarkerPos] = useState(null); // LatLng
+    // Fetch categories using the hook (robust against errors)
+    const { categories } = useMapData(refreshTrigger);
 
+    // State, form data, etc
     const [formData, setFormData] = useState({
         title: '',
         description: '',
         category_id: '',
         image_url: '',
         infected_level: 'Low',
-        loot_color: '#ffffff'
+        selectedTags: []
     });
+    const [markerPos, setMarkerPos] = useState({ lat: 0, lng: 0 });
+    const [editingMarker, setEditingMarker] = useState(null);
 
-    // Fetch Categories
-    useEffect(() => {
-        const fetchCats = async () => {
-            const { data } = await supabase.from('marker_categories').select('*').order('name');
-            if (data) setCategories(data);
-        };
-        fetchCats();
-    }, []);
+    const [itemSearchType, setItemSearchType] = useState('keys');
+    const [itemSearchQuery, setItemSearchQuery] = useState('');
+    const [itemSearchResults, setItemSearchResults] = useState([]);
+    const [isSearching, setIsSearching] = useState(false);
+
+    // Item Search Handler
+    const handleItemSearch = async () => {
+        if (!itemSearchQuery || itemSearchQuery.length < 2) return;
+        setIsSearching(true);
+        try {
+            const { data, error } = await supabase
+                .from(itemSearchType)
+                .select('*')
+                .ilike('name', `%${itemSearchQuery}%`)
+                .limit(5);
+
+            if (error) throw error;
+            setItemSearchResults(data || []);
+        } catch (error) {
+            console.error("Search error:", error);
+            toast({ title: 'Search skipped', description: 'Could not search that table (check permissions).', variant: 'destructive' });
+        } finally {
+            setIsSearching(false);
+        }
+    };
+
+
 
     // Handlers
     const handleMapClick = (latlng) => {
@@ -55,29 +87,59 @@ const MapManager = () => {
             category_id: categories.length > 0 ? categories[0].id : '',
             image_url: '',
             infected_level: 'Low',
-            loot_color: '#ffffff'
+            selectedTags: []
         });
         setDialogOpen(true);
     };
 
-    const handleMarkerClick = (marker) => {
-        setEditingMarker(marker);
-        setMarkerPos({ lat: marker.lat, lng: marker.lng });
+    const handleMarkerClick = async (marker) => {
+        setLoading(true);
+        try {
+            setEditingMarker(marker);
+            setMarkerPos({ lat: marker.lat, lng: marker.lng });
 
-        setFormData({
-            title: marker.title,
-            description: marker.description || '',
-            category_id: marker.category_id,
-            image_url: marker.image_url || '',
-            infected_level: marker.infected_level || 'Low',
-            loot_color: '#ffffff'
-        });
-        setDialogOpen(true);
+            // 1. Fetch tags
+            const { data: tags, error: tagError } = await supabase
+                .from('marker_loot_tags')
+                .select('label')
+                .eq('marker_id', marker.id);
+            if (tagError) throw tagError;
+
+
+
+            const currentTags = tags ? tags.map(t => t.label) : [];
+
+            setFormData({
+                title: marker.title,
+                description: marker.description || '',
+                category_id: marker.category_id,
+                image_url: marker.image_url || '',
+                infected_level: marker.infected_level || 'Low',
+                selectedTags: currentTags
+            });
+            setDialogOpen(true);
+        } catch (error) {
+            console.error("Error preparing edit:", error);
+            toast({ title: 'Error loading marker', description: error.message, variant: 'destructive' });
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleTagToggle = (tagLabel) => {
+        setFormData(prev => {
+            const current = prev.selectedTags;
+            if (current.includes(tagLabel)) {
+                return { ...prev, selectedTags: current.filter(t => t !== tagLabel) };
+            } else {
+                return { ...prev, selectedTags: [...current, tagLabel] };
+            }
+        });
     };
 
     const handleSave = async () => {
@@ -89,36 +151,43 @@ const MapManager = () => {
                 title: formData.title,
                 description: formData.description,
                 category_id: formData.category_id,
-                image_url: formData.image_url || null, // Allow empty for "dot" markers
+                image_url: formData.image_url || null,
                 infected_level: formData.infected_level,
             };
 
+            let targetMarkerId = editingMarker?.id;
+
             if (editingMarker) {
-                // Update
-                const { error } = await supabase
-                    .from('map_markers')
-                    .update(payload)
-                    .eq('id', editingMarker.id);
+                const { error } = await supabase.from('map_markers').update(payload).eq('id', editingMarker.id);
                 if (error) throw error;
                 toast({ title: 'Success', description: 'Marker updated!' });
             } else {
-                // Insert
-                const { data: newMarker, error } = await supabase
-                    .from('map_markers')
-                    .insert(payload)
-                    .select()
-                    .single();
+                const { data: newMarker, error } = await supabase.from('map_markers').insert(payload).select().single();
                 if (error) throw error;
-
+                targetMarkerId = newMarker.id;
                 toast({ title: 'Success', description: 'Marker created!' });
             }
 
+            if (targetMarkerId) {
+                // Tags Logic
+                const { error: deleteError } = await supabase.from('marker_loot_tags').delete().eq('marker_id', targetMarkerId);
+                if (deleteError) throw deleteError;
+                if (formData.selectedTags.length > 0) {
+                    const tagInserts = formData.selectedTags.map(label => {
+                        const tagConfig = TAG_OPTIONS.find(t => t.label === label);
+                        return { marker_id: targetMarkerId, label: label, color: tagConfig ? tagConfig.color : '#ffffff' };
+                    });
+                    const { error: insertError } = await supabase.from('marker_loot_tags').insert(tagInserts);
+                    if (insertError) throw insertError;
+                }
+            }
+
             setDialogOpen(false);
-            setRefreshTrigger(prev => prev + 1); // Trigger map refresh
+            setRefreshTrigger(prev => prev + 1);
 
         } catch (error) {
-            console.error(error);
-            toast({ title: 'Error', description: error.message, variant: 'destructive' });
+            console.error("Save Error:", error);
+            toast({ title: 'Error saving', description: error.message, variant: 'destructive' });
         } finally {
             setLoading(false);
         }
@@ -130,16 +199,14 @@ const MapManager = () => {
 
         setLoading(true);
         try {
-            await supabase.from('marker_loot_tags').delete().eq('marker_id', editingMarker.id); // clean tags
             const { error } = await supabase.from('map_markers').delete().eq('id', editingMarker.id);
             if (error) throw error;
-
-            toast({ title: 'Deleted', description: 'Marker removed.' });
+            toast({ title: 'Deleted', description: 'Marker deleted successfully.' });
             setDialogOpen(false);
-            setRefreshTrigger(prev => prev + 1); // Trigger map refresh
+            setRefreshTrigger(prev => prev + 1);
         } catch (error) {
-            console.error(error);
-            toast({ title: 'Error', description: error.message, variant: 'destructive' });
+            console.error("Delete Error:", error);
+            toast({ title: 'Error deleting', description: error.message, variant: 'destructive' });
         } finally {
             setLoading(false);
         }
@@ -160,6 +227,7 @@ const MapManager = () => {
             <div className="flex-grow border border-white/10 rounded-xl overflow-hidden relative min-h-[500px]">
                 <InteractiveMap
                     adminMode={true}
+                    disableUI={true}
                     onMapClick={handleMapClick}
                     onMarkerClick={handleMarkerClick}
                     refreshTrigger={refreshTrigger}
@@ -184,7 +252,7 @@ const MapManager = () => {
                                 value={formData.title}
                                 onChange={handleInputChange}
                                 className="bg-neutral-800 border-neutral-700"
-                                placeholder={formData.category_id && categories.find(c => c.id === formData.category_id)?.name.includes('Zone') ? "e.g., Dead Mans Flats" : "e.g., Hidden Cache"}
+                                placeholder="e.g., Hidden Cache"
                             />
                         </div>
 
@@ -195,16 +263,12 @@ const MapManager = () => {
                                 name="category_id"
                                 value={formData.category_id}
                                 onChange={handleInputChange}
-                                className="flex h-10 w-full rounded-md border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm text-white capitalize"
+                                className="flex h-10 w-full rounded-md border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm text-white capitalize text-left"
                             >
                                 <option value="" disabled>Select Type</option>
-                                {/* Group Categories dynamically */}
                                 {[...new Set(categories.map(c => c.group_name))].sort().map(group => {
-                                    // Make "meta" group appear as "Zones" or similar if prefered, but "meta" is in DB.
-                                    // Custom labels for well known groups
                                     let label = group;
                                     if (group === 'meta') label = 'Zones (Text Labels)';
-
                                     return (
                                         <optgroup key={group} label={label.charAt(0).toUpperCase() + label.slice(1)}>
                                             {categories.filter(c => c.group_name === group).map(cat => (
@@ -216,11 +280,11 @@ const MapManager = () => {
                             </select>
                         </div>
 
-                        {/* Hide Image/Infected/Desc for Zones to simplify */}
                         {(!formData.category_id || !categories.find(c => c.id === formData.category_id)?.name.startsWith('Zones')) && (
                             <>
+                                {/* FEATURED IMAGE */}
                                 <div className="grid gap-2">
-                                    <Label htmlFor="image_url">Featured Image (Popup)</Label>
+                                    <Label htmlFor="image_url">Featured Image</Label>
                                     <Input
                                         id="image_url"
                                         name="image_url"
@@ -229,29 +293,27 @@ const MapManager = () => {
                                         onChange={handleInputChange}
                                         className="bg-neutral-800 border-neutral-700"
                                     />
-                                    <p className="text-xs text-gray-500">
-                                        This image will appear inside the popup when clicking the marker.
-                                    </p>
                                 </div>
+
+
 
                                 <div className="grid gap-2">
-                                    <Label htmlFor="loot_type">Loot Type (Tag)</Label>
-                                    <select
-                                        id="loot_type"
-                                        name="loot_color" // Reusing this state for the tag selection
-                                        value={formData.loot_color}
-                                        onChange={handleInputChange}
-                                        className="flex h-10 w-full rounded-md border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm text-white"
-                                    >
-                                        <option value="#ffffff">None / Custom</option>
-                                        <option value="Military">Military (Red)</option>
-                                        <option value="Industrial">Industrial (Orange)</option>
-                                        <option value="Civilian">Civilian (Green)</option>
-                                        <option value="Medical">Medical (Purple)</option>
-                                    </select>
+                                    <Label>Loot Tags (Multi-select)</Label>
+                                    <div className="grid grid-cols-2 gap-2 p-3 bg-neutral-800 rounded-md border border-neutral-700">
+                                        {TAG_OPTIONS.map((tag) => (
+                                            <div key={tag.label} className="flex items-center space-x-2">
+                                                <Checkbox
+                                                    id={`tag-${tag.label}`}
+                                                    checked={formData.selectedTags.includes(tag.label)}
+                                                    onCheckedChange={() => handleTagToggle(tag.label)}
+                                                />
+                                                <label htmlFor={`tag-${tag.label}`} className="text-sm font-medium" style={{ color: tag.color }}>
+                                                    {tag.label}
+                                                </label>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
-
-
 
                                 <div className="grid gap-2">
                                     <Label htmlFor="infected_level">Infected Level</Label>
