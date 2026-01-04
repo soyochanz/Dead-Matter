@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BookOpen, MapPin, Image as ImageIcon, ArrowRight, Bell, X, Calendar, Tag, GitCommit, Shield, Car, Backpack, Hammer, ThumbsUp, User, UserCircle, Star, Zap, Video, ExternalLink, Radio, ChevronDown, ChevronUp, Loader2, Sword, Soup, Stethoscope, Users, Package } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { supabase } from '@/lib/customSupabaseClient';
+import { supabase } from '@/lib/mySupabaseClient';
 import { Button } from '@/components/ui/button';
 import UpdateCard from '@/components/UpdateCard';
 
@@ -179,23 +179,16 @@ const MediaCard = ({ item, index }) => (
   <motion.div
     initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
     transition={{ delay: index * 0.1 }}
-    whileHover={{ y: -5 }}
-    className="group relative h-48 rounded-2xl overflow-hidden bg-slate-900 border border-white/5 transition-all duration-500"
+    className="group relative h-48 rounded-xl overflow-hidden bg-slate-900"
   >
     <Link to="/media" className="block h-full w-full">
-      <img src={item.thumbnail} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 brightness-90 group-hover:brightness-110" loading="lazy" alt="" />
-      <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-80" />
-      <div className="absolute bottom-3 left-3 right-3 space-y-1">
-        <p className="text-sm font-bold text-white line-clamp-1 group-hover:text-red-500 transition-colors">{item.title}</p>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            {item.type === 'video' ? <Video size={10} className="text-red-500" /> : <ImageIcon size={10} className="text-blue-500" />}
-            <span className="text-[10px] uppercase font-bold text-slate-400">{item.type}</span>
-          </div>
-          <span className="text-[10px] text-slate-400 font-medium flex items-center gap-1">
-            <UserCircle size={10} className="text-red-500/50" />
-            {item.author || 'Member'}
-          </span>
+      <img src={item.thumbnail} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" alt="" />
+      <div className="absolute inset-0 bg-gradient-to-t from-slate-950 to-transparent" />
+      <div className="absolute bottom-3 left-3 right-3">
+        <p className="text-sm font-bold text-white line-clamp-1">{item.title}</p>
+        <div className="flex items-center gap-2 mt-1">
+          {item.type === 'video' ? <Video size={12} className="text-red-500" /> : <ImageIcon size={12} className="text-blue-500" />}
+          <span className="text-[10px] uppercase font-bold text-slate-400">{item.type}</span>
         </div>
       </div>
     </Link>

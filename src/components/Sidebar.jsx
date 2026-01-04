@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { NavLink, Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as Icons from 'lucide-react';
-import { ChevronRight, ChevronLeft, Sparkles, Radio, ExternalLink, ArrowRight } from 'lucide-react';
-import { supabase } from '@/lib/customSupabaseClient';
+import { ChevronRight, ChevronLeft, Sparkles, Radio, ExternalLink } from 'lucide-react';
+import { supabase } from '@/lib/mySupabaseClient';
 const Sidebar = ({
   isOpen,
   toggleSidebar
@@ -62,62 +62,117 @@ const Sidebar = ({
   };
   const StreamStatus = () => {
     if (isLoading) {
-      return (
-        <div className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-white/5 border border-white/5 animate-pulse">
-          <div className="w-2 h-2 bg-slate-500 rounded-full" />
-          <div className="h-3 w-24 bg-white/10 rounded" />
-        </div>
-      );
+      return <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-800/50 border border-gray-700">
+        <div className="w-2 h-2 bg-gray-500 rounded-full animate-pulse" />
+        <span className="text-xs text-gray-400">Checking status...</span>
+      </div>;
     }
-
     if (isDevLive) {
-      return (
-        <motion.a
-          href={TWITCH_CHANNEL_URL} target="_blank" rel="noopener noreferrer"
-          whileHover={{ y: -2, scale: 1.02 }}
-          className="relative block p-4 rounded-2xl bg-gradient-to-br from-purple-600/20 to-pink-600/20 border border-purple-500/30 overflow-hidden group shadow-lg shadow-purple-500/10"
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-white/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-          <div className="relative z-10 flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <div className="relative flex items-center justify-center">
-                <div className="absolute inset-0 bg-red-500 rounded-full animate-ping opacity-75" />
-                <div className="relative w-2 h-2 bg-red-500 rounded-full" />
-              </div>
-              <span className="text-[10px] font-black text-white uppercase tracking-widest bg-red-500 px-1.5 py-0.5 rounded">LIVE</span>
-            </div>
-            <ExternalLink className="h-3 w-3 text-white/50 group-hover:text-white transition-colors" />
-          </div>
-          <div className="relative z-10 flex items-center gap-3">
-            <img src={DEV_AVATAR_URL} className="w-10 h-10 rounded-xl border border-white/10 shadow-lg object-cover" alt="" />
-            <div className="min-w-0">
-              <p className="text-sm font-bold text-white truncate leading-none">JohnsonGuitarDev</p>
-              <p className="text-[10px] text-purple-300 font-medium mt-1 truncate">{streamData?.title || 'Developing Dead Matter'}</p>
-            </div>
-          </div>
-        </motion.a>
-      );
-    }
+      return <motion.a href={TWITCH_CHANNEL_URL} target="_blank" rel="noopener noreferrer" initial={{
+        opacity: 0,
+        y: 10
+      }} animate={{
+        opacity: 1,
+        y: 0
+      }} whileHover={{
+        scale: 1.02
+      }} whileTap={{
+        scale: 0.98
+      }} className="block p-3 rounded-xl bg-gradient-to-r from-purple-600/20 to-pink-600/20 border border-purple-500/30 relative overflow-hidden cursor-pointer group">
+        {/* Pulsing background effect */}
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-600/10 to-pink-600/10 animate-pulse" />
 
-    return (
-      <motion.a
-        href={TWITCH_CHANNEL_URL} target="_blank" rel="noopener noreferrer"
-        whileHover={{ y: -2 }}
-        className="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 hover:border-white/10 transition-all duration-300 group"
-      >
+        {/* Live indicator header */}
+        <div className="flex items-center justify-between mb-2 relative z-10">
+          <div className="flex items-center gap-2">
+            <div className="relative">
+              <Radio className="h-4 w-4 text-purple-400" />
+              <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full animate-ping" />
+              <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full" />
+            </div>
+            <span className="text-xs font-semibold text-purple-300 uppercase tracking-wide">
+              LIVE NOW!
+            </span>
+          </div>
+          <ExternalLink className="h-3 w-3 text-purple-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+        </div>
+
+        {/* Streamer info */}
+        <div className="space-y-2 relative z-10">
+          <div className="flex items-center gap-2">
+            <div className="flex-shrink-0 relative">
+              <img src={DEV_AVATAR_URL} alt="JohnsonGuitarDev Avatar" className="w-8 h-8 rounded-full border-2 border-purple-400/80 object-cover" />
+              <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-gray-900 animate-pulse" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs text-white font-semibold truncate">
+                JohnsonGuitarDev
+              </p>
+              <p className="text-xs text-purple-300 mt-0.5">
+                Is now live
+              </p>
+            </div>
+          </div>
+
+          {/* Stream details */}
+          {streamData && <div className="bg-black/20 rounded-lg p-2">
+            <p className="text-xs text-white/90 font-medium leading-tight">
+              {streamData.title}
+            </p>
+            <div className="flex items-center justify-between mt-1">
+              <span className="text-xs text-purple-300">{streamData.game_name}</span>
+              <span className="text-xs text-green-400 font-medium flex items-center gap-1">
+                <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse" />
+                Live
+              </span>
+            </div>
+          </div>}
+        </div>
+
+        {/* Hover effect */}
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl" />
+
+        {/* Click hint */}
+        <div className="absolute bottom-2 right-2 text-xs text-purple-400 opacity-0 group-hover:opacity-100 transition-opacity">
+          Click to watch →
+        </div>
+      </motion.a>;
+    }
+    return <motion.a href={TWITCH_CHANNEL_URL} target="_blank" rel="noopener noreferrer" whileHover={{
+      scale: 1.02
+    }} whileTap={{
+      scale: 0.98
+    }} className="block p-3 rounded-xl bg-gray-800/30 border border-gray-700/50 hover:bg-gray-700/40 hover:border-gray-600/60 transition-all duration-300 group cursor-pointer">
+      <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="relative">
-            <img src={DEV_AVATAR_URL} className="w-10 h-10 rounded-xl grayscale opacity-50 border border-white/5 object-cover" alt="" />
-            <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-slate-800 rounded-full border-2 border-gray-950" />
+          <div className="flex-shrink-0 relative">
+            <img src={DEV_AVATAR_URL} alt="JohnsonGuitarDev Avatar" className="w-10 h-10 rounded-full border-2 border-gray-600/50 object-cover" />
+            <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-gray-500 rounded-full border-2 border-gray-800" />
           </div>
           <div>
-            <p className="text-sm font-bold text-slate-400 group-hover:text-white transition-colors">JohnsonGuitar</p>
-            <p className="text-[10px] text-slate-600 font-bold uppercase tracking-wider">Offline</p>
+            <p className="text-xs font-semibold text-gray-300 group-hover:text-white">
+              JohnsonGuitarDev
+            </p>
+            <p className="text-xs text-gray-500 group-hover:text-gray-400 mt-0.5">
+              Is not streaming
+            </p>
           </div>
         </div>
-        <ExternalLink className="h-3.5 w-3.5 text-slate-700 group-hover:text-slate-400 transition-colors" />
-      </motion.a>
-    );
+
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-gray-700/50 group-hover:bg-gray-600/50">
+            <div className="w-2 h-2 bg-gray-500 rounded-full" />
+            <span className="text-xs text-gray-400">Off</span>
+          </div>
+          <ExternalLink className="h-3 w-3 text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+        </div>
+      </div>
+
+      {/* Click hint */}
+      <div className="mt-2 text-center text-xs text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity">
+        Click to follow on Twitch
+      </div>
+    </motion.a>;
   };
   const navItems = [{
     path: '/',
@@ -263,28 +318,36 @@ const Sidebar = ({
         </h3>
         <StreamStatus />
 
-        {/* Discord Button Premium Wiki Style */}
-        {discordUrl && (
-          <motion.a
-            href={discordUrl} target="_blank" rel="noopener noreferrer"
-            whileHover={{ y: -2 }}
-            className="relative flex items-center gap-4 px-4 py-3 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 hover:border-white/20 transition-all duration-300 group overflow-hidden"
-          >
-            {/* Red glow on hover */}
-            <div className="absolute -inset-1 bg-red-500/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+        {/* Discord Button Moderno y más pequeño */}
+        {discordUrl && <motion.a href={discordUrl} target="_blank" rel="noopener noreferrer" whileHover={{
+          scale: 1.02
+        }} whileTap={{
+          scale: 0.98
+        }} className="relative flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-300 group overflow-hidden bg-gradient-to-r from-[#5865F2] to-[#4752C4] text-white shadow-md hover:shadow-lg hover:shadow-[#5865F2]/20 border border-[#5865F2]/30">
+          {/* Background effect */}
+          <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-            <div className="relative z-10 flex-shrink-0 w-10 h-10 flex items-center justify-center bg-slate-950/80 rounded-xl border border-white/5 group-hover:border-red-500/50 group-hover:shadow-[0_0_15px_rgba(239,68,68,0.3)] transition-all duration-300">
-              <img src="https://pngimg.com/d/discord_PNG3.png" alt="Discord" className="w-5 h-5 filter brightness-0 invert opacity-60 group-hover:opacity-100 transition-opacity" />
+          {/* Logo de Discord */}
+          <div className="relative z-10 flex-shrink-0">
+            <div className="w-8 h-8 flex items-center justify-center bg-white/10 rounded-lg">
+              <img src="https://pngimg.com/d/discord_PNG3.png" alt="Discord Logo" className="w-5 h-5 filter brightness-0 invert" />
             </div>
+          </div>
 
-            <div className="relative z-10 flex-1 min-w-0">
-              <span className="text-sm font-black text-white uppercase tracking-tight block">Join Discord</span>
-              <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest block mt-0.5 group-hover:text-red-500 transition-colors">Official Community</span>
-            </div>
+          {/* Text compacto */}
+          <div className="relative z-10 flex-1 min-w-0">
+            <span className="font-semibold text-sm block truncate">Join Discord</span>
+            <span className="text-white/70 text-xs block truncate">Community & Support</span>
+          </div>
 
-            <ArrowRight className="h-4 w-4 text-slate-700 group-hover:text-white transform group-hover:translate-x-1 transition-all duration-300" />
-          </motion.a>
-        )}
+          {/* Flecha pequeña */}
+          <div className="relative z-10">
+            <ChevronRight className="h-3.5 w-3.5 text-white/70 transform group-hover:translate-x-0.5 transition-transform duration-300" />
+          </div>
+
+          {/* Glow effect */}
+          <div className="absolute inset-0 bg-gradient-to-r from-white/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        </motion.a>}
 
         {/* Footer info compacto - CON VERSIÓN DEL JUEGO (quitado "Online") */}
         <div className="flex items-center justify-between px-1 pt-2 border-t border-white/10">
