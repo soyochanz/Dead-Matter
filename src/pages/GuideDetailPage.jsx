@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Helmet } from 'react-helmet';
 import { useParams, Link } from 'react-router-dom';
-import { supabase } from '@/lib/customSupabaseClient';
+import { supabase } from '@/lib/mySupabaseClient';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { Loader2, ThumbsUp, MessageSquare, User, Calendar, ShieldAlert, Send, ArrowLeft, BookOpen, Clock, Hash } from 'lucide-react';
 import { Button } from '@/components/ui/button';

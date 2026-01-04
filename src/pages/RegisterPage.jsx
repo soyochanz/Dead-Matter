@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/components/ui/use-toast';
 import { Loader2, UserPlus } from 'lucide-react';
-import { supabase } from '@/lib/customSupabaseClient';
+import { supabase } from '@/lib/mySupabaseClient';
 import { Turnstile } from '@marsidev/react-turnstile';
 
 const RegisterPage = () => {

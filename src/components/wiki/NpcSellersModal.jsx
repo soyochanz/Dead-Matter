@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { supabase } from '@/lib/customSupabaseClient';
+import { supabase } from '@/lib/mySupabaseClient';
 import { Loader2, X, User } from 'lucide-react';
 
 const NpcSellersModal = ({ itemType, itemId, onClose, onNpcSelect }) => {

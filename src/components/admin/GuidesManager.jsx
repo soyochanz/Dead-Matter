@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { supabase } from '@/lib/customSupabaseClient';
+import { supabase } from '@/lib/mySupabaseClient';
 import { Loader2, Check, X, Trash2, ShieldAlert } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';

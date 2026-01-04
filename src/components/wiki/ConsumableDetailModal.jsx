@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Droplet, Sparkles, HeartPulse, ShieldAlert, Flame, DollarSign, TrendingUp, AlertTriangle } from 'lucide-react';
-import { supabase } from '@/lib/customSupabaseClient';
+import { supabase } from '@/lib/mySupabaseClient';
 import CanOpenerIcon from '@/components/icons/CanOpenerIcon';
 import NpcSellersModal from '@/components/wiki/NpcSellersModal';
 import { useNavigate } from 'react-router-dom';

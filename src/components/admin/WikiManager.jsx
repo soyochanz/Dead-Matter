@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Plus, Edit, Trash2, Loader2 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import WikiForm from '@/components/admin/WikiForm';
-import { supabase } from '@/lib/customSupabaseClient';
+import { supabase } from '@/lib/mySupabaseClient';
 
 const WikiManager = () => {
   const [items, setItems] = useState([]);

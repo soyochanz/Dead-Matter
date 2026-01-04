@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Plus, Edit, Trash2, Loader2, User } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import MediaForm from '@/components/admin/MediaForm';
-import { supabase } from '@/lib/customSupabaseClient';
+import { supabase } from '@/lib/mySupabaseClient';
 
 const MediaManager = () => {
   const [items, setItems] = useState([]);

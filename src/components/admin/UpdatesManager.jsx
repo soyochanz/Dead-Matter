@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Plus, Edit, Trash2, Loader2 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import UpdateForm from '@/components/admin/UpdateForm';
-import { supabase } from '@/lib/customSupabaseClient';
+import { supabase } from '@/lib/mySupabaseClient';
 
 const UpdatesManager = () => {
   const [items, setItems] = useState([]);

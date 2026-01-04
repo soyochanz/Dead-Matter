@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Plus, Edit, Trash2, Loader2, Upload, HeartPulse, Gem, DollarSign, Droplet, Sparkles } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
-import { supabase } from '@/lib/customSupabaseClient';
+import { supabase } from '@/lib/mySupabaseClient';
 import { Input } from '@/components/ui/input';
 
 const MedicineForm = ({ item, onSave, onCancel, sharedMetadata }) => {

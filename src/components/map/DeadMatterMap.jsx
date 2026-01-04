@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { MapContainer, TileLayer, LayersControl, LayerGroup, Marker, Popup, Circle, useMapEvents, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { supabase } from '@/lib/customSupabaseClient';
+import { supabase } from '@/lib/mySupabaseClient';
 import { mapConfig, iconTypes, divIconTypes, layerCategories, landmarkInfo, staticMarkers, pueblosImportantes, pueblosMenosImportantes } from '@/data/mapData';
 import { Loader2 } from 'lucide-react';
 

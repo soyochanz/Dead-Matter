@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Plus, Edit, Trash2, Loader2 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
-import { supabase } from '@/lib/customSupabaseClient';
+import { supabase } from '@/lib/mySupabaseClient';
 
 const RarityForm = ({ item, onSave, onCancel }) => {
     const [formData, setFormData] = useState({ name: '', color: '#9ca3af' });

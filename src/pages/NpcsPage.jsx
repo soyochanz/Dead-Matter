@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Helmet } from 'react-helmet';
 import { motion, AnimatePresence } from 'framer-motion';
-import { supabase } from '@/lib/customSupabaseClient';
+import { supabase } from '@/lib/mySupabaseClient';
 import { Loader2, X, MapPin, Package, Target, Search, User, ArrowRight, DollarSign, Shield, Zap } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import { Input } from '@/components/ui/input';

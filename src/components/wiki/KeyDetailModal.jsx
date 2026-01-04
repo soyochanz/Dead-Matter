@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Key, DollarSign, TrendingUp, MapPin, ArrowRight, DoorOpen } from 'lucide-react';
-import { supabase } from '@/lib/customSupabaseClient';
+import { supabase } from '@/lib/mySupabaseClient';
 import NpcSellersModal from '@/components/wiki/NpcSellersModal';
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 

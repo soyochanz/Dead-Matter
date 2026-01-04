@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Helmet } from 'react-helmet';
-import { supabase } from '@/lib/customSupabaseClient';
+import { supabase } from '@/lib/mySupabaseClient';
 import { Loader2 } from 'lucide-react';
 import BasebuildingCard from '@/components/wiki/BasebuildingCard';
 import BasebuildingDetailModal from '@/components/wiki/BasebuildingDetailModal';

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Heart, Weight, Box, Hammer, Info, DollarSign, TrendingUp, Tent, TentTree } from 'lucide-react';
-import { supabase } from '@/lib/customSupabaseClient';
+import { supabase } from '@/lib/mySupabaseClient';
 import { Button } from '@/components/ui/button';
 import NpcSellersModal from '@/components/wiki/NpcSellersModal';
 

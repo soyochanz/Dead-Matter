@@ -5,7 +5,7 @@ import {
     Wrench, Loader2, Shield, Zap, MapPin, Settings 
 } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
-import { supabase } from '@/lib/customSupabaseClient';
+import { supabase } from '@/lib/mySupabaseClient';
 
 const Stat = ({ icon: Icon, label, value, unit, colorClass = 'text-white' }) => (
     <div className="flex items-center justify-between py-3 px-4 bg-white/5 rounded-lg border border-white/10">

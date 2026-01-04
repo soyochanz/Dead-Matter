@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { MapPin, Navigation, Link as LinkIcon } from 'lucide-react';
-import { supabase } from '@/lib/customSupabaseClient';
+import { supabase } from '@/lib/mySupabaseClient';
 
 const MapPopup = ({ marker, tags }) => {
 

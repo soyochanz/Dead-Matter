@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Plus, Edit, Trash2, Loader2 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
-import { supabase } from '@/lib/customSupabaseClient';
+import { supabase } from '@/lib/mySupabaseClient';
 
 const OccupationForm = ({ item, onSave, onCancel }) => {
     const defaultState = { name: '', description: '', points: 0, effects: { attributes: {}, skills: {}, stats: {} } };

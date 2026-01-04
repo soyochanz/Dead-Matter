@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { supabase } from '@/lib/customSupabaseClient';
+import { supabase } from '@/lib/mySupabaseClient';
 import { Loader2, Plus, Users, Copy, LogOut, Check } from 'lucide-react';
 
 const GroupManager = ({ currentUser, groups, onGroupUpdate }) => {

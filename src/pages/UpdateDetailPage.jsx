@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { motion } from 'framer-motion';
-import { supabase } from '@/lib/customSupabaseClient';
+import { supabase } from '@/lib/mySupabaseClient';
 import { ArrowLeft, Calendar, Tag, Loader2, Share2, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 

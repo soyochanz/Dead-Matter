@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Target, Zap, Shield, Gem, Crosshair, Grip, Puzzle, Wind, Loader2, Box, Ban, DollarSign, Tag, Ruler, Weight, Swords, TrendingUp, Hand, Clock, Lightbulb as Bolt, SlidersHorizontal } from 'lucide-react';
 import { DndContext, useDraggable, useDroppable, DragOverlay } from '@dnd-kit/core';
-import { supabase } from '@/lib/customSupabaseClient';
+import { supabase } from '@/lib/mySupabaseClient';
 import * as LucideIcons from 'lucide-react';
 import NpcSellersModal from '@/components/wiki/NpcSellersModal';
 

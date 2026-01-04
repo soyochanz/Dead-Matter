@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { motion, AnimatePresence } from 'framer-motion';
-import { supabase } from '@/lib/customSupabaseClient';
+import { supabase } from '@/lib/mySupabaseClient';
 import { Loader2 } from 'lucide-react';
 import WeaponCard from '@/components/wiki/WeaponCard';
 import WeaponDetailModal from '@/components/wiki/WeaponDetailModal';

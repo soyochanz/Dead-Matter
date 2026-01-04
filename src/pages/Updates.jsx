@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Helmet } from 'react-helmet';
 import { motion } from 'framer-motion';
-import { supabase } from '@/lib/customSupabaseClient';
+import { supabase } from '@/lib/mySupabaseClient';
 import UpdateCard from '@/components/UpdateCard';
 import { Loader2, ArrowLeft, Tag, Zap, Wrench, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';

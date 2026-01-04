@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents, LayersControl, Circle, ZoomControl } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { supabase } from '@/lib/customSupabaseClient'; // Ensure this path is correct
+import { supabase } from '@/lib/mySupabaseClient'; // Ensure this path is correct
 import { useMapData } from '@/hooks/useMapData';
 import MapPopup from './MapPopup';
 import MapFilters from './MapFilters';

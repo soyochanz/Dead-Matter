@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/customSupabaseClient';
+import { supabase } from '@/lib/mySupabaseClient';
 
 export const useMapData = (refreshTrigger = 0) => {
     const [categories, setCategories] = useState([]);
