@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
-import { supabase } from '@/lib/mySupabaseClient';
+import { supabase } from '@/lib/customSupabaseClient';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -30,7 +30,7 @@ const SECURITY_CONFIG = {
       max: 1.2  // 5:4
     }
   },
-  
+
   FILES: {
     MAX_FILENAME_LENGTH: 50,
     DISALLOWED_CHARS: /[<>:"/\\|?*]/g,
@@ -50,27 +50,27 @@ const SECURITY_CONFIG = {
 const AvatarSecurityUtils = {
   validateFileType(file) {
     const fileExtension = '.' + file.name.toLowerCase().split('.').pop();
-    
+
     // Verificar extensión peligrosa
     if (SECURITY_CONFIG.FILES.DISALLOWED_EXTENSIONS.includes(fileExtension)) {
       return { valid: false, error: 'File type not allowed for avatars' };
     }
-    
+
     // Verificar tipo MIME permitido
     if (!SECURITY_CONFIG.AVATAR.ALLOWED_TYPES.includes(file.type)) {
-      return { 
-        valid: false, 
-        error: 'Invalid format. Allowed: JPEG, PNG, WebP' 
+      return {
+        valid: false,
+        error: 'Invalid format. Allowed: JPEG, PNG, WebP'
       };
     }
-    
+
     return { valid: true };
   },
 
   validateFileSize(file) {
     if (file.size > SECURITY_CONFIG.AVATAR.MAX_SIZE) {
-      return { 
-        valid: false, 
+      return {
+        valid: false,
         error: `File too large. Maximum size: ${SECURITY_CONFIG.AVATAR.MAX_SIZE / 1024 / 1024}MB`
       };
     }
@@ -85,7 +85,7 @@ const AvatarSecurityUtils = {
       .replace(/\s+/g, '_')
       .replace(/_{2,}/g, '_')
       .substring(0, SECURITY_CONFIG.FILES.MAX_FILENAME_LENGTH);
-    
+
     // Forzar extensión .jpg para consistencia
     const nameWithoutExt = sanitized.replace(/\.[^/.]+$/, '');
     return `${nameWithoutExt}.jpg`;
@@ -93,23 +93,23 @@ const AvatarSecurityUtils = {
 
   detectDisguisedFile(filename) {
     const lowerFilename = filename.toLowerCase();
-    
+
     // Detectar doble extensión
     const doubleExtension = /\.(jpg|jpeg|png|webp)\.(php|exe|js|html|asp|aspx|jsp)$/i;
     if (doubleExtension.test(lowerFilename)) {
       return { malicious: true, type: 'double_extension' };
     }
-    
+
     // Detectar null bytes
     if (filename.includes('\0') || filename.includes('%00')) {
       return { malicious: true, type: 'null_byte' };
     }
-    
+
     // Detectar archivos muy largos (posible buffer overflow)
     if (filename.length > 255) {
       return { malicious: true, type: 'filename_length' };
     }
-    
+
     return { malicious: false };
   },
 
@@ -117,41 +117,41 @@ const AvatarSecurityUtils = {
     return new Promise((resolve) => {
       const img = new Image();
       const url = URL.createObjectURL(file);
-      
+
       img.onload = () => {
         URL.revokeObjectURL(url);
-        
+
         // Validar dimensiones máximas
-        if (img.width > SECURITY_CONFIG.AVATAR.MAX_DIMENSION || 
-            img.height > SECURITY_CONFIG.AVATAR.MAX_DIMENSION) {
+        if (img.width > SECURITY_CONFIG.AVATAR.MAX_DIMENSION ||
+          img.height > SECURITY_CONFIG.AVATAR.MAX_DIMENSION) {
           resolve({ valid: false, error: 'Image dimensions too large' });
           return;
         }
-        
+
         // Validar dimensiones mínimas
-        if (img.width < SECURITY_CONFIG.AVATAR.MIN_DIMENSION || 
-            img.height < SECURITY_CONFIG.AVATAR.MIN_DIMENSION) {
+        if (img.width < SECURITY_CONFIG.AVATAR.MIN_DIMENSION ||
+          img.height < SECURITY_CONFIG.AVATAR.MIN_DIMENSION) {
           resolve({ valid: false, error: 'Image too small. Minimum 64x64px' });
           return;
         }
-        
+
         // Validar ratio de aspecto (cercano a cuadrado)
         const aspectRatio = img.width / img.height;
-        if (aspectRatio < SECURITY_CONFIG.AVATAR.ASPECT_RATIO.min || 
-            aspectRatio > SECURITY_CONFIG.AVATAR.ASPECT_RATIO.max) {
+        if (aspectRatio < SECURITY_CONFIG.AVATAR.ASPECT_RATIO.min ||
+          aspectRatio > SECURITY_CONFIG.AVATAR.ASPECT_RATIO.max) {
           resolve({ valid: false, error: 'Image should be close to square (between 4:5 and 5:4)' });
           return;
         }
-        
+
         // Validar que la imagen no esté corrupta usando canvas
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
         canvas.width = img.width;
         canvas.height = img.height;
-        
+
         try {
           ctx.drawImage(img, 0, 0);
-          
+
           // Verificar que se dibujó correctamente
           const imageData = ctx.getImageData(0, 0, 1, 1).data;
           if (imageData[3] === 0 && file.type !== 'image/png') {
@@ -159,7 +159,7 @@ const AvatarSecurityUtils = {
             resolve({ valid: false, error: 'Invalid image data' });
             return;
           }
-          
+
           // Calcular luminosidad promedio (detectar imágenes completamente negras/blancas)
           const sampleData = ctx.getImageData(0, 0, Math.min(10, img.width), Math.min(10, img.height)).data;
           let totalLuminance = 0;
@@ -168,30 +168,30 @@ const AvatarSecurityUtils = {
             totalLuminance += luminance;
           }
           const avgLuminance = totalLuminance / (sampleData.length / 4);
-          
+
           if (avgLuminance < 5 || avgLuminance > 250) {
             resolve({ valid: false, error: 'Image appears to be blank or corrupted' });
             return;
           }
-          
+
         } catch (error) {
           resolve({ valid: false, error: 'Failed to validate image content' });
           return;
         }
-        
-        resolve({ 
-          valid: true, 
-          width: img.width, 
+
+        resolve({
+          valid: true,
+          width: img.width,
           height: img.height,
           aspectRatio: aspectRatio.toFixed(2)
         });
       };
-      
+
       img.onerror = () => {
         URL.revokeObjectURL(url);
         resolve({ valid: false, error: 'Invalid image file or corrupted data' });
       };
-      
+
       img.src = url;
     });
   },
@@ -200,46 +200,46 @@ const AvatarSecurityUtils = {
     return new Promise((resolve, reject) => {
       const img = new Image();
       const reader = new FileReader();
-      
+
       reader.onload = (e) => {
         img.src = e.target.result;
       };
-      
+
       img.onload = () => {
         const canvas = document.createElement('canvas');
         canvas.width = targetSize;
         canvas.height = targetSize;
-        
+
         const ctx = canvas.getContext('2d');
-        
+
         // Calcular recorte centrado
         const sourceSize = Math.min(img.width, img.height);
         const sourceX = (img.width - sourceSize) / 2;
         const sourceY = (img.height - sourceSize) / 2;
-        
+
         // Limpiar canvas
         ctx.fillStyle = '#374151'; // Color de fondo por defecto
         ctx.fillRect(0, 0, targetSize, targetSize);
-        
+
         // Dibujar imagen recortada y redimensionada
         ctx.drawImage(
-          img, 
+          img,
           sourceX, sourceY, sourceSize, sourceSize, // source
           0, 0, targetSize, targetSize // destination
         );
-        
+
         // Añadir borde sutil
         ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
         ctx.lineWidth = 2;
         ctx.strokeRect(0, 0, targetSize, targetSize);
-        
+
         canvas.toBlob(
           (blob) => {
             if (!blob) {
               reject(new Error('Compression failed'));
               return;
             }
-            resolve(new File([blob], file.name, { 
+            resolve(new File([blob], file.name, {
               type: 'image/jpeg',
               lastModified: Date.now()
             }));
@@ -248,7 +248,7 @@ const AvatarSecurityUtils = {
           SECURITY_CONFIG.AVATAR.COMPRESSION_QUALITY
         );
       };
-      
+
       img.onerror = () => reject(new Error('Failed to load image'));
       reader.readAsDataURL(file);
     });
@@ -257,26 +257,26 @@ const AvatarSecurityUtils = {
   async validateAndProcessAvatar(file) {
     const errors = [];
     const warnings = [];
-    
+
     // 1. Detección de archivos disfrazados
     const disguiseCheck = this.detectDisguisedFile(file.name);
     if (disguiseCheck.malicious) {
       errors.push(`Security alert: Suspicious file detected`);
       return { success: false, errors, warnings };
     }
-    
+
     // 2. Validar tipo de archivo
     const typeCheck = this.validateFileType(file);
     if (!typeCheck.valid) {
       errors.push(typeCheck.error);
     }
-    
+
     // 3. Validar tamaño
     const sizeCheck = this.validateFileSize(file);
     if (!sizeCheck.valid) {
       errors.push(sizeCheck.error);
     }
-    
+
     // 4. Validar contenido de imagen
     const contentCheck = await this.validateImageContent(file);
     if (!contentCheck.valid) {
@@ -290,11 +290,11 @@ const AvatarSecurityUtils = {
         warnings.push('Image will be cropped to square.');
       }
     }
-    
+
     if (errors.length > 0) {
       return { success: false, errors, warnings };
     }
-    
+
     // 5. Procesar imagen (comprimir y recortar)
     let processedFile = file;
     try {
@@ -304,13 +304,13 @@ const AvatarSecurityUtils = {
       // Continuar con archivo original si el procesamiento falla
       warnings.push('Could not optimize image. Using original.');
     }
-    
+
     // 6. Sanitizar nombre
     const sanitizedName = this.sanitizeFilename(file.name);
-    
-    return { 
-      success: true, 
-      file: processedFile, 
+
+    return {
+      success: true,
+      file: processedFile,
       sanitizedName,
       dimensions: contentCheck,
       warnings
@@ -341,50 +341,50 @@ const EditProfilePage = () => {
 
   const handleAvatarChange = async (e) => {
     if (!e.target.files || !e.target.files[0]) return;
-    
+
     const file = e.target.files[0];
     setValidationErrors([]);
     setValidationWarnings([]);
     setUploadProgress(0);
-    
+
     try {
       // Mostrar preview inmediato (pero no procesado)
       const tempPreview = URL.createObjectURL(file);
       setAvatarPreview(tempPreview);
-      
+
       // Validar y procesar avatar
       setUploadProgress(20);
       const validation = await AvatarSecurityUtils.validateAndProcessAvatar(file);
       setUploadProgress(60);
-      
+
       if (!validation.success) {
         setValidationErrors(validation.errors);
         // Revertir preview si la validación falla
         URL.revokeObjectURL(tempPreview);
         setAvatarPreview(profile?.avatar_url || '');
-        
-        toast({ 
-          variant: 'destructive', 
-          title: 'Invalid Avatar', 
-          description: validation.errors.join('. ') 
+
+        toast({
+          variant: 'destructive',
+          title: 'Invalid Avatar',
+          description: validation.errors.join('. ')
         });
         return;
       }
-      
+
       // Mostrar advertencias si las hay
       if (validation.warnings.length > 0) {
         setValidationWarnings(validation.warnings);
-        toast({ 
-          variant: 'default', 
-          title: 'Image Note', 
-          description: validation.warnings.join('. ') 
+        toast({
+          variant: 'default',
+          title: 'Image Note',
+          description: validation.warnings.join('. ')
         });
       }
-      
+
       // Actualizar con archivo procesado
       setAvatarFile(validation.file);
       setUploadProgress(100);
-      
+
       // Crear nuevo preview con imagen procesada
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -395,19 +395,19 @@ const EditProfilePage = () => {
         toast({ variant: 'destructive', title: 'Error', description: 'Failed to load image preview' });
       };
       reader.readAsDataURL(validation.file);
-      
+
       toast({
         title: 'Avatar Validated',
         description: `${validation.sanitizedName} ready for upload`,
         duration: 3000
       });
-      
+
     } catch (error) {
       console.error('Avatar processing error:', error);
-      toast({ 
-        variant: 'destructive', 
-        title: 'Processing Error', 
-        description: 'Failed to process image. Please try another file.' 
+      toast({
+        variant: 'destructive',
+        title: 'Processing Error',
+        description: 'Failed to process image. Please try another file.'
       });
       setValidationErrors(['Unexpected error during validation']);
     } finally {
@@ -522,7 +522,7 @@ const EditProfilePage = () => {
         description: 'Your profile has been successfully updated.',
         duration: 5000
       });
-      
+
       // Forzar recarga de avatar cache
       if (avatar_url !== profile.avatar_url) {
         const cacheBuster = `?t=${Date.now()}`;
@@ -530,7 +530,7 @@ const EditProfilePage = () => {
       } else {
         await fetchProfile(user.id);
       }
-      
+
       navigate('/');
     } catch (error) {
       console.error('Update error:', error);
@@ -565,7 +565,7 @@ const EditProfilePage = () => {
       <Helmet>
         <title>Edit Profile - Dead Matter Wiki</title>
       </Helmet>
-      
+
       <div className="max-w-3xl mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -634,7 +634,7 @@ const EditProfilePage = () => {
           className="relative"
         >
           <div className="absolute inset-0 bg-gradient-to-br from-red-600/10 via-gray-900/50 to-orange-600/10 rounded-3xl" />
-          
+
           <div className="relative bg-gray-900/90 backdrop-blur-sm border border-white/10 rounded-3xl overflow-hidden">
             <div className="bg-gradient-to-r from-red-600/20 to-orange-600/20 border-b border-white/10 p-8">
               <div className="flex flex-col items-center">
@@ -651,7 +651,7 @@ const EditProfilePage = () => {
                         {username?.charAt(0).toUpperCase() || 'U'}
                       </AvatarFallback>
                     </Avatar>
-                    
+
                     {/* Indicador de progreso */}
                     {uploadProgress > 0 && uploadProgress < 100 && (
                       <div className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-full">
@@ -683,7 +683,7 @@ const EditProfilePage = () => {
                         </div>
                       </div>
                     )}
-                    
+
                     <AnimatePresence>
                       {isHovering && (
                         <motion.div
@@ -696,7 +696,7 @@ const EditProfilePage = () => {
                         </motion.div>
                       )}
                     </AnimatePresence>
-                    
+
                     <Label
                       htmlFor="avatar-upload"
                       className="absolute -bottom-2 -right-2 bg-gradient-to-r from-red-600 to-orange-600 p-2 rounded-full cursor-pointer hover:shadow-lg hover:shadow-red-500/30 transition-all"
@@ -711,7 +711,7 @@ const EditProfilePage = () => {
                       />
                     </Label>
                   </div>
-                  
+
                   {/* Información de seguridad */}
                   <div className="mt-4 text-center">
                     <div className="inline-flex items-center gap-2 px-3 py-1 bg-gray-800/50 rounded-full">
@@ -720,7 +720,7 @@ const EditProfilePage = () => {
                     </div>
                   </div>
                 </motion.div>
-                
+
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -738,7 +738,7 @@ const EditProfilePage = () => {
             </div>
 
             <form onSubmit={handleSubmit} className="p-8 space-y-8">
-          
+
 
               {/* Campo de Usuario */}
               <motion.div
@@ -908,14 +908,14 @@ const EditProfilePage = () => {
                 </div>
                 <div className="text-sm text-gray-500">
                   <p>
-                    Last updated: {profile?.updated_at ? 
+                    Last updated: {profile?.updated_at ?
                       new Date(profile.updated_at).toLocaleDateString('en-US', {
                         year: 'numeric',
                         month: 'short',
                         day: 'numeric',
                         hour: '2-digit',
                         minute: '2-digit'
-                      }) : 
+                      }) :
                       'Never'
                     }
                   </p>
@@ -943,7 +943,7 @@ const EditProfilePage = () => {
               Files are validated for type, size, content, and scanned for malware before upload.
             </p>
           </div>
-          
+
           <div className="bg-gradient-to-br from-blue-600/5 to-transparent border border-white/10 rounded-2xl p-6">
             <div className="flex items-center gap-3 mb-3">
               <div className="p-2 rounded-lg bg-blue-600/20">
@@ -955,7 +955,7 @@ const EditProfilePage = () => {
               Avatars are automatically cropped to square and compressed for optimal performance.
             </p>
           </div>
-          
+
           <div className="bg-gradient-to-br from-green-600/5 to-transparent border border-white/10 rounded-2xl p-6">
             <div className="flex items-center gap-3 mb-3">
               <div className="p-2 rounded-lg bg-green-600/20">

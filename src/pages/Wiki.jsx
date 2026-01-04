@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { motion } from 'framer-motion';
 import { Loader2, ArrowRight, Sword, Car, Backpack, Hammer, Soup, Stethoscope, Users, Package, HelpCircle } from 'lucide-react';
-import { supabase } from '@/lib/mySupabaseClient';
+import { supabase } from '@/lib/customSupabaseClient';
 import * as Icons from 'lucide-react';
 import { Link } from 'react-router-dom';
 

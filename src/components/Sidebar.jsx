@@ -3,7 +3,7 @@ import { NavLink, Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as Icons from 'lucide-react';
 import { ChevronRight, ChevronLeft, Sparkles, Radio, ExternalLink, ArrowRight } from 'lucide-react';
-import { supabase } from '@/lib/mySupabaseClient';
+import { supabase } from '@/lib/customSupabaseClient';
 const Sidebar = ({
   isOpen,
   toggleSidebar

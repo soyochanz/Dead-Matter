@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BookOpen, MapPin, Image as ImageIcon, ArrowRight, Bell, X, Calendar, Tag, GitCommit, Shield, Car, Backpack, Hammer, ThumbsUp, User, UserCircle, Star, Zap, Video, ExternalLink, Radio, ChevronDown, ChevronUp, Loader2, Sword, Soup, Stethoscope, Users, Package } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { supabase } from '@/lib/mySupabaseClient';
+import { supabase } from '@/lib/customSupabaseClient';
 import { Button } from '@/components/ui/button';
 import UpdateCard from '@/components/UpdateCard';
 

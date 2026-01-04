@@ -6,9 +6,13 @@ import { useAuth } from '@/contexts/SupabaseAuthContext';
 import Layout from '@/components/Layout';
 
 // Lazy load de páginas
-const Home = lazy(() => import('@/pages/Home'));
-const Wiki = lazy(() => import('@/pages/Wiki'));
+// Regular imports for main entry points to avoid chunk loading issues on initial load
+import Home from '@/pages/Home';
+import Wiki from '@/pages/Wiki';
+
+// Lazy load de páginas secundarias
 const WeaponsPage = lazy(() => import('@/pages/WeaponsPage'));
+
 const ConsumablesPage = lazy(() => import('@/pages/ConsumablesPage'));
 const GearPage = lazy(() => import('@/pages/GearPage'));
 const ToolbeltsPage = lazy(() => import('@/pages/ToolbeltsPage'));
@@ -147,150 +151,65 @@ function App() {
 
         {/* Rutas principales */}
         <Route element={<MainLayout />}>
-          <Route index path="/" element={
-            <Suspense fallback={<PageLoader />}>
-              <Home />
-            </Suspense>
-          } />
+          <Route index element={<Home />} />
+          <Route path="wiki" element={<Wiki />} />
 
-          <Route path="wiki" element={
-            <Suspense fallback={<PageLoader />}>
-              <Wiki />
-            </Suspense>
-          } />
 
           {/* Individual Category Pages */}
-          <Route path="wiki/weapons" element={
-            <Suspense fallback={<PageLoader />}>
-              <WeaponsPage />
-            </Suspense>
-          } />
-          <Route path="wiki/consumables" element={
-            <Suspense fallback={<PageLoader />}>
-              <ConsumablesPage />
-            </Suspense>
-          } />
-          <Route path="wiki/gear" element={
-            <Suspense fallback={<PageLoader />}>
-              <GearPage />
-            </Suspense>
-          } />
-          <Route path="wiki/toolbelts" element={
-            <Suspense fallback={<PageLoader />}>
-              <ToolbeltsPage />
-            </Suspense>
-          } />
-          <Route path="wiki/keys" element={
-            <Suspense fallback={<PageLoader />}>
-              <KeysPage />
-            </Suspense>
-          } />
-          <Route path="wiki/vehicles" element={
-            <Suspense fallback={<PageLoader />}>
-              <VehiclesPage />
-            </Suspense>
-          } />
-          <Route path="wiki/accessories" element={
-            <Suspense fallback={<PageLoader />}>
-              <AccessoriesPage />
-            </Suspense>
-          } />
+          <Route path="wiki/weapons" element={<WeaponsPage />} />
+          <Route path="wiki/consumables" element={<ConsumablesPage />} />
+          <Route path="wiki/gear" element={<GearPage />} />
+          <Route path="wiki/toolbelts" element={<ToolbeltsPage />} />
+          <Route path="wiki/keys" element={<KeysPage />} />
+          <Route path="wiki/vehicles" element={<VehiclesPage />} />
+          <Route path="wiki/accessories" element={<AccessoriesPage />} />
+
 
           {/* Specialized Pages */}
-          <Route path="wiki/meds" element={
-            <Suspense fallback={<PageLoader />}>
-              <MedsPage />
-            </Suspense>
-          } />
-          <Route path="wiki/perks" element={
-            <Suspense fallback={<PageLoader />}>
-              <PerksPage />
-            </Suspense>
-          } />
-          <Route path="wiki/npcs" element={
-            <Suspense fallback={<PageLoader />}>
-              <NpcsPage />
-            </Suspense>
-          } />
-          <Route path="wiki/basebuilding" element={
-            <Suspense fallback={<PageLoader />}>
-              <BasebuildingPage />
-            </Suspense>
-          } />
+          <Route path="wiki/meds" element={<MedsPage />} />
+          <Route path="wiki/perks" element={<PerksPage />} />
+          <Route path="wiki/npcs" element={<NpcsPage />} />
+          <Route path="wiki/basebuilding" element={<BasebuildingPage />} />
 
           {/* Fallback for any other dynamic categories */}
-          <Route path="wiki/:categoryName" element={
-            <Suspense fallback={<PageLoader />}>
-              <WikiCategoryPage />
-            </Suspense>
-          } />
+          <Route path="wiki/:categoryName" element={<WikiCategoryPage />} />
 
-          <Route path="updates" element={
-            <Suspense fallback={<PageLoader />}>
-              <Updates />
-            </Suspense>
-          } />
-          <Route path="updates/:slug" element={
-            <Suspense fallback={<PageLoader />}>
-              <UpdateDetailPage />
-            </Suspense>
-          } />
+          <Route path="updates" element={<Updates />} />
+          <Route path="updates/:slug" element={<UpdateDetailPage />} />
 
           {/* Map page - IMPORTANTE que cargue */}
-          <Route path="map" element={
-            <Suspense fallback={<PageLoader />}>
-              <Map />
-            </Suspense>
-          } />
+          <Route path="map" element={<Map />} />
 
-          <Route path="media" element={
-            <Suspense fallback={<PageLoader />}>
-              <Media />
-            </Suspense>
-          } />
-          <Route path="guides" element={
-            <Suspense fallback={<PageLoader />}>
-              <GuidesPage />
-            </Suspense>
-          } />
+          <Route path="media" element={<Media />} />
+          <Route path="guides" element={<GuidesPage />} />
 
           <Route path="guides/create" element={
             <PrivateRoute>
-              <Suspense fallback={<PageLoader />}>
-                <CreateGuidePage />
-              </Suspense>
+              <CreateGuidePage />
             </PrivateRoute>
           } />
 
-          <Route path="guides/:slug" element={
-            <Suspense fallback={<PageLoader />}>
-              <GuideDetailPage />
-            </Suspense>
-          } />
+          <Route path="guides/:slug" element={<GuideDetailPage />} />
 
           <Route path="register" element={
             <PublicOnlyRoute>
-              <Suspense fallback={<PageLoader />}>
-                <RegisterPage />
-              </Suspense>
+              <RegisterPage />
             </PublicOnlyRoute>
           } />
 
           <Route path="login" element={
             <PublicOnlyRoute>
-              <Suspense fallback={<PageLoader />}>
-                <LoginPage />
-              </Suspense>
+              <LoginPage />
             </PublicOnlyRoute>
           } />
 
-          <Route path="/profile/edit" element={
+          <Route path="profile/edit" element={
+
             <PrivateRoute>
-              <Suspense fallback={<PageLoader />}>
-                <EditProfilePage />
-              </Suspense>
+              <EditProfilePage />
             </PrivateRoute>
           } />
+
 
           {/* Ruta 404 */}
           <Route path="*" element={
