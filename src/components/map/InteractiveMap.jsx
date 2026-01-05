@@ -65,13 +65,23 @@ const createClusterIcon = (cluster, colorClass, colorCode) => {
 // --- Subcomponents for Map Logic ---
 
 // Component to handle mouse coordinates
-const MouseCoords = ({ onMove }) => {
+// Component to handle mouse coordinates and display them independently
+// This prevents the main map from re-rendering on every mouse move
+const MouseCoordinatesDisplay = () => {
+    const [coords, setCoords] = useState({ lat: 0, lng: 0 });
+
     useMapEvents({
         mousemove: (e) => {
-            onMove(e.latlng);
+            setCoords(e.latlng);
         },
     });
-    return null;
+
+    return (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-[#0e1116f2] backdrop-blur-[20px] border border-white/15 rounded-2xl px-5 py-3 z-[1000] shadow-2xl flex flex-col items-center gap-1 pointer-events-none">
+            <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Coordinates</span>
+            <span className="text-sm font-bold text-white font-mono">{coords.lat.toFixed(5)} / {coords.lng.toFixed(5)}</span>
+        </div>
+    );
 };
 
 // Component to fly to location
@@ -113,7 +123,8 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
     const { markers, personalMarkers, groups, categories, lootTags, loading: dataLoading, error: dataError } = useMapData(combinedRefresh);
     const [activeFilters, setActiveFilters] = useState({});
     const [isFilterOpen, setIsFilterOpen] = useState(false);
-    const [mouseCoords, setMouseCoords] = useState({ lat: 0, lng: 0 });
+    const [isFilterOpen, setIsFilterOpen] = useState(false);
+    // mouseCoords moved to isolated component to prevent re-renders
     const [selectedLocation, setSelectedLocation] = useState(null);
     const [clickedCoords, setClickedCoords] = useState(null);
 
@@ -493,7 +504,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                         </LayersControl.BaseLayer>
                     </LayersControl>
 
-                    <MouseCoords onMove={setMouseCoords} />
+                    <MouseCoordinatesDisplay />
                     <ZoomTracker />
                     <MapFlyTo location={selectedLocation} />
 
@@ -624,10 +635,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
 
                 </MapContainer>
 
-                <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-[#0e1116f2] backdrop-blur-[20px] border border-white/15 rounded-2xl px-5 py-3 z-[1000] shadow-2xl flex flex-col items-center gap-1">
-                    <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Coordinates</span>
-                    <span className="text-sm font-bold text-white font-mono">{mouseCoords.lat.toFixed(5)} / {mouseCoords.lng.toFixed(5)}</span>
-                </div>
+
 
                 {clickedCoords && (
                     <div className="fixed bottom-[90px] left-1/2 -translate-x-1/2 bg-[#0e1116f2] backdrop-blur-[20px] border border-white/15 rounded-2xl px-6 py-3.5 z-[1000] shadow-2xl flex flex-col items-center gap-1 cursor-pointer hover:scale-105 transition-transform" onClick={() => navigator.clipboard.writeText(`${clickedCoords.lat.toFixed(5)}, ${clickedCoords.lng.toFixed(5)}`)}>
