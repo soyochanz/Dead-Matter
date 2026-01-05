@@ -84,7 +84,7 @@ const Updates = () => {
             const fetchCategory = async (categories) => {
                 const { data, error } = await supabase
                     .from('updates')
-                    .select('id, title, date, version, category, content, slug')
+                    .select('id, title, date, version, category, slug')
                     .in('category', categories)
                     .order('date', { ascending: false })
                     .limit(10);
@@ -146,30 +146,29 @@ const Updates = () => {
                     transition={{ duration: 0.6 }}
                 >
                     {/* Header */}
-                    <div className="mb-8">
+                    <div className="text-center mb-24 space-y-6">
                         <Link to="/" className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors group mb-6">
                             <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
                             Back to Home
                         </Link>
 
-                        <div className="text-center mb-8">
-                            <motion.h1
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.6, delay: 0.1 }}
-                                className="text-5xl md:text-8xl font-black text-white tracking-tighter uppercase mb-4 drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]"
-                            >
-                                SECTOR <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-500">PATCHES</span>
-                            </motion.h1>
-                            <motion.p
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.6, delay: 0.2 }}
-                                className="text-gray-400 text-lg max-w-2xl mx-auto font-light tracking-wide"
-                            >
-                                TRANSMISSION LOG // LATEST DEVELOPMENT UPDATES
-                            </motion.p>
-                        </div>
+                        <motion.h1
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6, delay: 0.1 }}
+                            className="text-5xl md:text-8xl font-black text-white tracking-tighter uppercase"
+                        >
+                            GAME <span className="text-red-500">UPDATES</span>
+                        </motion.h1>
+
+                        <motion.p
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6, delay: 0.2 }}
+                            className="text-xl text-slate-400 font-medium max-w-3xl mx-auto leading-relaxed"
+                        >
+                            Stay informed with the latest patches, hotfixes, and development updates.
+                        </motion.p>
                     </div>
 
                     {loading ? (
