@@ -1,5 +1,5 @@
 // src/App.jsx
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense } from 'react';
 import { Routes, Route, Outlet, Navigate, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
@@ -9,32 +9,33 @@ import Layout from '@/components/Layout';
 // Regular imports for main entry points to avoid chunk loading issues on initial load
 import Home from '@/pages/Home';
 import Wiki from '@/pages/Wiki';
+import { lazyImport } from '@/utils/lazyImport';
 
 // Lazy load de páginas secundarias
-const WeaponsPage = lazy(() => import('@/pages/WeaponsPage'));
+const WeaponsPage = lazyImport(() => import('@/pages/WeaponsPage'));
 
-const ConsumablesPage = lazy(() => import('@/pages/ConsumablesPage'));
-const GearPage = lazy(() => import('@/pages/GearPage'));
-const ToolbeltsPage = lazy(() => import('@/pages/ToolbeltsPage'));
-const KeysPage = lazy(() => import('@/pages/KeysPage'));
-const VehiclesPage = lazy(() => import('@/pages/VehiclesPage'));
-const AccessoriesPage = lazy(() => import('@/pages/AccessoriesPage'));
-const WikiCategoryPage = lazy(() => import('@/pages/WikiCategoryPage'));
-const MedsPage = lazy(() => import('@/pages/MedsPage'));
-const PerksPage = lazy(() => import('@/pages/PerksPage'));
-const NpcsPage = lazy(() => import('@/pages/NpcsPage'));
-const Updates = lazy(() => import('@/pages/Updates'));
-const UpdateDetailPage = lazy(() => import('@/pages/UpdateDetailPage'));
-const Map = lazy(() => import('@/pages/Map'));
-const Media = lazy(() => import('@/pages/Media'));
-const AdminPanel = lazy(() => import('@/pages/AdminPanel'));
-const BasebuildingPage = lazy(() => import('@/pages/BasebuildingPage'));
-const GuidesPage = lazy(() => import('@/pages/GuidesPage'));
-const GuideDetailPage = lazy(() => import('@/pages/GuideDetailPage'));
-const CreateGuidePage = lazy(() => import('@/pages/CreateGuidePage'));
-const RegisterPage = lazy(() => import('@/pages/RegisterPage'));
-const LoginPage = lazy(() => import('@/pages/LoginPage'));
-const EditProfilePage = lazy(() => import('@/pages/EditProfilePage'));
+const ConsumablesPage = lazyImport(() => import('@/pages/ConsumablesPage'));
+const GearPage = lazyImport(() => import('@/pages/GearPage'));
+const ToolbeltsPage = lazyImport(() => import('@/pages/ToolbeltsPage'));
+const KeysPage = lazyImport(() => import('@/pages/KeysPage'));
+const VehiclesPage = lazyImport(() => import('@/pages/VehiclesPage'));
+const AccessoriesPage = lazyImport(() => import('@/pages/AccessoriesPage'));
+const WikiCategoryPage = lazyImport(() => import('@/pages/WikiCategoryPage'));
+const MedsPage = lazyImport(() => import('@/pages/MedsPage'));
+const PerksPage = lazyImport(() => import('@/pages/PerksPage'));
+const NpcsPage = lazyImport(() => import('@/pages/NpcsPage'));
+const Updates = lazyImport(() => import('@/pages/Updates'));
+const UpdateDetailPage = lazyImport(() => import('@/pages/UpdateDetailPage'));
+const Map = lazyImport(() => import('@/pages/Map'));
+const Media = lazyImport(() => import('@/pages/Media'));
+const AdminPanel = lazyImport(() => import('@/pages/AdminPanel'));
+const BasebuildingPage = lazyImport(() => import('@/pages/BasebuildingPage'));
+const GuidesPage = lazyImport(() => import('@/pages/GuidesPage'));
+const GuideDetailPage = lazyImport(() => import('@/pages/GuideDetailPage'));
+const CreateGuidePage = lazyImport(() => import('@/pages/CreateGuidePage'));
+const RegisterPage = lazyImport(() => import('@/pages/RegisterPage'));
+const LoginPage = lazyImport(() => import('@/pages/LoginPage'));
+const EditProfilePage = lazyImport(() => import('@/pages/EditProfilePage'));
 
 // Componente de carga
 const PageLoader = () => (

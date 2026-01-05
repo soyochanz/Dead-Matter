@@ -135,7 +135,7 @@ export const AuthProvider = ({ children }) => {
 
         // 4. Set up the auth state listener
         const { data: listener } = supabase.auth.onAuthStateChange(async (event, newSession) => {
-          console.log(`Auth event: ${event}`);
+          // console.log(`Auth event: ${event}`);
 
           if (event === 'TOKEN_REFRESHED' || event === 'SIGNED_IN') {
             await handleSession(newSession);
