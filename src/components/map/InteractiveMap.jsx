@@ -595,10 +595,18 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                     {/* UNCLUSTERED MARKERS */}
                     {unclusteredMarkers.map(marker => {
                         const markerTags = lootTags.filter(t => t.marker_id === marker.id);
+                        const category = categories.find(c => c.id === marker.category_id);
+                        const isZone = category?.name === 'Zones (Major)' || category?.name === 'Zones (Minor)';
 
                         return (
-                            <Marker key={marker.id} position={[marker.lat, marker.lng]} icon={getIconForMarker(marker)} eventHandlers={{ click: (e) => { if (adminMode && onMarkerClick) { L.DomEvent.stopPropagation(e.originalEvent || e); onMarkerClick(marker); } } }}>
-                                {!adminMode && (
+                            <Marker
+                                key={marker.id}
+                                position={[marker.lat, marker.lng]}
+                                icon={getIconForMarker(marker)}
+                                interactive={!isZone} // Disable interactions for zones
+                                eventHandlers={!isZone ? { click: (e) => { if (adminMode && onMarkerClick) { L.DomEvent.stopPropagation(e.originalEvent || e); onMarkerClick(marker); } } } : {}}
+                            >
+                                {!adminMode && !isZone && (
                                     <Popup closeButton={false} offset={[0, -10]}>
                                         <MapPopup marker={marker} tags={markerTags} />
                                     </Popup>
