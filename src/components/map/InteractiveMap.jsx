@@ -123,7 +123,6 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
     const { markers, personalMarkers, groups, categories, lootTags, loading: dataLoading, error: dataError } = useMapData(combinedRefresh);
     const [activeFilters, setActiveFilters] = useState({});
     const [isFilterOpen, setIsFilterOpen] = useState(false);
-    const [isFilterOpen, setIsFilterOpen] = useState(false);
     // mouseCoords moved to isolated component to prevent re-renders
     const [selectedLocation, setSelectedLocation] = useState(null);
     const [clickedCoords, setClickedCoords] = useState(null);
