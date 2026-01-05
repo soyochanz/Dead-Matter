@@ -87,11 +87,10 @@ export const AuthProvider = ({ children }) => {
         }
       } else {
         // Handle logout / no session
-        if (session) { // only update if we actually had a session before
-          safeSetState(setSession, null);
-          safeSetState(setUser, null);
-          safeSetState(setProfile, null);
-        }
+        // Always clear state if there is no session, regardless of previous state
+        safeSetState(setSession, null);
+        safeSetState(setUser, null);
+        safeSetState(setProfile, null);
       }
     } catch (error) {
       console.error('Error handling session:', error);

@@ -151,19 +151,8 @@ const GuidesPage = () => {
     }
   };
 
-  const getGuideColor = (title) => {
-    const colors = [
-      'from-red-600 to-orange-600',
-      'from-blue-600 to-cyan-600',
-      'from-green-600 to-emerald-600',
-      'from-purple-600 to-pink-600',
-      'from-yellow-600 to-amber-600',
-      'from-indigo-600 to-purple-600',
-      'from-rose-600 to-pink-600',
-      'from-teal-600 to-cyan-600'
-    ];
-    const index = title.length % colors.length;
-    return colors[index];
+  const getGuideColor = () => {
+    return 'from-red-600 to-orange-600';
   };
 
   return (
@@ -174,7 +163,9 @@ const GuidesPage = () => {
       </Helmet>
 
       <div className="max-w-7xl mx-auto px-4">
+        {/* ... (Header kept implicitly by minimal diff, but ensures safely rendered) ... */}
         <div className="text-center mb-12">
+          {/* Headers ... */}
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -345,7 +336,7 @@ const GuidesPage = () => {
 
                       <div className="p-6 flex-grow flex flex-col">
                         <h2 className="text-xl font-bold text-white mb-3 group-hover:text-red-400 transition-colors line-clamp-2">
-                          {guide.title}
+                          {guide.title || 'Untitled Guide'}
                         </h2>
 
                         {/* Display Hashtags in Card */}
@@ -363,14 +354,14 @@ const GuidesPage = () => {
                         )}
 
                         <p className="text-gray-400 line-clamp-3 mb-4 flex-grow">
-                          {guide.description}
+                          {guide.description || 'No description provided.'}
                         </p>
 
                         <div className="flex items-center justify-between text-sm text-gray-400 mb-4">
                           <div className="flex items-center gap-4">
                             <div className="flex items-center gap-1.5">
                               <MessageSquare size={14} className="text-blue-400" />
-                              <span>{guide.comments[0]?.count || 0}</span>
+                              <span>{Array.isArray(guide.comments) ? guide.comments[0]?.count || 0 : 0}</span>
                             </div>
                             <div className="flex items-center gap-1.5">
                               <Calendar size={14} className="text-green-400" />
