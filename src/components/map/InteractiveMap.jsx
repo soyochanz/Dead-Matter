@@ -316,10 +316,10 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
 
             {/* --- SIDEBAR: MY MARKERS --- */}
             {!disableUI && (
-                <div className={`fixed top-0 left-0 h-full w-[300px] z-[4500] bg-[#0e1116] border-r border-white/10 shadow-2xl transition-transform duration-300 flex flex-col ${isMyMarkersOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-                    <div className="p-5 border-b border-white/10 flex justify-between items-center bg-black/20 shrink-0">
-                        <h2 className="text-lg font-bold flex items-center gap-2">
-                            <span className="text-blue-500">⭐</span> My Markers
+                <div className={`fixed top-0 left-0 h-full w-[320px] z-[4500] bg-[#0a0a0c]/95 backdrop-blur-xl border-r border-white/10 shadow-2xl transition-transform duration-300 flex flex-col ${isMyMarkersOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+                    <div className="p-6 border-b border-white/10 flex justify-between items-center shrink-0">
+                        <h2 className="text-xl font-bold text-white flex items-center gap-3">
+                            <span>⭐</span> My Markers
                         </h2>
                         <button onClick={() => setIsMyMarkersOpen(false)} className="bg-white/5 hover:bg-white/10 p-1.5 rounded-lg transition-colors"><Menu className="w-5 h-5 rotate-180" /></button>
                     </div>
@@ -395,13 +395,13 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                         {/* My Markers Button */}
                         <button
                             onClick={() => setIsMyMarkersOpen(!isMyMarkersOpen)}
-                            className={`flex lg:hidden xl:flex items-center gap-2 px-3 py-2 rounded-lg transition-all font-semibold text-xs uppercase tracking-wide border
+                            className={`flex lg:hidden xl:flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all duration-300 font-semibold text-sm border
                             ${isMyMarkersOpen
-                                    ? 'bg-blue-500 text-white border-blue-500 shadow-lg shadow-blue-500/20'
-                                    : 'bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 border-blue-500/20'
+                                    ? 'bg-white text-black border-white shadow-[0_0_20px_rgba(255,255,255,0.3)]'
+                                    : 'bg-white/5 text-gray-300 hover:bg-white/10 hover:text-white border-white/10'
                                 }`}
                         >
-                            ⭐ <span className="hidden sm:inline">My Markers</span>
+                            <span className="text-base">⭐</span> <span className="hidden sm:inline">My Markers</span>
                         </button>
 
                         <div className="flex-1">

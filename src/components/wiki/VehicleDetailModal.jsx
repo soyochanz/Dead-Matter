@@ -22,9 +22,9 @@ const StatDisplay = ({ icon: Icon, label, value, subValue, color = "text-white",
                 <span className="text-xs text-gray-500 font-medium tracking-wide uppercase">{label}</span>
             </div>
         </div>
-        <div className="text-right">
-            <span className="block text-lg font-medium text-white tracking-tight">{value}</span>
-            {subValue && <span className="text-xs text-gray-500">{subValue}</span>}
+        <div className="flex items-baseline gap-1.5 text-right">
+            <span className="text-lg font-bold text-white tracking-tight">{value}</span>
+            {subValue && <span className="text-xs font-bold text-gray-500 uppercase">{subValue}</span>}
         </div>
     </motion.div>
 );
@@ -166,7 +166,7 @@ const VehicleDetailModal = ({ item, onClose }) => {
                         {isTowable ? (
                             <>
                                 <StatDisplay icon={Package} label="Capacity" value={item.capacity || 'N/A'} color="text-purple-400" />
-                                <StatDisplay icon={Wrench} label="Use Case" value="Utility" subValue={item.use_case} color="text-gray-400" />
+                                <StatDisplay icon={Wrench} label="Use Case" value={item.use_case} color="text-gray-400" />
                             </>
                         ) : (
                             <>
@@ -241,11 +241,7 @@ const VehicleDetailModal = ({ item, onClose }) => {
                                         {item.subcategory.name}
                                     </span>
                                 )}
-                                {isTowable && (
-                                    <span className="text-xs font-bold px-2 py-0.5 rounded border border-purple-500/30 text-purple-400 bg-purple-500/10 uppercase tracking-wider">
-                                        Towable Asset
-                                    </span>
-                                )}
+
                             </div>
                         </div>
                         <button onClick={onClose} className="p-2 rounded-full bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-colors border border-white/5">
