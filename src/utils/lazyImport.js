@@ -1,4 +1,4 @@
-import { lazy } from 'react';
+import React, { lazy } from 'react';
 
 export const lazyImport = (factory) => {
     return lazy(async () => {
@@ -26,9 +26,30 @@ export const lazyImport = (factory) => {
                     return new Promise(() => { });
                 } else {
                     console.error('Chunk load error persisted after reload.', error);
-                    // Optionally clear the flag so it tries again next time the user visits
-                    sessionStorage.removeItem(storageKey);
-                    throw error;
+                    // Instead of throwing and crashing, return a fallback component that allows manual retry
+                    return {
+                        default: () => React.createElement('div', {
+                            style: { padding: '20px', textAlign: 'center', color: '#ef4444' }
+                        }, [
+                            React.createElement('p', { key: 'error-msg' }, 'Error loading component. Please check your connection.'),
+                            React.createElement('button', {
+                                key: 'retry-btn',
+                                onClick: () => {
+                                    sessionStorage.removeItem(storageKey);
+                                    window.location.reload();
+                                },
+                                style: {
+                                    marginTop: '10px',
+                                    padding: '8px 16px',
+                                    backgroundColor: '#3b82f6',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '4px',
+                                    cursor: 'pointer'
+                                }
+                            }, 'Try Again')
+                        ])
+                    };
                 }
             } else {
                 throw error;

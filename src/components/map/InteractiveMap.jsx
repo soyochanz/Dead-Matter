@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents, LayersControl, Circle, ZoomControl } from 'react-leaflet';
+import MarkerClusterGroup from 'react-leaflet-cluster';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { supabase } from '@/lib/mySupabaseClient'; // Ensure this path is correct
@@ -43,6 +44,21 @@ const createDivIcon = (colorClassName) => {
         iconSize: [12, 12],
         iconAnchor: [6, 6],
         className: 'precise-icon'
+    });
+    return L.divIcon({
+        html: `<div style="background-color: ${color}; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.4);"></div>`,
+        iconSize: [12, 12],
+        iconAnchor: [6, 6],
+        className: 'precise-icon'
+    });
+};
+
+const createClusterIcon = (cluster, colorClass, colorCode) => {
+    return L.divIcon({
+        html: `<div style="background-color: ${colorCode}; box-shadow: 0 0 10px ${colorCode};" class="custom-cluster-marker"></div>`,
+        className: `custom-cluster-group ${colorClass}`,
+        iconSize: [20, 20],
+        iconAnchor: [10, 10]
     });
 };
 
@@ -147,6 +163,37 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
         if (!activeFilters['personal']) return [];
         return personalMarkers || [];
     }, [personalMarkers, activeFilters]);
+
+    // Group markers for clustering
+    const { civilianLoot, medicalLoot, militaryLoot, industrialLoot, unclusteredMarkers } = useMemo(() => {
+        const grouped = {
+            civilianLoot: [],
+            medicalLoot: [],
+            militaryLoot: [],
+            industrialLoot: [],
+            unclusteredMarkers: []
+        };
+
+        visibleMarkers.forEach(marker => {
+            const category = categories.find(c => c.id === marker.category_id);
+            const isLoot = (marker.title.toLowerCase().includes('loot') || category?.name.toLowerCase().includes('loot'));
+            const groupName = category?.group_name;
+
+            if (isLoot && groupName === 'civilian') {
+                grouped.civilianLoot.push(marker);
+            } else if (isLoot && groupName === 'medical') {
+                grouped.medicalLoot.push(marker);
+            } else if (isLoot && groupName === 'military') {
+                grouped.militaryLoot.push(marker);
+            } else if (isLoot && groupName === 'industrial') {
+                grouped.industrialLoot.push(marker);
+            } else {
+                grouped.unclusteredMarkers.push(marker);
+            }
+        });
+
+        return grouped;
+    }, [visibleMarkers, categories]);
 
     // ... (Keep existing getIconForMarker) ...
     // Expanded Icons and Colors for Personal Markers
@@ -312,6 +359,24 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                 }
                 .zone-major { font-size: 16px; letter-spacing: 1px; }
                 .zone-minor { font-size: 12px; opacity: 0.8; }
+                .zone-major { font-size: 16px; letter-spacing: 1px; }
+                .zone-minor { font-size: 12px; opacity: 0.8; }
+                
+                /* Cluster Styles */
+                .custom-cluster-marker {
+                    width: 16px;
+                    height: 16px;
+                    border-radius: 50%;
+                    border: 2px solid rgba(255,255,255,0.9);
+                    opacity: 0.9;
+                    transition: all 0.2s ease;
+                }
+                .custom-cluster-marker:hover {
+                    transform: scale(1.3);
+                    opacity: 1;
+                    z-index: 1000;
+                    border-color: white;
+                }
             `}</style>
 
             {/* --- SIDEBAR: MY MARKERS --- */}
@@ -441,8 +506,84 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
 
                     <ClickHelper setClickedCoords={setClickedCoords} adminMode={adminMode} onMapClick={onMapClick} onContextMenu={handleContextMenu} />
 
-                    {/* Standard Markers */}
-                    {visibleMarkers.map(marker => {
+                    {/* CLUSTER: CIVILIAN (Green) */}
+                    <MarkerClusterGroup
+                        iconCreateFunction={(cluster) => createClusterIcon(cluster, 'civilian-cluster', '#10b981')}
+                        maxClusterRadius={60}
+                        disableClusteringAtZoom={18}
+                        spiderfyOnMaxZoom={false}
+                        animate={true}
+                    >
+                        {civilianLoot.map(marker => (
+                            <Marker key={marker.id} position={[marker.lat, marker.lng]} icon={getIconForMarker(marker)} eventHandlers={{ click: (e) => { if (adminMode && onMarkerClick) { L.DomEvent.stopPropagation(e.originalEvent || e); onMarkerClick(marker); } } }}>
+                                {!adminMode && (
+                                    <Popup closeButton={false} offset={[0, -10]}>
+                                        <MapPopup marker={marker} tags={lootTags.filter(t => t.marker_id === marker.id)} />
+                                    </Popup>
+                                )}
+                            </Marker>
+                        ))}
+                    </MarkerClusterGroup>
+
+                    {/* CLUSTER: MEDICAL (Purple) */}
+                    <MarkerClusterGroup
+                        iconCreateFunction={(cluster) => createClusterIcon(cluster, 'medical-cluster', '#a855f7')}
+                        maxClusterRadius={60}
+                        disableClusteringAtZoom={18}
+                        spiderfyOnMaxZoom={false}
+                        animate={true}
+                    >
+                        {medicalLoot.map(marker => (
+                            <Marker key={marker.id} position={[marker.lat, marker.lng]} icon={getIconForMarker(marker)} eventHandlers={{ click: (e) => { if (adminMode && onMarkerClick) { L.DomEvent.stopPropagation(e.originalEvent || e); onMarkerClick(marker); } } }}>
+                                {!adminMode && (
+                                    <Popup closeButton={false} offset={[0, -10]}>
+                                        <MapPopup marker={marker} tags={lootTags.filter(t => t.marker_id === marker.id)} />
+                                    </Popup>
+                                )}
+                            </Marker>
+                        ))}
+                    </MarkerClusterGroup>
+
+                    {/* CLUSTER: MILITARY (Red) */}
+                    <MarkerClusterGroup
+                        iconCreateFunction={(cluster) => createClusterIcon(cluster, 'military-cluster', '#ef4444')}
+                        maxClusterRadius={60}
+                        disableClusteringAtZoom={18}
+                        spiderfyOnMaxZoom={false}
+                        animate={true}
+                    >
+                        {militaryLoot.map(marker => (
+                            <Marker key={marker.id} position={[marker.lat, marker.lng]} icon={getIconForMarker(marker)} eventHandlers={{ click: (e) => { if (adminMode && onMarkerClick) { L.DomEvent.stopPropagation(e.originalEvent || e); onMarkerClick(marker); } } }}>
+                                {!adminMode && (
+                                    <Popup closeButton={false} offset={[0, -10]}>
+                                        <MapPopup marker={marker} tags={lootTags.filter(t => t.marker_id === marker.id)} />
+                                    </Popup>
+                                )}
+                            </Marker>
+                        ))}
+                    </MarkerClusterGroup>
+
+                    {/* CLUSTER: INDUSTRIAL (Orange) */}
+                    <MarkerClusterGroup
+                        iconCreateFunction={(cluster) => createClusterIcon(cluster, 'industrial-cluster', '#f97316')}
+                        maxClusterRadius={60}
+                        disableClusteringAtZoom={18}
+                        spiderfyOnMaxZoom={false}
+                        animate={true}
+                    >
+                        {industrialLoot.map(marker => (
+                            <Marker key={marker.id} position={[marker.lat, marker.lng]} icon={getIconForMarker(marker)} eventHandlers={{ click: (e) => { if (adminMode && onMarkerClick) { L.DomEvent.stopPropagation(e.originalEvent || e); onMarkerClick(marker); } } }}>
+                                {!adminMode && (
+                                    <Popup closeButton={false} offset={[0, -10]}>
+                                        <MapPopup marker={marker} tags={lootTags.filter(t => t.marker_id === marker.id)} />
+                                    </Popup>
+                                )}
+                            </Marker>
+                        ))}
+                    </MarkerClusterGroup>
+
+                    {/* UNCLUSTERED MARKERS */}
+                    {unclusteredMarkers.map(marker => {
                         const markerTags = lootTags.filter(t => t.marker_id === marker.id);
 
                         return (

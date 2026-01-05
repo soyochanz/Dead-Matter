@@ -73,7 +73,7 @@ export const AuthProvider = ({ children }) => {
           // better to rely on realtime subs for profile changes, for now just prevent heavy re-render
           // Actually, we skip setting session/user, but we might want to ensure profile is fetched if missing
           if (!profile) {
-            await fetchProfile(currentSession.user.id);
+            fetchProfile(currentSession.user.id).catch(err => console.warn('Background profile fetch failed:', err));
           }
           // Stop here to prevent context churn
           return;
@@ -83,7 +83,7 @@ export const AuthProvider = ({ children }) => {
         safeSetState(setUser, currentSession?.user ?? null);
 
         if (currentSession?.user) {
-          await fetchProfile(currentSession.user.id);
+          fetchProfile(currentSession.user.id).catch(err => console.warn('Background profile fetch failed:', err));
         }
       } else {
         // Handle logout / no session
