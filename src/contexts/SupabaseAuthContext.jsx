@@ -37,14 +37,17 @@ export const AuthProvider = ({ children }) => {
       }
 
       if (isMounted.current) {
-        setProfile(data);
+        // Deep compare to prevent unnecessary re-renders
+        if (JSON.stringify(data) !== JSON.stringify(profile)) {
+          setProfile(data);
+        }
       }
       return data;
     } catch (err) {
       console.error('Unexpected error fetching profile:', err);
       return null;
     }
-  }, []);
+  }, [profile]); // Add profile to dependency since we use it for comparison
 
   const handleSession = useCallback(async (currentSession) => {
     if (!isMounted.current) return;
@@ -64,6 +67,18 @@ export const AuthProvider = ({ children }) => {
           currentSession = refreshedSession;
         }
 
+        // Optimization: If session is identical, skip updates
+        if (session?.access_token === currentSession?.access_token) {
+          // still fetch profile if needed in case it changed independently?
+          // better to rely on realtime subs for profile changes, for now just prevent heavy re-render
+          // Actually, we skip setting session/user, but we might want to ensure profile is fetched if missing
+          if (!profile) {
+            await fetchProfile(currentSession.user.id);
+          }
+          // Stop here to prevent context churn
+          return;
+        }
+
         safeSetState(setSession, currentSession);
         safeSetState(setUser, currentSession?.user ?? null);
 
@@ -71,9 +86,12 @@ export const AuthProvider = ({ children }) => {
           await fetchProfile(currentSession.user.id);
         }
       } else {
-        safeSetState(setSession, null);
-        safeSetState(setUser, null);
-        safeSetState(setProfile, null);
+        // Handle logout / no session
+        if (session) { // only update if we actually had a session before
+          safeSetState(setSession, null);
+          safeSetState(setUser, null);
+          safeSetState(setProfile, null);
+        }
       }
     } catch (error) {
       console.error('Error handling session:', error);
@@ -84,7 +102,8 @@ export const AuthProvider = ({ children }) => {
       safeSetState(setAuthLoaded, true);
       safeSetState(setLoading, false);
     }
-  }, [fetchProfile, safeSetState]);
+  }, [fetchProfile, safeSetState, session, profile]); // Add session/profile deps
+
 
   useEffect(() => {
     isMounted.current = true;
