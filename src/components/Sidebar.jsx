@@ -132,7 +132,7 @@ const Sidebar = ({
             </div>
             <div className="min-w-0">
               <p className="text-sm font-bold text-gray-400 group-hover:text-white truncate">JohnsonGuitarDev</p>
-              <p className="text-[10px] text-gray-500 font-medium italic">Currently handling tech...</p>
+              <p className="text-[10px] text-gray-500 font-medium italic">Currently offline</p>
             </div>
           </div>
           <ExternalLink className="h-3.5 w-3.5 text-gray-600 group-hover:text-gray-400 transition-colors" />

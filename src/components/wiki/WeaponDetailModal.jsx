@@ -73,7 +73,7 @@ const SimpleStat = ({ icon: Icon, label, value, unit, onClick, className = "", v
             </div>
             <span className="text-[10px] font-black uppercase tracking-widest text-gray-500 group-hover/simple:text-gray-400">{label}</span>
         </div>
-        <span className={`font-mono text-sm font-bold text-white tracking-widest ${valueClassName}`}>
+        <span className={`font-mono text-sm font-bold text-white tracking-widest whitespace-nowrap ${valueClassName}`}>
             {value} <span className="text-[10px] text-gray-500 font-sans">{unit}</span>
         </span>
     </div>

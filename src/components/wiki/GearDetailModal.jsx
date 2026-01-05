@@ -15,7 +15,7 @@ const Stat = ({ icon: Icon, label, value, colorClass = 'text-white', onClick, cl
             </div>
             <span className="text-[10px] font-black uppercase tracking-widest text-gray-500 group-hover/stat-row:text-gray-400">{label}</span>
         </div>
-        <span className={`font-mono text-sm font-bold text-white tracking-widest ${colorClass}`}>
+        <span className={`font-mono text-sm font-bold text-white tracking-widest whitespace-nowrap ${colorClass}`}>
             {value}
         </span>
     </div>

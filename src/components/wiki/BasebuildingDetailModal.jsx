@@ -20,9 +20,9 @@ const StatDisplay = ({ icon: Icon, label, value, subValue, color = "text-white",
                 <span className="text-xs text-gray-500 font-medium tracking-wide uppercase">{label}</span>
             </div>
         </div>
-        <div className="text-right">
-            <span className="block text-lg font-medium text-white tracking-tight">{value}</span>
-            {subValue && <span className="text-xs text-gray-500">{subValue}</span>}
+        <div className="flex items-baseline gap-1.5 text-right">
+            <span className="text-lg font-bold text-white tracking-tight">{value}</span>
+            {subValue && <span className="text-xs font-bold text-gray-500 uppercase">{subValue}</span>}
         </div>
     </motion.div>
 );

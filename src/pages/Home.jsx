@@ -39,7 +39,7 @@ const GuideCard = ({ guide, index }) => (
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-60" />
       </div>
       <div className="p-5 flex-1 flex flex-col gap-3">
-        <h4 className="font-bold text-white leading-tight group-hover:text-red-400 transition-colors line-clamp-2">{guide.title}</h4>
+        <h4 className="font-bold text-white leading-tight group-hover:text-red-400 transition-colors line-clamp-2 min-h-[2.5rem] flex items-center">{guide.title}</h4>
         <div className="mt-auto flex justify-between items-center pt-3 border-t border-white/5">
           <span className="text-xs text-slate-400 truncate flex items-center gap-1.5"><UserCircle size={14} className="text-red-500" /> {guide.author?.username || 'Member'}</span>
           <span className="text-xs text-slate-400 flex items-center gap-1"><ThumbsUp size={12} className="text-green-500" /> {guide.likes_count}</span>
@@ -53,7 +53,7 @@ const MediaCard = ({ item, index }) => (
   <motion.div
     initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
     transition={{ delay: index * 0.1 }}
-    className="group relative h-48 rounded-xl overflow-hidden bg-[#0a0a0c] border border-white/5"
+    className="group relative aspect-square rounded-xl overflow-hidden bg-[#0a0a0c] border border-white/5"
   >
     <Link to="/media" className="block h-full w-full">
       <img src={item.thumbnail} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" alt="" />
@@ -65,10 +65,10 @@ const MediaCard = ({ item, index }) => (
             {item.type === 'video' ? <Video size={12} className="text-red-500" /> : <ImageIcon size={12} className="text-blue-500" />}
             <span className="text-[10px] uppercase font-bold text-gray-400">{item.type}</span>
           </div>
-          {item.author?.username && (
+          {(item.author || item.author?.username) && (
             <span className="text-[10px] text-gray-400 flex items-center gap-1.5">
               <UserCircle size={12} className="text-gray-500" />
-              {item.author.username}
+              {typeof item.author === 'object' ? item.author.username : item.author}
             </span>
           )}
         </div>
@@ -122,7 +122,7 @@ const WikiShortcuts = () => {
 };
 
 const Home = () => {
-  const [latestUpdate, setLatestUpdate] = useState(null);
+  const [latestUpdates, setLatestUpdates] = useState([]);
   const [latestMedia, setLatestMedia] = useState([]);
   const [latestCommits, setLatestCommits] = useState([]);
   const [topGuides, setTopGuides] = useState([]);
@@ -146,10 +146,10 @@ const Home = () => {
         setLoading(prev => ({ ...prev, guides: false }));
       });
 
-    // 2. Fetch Latest Update
-    supabase.from('updates').select('*').order('date', { ascending: false }).limit(1)
+    // 2. Fetch Latest Updates (2)
+    supabase.from('updates').select('*').order('date', { ascending: false }).limit(2)
       .then(res => {
-        if (res.data?.[0]) setLatestUpdate(res.data[0]);
+        if (res.data) setLatestUpdates(res.data);
         setLoading(prev => ({ ...prev, update: false }));
       });
 
@@ -234,8 +234,12 @@ const Home = () => {
               <Bell size={24} className="text-red-500" />
               <h2 className="text-3xl font-bold text-white">Latest Patch Notes</h2>
             </div>
-            {loading.update ? <SkeletonCard /> : latestUpdate && (
-              <UpdateCard update={latestUpdate} onReadMore={setSelectedUpdate} versionTag={<VersionTag version={latestUpdate.version} />} />
+            {loading.update ? <SkeletonCard /> : (
+              <div className="space-y-6">
+                {latestUpdates.map(update => (
+                  <UpdateCard key={update.id} update={update} onReadMore={setSelectedUpdate} versionTag={<VersionTag version={update.version} />} />
+                ))}
+              </div>
             )}
           </div>
 
@@ -280,7 +284,7 @@ const Home = () => {
             <Video size={24} className="text-red-500" />
             <h2 className="text-3xl font-bold text-white">Official Trailer</h2>
           </div>
-          <div className="aspect-video w-full rounded-2xl overflow-hidden border border-white/5 bg-slate-900 shadow-2xl">
+          <div className="aspect-video w-full rounded-2xl overflow-hidden border border-white/5 shadow-2xl">
             <iframe
               width="100%"
               height="100%"

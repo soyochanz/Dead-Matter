@@ -164,7 +164,7 @@ export const AuthProvider = ({ children }) => {
       if (authListener) authListener.unsubscribe();
       if (timeoutId) clearTimeout(timeoutId);
     };
-  }, [handleSession, toast, safeSetState, loading]);
+  }, [handleSession, toast, safeSetState]);
 
   const signUp = useCallback(async (email, password, options) => {
     try {
