@@ -182,7 +182,11 @@ const MapManager = () => {
                 }
             }
 
-            setDialogOpen(false);
+            if (!editingMarker && newMarker) {
+                setEditingMarker(newMarker);
+            }
+
+            // setDialogOpen(false); // Keep open for continuous editing
             setRefreshTrigger(prev => prev + 1);
 
         } catch (error) {

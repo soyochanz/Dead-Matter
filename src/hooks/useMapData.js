@@ -14,7 +14,8 @@ export const useMapData = (refreshTrigger = 0) => {
     useEffect(() => {
         const fetchMapData = async () => {
             try {
-                setLoading(true);
+                // Only show loading spinner on initial fetch, not refreshes
+                if (markers.length === 0) setLoading(true);
 
                 // Check auth
                 const { data: { user } } = await supabase.auth.getUser();

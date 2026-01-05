@@ -37,8 +37,6 @@ const UpdatesManager = () => {
 
     const { data, error } = await supabase
       .from('updates')
-      .from('updates')
-      .select('id, title, date, version, category, slug')
       .order('date', { ascending: false })
       .range(from, to);
 
