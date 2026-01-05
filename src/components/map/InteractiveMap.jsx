@@ -105,7 +105,7 @@ const ClickHelper = ({ setClickedCoords, adminMode, onMapClick, onContextMenu })
     return null;
 };
 
-const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMarkerClick, refreshTrigger = 0, pendingMarkers = [] }) => {
+const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMarkerClick, refreshTrigger = 0 }) => {
     // Note: refreshTrigger increments after save, triggering re-fetch in hook
     const [internalRefresh, setInternalRefresh] = useState(0);
     const combinedRefresh = refreshTrigger + internalRefresh;
@@ -621,24 +621,6 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                             </Marker>
                         );
                     })}
-
-                    {/* Pending Markers (Batch Mode) */}
-                    {pendingMarkers.map((marker, index) => (
-                        <Marker
-                            key={`pending-${index}`}
-                            position={[marker.lat, marker.lng]}
-                            icon={getIconForMarker({ ...marker, title: marker.title + ' (Pending)' })}
-                            opacity={0.6}
-                            eventHandlers={{
-                                click: (e) => {
-                                    if (adminMode && onMarkerClick) {
-                                        L.DomEvent.stopPropagation(e.originalEvent || e);
-                                        onMarkerClick({ ...marker, isPending: true, pendingIndex: index });
-                                    }
-                                }
-                            }}
-                        />
-                    ))}
 
                 </MapContainer>
 

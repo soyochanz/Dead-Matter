@@ -48,7 +48,6 @@ const MapManager = () => {
     });
     const [markerPos, setMarkerPos] = useState({ lat: 0, lng: 0 });
     const [editingMarker, setEditingMarker] = useState(null);
-    const [pendingMarkers, setPendingMarkers] = useState([]); // Batch Queue
 
     const [itemSearchType, setItemSearchType] = useState('keys');
     const [itemSearchQuery, setItemSearchQuery] = useState('');
@@ -99,21 +98,7 @@ const MapManager = () => {
             setEditingMarker(marker);
             setMarkerPos({ lat: marker.lat, lng: marker.lng });
 
-            // Handle Pending vs Real
-            if (marker.isPending) {
-                setFormData({
-                    title: marker.title,
-                    description: marker.description || '',
-                    category_id: marker.category_id,
-                    image_url: marker.image_url || '',
-                    infected_level: marker.infected_level || 'Low',
-                    selectedTags: marker.selectedTags || []
-                });
-                setDialogOpen(true);
-                return;
-            }
-
-            // 1. Fetch tags for REAL markers
+            // 1. Fetch tags
             const { data: tags, error: tagError } = await supabase
                 .from('marker_loot_tags')
                 .select('label')
@@ -157,103 +142,10 @@ const MapManager = () => {
         });
     };
 
-    // Bulk Save Handler
-    const handleBulkSave = async () => {
-        if (pendingMarkers.length === 0) return;
+    const handleSave = async () => {
         setLoading(true);
         try {
-            let processedCount = 0;
-
-            for (const marker of pendingMarkers) {
-                // Insert Marker
-                const { data: newMarker, error: insertError } = await supabase
-                    .from('map_markers')
-                    .insert({
-                        lat: marker.lat,
-                        lng: marker.lng,
-                        title: marker.title,
-                        description: marker.description,
-                        category_id: marker.category_id,
-                        image_url: marker.image_url,
-                        infected_level: marker.infected_level,
-                    })
-                    .select()
-                    .single();
-
-                if (insertError) {
-                    console.error("Bulk Insert Error:", insertError);
-                    continue; // Skip failed, log it
-                }
-
-                // Insert Tags
-                if (marker.selectedTags && marker.selectedTags.length > 0) {
-                    const tagInserts = marker.selectedTags.map(label => {
-                        const tagConfig = TAG_OPTIONS.find(t => t.label === label);
-                        return { marker_id: newMarker.id, label: label, color: tagConfig ? tagConfig.color : '#ffffff' };
-                    });
-                    const { error: tagError } = await supabase.from('marker_loot_tags').insert(tagInserts);
-                    if (tagError) console.error("Tag Insert Error:", tagError);
-                }
-                processedCount++;
-            }
-
-            toast({ title: "Batch Complete", description: `Saved ${processedCount} markers successfully.` });
-            setPendingMarkers([]);
-            setRefreshTrigger(prev => prev + 1);
-
-        } catch (err) {
-            console.error(err);
-            toast({ title: "Error", description: err.message, variant: "destructive" });
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const handleSave = async () => {
-        // Updated Logic: If editing an EXISTING marker (has ID), save immediately.
-        // If creating NEW marker (no ID or isPending), add/update in Queue.
-
-        if (editingMarker && !editingMarker.isPending && editingMarker.id) {
-            // --- EXISTING MARKER SAVE (DIRECT) ---
-            setLoading(true);
-            try {
-                const payload = {
-                    lat: markerPos.lat,
-                    lng: markerPos.lng,
-                    title: formData.title,
-                    description: formData.description,
-                    category_id: formData.category_id,
-                    image_url: formData.image_url || null,
-                    infected_level: formData.infected_level,
-                };
-
-                const { error } = await supabase.from('map_markers').update(payload).eq('id', editingMarker.id);
-                if (error) throw error;
-
-                // Tags Logic
-                const { error: deleteError } = await supabase.from('marker_loot_tags').delete().eq('marker_id', editingMarker.id);
-                if (deleteError) throw deleteError;
-                if (formData.selectedTags.length > 0) {
-                    const tagInserts = formData.selectedTags.map(label => {
-                        const tagConfig = TAG_OPTIONS.find(t => t.label === label);
-                        return { marker_id: editingMarker.id, label: label, color: tagConfig ? tagConfig.color : '#ffffff' };
-                    });
-                    const { error: insertError } = await supabase.from('marker_loot_tags').insert(tagInserts);
-                    if (insertError) throw insertError;
-                }
-
-                toast({ title: 'Success', description: 'Marker updated!' });
-                setDialogOpen(false);
-                setRefreshTrigger(prev => prev + 1);
-            } catch (error) {
-                console.error("Save Error:", error);
-                toast({ title: 'Error saving', description: error.message, variant: 'destructive' });
-            } finally {
-                setLoading(false);
-            }
-        } else {
-            // --- QUEUE ADD / UPDATE ---
-            const newPending = {
+            const payload = {
                 lat: markerPos.lat,
                 lng: markerPos.lng,
                 title: formData.title,
@@ -261,25 +153,47 @@ const MapManager = () => {
                 category_id: formData.category_id,
                 image_url: formData.image_url || null,
                 infected_level: formData.infected_level,
-                selectedTags: formData.selectedTags,
-                isPending: true
             };
 
-            setPendingMarkers(prev => {
-                const newList = [...prev];
-                if (editingMarker && editingMarker.isPending && editingMarker.pendingIndex !== undefined) {
-                    // Update existing pending
-                    newList[editingMarker.pendingIndex] = newPending;
-                    toast({ title: "Updated", description: "Updated in queue (Unsaved)" });
-                } else {
-                    // Add new pending
-                    newList.push(newPending);
-                    toast({ title: "Queued", description: "Added to unsaved list" });
-                }
-                return newList;
-            });
+            let targetMarkerId = editingMarker?.id;
 
-            setDialogOpen(false);
+            if (editingMarker) {
+                const { error } = await supabase.from('map_markers').update(payload).eq('id', editingMarker.id);
+                if (error) throw error;
+                toast({ title: 'Success', description: 'Marker updated!' });
+            } else {
+                const { data: newMarker, error } = await supabase.from('map_markers').insert(payload).select().single();
+                if (error) throw error;
+                targetMarkerId = newMarker.id;
+                toast({ title: 'Success', description: 'Marker created!' });
+            }
+
+            if (targetMarkerId) {
+                // Tags Logic
+                const { error: deleteError } = await supabase.from('marker_loot_tags').delete().eq('marker_id', targetMarkerId);
+                if (deleteError) throw deleteError;
+                if (formData.selectedTags.length > 0) {
+                    const tagInserts = formData.selectedTags.map(label => {
+                        const tagConfig = TAG_OPTIONS.find(t => t.label === label);
+                        return { marker_id: targetMarkerId, label: label, color: tagConfig ? tagConfig.color : '#ffffff' };
+                    });
+                    const { error: insertError } = await supabase.from('marker_loot_tags').insert(tagInserts);
+                    if (insertError) throw insertError;
+                }
+            }
+
+            if (!editingMarker && newMarker) {
+                setEditingMarker(newMarker);
+            }
+
+            // setDialogOpen(false); // Keep open for continuous editing
+            setRefreshTrigger(prev => prev + 1);
+
+        } catch (error) {
+            console.error("Save Error:", error);
+            toast({ title: 'Error saving', description: error.message, variant: 'destructive' });
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -306,22 +220,11 @@ const MapManager = () => {
         <div className="space-y-6 flex flex-col h-[calc(100vh-100px)]">
             <div className="flex justify-between items-center shrink-0">
                 <h2 className="text-2xl font-bold text-white">Interactive Map Manager</h2>
-                <div className="flex items-center gap-4">
-                    {pendingMarkers.length > 0 && (
-                        <div className="flex items-center gap-2 bg-yellow-500/10 border border-yellow-500/20 px-3 py-1.5 rounded-lg animate-pulse">
-                            <span className="text-yellow-500 font-bold text-sm">{pendingMarkers.length} Unsaved Changes</span>
-                            <Button size="sm" onClick={handleBulkSave} disabled={loading} className="h-7 text-xs bg-yellow-600 hover:bg-yellow-700">
-                                {loading && <Loader2 className="mr-1 h-3 w-3 animate-spin" />}
-                                SAVE ALL
-                            </Button>
-                        </div>
-                    )}
-                    <div className="text-sm text-gray-400">
-                        <span className="flex items-center gap-2">
-                            <MapPin className="w-4 h-4 text-red-500" />
-                            Click map to add | Click marker to edit
-                        </span>
-                    </div>
+                <div className="text-sm text-gray-400">
+                    <span className="flex items-center gap-2">
+                        <MapPin className="w-4 h-4 text-red-500" />
+                        Click map to add | Click marker to edit
+                    </span>
                 </div>
             </div>
 
@@ -332,7 +235,6 @@ const MapManager = () => {
                     onMapClick={handleMapClick}
                     onMarkerClick={handleMarkerClick}
                     refreshTrigger={refreshTrigger}
-                    pendingMarkers={pendingMarkers}
                 />
             </div>
 
@@ -458,7 +360,7 @@ const MapManager = () => {
                         <Button variant="ghost" onClick={() => setDialogOpen(false)}>Cancel</Button>
                         <Button onClick={handleSave} disabled={loading} className="bg-red-600 hover:bg-red-700">
                             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                            {editingMarker && editingMarker.id ? 'Save Changes' : 'Add to Queue'}
+                            Save
                         </Button>
                     </DialogFooter>
                 </DialogContent>
