@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { motion } from 'framer-motion';
 import { supabase } from '@/lib/mySupabaseClient';
@@ -72,41 +72,44 @@ const UpdatesList = ({ updates }) => {
 };
 
 const Updates = () => {
-    const [updates, setUpdates] = useState([]);
+    const [majorUpdates, setMajorUpdates] = useState([]);
+    const [hotfixes, setHotfixes] = useState([]);
+    const [nightlies, setNightlies] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchUpdates = async () => {
             setLoading(true);
-            // We select slug as well now
-            const { data, error } = await supabase
-                .from('updates')
-                .select('id, title, date, version, category, content, slug')
-                .order('date', { ascending: false });
 
-            if (error) {
-                console.error('Error fetching updates:', error.message);
-            } else {
-                setUpdates(data || []);
-            }
+            const fetchCategory = async (categories) => {
+                const { data, error } = await supabase
+                    .from('updates')
+                    .select('id, title, date, version, category, content, slug')
+                    .in('category', categories)
+                    .order('date', { ascending: false })
+                    .limit(10);
+
+                if (error) {
+                    console.error('Error fetching updates for', categories, error.message);
+                    return [];
+                }
+                return data || [];
+            };
+
+            const [majorData, hotfixData, nightlyData] = await Promise.all([
+                fetchCategory(['Major', 'Major updates']),
+                fetchCategory(['Hotfix', 'Hotfixes']),
+                fetchCategory(['Nightly', 'Nightly updates'])
+            ]);
+
+            setMajorUpdates(majorData);
+            setHotfixes(hotfixData);
+            setNightlies(nightlyData);
+
             setLoading(false);
         };
         fetchUpdates();
     }, []);
-
-    const { majorUpdates, hotfixes, nightlies } = useMemo(() => {
-        return {
-            majorUpdates: updates.filter(u =>
-                ['Major', 'Major updates'].includes(u.category)
-            ),
-            hotfixes: updates.filter(u =>
-                ['Hotfix', 'Hotfixes'].includes(u.category)
-            ),
-            nightlies: updates.filter(u =>
-                ['Nightly', 'Nightly updates'].includes(u.category)
-            ),
-        };
-    }, [updates]);
 
     const tabConfigs = {
         major: {
