@@ -37,7 +37,8 @@ const UpdatesManager = () => {
 
     const { data, error } = await supabase
       .from('updates')
-      .select('*')
+      .from('updates')
+      .select('id, title, date, version, category, slug')
       .order('date', { ascending: false })
       .range(from, to);
 
@@ -69,8 +70,20 @@ const UpdatesManager = () => {
     }
   };
 
-  const handleEdit = (item) => {
-    setEditingItem(item);
+  const handleEdit = async (item) => {
+    // Fetch full content on demand
+    const { data, error } = await supabase
+      .from('updates')
+      .select('content, content_html')
+      .eq('id', item.id)
+      .single();
+
+    if (error) {
+      toast({ title: "Error", description: "Could not load update content.", variant: "destructive" });
+      return;
+    }
+
+    setEditingItem({ ...item, ...data });
     setShowForm(true);
   };
 
@@ -132,8 +145,9 @@ const UpdatesManager = () => {
                   </span>
                 </div>
 
-                <div className="text-sm text-gray-400 line-clamp-2">
-                  {item.content ? item.content.replace(/<[^>]+>/g, '').substring(0, 150) + '...' : 'No content'}
+                <div className="text-sm text-gray-400">
+                  {/* Content summary removed for performance */}
+                  Click edit to view content details.
                 </div>
 
               </div>

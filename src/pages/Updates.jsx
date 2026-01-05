@@ -157,17 +157,17 @@ const Updates = () => {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.6, delay: 0.1 }}
-                                className="text-5xl md:text-8xl font-black text-white tracking-tighter uppercase mb-4"
+                                className="text-5xl md:text-8xl font-black text-white tracking-tighter uppercase mb-4 drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]"
                             >
-                                SECTOR <span className="text-red-500">PATCHES</span>
+                                SECTOR <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-500">PATCHES</span>
                             </motion.h1>
                             <motion.p
                                 initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.6, delay: 0.2 }}
-                                className="text-gray-400 text-lg max-w-2xl mx-auto"
+                                className="text-gray-400 text-lg max-w-2xl mx-auto font-light tracking-wide"
                             >
-                                Stay informed with the latest patches, hotfixes, and development updates
+                                TRANSMISSION LOG // LATEST DEVELOPMENT UPDATES
                             </motion.p>
                         </div>
                     </div>

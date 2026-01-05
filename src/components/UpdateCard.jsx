@@ -35,9 +35,17 @@ const UpdateCard = ({ update, index, versionTag }) => {
             month: 'long',
             day: 'numeric'
           })}
+          {index === 0 && (
+            <span className="ml-2 px-2 py-0.5 bg-red-500 text-white text-xs font-bold rounded-full animate-pulse shadow-[0_0_10px_rgba(239,68,68,0.5)]">
+              LATEST
+            </span>
+          )}
         </div>
 
-        <p className="text-gray-300 text-sm line-clamp-3">{summary}</p>
+        <p className="text-gray-300 text-sm leading-relaxed mb-6">
+          {/* Text summary fallback or removed for cleaner look if no content is fetched */}
+          Click to view the full changelog for version {update.version}.
+        </p>
       </div>
 
       <div className="mt-6 flex justify-end">
