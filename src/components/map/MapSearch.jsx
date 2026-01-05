@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Search, X } from 'lucide-react';
 
-const MapSearch = ({ markers, onLocationSelect }) => {
+const MapSearch = ({ markers, categories, onLocationSelect }) => {
     const [query, setQuery] = useState('');
     const [results, setResults] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
@@ -14,12 +14,20 @@ const MapSearch = ({ markers, onLocationSelect }) => {
             return;
         }
 
-        const filtered = markers.filter(m =>
-            m.title.toLowerCase().includes(query.toLowerCase())
-        );
+        const filtered = markers.filter(m => {
+            // Find category for this marker
+            const category = categories?.find(c => c.id === m.category_id);
+            if (!category) return false;
+
+            // Only allow Major and Minor zones
+            const isZone = category.name === 'Zones (Major)' || category.name === 'Zones (Minor)';
+            if (!isZone) return false;
+
+            return m.title.toLowerCase().includes(query.toLowerCase());
+        });
         setResults(filtered);
         setIsOpen(true);
-    }, [query, markers]);
+    }, [query, markers, categories]);
 
     // Close on click outside
     useEffect(() => {

@@ -470,7 +470,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                         </button>
 
                         <div className="flex-1">
-                            <MapSearch markers={markers} onLocationSelect={setSelectedLocation} />
+                            <MapSearch markers={markers} categories={categories} onLocationSelect={setSelectedLocation} />
                         </div>
                         <button onClick={() => setIsFilterOpen(!isFilterOpen)} className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm transition-all duration-300 ${isFilterOpen ? 'bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.3)]' : 'bg-white/5 text-white hover:bg-white/10 border border-white/10'}`}>
                             <Menu className="w-4 h-4" />
@@ -512,7 +512,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                         maxClusterRadius={60}
                         disableClusteringAtZoom={18}
                         spiderfyOnMaxZoom={false}
-                        animate={true}
+                        animate={false}
                     >
                         {civilianLoot.map(marker => (
                             <Marker key={marker.id} position={[marker.lat, marker.lng]} icon={getIconForMarker(marker)} eventHandlers={{ click: (e) => { if (adminMode && onMarkerClick) { L.DomEvent.stopPropagation(e.originalEvent || e); onMarkerClick(marker); } } }}>
