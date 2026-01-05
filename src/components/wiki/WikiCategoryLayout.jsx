@@ -187,19 +187,7 @@ const WikiCategoryLayout = ({
         </motion.div>
 
         {/* Bottom Navigation */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.7 }}
-          className="flex justify-center mt-12 pt-8 border-t border-white/10"
-        >
-          <Button asChild variant="outline" className="border-white/20 hover:bg-white/10">
-            <Link to="/wiki">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Return to Archive
-            </Link>
-          </Button>
-        </motion.div>
+
       </motion.div>
     </div>
   );
