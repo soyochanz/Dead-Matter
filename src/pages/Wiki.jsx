@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet';
 import { motion } from 'framer-motion';
 import { Loader2, ArrowRight, Sword, Car, Backpack, Hammer, Soup, Stethoscope, Users, Package, HelpCircle } from 'lucide-react';
@@ -7,6 +8,7 @@ import * as Icons from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const WikiCategoryCard = ({ category, itemCount, index }) => {
+  const { t } = useTranslation();
   const IconComponent = Icons[category.icon_name] || Icons.HelpCircle;
   const isTool = ['Perks', 'NPCs', 'Meds', 'Basebuilding'].includes(category.name);
   const isDisabled = itemCount === 0 && !isTool;
@@ -43,26 +45,26 @@ const WikiCategoryCard = ({ category, itemCount, index }) => {
 
         <div className="flex-1">
           <h3 className="text-xl font-bold text-white mb-2 group-hover:text-red-500 transition-colors uppercase tracking-tight">
-            {category.name}
+            {t(`home.shortcuts.${category.name.toLowerCase()}`, category.name)}
           </h3>
 
           <div className={`text-xs font-bold uppercase tracking-wider ${isDisabled ? 'text-slate-500' : 'text-slate-400'}`}>
             {isTool ? (
               <span className="flex items-center justify-center gap-1.5">
                 <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                Available
+                {t('wiki_page.available')}
               </span>
             ) : itemCount > 0 ? (
-              <span>{itemCount} {itemCount === 1 ? 'item' : 'items'}</span>
+              <span>{t('wiki_page.item_count_plural', { count: itemCount })}</span>
             ) : (
-              'Coming Soon'
+              t('wiki_page.coming_soon')
             )}
           </div>
         </div>
 
         {!isDisabled && (
           <div className="mt-4 flex items-center gap-1.5 text-red-500 text-[10px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
-            Explore <ArrowRight size={10} />
+            {t('wiki_page.explore')} <ArrowRight size={10} />
           </div>
         )}
       </div>
@@ -77,6 +79,7 @@ const WikiCategoryCard = ({ category, itemCount, index }) => {
 };
 
 const Wiki = () => {
+  const { t } = useTranslation();
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -208,11 +211,11 @@ const Wiki = () => {
           {/* Header estilo Home Hero */}
           <div className="text-center mb-24 space-y-6">
             <h1 className="text-5xl md:text-8xl font-black text-white tracking-tighter uppercase">
-              SURVIVAL <span className="text-red-500">DATABASE</span>
+              {t('wiki_page.title')} <span className="text-red-500">{t('wiki_page.title_suffix')}</span>
             </h1>
 
             <p className="text-xl text-slate-400 font-medium max-w-3xl mx-auto leading-relaxed">
-              Explore the most comprehensive technical resource for the Dead Matter universe. From weapons and gear to survival mechanics and NPC data.
+              {t('wiki_page.description')}
             </p>
           </div>
 
@@ -220,7 +223,7 @@ const Wiki = () => {
             <div className="flex justify-center items-center h-64">
               <div className="text-center">
                 <Loader2 className="w-16 h-16 text-red-500 animate-spin mx-auto mb-4" />
-                <p className="text-gray-400">Loading survival database...</p>
+                <p className="text-gray-400">{t('wiki_page.loading')}</p>
               </div>
             </div>
           ) : (

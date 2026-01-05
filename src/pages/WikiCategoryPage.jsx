@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -20,12 +21,13 @@ import NpcDetailModal from '@/pages/NpcsPage';
 import WikiCategoryLayout from '@/components/wiki/WikiCategoryLayout';
 
 const WikiCategoryPage = ({ category, customTitle, customSubtitle, customDescription, extraHeadElements }) => {
+    const { t } = useTranslation();
     const { categoryName: paramCategoryName } = useParams();
     const navigate = useNavigate();
-    
+
     // Prefer prop 'category', fallback to url param
     const activeCategory = category || paramCategoryName;
-    
+
     const [pageTitle, setPageTitle] = useState(customTitle || '');
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -38,27 +40,29 @@ const WikiCategoryPage = ({ category, customTitle, customSubtitle, customDescrip
     useEffect(() => {
         const fetchData = async () => {
             if (!activeCategory) return;
-            
+
             setLoading(true);
             setActiveFilter('all');
             setSearchTerm('');
 
             const normalizedCategoryName = activeCategory.toLowerCase().replace('-', ' ');
             const title = normalizedCategoryName.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-            
+
             if (!customTitle) {
-                setPageTitle(title);
+                // Try to get translation, fallback to formatted title
+                const translatedTitle = t(`home.shortcuts.${activeCategory.toLowerCase()}`, title);
+                setPageTitle(translatedTitle);
             }
-            
+
             let catData, catError;
-            
+
             const dynamicCats = ['toolbelts', 'basebuilding'];
-            
+
             if (dynamicCats.includes(activeCategory.toLowerCase())) {
                 catData = { name: title, wiki_subcategories: [] };
                 catError = null;
             } else {
-                 ({ data: catData, error: catError } = await supabase
+                ({ data: catData, error: catError } = await supabase
                     .from('wiki_categories')
                     .select(`name, wiki_subcategories(id, name)`)
                     .ilike('name', title)
@@ -66,11 +70,11 @@ const WikiCategoryPage = ({ category, customTitle, customSubtitle, customDescrip
             }
 
             if (catError && catError.code !== 'PGRST116') { // Ignore "No rows found"
-                 console.error("Error fetching category", catError);
+                console.error("Error fetching category", catError);
             }
-            
+
             const fetchedSubcategories = catData?.wiki_subcategories || [];
-            
+
             let fetchedItems = [];
             let queryError = null;
 
@@ -83,7 +87,7 @@ const WikiCategoryPage = ({ category, customTitle, customSubtitle, customDescrip
                 consumables: '*, rarity:rarities(*)',
                 accessories: '*, rarity:rarities(*), subcategory:wiki_subcategories(id, name)',
             };
-            
+
             const tableName = tables[activeCategory.toLowerCase()] ? activeCategory.toLowerCase() : null;
 
             if (tableName) {
@@ -93,24 +97,24 @@ const WikiCategoryPage = ({ category, customTitle, customSubtitle, customDescrip
                     const { data: cookedItemsData } = await supabase.from('consumables').select('cooked_version_id').not('cooked_version_id', 'is', null);
                     const cookedItemIds = cookedItemsData?.map(item => item.cooked_version_id) || [];
                     if (cookedItemIds.length > 0) query = query.not('id', 'in', `(${cookedItemIds.join(',')})`);
-                    
+
                     if (fetchedSubcategories.length === 0) {
-                        setSubcategories([{id: 'food', name: 'Food'}, {id: 'drink', name: 'Drinks'}]);
+                        setSubcategories([{ id: 'food', name: 'Food' }, { id: 'drink', name: 'Drinks' }]);
                     }
                 }
-                 else {
-                     setSubcategories(fetchedSubcategories);
-                 }
+                else {
+                    setSubcategories(fetchedSubcategories);
+                }
 
                 const { data, error } = await query;
-                if(error) queryError = error; else fetchedItems = data.map(i => ({...i, itemType: activeCategory.toLowerCase()}));
+                if (error) queryError = error; else fetchedItems = data.map(i => ({ ...i, itemType: activeCategory.toLowerCase() }));
             } else {
-                 // For pages like meds, npcs, perks that have their own dedicated page component, 
-                 // if we ended up here without a dedicated component prop usage
-                 if (!category) {
-                    navigate(`/wiki/${activeCategory.toLowerCase()}`); 
-                 }
-                 return;
+                // For pages like meds, npcs, perks that have their own dedicated page component, 
+                // if we ended up here without a dedicated component prop usage
+                if (!category) {
+                    navigate(`/wiki/${activeCategory.toLowerCase()}`);
+                }
+                return;
             }
 
             if (queryError) console.error(queryError);
@@ -122,8 +126,8 @@ const WikiCategoryPage = ({ category, customTitle, customSubtitle, customDescrip
     }, [activeCategory, navigate, customTitle, category]);
 
     const handleNpcSelect = (npc) => {
-        setSelectedItem(null); 
-        setSelectedNpc(npc); 
+        setSelectedItem(null);
+        setSelectedNpc(npc);
     };
 
     const filteredItems = useMemo(() => {
@@ -131,11 +135,11 @@ const WikiCategoryPage = ({ category, customTitle, customSubtitle, customDescrip
         if (activeFilter === 'all') {
             categoryFiltered = items;
         } else {
-             if (activeCategory.toLowerCase() === 'consumables') {
+            if (activeCategory.toLowerCase() === 'consumables') {
                 categoryFiltered = items.filter(item => item.type === activeFilter);
             } else {
                 const subcategoryIdField = activeCategory.toLowerCase() === 'accessories' ? 'type' : 'subcategory.id';
-                const filterValue = activeCategory.toLowerCase() === 'accessories' ? subcategories.find(s=>s.id === activeFilter)?.name : activeFilter;
+                const filterValue = activeCategory.toLowerCase() === 'accessories' ? subcategories.find(s => s.id === activeFilter)?.name : activeFilter;
 
                 categoryFiltered = items.filter(item => {
                     const itemValue = subcategoryIdField.split('.').reduce((o, i) => o ? o[i] : null, item);
@@ -156,7 +160,7 @@ const WikiCategoryPage = ({ category, customTitle, customSubtitle, customDescrip
         vehicles: { Card: VehicleCard, Modal: VehicleDetailModal },
         accessories: { Card: WeaponCard, Modal: WeaponDetailModal }, // Re-using for now, can be specific later
     };
-    
+
     // Default to a generic card if specific one is not found
     const { Card, Modal } = itemComponents[activeCategory.toLowerCase()] || { Card: () => null, Modal: () => null };
 
@@ -172,8 +176,8 @@ const WikiCategoryPage = ({ category, customTitle, customSubtitle, customDescrip
 
     // Use custom description or fallback to default logic
     const metaDescription = customDescription || (activeCategory.toLowerCase() === 'weapons'
-        ? 'Browse and discover all the Dead Matter Weapons'
-        : `Browse ${pageTitle} in the Dead Matter Wiki.`);
+        ? t('wiki_category_page.meta_weapons_desc', { defaultValue: 'Browse and discover all the Dead Matter Weapons' })
+        : t('wiki_category_page.meta_generic_desc', { title: pageTitle, defaultValue: `Browse ${pageTitle} in the Dead Matter Wiki.` }));
 
     return (
         <>
@@ -203,24 +207,24 @@ const WikiCategoryPage = ({ category, customTitle, customSubtitle, customDescrip
                     <>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
                             {Card && filteredItems.map((item, index) => (
-                                <Card key={item.id} {...{[cardItemProp]: item}} index={index} onClick={() => setSelectedItem(item)} />
+                                <Card key={item.id} {...{ [cardItemProp]: item }} index={index} onClick={() => setSelectedItem(item)} />
                             ))}
                         </div>
                         {!loading && filteredItems.length === 0 && (
-                            <p className="text-gray-400 text-center py-10">No items found.</p>
+                            <p className="text-gray-400 text-center py-10">{t('wiki_category_page.no_items')}</p>
                         )}
                     </>
                 )}
             </WikiCategoryLayout>
 
             {selectedItem && Modal && (
-                 <Modal 
-                    {...{[cardItemProp]: selectedItem}}
-                    onClose={() => setSelectedItem(null)} 
-                    onNpcSelect={handleNpcSelect} 
+                <Modal
+                    {...{ [cardItemProp]: selectedItem }}
+                    onClose={() => setSelectedItem(null)}
+                    onNpcSelect={handleNpcSelect}
                 />
             )}
-            
+
             <AnimatePresence>
                 {selectedNpc && <NpcDetailModal npc={selectedNpc} onClose={() => setSelectedNpc(null)} />}
             </AnimatePresence>

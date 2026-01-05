@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     X, Car, Gauge, Users, Fuel, Heart, Package,
@@ -56,6 +57,7 @@ const CustomStatBar = ({ label, value, max, icon, color }) => {
 };
 
 const MechanicsSection = ({ vehicleId }) => {
+    const { t } = useTranslation();
     const [mechanics, setMechanics] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -85,7 +87,7 @@ const MechanicsSection = ({ vehicleId }) => {
         <div className="mt-8 pt-8 border-t border-white/5">
             <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
                 <Wrench size={14} className="text-orange-500" />
-                Required Components
+                {t('wiki.vehicle.required_components')}
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {mechanics.map(({ quantity, component }, index) => (
@@ -105,7 +107,7 @@ const MechanicsSection = ({ vehicleId }) => {
                         </div>
                         <div className="flex-grow min-w-0">
                             <p className="font-medium text-sm text-gray-200 truncate">{component.name}</p>
-                            <span className="text-[10px] text-gray-500 uppercase">Mechanical Part</span>
+                            <span className="text-[10px] text-gray-500 uppercase">{t('wiki.vehicle.mechanical_part')}</span>
                         </div>
                         <div className="text-xs font-bold text-orange-400 bg-orange-500/10 px-2 py-0.5 rounded border border-orange-500/20">
                             x{quantity}
@@ -118,6 +120,7 @@ const MechanicsSection = ({ vehicleId }) => {
 };
 
 const VehicleDetailModal = ({ item, onClose }) => {
+    const { t } = useTranslation();
     if (!item) return null;
 
     const isTowable = item.subcategory?.name?.toLowerCase().includes('towable') || false;
@@ -159,31 +162,31 @@ const VehicleDetailModal = ({ item, onClose }) => {
                 <div>
                     <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
                         <Gauge size={14} className="text-blue-500" />
-                        Specifications
+                        {t('wiki.vehicle.specifications')}
                     </h3>
 
                     <div className="grid grid-cols-2 gap-3 mb-6">
                         {isTowable ? (
                             <>
-                                <StatDisplay icon={Package} label="Capacity" value={item.capacity || 'N/A'} color="text-purple-400" />
-                                <StatDisplay icon={Wrench} label="Use Case" value={item.use_case} color="text-gray-400" />
+                                <StatDisplay icon={Package} label={t('wiki.vehicle.capacity')} value={item.capacity || 'N/A'} color="text-purple-400" />
+                                <StatDisplay icon={Wrench} label={t('wiki.vehicle.use_case')} value={item.use_case} color="text-gray-400" />
                             </>
                         ) : (
                             <>
-                                <StatDisplay icon={Gauge} label="Max Speed" value={item.speed || '-'} subValue="km/h" color="text-cyan-400" />
-                                <StatDisplay icon={Users} label="Seats" value={item.occupants || '-'} color="text-green-400" />
-                                <StatDisplay icon={Fuel} label="Fuel" value={item.fuel_capacity || '-'} subValue="L" color="text-orange-400" />
-                                <StatDisplay icon={Package} label="Storage" value={item.inventory_slots || '0'} subValue="Slots" color="text-blue-400" />
+                                <StatDisplay icon={Gauge} label={t('wiki.vehicle.max_speed')} value={item.speed || '-'} subValue="km/h" color="text-cyan-400" />
+                                <StatDisplay icon={Users} label={t('wiki.vehicle.seats')} value={item.occupants || '-'} color="text-green-400" />
+                                <StatDisplay icon={Fuel} label={t('wiki.vehicle.fuel')} value={item.fuel_capacity || '-'} subValue="L" color="text-orange-400" />
+                                <StatDisplay icon={Package} label={t('wiki.vehicle.storage')} value={item.inventory_slots || '0'} subValue={t('wiki.vehicle.slots')} color="text-blue-400" />
                             </>
                         )}
-                        <StatDisplay icon={Heart} label="Health" value={item.health || 'Standard'} color="text-rose-400" />
+                        <StatDisplay icon={Heart} label={t('wiki.vehicle.health')} value={item.health || t('wiki.vehicle.standard')} color="text-rose-400" />
                     </div>
 
                     {item.stats && item.stats.length > 0 && (
                         <div className="space-y-3 pt-6 border-t border-white/5">
                             <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-2 flex items-center gap-2">
                                 <Zap size={14} className="text-yellow-500" />
-                                Performance
+                                {t('wiki.vehicle.performance')}
                             </h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                 {item.stats.map((stat, i) => (

@@ -1,0 +1,209 @@
+{
+    "nav": {
+        "home": "Home",
+        "home_desc": "Main dashboard",
+        "wiki": "Wiki",
+        "wiki_desc": "Game knowledge base",
+        "guides": "Guides",
+        "guides_desc": "Tips and strategies",
+        "updates": "Updates",
+        "updates_desc": "Latest patches & news",
+        "map": "Map",
+        "map_desc": "Interactive world map",
+        "media": "Media",
+        "media_desc": "Screenshots & videos"
+    },
+    "user": {
+        "login": "Login",
+        "register": "Register",
+        "profile_settings": "Profile Settings",
+        "admin_dashboard": "Admin Dashboard",
+        "disconnect": "Disconnect",
+        "system_id": "System ID",
+        "cmd": "CMD",
+        "online": "Online",
+        "offline": "Offline"
+    },
+    "footer": {
+        "rights_reserved": "All rights reserved.",
+        "privacy_policy": "Privacy Policy",
+        "terms_of_service": "Terms of Service"
+    },
+    "sidebar": {
+        "community_resource": "Community Resource",
+        "status_transmission": "Status Transmission",
+        "join_discord": "Join Official Discord",
+        "official_link": "Official Link",
+        "watch_development": "Watch Development",
+        "live_now": "LIVE NOW",
+        "streaming_game": "Streaming Dead Matter",
+        "alpha_database": "Alpha Database"
+    },
+    "wiki": {
+        "common": {
+            "market_value": "Market Value",
+            "resale_factor": "Resale Factor",
+            "grade": "GRADE",
+            "class": "CLASS",
+            "size": "Size",
+            "frame": "Frame",
+            "weight": "Weight",
+            "remove": "Remove",
+            "loading": "Loading..."
+        },
+        "weapon": {
+            "ballistic_registry": "Ballistic Registry",
+            "compatible_with": "Compatible with",
+            "scanning_database": "Scanning Armory Database...",
+            "no_ballistic_data": "No matching ballistic data",
+            "module_sync_unavailable": "Module Synchronization Unavailable",
+            "visual_confirm": "Visual Confirm",
+            "inventory_attachments": "Inventory Attachments",
+            "no_mods_available": "No Mods Available",
+            "drag_instruction": "Drag items to install modules",
+            "performance_analysis": "Performance Analysis",
+            "integrated_systems": "Integrated Systems",
+            "ballistic_performance": "Ballistic Performance",
+            "stats": {
+                "lethality": "Lethality",
+                "melee_range": "Melee Range",
+                "attack_speed": "Attack Speed",
+                "stamina_efficiency": "Stamina Efficiency",
+                "rate_of_fire": "Rate of Fire",
+                "accuracy": "Accuracy",
+                "handling": "Handling",
+                "ammo_type": "Ammo Type",
+                "capacity": "Capacity"
+            }
+        },
+        "gear": {
+            "small_weapon_slot": "Small Weapon Slot",
+            "large_weapon_slot": "Large Weapon Slot",
+            "stats": {
+                "armor_rating": "Armor Rating",
+                "insulation": "Insulation",
+                "bleed_prot": "Bleed Prot.",
+                "blunt_prot": "Blunt Prot.",
+                "fire_prot": "Fire Prot.",
+                "inv_slots": "Inv. Slots"
+            }
+        },
+        "consumable": {
+            "hold_to_cook": "Hold to cook",
+            "type": "TYPE",
+            "consumable_label": "CONSUMABLE",
+            "toxicity_side_effects": "Toxicity & Side Effects",
+            "safe_bio_integrity": "Safe Bio-Integrity",
+            "bio_hazardous_raw": "Bio-Hazardous (Raw)",
+            "extraction_tool_required": "Extraction Tool Required",
+            "stats": {
+                "hydration": "Hydration",
+                "energy": "Energy",
+                "health": "Health"
+            }
+        },
+        "vehicle": {
+            "specifications": "Specifications",
+            "capacity": "Capacity",
+            "use_case": "Use Case",
+            "max_speed": "Max Speed",
+            "seats": "Seats",
+            "fuel": "Fuel",
+            "storage": "Storage",
+            "slots": "Slots",
+            "health": "Health",
+            "standard": "Standard",
+            "performance": "Performance",
+            "required_components": "Required Components",
+            "mechanical_part": "Mechanical Part"
+        }
+    },
+    "home": {
+        "hero_title": "DEAD MATTER",
+        "hero_subtitle": "The definitive technical guide for the survival in the Canadian Rockies. Databases for weapons, vehicles, survival mechanics and community guides.",
+        "interactive_map": "Interactive Map",
+        "wiki_button": "Wiki",
+        "top_guides": "Top Community Guides",
+        "learn_experts": "Learner from the experts",
+        "view_all": "VIEW ALL",
+        "latest_patch_notes": "Latest Patch Notes",
+        "micro_changes": "Micro Changes",
+        "latest_media": "Latest Media Highlights",
+        "official_trailer": "Official Trailer",
+        "loading_updates": "Loading updates...",
+        "shortcuts": {
+            "weapons": "Weapons",
+            "vehicles": "Vehicles",
+            "gear": "Gear",
+            "basebuilding": "Basebuilding",
+            "consumables": "Consumables",
+            "medical": "Medical",
+            "npcs": "NPCs",
+            "keys": "Keys",
+            "toolbelts": "Toolbelts",
+            "accessories": "Accessories",
+            "perks": "Perks"
+        }
+    },
+    "updates": {
+        "read_full": "Read Full Update",
+        "latest_tag": "LATEST",
+        "posted_on": "Posted on",
+        "click_view": "Click to view the full changelog for version {{version}}."
+    },
+    "wiki_page": {
+        "title": "SURVIVAL",
+        "title_suffix": "DATABASE",
+        "description": "Explore the most comprehensive technical resource for the Dead Matter universe. From weapons and gear to survival mechanics and NPC data.",
+        "loading": "Loading survival database...",
+        "available": "Available",
+        "coming_soon": "Coming Soon",
+        "explore": "Explore",
+        "item_count": "{{count}} item",
+        "item_count_plural": "{{count}} items"
+    },
+    "wiki_category_page": {
+        "no_items": "No items found in this category.",
+        "meta_weapons_desc": "Browse and discover all the Dead Matter Weapons",
+        "meta_generic_desc": "Browse {{title}} in the Dead Matter Wiki."
+    },
+    "wiki_layout": {
+        "return_to_wiki": "Return to Wiki",
+        "filter": "Filter",
+        "all_types": "All Types",
+        "search": "Search",
+        "search_placeholder": "Search {{title}}...",
+        "active_filters": "Active Filters",
+        "clear_filters": "Clear Filters"
+    },
+    "meta": {
+        "description": "The ultimate wiki and interactive map for Dead Matter. Find weapons, vehicles, loot locations, and more."
+    },
+    "auth": {
+        "login": {
+            "title": "Sign In",
+            "subtitle": "Access your account to contribute.",
+            "email_label": "Email",
+            "password_label": "Password",
+            "submit_button": "Sign In",
+            "no_account": "Don't have an account?",
+            "register_link": "Register",
+            "success_title": "Login successful!",
+            "success_desc": "Welcome back.",
+            "failed_title": "Login Failed"
+        },
+        "register": {
+            "title": "Create an Account",
+            "subtitle": "Join the community to create and share guides.",
+            "username_label": "Username",
+            "email_label": "Email",
+            "password_label": "Password",
+            "submit_button": "Register",
+            "has_account": "Already have an account?",
+            "login_link": "Sign In",
+            "success_title": "Registration successful!",
+            "success_desc": "Please check your email to confirm your account.",
+            "failed_title": "Registration failed"
+        }
+    }
+}

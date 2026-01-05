@@ -1,10 +1,12 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Calendar, ArrowRight } from 'lucide-react';
 import { Button } from './ui/button';
 import { Link } from 'react-router-dom';
 
 const UpdateCard = ({ update, index, versionTag }) => {
+  const { t, i18n } = useTranslation();
   const contentToParse = update.content_html || update.content || '';
   const summary = contentToParse ? new DOMParser().parseFromString(contentToParse, 'text/html').body.textContent.substring(0, 150) + '...' : '';
 
@@ -30,28 +32,28 @@ const UpdateCard = ({ update, index, versionTag }) => {
 
         <div className="flex items-center gap-2 text-gray-400 text-sm mb-4">
           <Calendar className="h-4 w-4" />
-          {new Date(update.date).toLocaleDateString('en-US', {
+          {new Date(update.date).toLocaleDateString(i18n.language, {
             year: 'numeric',
             month: 'long',
             day: 'numeric'
           })}
           {index === 0 && (
             <span className="ml-2 px-2 py-0.5 bg-red-500 text-white text-xs font-bold rounded-full animate-pulse shadow-[0_0_10px_rgba(239,68,68,0.5)]">
-              LATEST
+              {t('updates.latest_tag')}
             </span>
           )}
         </div>
 
         <p className="text-gray-300 text-sm leading-relaxed mb-6">
           {/* Text summary fallback or removed for cleaner look if no content is fetched */}
-          Click to view the full changelog for version {update.version}.
+          {t('updates.click_view', { version: update.version })}
         </p>
       </div>
 
       <div className="mt-6 flex justify-end">
         <Button asChild variant="outline" className="gap-2 border-white/20 hover:bg-white/10 hover:text-white group-hover:border-red-500/50 transition-all">
           <Link to={targetLink}>
-            Read Full Update
+            {t('updates.read_full')}
             <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
           </Link>
         </Button>

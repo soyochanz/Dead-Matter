@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Droplet, Sparkles, HeartPulse, ShieldAlert, Flame, DollarSign, TrendingUp, AlertTriangle } from 'lucide-react';
 import { supabase } from '@/lib/mySupabaseClient';
@@ -24,6 +25,7 @@ const StatDisplay = ({ icon, label, value, colorClass = 'text-white', onClick, c
 );
 
 const CookButton = ({ onCook }) => {
+    const { t } = useTranslation();
     const [progress, setProgress] = useState(0);
     const timerRef = useRef(null);
     const intervalRef = useRef(null);
@@ -82,12 +84,13 @@ const CookButton = ({ onCook }) => {
                     />
                 </svg>
             </div>
-            <p className="text-sm text-gray-400 mt-2">Hold to cook</p>
+            <p className="text-sm text-gray-400 mt-2">{t('wiki.consumable.hold_to_cook')}</p>
         </div>
     )
 }
 
 const ConsumableDetailModal = ({ consumable, onClose }) => {
+    const { t } = useTranslation();
     const [currentItem, setCurrentItem] = useState(consumable);
     const [isCooked, setIsCooked] = useState(false);
     const [cookedVersion, setCookedVersion] = useState(null);
@@ -184,8 +187,8 @@ const ConsumableDetailModal = ({ consumable, onClose }) => {
 
                                 {/* Secondary Specs */}
                                 <div className="grid grid-cols-2 gap-4">
-                                    <StatDisplay icon={<DollarSign size={16} />} label="Market Value" value={`${currentItem.price || 0} $`} colorClass="text-red-500" className="border-red-500/10 hover:border-red-500/40" onClick={() => setShowNpcSellers(true)} />
-                                    <StatDisplay icon={<TrendingUp size={16} />} label="Resale Factor" value={`${currentItem.sell_price || 'N/A'} $`} colorClass="text-green-500" />
+                                    <StatDisplay icon={<DollarSign size={16} />} label={t('wiki.common.market_value')} value={`${currentItem.price || 0} $`} colorClass="text-red-500" className="border-red-500/10 hover:border-red-500/40" onClick={() => setShowNpcSellers(true)} />
+                                    <StatDisplay icon={<TrendingUp size={16} />} label={t('wiki.common.resale_factor')} value={`${currentItem.sell_price || 'N/A'} $`} colorClass="text-green-500" />
                                 </div>
                             </div>
 
@@ -198,10 +201,10 @@ const ConsumableDetailModal = ({ consumable, onClose }) => {
                                         className="flex items-center gap-2 mb-4"
                                     >
                                         <span className="text-[10px] font-black px-4 py-1.5 rounded-full tracking-widest uppercase shadow-lg border border-red-500/20 bg-red-500/10 text-red-500">
-                                            CONSUMABLE
+                                            {t('wiki.consumable.consumable_label')}
                                         </span>
                                         <span className="text-[10px] font-black px-4 py-1.5 rounded-full tracking-widest uppercase bg-white/5 text-gray-500 border border-white/5">
-                                            TYPE: {currentItem.type?.toUpperCase() || 'N/A'}
+                                            {t('wiki.consumable.type')}: {currentItem.type?.toUpperCase() || 'N/A'}
                                         </span>
                                     </motion.div>
 
@@ -219,15 +222,15 @@ const ConsumableDetailModal = ({ consumable, onClose }) => {
                                     <div className="bg-white/5 border border-white/5 p-8 rounded-[2.5rem] space-y-8 shadow-inner relative overflow-hidden">
 
                                         <div className="grid grid-cols-1 gap-4">
-                                            <StatDisplay icon={<Droplet size={16} className="text-blue-400" />} label="Hydration" value={currentItem.hydration || 0} colorClass={currentItem.hydration >= 0 ? 'text-blue-400' : 'text-red-400'} />
-                                            <StatDisplay icon={<Sparkles size={16} className="text-yellow-400" />} label="Energy" value={currentItem.energy || 0} colorClass={currentItem.energy >= 0 ? 'text-yellow-400' : 'text-red-400'} />
-                                            <StatDisplay icon={<HeartPulse size={16} className="text-green-400" />} label="Health" value={currentItem.health || 0} colorClass={currentItem.health >= 0 ? 'text-green-400' : 'text-red-400'} />
+                                            <StatDisplay icon={<Droplet size={16} className="text-blue-400" />} label={t('wiki.consumable.stats.hydration')} value={currentItem.hydration || 0} colorClass={currentItem.hydration >= 0 ? 'text-blue-400' : 'text-red-400'} />
+                                            <StatDisplay icon={<Sparkles size={16} className="text-yellow-400" />} label={t('wiki.consumable.stats.energy')} value={currentItem.energy || 0} colorClass={currentItem.energy >= 0 ? 'text-yellow-400' : 'text-red-400'} />
+                                            <StatDisplay icon={<HeartPulse size={16} className="text-green-400" />} label={t('wiki.consumable.stats.health')} value={currentItem.health || 0} colorClass={currentItem.health >= 0 ? 'text-green-400' : 'text-red-400'} />
                                         </div>
 
                                         {hasSideEffects && (
                                             <div className="space-y-4 pt-6 border-t border-white/5">
                                                 <h5 className="text-[10px] font-black uppercase tracking-widest text-gray-500 flex items-center gap-2">
-                                                    <AlertTriangle size={14} className="text-yellow-500" /> Toxicity & Side Effects
+                                                    <AlertTriangle size={14} className="text-yellow-500" /> {t('wiki.consumable.toxicity_side_effects')}
                                                 </h5>
                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                                     {Object.entries(currentItem.side_effects).map(([key, value]) => (
@@ -244,13 +247,13 @@ const ConsumableDetailModal = ({ consumable, onClose }) => {
                                             {currentItem.type === 'food' && (
                                                 <div className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-[10px] font-black uppercase tracking-widest ${currentItem.is_safe_to_eat_raw ? 'bg-green-500/10 border-green-500/20 text-green-500' : 'bg-red-500/10 border-red-500/20 text-red-500'}`}>
                                                     <ShieldAlert size={14} />
-                                                    {currentItem.is_safe_to_eat_raw ? 'Safe Bio-Integrity' : 'Bio-Hazardous (Raw)'}
+                                                    {currentItem.is_safe_to_eat_raw ? t('wiki.consumable.safe_bio_integrity') : t('wiki.consumable.bio_hazardous_raw')}
                                                 </div>
                                             )}
                                             {currentItem.requires_can_opener && (
                                                 <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-yellow-500/10 border border-yellow-500/20 text-yellow-500 text-[10px] font-black uppercase tracking-widest">
                                                     <CanOpenerIcon className="w-4 h-4" />
-                                                    Extraction Tool Required
+                                                    {t('wiki.consumable.extraction_tool_required')}
                                                 </div>
                                             )}
                                         </div>

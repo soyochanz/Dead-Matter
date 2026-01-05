@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Shield, Weight, Backpack, Swords, Zap, Flame, Droplets, Tally1, Ruler, DollarSign, TrendingUp, ArrowRight } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
@@ -58,6 +59,7 @@ const CustomStatBar = ({ label, value, max, icon, color }) => {
 };
 
 const GearDetailModal = ({ gear, onClose, onNpcSelect }) => {
+    const { t } = useTranslation();
     const [showNpcSellers, setShowNpcSellers] = useState(false);
     if (!gear) return null;
 
@@ -78,8 +80,8 @@ const GearDetailModal = ({ gear, onClose, onNpcSelect }) => {
     const rarityColor = gear.rarity?.color || '#4b5563';
 
     const weaponSlotText = {
-        'small': 'Small Weapon Slot',
-        'large': 'Large Weapon Slot',
+        'small': t('wiki.gear.small_weapon_slot'),
+        'large': t('wiki.gear.large_weapon_slot'),
     }[gear.weapon_slot_type];
 
     return (
@@ -136,8 +138,8 @@ const GearDetailModal = ({ gear, onClose, onNpcSelect }) => {
 
                                 {/* Secondary Technical Stats */}
                                 <div className="grid grid-cols-2 gap-4">
-                                    <Stat icon={DollarSign} label="Market Value" value={`${gear.price || 0} $`} colorClass="text-red-500" className="border-red-500/10 hover:border-red-500/40" onClick={() => setShowNpcSellers(true)} />
-                                    <Stat icon={TrendingUp} label="Resale Factor" value={`${gear.sell_price || 'N/A'} $`} colorClass="text-green-500" />
+                                    <Stat icon={DollarSign} label={t('wiki.common.market_value')} value={`${gear.price || 0} $`} colorClass="text-red-500" className="border-red-500/10 hover:border-red-500/40" onClick={() => setShowNpcSellers(true)} />
+                                    <Stat icon={TrendingUp} label={t('wiki.common.resale_factor')} value={`${gear.sell_price || 'N/A'} $`} colorClass="text-green-500" />
                                 </div>
                             </div>
 
@@ -150,10 +152,10 @@ const GearDetailModal = ({ gear, onClose, onNpcSelect }) => {
                                         className="flex items-center gap-2 mb-4"
                                     >
                                         <span className="text-[10px] font-black px-4 py-1.5 rounded-full tracking-widest uppercase shadow-lg border border-red-500/20" style={{ backgroundColor: `${rarityColor}20`, color: rarityColor }}>
-                                            {gear.rarity?.name || 'COMMON'} GRADE
+                                            {gear.rarity?.name || 'COMMON'} {t('wiki.common.grade')}
                                         </span>
                                         <span className="text-[10px] font-black px-4 py-1.5 rounded-full tracking-widest uppercase bg-white/5 text-gray-500 border border-white/5">
-                                            CLASS: {gear.subcategory?.name || 'N/A'}
+                                            {t('wiki.common.class')}: {gear.subcategory?.name || 'N/A'}
                                         </span>
                                     </motion.div>
 
@@ -175,17 +177,17 @@ const GearDetailModal = ({ gear, onClose, onNpcSelect }) => {
 
 
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            <Stat icon={Shield} label="Armor Rating" value={gear.armor_rating || 0} colorClass="text-blue-400" />
-                                            <Stat icon={Zap} label="Insulation" value={gear.insulation || 0} colorClass="text-purple-400" />
-                                            <Stat icon={Droplets} label="Bleed Prot." value={gear.bleed_protection || 0} colorClass="text-red-400" />
-                                            <Stat icon={Tally1} label="Blunt Prot." value={gear.blunt_protection || 0} colorClass="text-yellow-400" />
-                                            <Stat icon={Flame} label="Fire Prot." value={gear.fire_protection || 0} colorClass="text-orange-400" />
-                                            <Stat icon={Backpack} label="Inv. Slots" value={gear.inventory_slots || 0} colorClass="text-cyan-400" />
+                                            <Stat icon={Shield} label={t('wiki.gear.stats.armor_rating')} value={gear.armor_rating || 0} colorClass="text-blue-400" />
+                                            <Stat icon={Zap} label={t('wiki.gear.stats.insulation')} value={gear.insulation || 0} colorClass="text-purple-400" />
+                                            <Stat icon={Droplets} label={t('wiki.gear.stats.bleed_prot')} value={gear.bleed_protection || 0} colorClass="text-red-400" />
+                                            <Stat icon={Tally1} label={t('wiki.gear.stats.blunt_prot')} value={gear.blunt_protection || 0} colorClass="text-yellow-400" />
+                                            <Stat icon={Flame} label={t('wiki.gear.stats.fire_prot')} value={gear.fire_protection || 0} colorClass="text-orange-400" />
+                                            <Stat icon={Backpack} label={t('wiki.gear.stats.inv_slots')} value={gear.inventory_slots || 0} colorClass="text-cyan-400" />
                                         </div>
 
                                         <div className="grid grid-cols-2 gap-4 mt-4">
-                                            <Stat icon={Weight} label="Weight" value={`${gear.weight || 0} kg`} />
-                                            <Stat icon={Ruler} label="Frame" value={gear.size || 'N/A'} />
+                                            <Stat icon={Weight} label={t('wiki.common.weight')} value={`${gear.weight || 0} kg`} />
+                                            <Stat icon={Ruler} label={t('wiki.common.frame')} value={gear.size || 'N/A'} />
                                         </div>
 
                                         {/* Custom Stats if any */}

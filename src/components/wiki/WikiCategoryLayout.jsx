@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Search, Filter, Grid } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -14,6 +15,7 @@ const WikiCategoryLayout = ({
   searchTerm,
   setSearchTerm,
 }) => {
+  const { t } = useTranslation();
   return (
     <div className="relative max-w-7xl mx-auto px-4 py-8">
       {/* Technical background elements */}
@@ -53,7 +55,7 @@ const WikiCategoryLayout = ({
               <Button asChild variant="outline" className="h-12 border-white/5 bg-white/5 hover:bg-white/10 text-white font-bold rounded-xl px-6">
                 <Link to="/wiki">
                   <ArrowLeft className="mr-2 h-4 w-4" />
-                  Return to Wiki
+                  {t('wiki_layout.return_to_wiki')}
                 </Link>
               </Button>
             </motion.div>
@@ -83,7 +85,7 @@ const WikiCategoryLayout = ({
                 <div className="flex flex-col gap-4 flex-1">
                   <div className="flex items-center gap-3">
                     <Filter className="w-3 h-3 text-red-500" />
-                    <span className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em]">Filter</span>
+                    <span className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em]">{t('wiki_layout.filter')}</span>
                   </div>
                   <div className="flex flex-wrap gap-2">
                     <button
@@ -96,7 +98,7 @@ const WikiCategoryLayout = ({
                         }
                       `}
                     >
-                      All Types
+                      {t('wiki_layout.all_types')}
                     </button>
                     {filters.map((filter, index) => (
                       <motion.button
@@ -125,12 +127,12 @@ const WikiCategoryLayout = ({
                 <div className="w-full lg:w-auto flex flex-col gap-4">
                   <div className="flex items-center gap-3">
                     <Search className="w-3 h-3 text-red-500" />
-                    <span className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em]">Search</span>
+                    <span className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em]">{t('wiki_layout.search')}</span>
                   </div>
                   <div className="relative group min-w-[320px]">
                     <Input
                       type="text"
-                      placeholder={`Search ${title.toLowerCase()}...`}
+                      placeholder={t('wiki_layout.search_placeholder', { title: title.toLowerCase() })}
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       className="w-full h-12 bg-white/5 border-white/5 pl-6 pr-4 py-2 text-white font-bold placeholder:text-gray-600 
@@ -150,7 +152,7 @@ const WikiCategoryLayout = ({
                 animate={{ opacity: 1, height: 'auto' }}
                 className="flex items-center gap-4 mt-8 pt-6 border-t border-white/5"
               >
-                <span className="text-[10px] font-black text-white/20 uppercase tracking-[0.2em]">Active Filters</span>
+                <span className="text-[10px] font-black text-white/20 uppercase tracking-[0.2em]">{t('wiki_layout.active_filters')}</span>
                 <div className="flex flex-wrap gap-2">
                   {activeFilter !== 'all' && (
                     <span className="bg-red-600/10 text-red-500 border border-red-500/20 px-3 py-1 rounded-lg text-[10px] font-black uppercase">
@@ -170,7 +172,7 @@ const WikiCategoryLayout = ({
                   }}
                   className="ml-auto text-[10px] font-black text-gray-500 hover:text-white uppercase tracking-widest transition-colors"
                 >
-                  Clear Filters [X]
+                  {t('wiki_layout.clear_filters')} [X]
                 </button>
               </motion.div>
             )}

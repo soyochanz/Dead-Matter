@@ -6,6 +6,7 @@ import '@/index.css';
 import { AuthProvider } from '@/contexts/SupabaseAuthContext';
 import { Toaster } from '@/components/ui/toaster';
 import 'react-quill/dist/quill.snow.css';
+import './i18n';
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(

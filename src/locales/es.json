@@ -1,0 +1,209 @@
+{
+    "nav": {
+        "home": "Inicio",
+        "home_desc": "Panel principal",
+        "wiki": "Wiki",
+        "wiki_desc": "Base de conocimientos",
+        "guides": "Guías",
+        "guides_desc": "Consejos y estrategias",
+        "updates": "Actualizaciones",
+        "updates_desc": "Parches y noticias",
+        "map": "Mapa",
+        "map_desc": "Mapa interactivo",
+        "media": "Multimedia",
+        "media_desc": "Capturas y videos"
+    },
+    "user": {
+        "login": "Iniciar Sesión",
+        "register": "Registrarse",
+        "profile_settings": "Configuración de Perfil",
+        "admin_dashboard": "Panel de Administración",
+        "disconnect": "Desconectar",
+        "system_id": "ID del Sistema",
+        "cmd": "CMD",
+        "online": "En línea",
+        "offline": "Desconectado"
+    },
+    "footer": {
+        "rights_reserved": "Todos los derechos reservados.",
+        "privacy_policy": "Política de Privacidad",
+        "terms_of_service": "Términos de Servicio"
+    },
+    "sidebar": {
+        "community_resource": "Recurso Comunitario",
+        "status_transmission": "Transmisión de Estado",
+        "join_discord": "Unirse al Discord Oficial",
+        "official_link": "Enlace Oficial",
+        "watch_development": "Ver Desarrollo",
+        "live_now": "EN VIVO AHORA",
+        "streaming_game": "Transmitiendo Dead Matter",
+        "alpha_database": "Base de Datos Alfa"
+    },
+    "wiki": {
+        "common": {
+            "market_value": "Valor de Mercado",
+            "resale_factor": "Factor de Reventa",
+            "grade": "GRADO",
+            "class": "CLASE",
+            "size": "Tamaño",
+            "frame": "Marco",
+            "weight": "Peso",
+            "remove": "Quitar",
+            "loading": "Cargando..."
+        },
+        "weapon": {
+            "ballistic_registry": "Registro Balístico",
+            "compatible_with": "Compatible con",
+            "scanning_database": "Escaneando Base de Datos...",
+            "no_ballistic_data": "Sin datos balísticos",
+            "module_sync_unavailable": "Sincronización de Módulo No Disponible",
+            "visual_confirm": "Confirmación Visual",
+            "inventory_attachments": "Accesorios de Inventario",
+            "no_mods_available": "Sin Mods Disponibles",
+            "drag_instruction": "Arrastra ítems para instalar módulos",
+            "performance_analysis": "Análisis de Rendimiento",
+            "integrated_systems": "Sistemas Integrados",
+            "ballistic_performance": "Rendimiento Balístico",
+            "stats": {
+                "lethality": "Letalidad",
+                "melee_range": "Rango Melee",
+                "attack_speed": "Velocidad de Ataque",
+                "stamina_efficiency": "Eficiencia de Estamina",
+                "rate_of_fire": "Cadencia de Fuego",
+                "accuracy": "Precisión",
+                "handling": "Manejo",
+                "ammo_type": "Tipo de Munición",
+                "capacity": "Capacidad"
+            }
+        },
+        "gear": {
+            "small_weapon_slot": "Ranura de Arma Pequeña",
+            "large_weapon_slot": "Ranura de Arma Grande",
+            "stats": {
+                "armor_rating": "Índice de Armadura",
+                "insulation": "Aislamiento",
+                "bleed_prot": "Prot. Sangrado",
+                "blunt_prot": "Prot. Contundente",
+                "fire_prot": "Prot. Fuego",
+                "inv_slots": "Ranuras Inv."
+            }
+        },
+        "consumable": {
+            "hold_to_cook": "Mantener para cocinar",
+            "type": "TIPO",
+            "consumable_label": "CONSUMIBLE",
+            "toxicity_side_effects": "Toxicidad y Efectos Secundarios",
+            "safe_bio_integrity": "Bio-Integridad Segura",
+            "bio_hazardous_raw": "Bio-Peligroso (Crudo)",
+            "extraction_tool_required": "Herramienta de Extracción Requerida",
+            "stats": {
+                "hydration": "Hidratación",
+                "energy": "Energía",
+                "health": "Salud"
+            }
+        },
+        "vehicle": {
+            "specifications": "Especificaciones",
+            "capacity": "Capacidad",
+            "use_case": "Caso de Uso",
+            "max_speed": "Velocidad Máx",
+            "seats": "Asientos",
+            "fuel": "Combustible",
+            "storage": "Almacenamiento",
+            "slots": "Ranuras",
+            "health": "Salud",
+            "standard": "Estándar",
+            "performance": "Rendimiento",
+            "required_components": "Componentes Requeridos",
+            "mechanical_part": "Parte Mecánica"
+        }
+    },
+    "home": {
+        "hero_title": "DEAD MATTER",
+        "hero_subtitle": "La guía técnica definitiva para la supervivencia en las Montañas Rocosas de Canadá. Bases de datos de armas, vehículos, mecánicas de supervivencia y guías de la comunidad.",
+        "interactive_map": "Mapa Interactivo",
+        "wiki_button": "Wiki",
+        "top_guides": "Mejores Guías de la Comunidad",
+        "learn_experts": "Aprende de los expertos",
+        "view_all": "VER TODO",
+        "latest_patch_notes": "Últimas Notas del Parche",
+        "micro_changes": "Micro Cambios",
+        "latest_media": "Destacados Multimedia Recientes",
+        "official_trailer": "Tráiler Oficial",
+        "loading_updates": "Cargando actualizaciones...",
+        "shortcuts": {
+            "weapons": "Armas",
+            "vehicles": "Vehículos",
+            "gear": "Equipo",
+            "basebuilding": "Construcción",
+            "consumables": "Consumibles",
+            "medical": "Médico",
+            "npcs": "NPCs",
+            "keys": "Llaves",
+            "toolbelts": "Cinturones",
+            "accessories": "Accesorios",
+            "perks": "Ventajas"
+        }
+    },
+    "updates": {
+        "read_full": "Leer Actualización Completa",
+        "latest_tag": "ÚLTIMO",
+        "posted_on": "Publicado el",
+        "click_view": "Haz clic para ver el registro de cambios completo de la versión {{version}}."
+    },
+    "wiki_page": {
+        "title": "BASE DE DATOS DE",
+        "title_suffix": "SUPERVIVENCIA",
+        "description": "Explora el recurso técnico más completo para el universo de Dead Matter. Desde armas y equipo hasta mecánicas de supervivencia y datos de NPCs.",
+        "loading": "Cargando base de datos de supervivencia...",
+        "available": "Disponible",
+        "coming_soon": "Próximamente",
+        "explore": "Explorar",
+        "item_count": "{{count}} ítem",
+        "item_count_plural": "{{count}} ítems"
+    },
+    "wiki_category_page": {
+        "no_items": "No hay elementos en esta categoría.",
+        "meta_weapons_desc": "Explora y descubre todas las armas de Dead Matter",
+        "meta_generic_desc": "Explora {{title}} en la Wiki de Dead Matter."
+    },
+    "wiki_layout": {
+        "return_to_wiki": "Volver a la Wiki",
+        "filter": "Filtrar",
+        "all_types": "Todos",
+        "search": "Buscar",
+        "search_placeholder": "Buscar en {{title}}...",
+        "active_filters": "Filtros Activos",
+        "clear_filters": "Borrar Filtros"
+    },
+    "meta": {
+        "description": "La wiki definitiva y mapa interactivo para Dead Matter. Encuentra armas, vehículos, ubicaciones de botín y más."
+    },
+    "auth": {
+        "login": {
+            "title": "Iniciar Sesión",
+            "subtitle": "Accede a tu cuenta para contribuir.",
+            "email_label": "Correo Electrónico",
+            "password_label": "Contraseña",
+            "submit_button": "Iniciar Sesión",
+            "no_account": "¿No tienes una cuenta?",
+            "register_link": "Registrarse",
+            "success_title": "¡Inicio de sesión exitoso!",
+            "success_desc": "Bienvenido de nuevo.",
+            "failed_title": "Inicio de Sesión Fallido"
+        },
+        "register": {
+            "title": "Crear una Cuenta",
+            "subtitle": "Únete a la comunidad para crear y compartir guías.",
+            "username_label": "Nombre de Usuario",
+            "email_label": "Correo Electrónico",
+            "password_label": "Contraseña",
+            "submit_button": "Registrarse",
+            "has_account": "¿Ya tienes una cuenta?",
+            "login_link": "Iniciar Sesión",
+            "success_title": "¡Registro exitoso!",
+            "success_desc": "Por favor revisa tu correo para confirmar tu cuenta.",
+            "failed_title": "Registro fallido"
+        }
+    }
+}

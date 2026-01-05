@@ -4,11 +4,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import * as Icons from 'lucide-react';
 import { ChevronRight, ChevronLeft, Sparkles, Radio, ExternalLink } from 'lucide-react';
 import { supabase } from '@/lib/mySupabaseClient';
+import { useTranslation } from 'react-i18next';
 const Sidebar = ({
   isOpen,
   toggleSidebar
 }) => {
   const location = useLocation();
+  const { t } = useTranslation();
   const [discordUrl, setDiscordUrl] = useState('');
   const [activeHover, setActiveHover] = useState(null);
   const [isDevLive, setIsDevLive] = useState(false);
@@ -88,7 +90,7 @@ const Sidebar = ({
           <div className="flex items-center justify-between mb-3 relative z-10">
             <div className="flex items-center gap-2 px-2 py-0.5 rounded-full bg-red-500/20 border border-red-500/30">
               <div className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.8)]" />
-              <span className="text-[10px] font-black text-red-500 uppercase tracking-tighter">LIVE NOW</span>
+              <span className="text-[10px] font-black text-red-500 uppercase tracking-tighter">{t('sidebar.live_now')}</span>
             </div>
             <ExternalLink className="h-3 w-3 text-white/50 group-hover:text-white transition-colors" />
           </div>
@@ -103,14 +105,14 @@ const Sidebar = ({
               <p className="text-sm font-bold text-white truncate group-hover:text-purple-300 transition-colors">JohnsonGuitarDev</p>
               <div className="flex items-center gap-1.5">
                 <Radio className="h-3 w-3 text-purple-400" />
-                <span className="text-[10px] text-purple-300/80 font-medium">Streaming Dead Matter</span>
+                <span className="text-[10px] text-purple-300/80 font-medium">{t('sidebar.streaming_game')}</span>
               </div>
             </div>
           </div>
 
           {/* Hover Clue */}
           <div className="mt-3 flex items-center justify-center py-1.5 rounded-lg bg-white/5 border border-white/5 group-hover:bg-purple-500/20 group-hover:border-purple-500/30 transition-all relative z-10">
-            <span className="text-[10px] font-bold text-white/40 group-hover:text-white uppercase tracking-widest">Watch Development →</span>
+            <span className="text-[10px] font-bold text-white/40 group-hover:text-white uppercase tracking-widest">{t('sidebar.watch_development')} →</span>
           </div>
         </motion.a>
       );
@@ -132,7 +134,7 @@ const Sidebar = ({
             </div>
             <div className="min-w-0">
               <p className="text-sm font-bold text-gray-400 group-hover:text-white truncate">JohnsonGuitarDev</p>
-              <p className="text-[10px] text-gray-500 font-medium italic">Currently offline</p>
+              <p className="text-[10px] text-gray-500 font-medium italic">Currently {t('user.offline')}</p>
             </div>
           </div>
           <ExternalLink className="h-3.5 w-3.5 text-gray-600 group-hover:text-gray-400 transition-colors" />
@@ -143,40 +145,40 @@ const Sidebar = ({
 
   const navItems = [{
     path: '/',
-    label: 'Home',
+    label: t('nav.home'),
     icon: 'Home',
     gradient: 'from-orange-500 to-red-600',
-    description: 'Main dashboard'
+    description: t('nav.home_desc')
   }, {
     path: '/wiki',
-    label: 'Wiki',
+    label: t('nav.wiki'),
     icon: 'Database',
     gradient: 'from-blue-500 to-indigo-600',
-    description: 'Game knowledge base'
+    description: t('nav.wiki_desc')
   }, {
     path: '/guides',
-    label: 'Guides',
+    label: t('nav.guides'),
     icon: 'ShieldCheck',
     gradient: 'from-emerald-500 to-teal-600',
-    description: 'Tips and strategies'
+    description: t('nav.guides_desc')
   }, {
     path: '/updates',
-    label: 'Updates',
+    label: t('nav.updates'),
     icon: 'Terminal',
     gradient: 'from-violet-500 to-fuchsia-600',
-    description: 'Latest patches & news'
+    description: t('nav.updates_desc')
   }, {
     path: '/map',
-    label: 'Map',
+    label: t('nav.map'),
     icon: 'Compass',
     gradient: 'from-amber-400 to-orange-500',
-    description: 'Interactive world map'
+    description: t('nav.map_desc')
   }, {
     path: '/media',
-    label: 'Media',
+    label: t('nav.media'),
     icon: 'Camera',
     gradient: 'from-rose-500 to-pink-600',
-    description: 'Screenshots & videos'
+    description: t('nav.media_desc')
   }];
 
   if (location.pathname.startsWith('/tutucucu')) {
@@ -223,7 +225,7 @@ const Sidebar = ({
             </h1>
             <div className="flex items-center gap-2 mt-1 px-1">
               <div className="h-[1px] flex-1 bg-gradient-to-r from-red-600/50 to-transparent" />
-              <span className="text-[9px] text-gray-500 font-bold uppercase tracking-[0.3em]">Community Resource</span>
+              <span className="text-[9px] text-gray-500 font-bold uppercase tracking-[0.3em]">{t('sidebar.community_resource')}</span>
             </div>
           </Link>
         </div>
@@ -275,7 +277,7 @@ const Sidebar = ({
         {/* Footer Actions */}
         <div className="p-6 bg-black/40 border-t border-white/5 space-y-4">
           <div className="space-y-3">
-            <h3 className="text-[10px] font-black text-gray-600 uppercase tracking-[0.2em] px-1">Status Transmission</h3>
+            <h3 className="text-[10px] font-black text-gray-600 uppercase tracking-[0.2em] px-1">{t('sidebar.status_transmission')}</h3>
             <StreamStatus />
             {/* Discord Button */}
             {discordUrl && (
@@ -295,8 +297,8 @@ const Sidebar = ({
                   />
                 </div>
                 <div className="relative z-10 flex flex-col leading-none">
-                  <span className="text-[10px] font-black text-[#5865F2] uppercase tracking-[0.22em] mb-1">Official Link</span>
-                  <span className="text-sm font-black text-white tracking-tight">Join Official Discord</span>
+                  <span className="text-[10px] font-black text-[#5865F2] uppercase tracking-[0.22em] mb-1">{t('sidebar.official_link')}</span>
+                  <span className="text-sm font-black text-white tracking-tight">{t('sidebar.join_discord')}</span>
                 </div>
 
                 {/* Animated Shine */}
@@ -309,7 +311,7 @@ const Sidebar = ({
           <div className="flex items-center justify-between pt-2">
             <div className="flex items-center gap-2">
               <div className="h-[4px] w-[4px] bg-red-600 rounded-full animate-ping" />
-              <span className="text-[10px] font-black text-white/20 uppercase tracking-[0.2em]">Alpha Database</span>
+              <span className="text-[10px] font-black text-white/20 uppercase tracking-[0.2em]">{t('sidebar.alpha_database')}</span>
             </div>
             <div className="px-2 py-0.5 rounded-md bg-white/5 border border-white/5">
               <span className="text-[10px] font-mono font-bold text-red-600">v0.12.2</span>

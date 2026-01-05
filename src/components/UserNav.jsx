@@ -12,19 +12,21 @@ import {
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from '@/contexts/SupabaseAuthContext';
+import { useTranslation } from 'react-i18next';
 import { LogOut, User, ShieldAlert, ChevronDown, Sparkles } from 'lucide-react';
 
 export function UserNav() {
   const { session, profile, signOut } = useAuth();
+  const { t } = useTranslation();
 
   if (!session) {
     return (
       <div className="flex gap-3">
         <Button asChild variant="ghost" className="text-white/90 hover:text-red-300 hover:bg-white/5 backdrop-blur-sm border border-white/10">
-          <Link to="/login">Login</Link>
+          <Link to="/login">{t('user.login')}</Link>
         </Button>
         <Button asChild className="bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white border-none shadow-lg hover:shadow-red-500/30 transition-all duration-300">
-          <Link to="/register">Register</Link>
+          <Link to="/register">{t('user.register')}</Link>
         </Button>
       </div>
     );
@@ -80,7 +82,7 @@ export function UserNav() {
                 <span className="font-bold text-sm text-white truncate">{username}</span>
                 {isAdmin && (
                   <span className="px-1.5 py-0.5 rounded text-[9px] font-black uppercase tracking-wider bg-red-500/10 text-red-500 border border-red-500/20">
-                    CMD
+                    {t('user.cmd')}
                   </span>
                 )}
               </div>
@@ -95,7 +97,7 @@ export function UserNav() {
               <Link to="/profile/edit" className="w-full flex items-center gap-3">
                 <User className="h-4 w-4 text-gray-500 group-hover:text-white transition-colors" />
                 <div className="flex flex-col">
-                  <span className="text-sm font-medium text-gray-300 group-hover:text-white">Profile Settings</span>
+                  <span className="text-sm font-medium text-gray-300 group-hover:text-white">{t('user.profile_settings')}</span>
                 </div>
               </Link>
             </DropdownMenuItem>
@@ -105,7 +107,7 @@ export function UserNav() {
                 <Link to="/tutucucu" className="w-full flex items-center gap-3">
                   <ShieldAlert className="h-4 w-4 text-gray-500 group-hover:text-red-500 transition-colors" />
                   <div className="flex flex-col">
-                    <span className="text-sm font-medium text-gray-300 group-hover:text-red-400">Admin Dashboard</span>
+                    <span className="text-sm font-medium text-gray-300 group-hover:text-red-400">{t('user.admin_dashboard')}</span>
                   </div>
                 </Link>
               </DropdownMenuItem>
@@ -119,13 +121,13 @@ export function UserNav() {
             onSelect={() => signOut()}
           >
             <LogOut className="h-4 w-4 text-gray-500 group-hover:text-red-500 transition-colors" />
-            <span className="text-sm font-medium text-gray-300 group-hover:text-red-400">Disconnect</span>
+            <span className="text-sm font-medium text-gray-300 group-hover:text-red-400">{t('user.disconnect')}</span>
           </DropdownMenuItem>
         </div>
 
         {/* Footer info */}
         <div className="px-4 py-2 border-t border-white/5 bg-white/[0.02] flex justify-between items-center">
-          <span className="text-[9px] text-gray-600 uppercase tracking-widest font-black">System ID</span>
+          <span className="text-[9px] text-gray-600 uppercase tracking-widest font-black">{t('user.system_id')}</span>
           <span className="text-[9px] font-mono text-gray-500">USER-{session.user.id.slice(0, 4)}</span>
         </div>
       </DropdownMenuContent>

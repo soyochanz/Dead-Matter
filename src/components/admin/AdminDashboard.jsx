@@ -7,7 +7,7 @@ import {
   Sword, Crosshair, Shirt, Package,
   Soup, Key, Sprout, Car, Wrench,
   Stethoscope, UserCircle, Layers, Star,
-  Menu, X, Loader2, Shield
+  Menu, X, Loader2, Shield, Globe
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -39,6 +39,7 @@ const NpcManager = lazy(() => import('@/components/admin/NpcManager'));
 const PerksOccupationsManager = lazy(() => import('@/components/admin/PerksOccupationsManager'));
 const WikiCategoryManager = lazy(() => import('@/components/admin/WikiCategoryManager'));
 const RarityManager = lazy(() => import('@/components/admin/RarityManager'));
+const TranslationManager = lazy(() => import('@/components/admin/TranslationManager'));
 
 const CATEGORIES = [
   {
@@ -95,6 +96,7 @@ const CATEGORIES = [
     items: [
       { id: 'categories', label: 'Categories', icon: Layers, component: WikiCategoryManager },
       { id: 'rarities', label: 'Rarities', icon: Star, component: RarityManager },
+      { id: 'translations', label: 'Translations', icon: Globe, component: TranslationManager },
     ]
   }
 ];

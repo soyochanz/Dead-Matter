@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
+import { useTranslation } from 'react-i18next';
 import {
     Dialog,
     DialogContent,
@@ -51,6 +52,7 @@ const CookiePolicyContent = () => (
 
 
 const Footer = () => {
+    const { t } = useTranslation();
     return (
         <footer className="relative mt-24 border-t border-white/5 py-12 overflow-hidden">
             {/* Technical Background */}
@@ -65,7 +67,7 @@ const Footer = () => {
             <div className="relative max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6 z-10">
                 <div className="text-center md:text-left">
                     <p className="text-xs text-gray-500 font-medium tracking-wide">
-                        © 2026 <span className="text-white">Deadmatterwiki.com</span>. All Rights Reserved.
+                        © 2026 <span className="text-white">Deadmatterwiki.com</span>. {t('footer.rights_reserved')}
                     </p>
                     <p className="text-[10px] text-gray-600 mt-1 uppercase tracking-wider">
                         Made with <span className="text-red-500 animate-pulse">❤</span> by <a href="https://ignaciomartin.site" target="_blank" rel="noopener noreferrer" className="text-red-400/80 hover:text-red-400 transition-colors font-bold hover:underline decoration-red-500/30 underline-offset-4">ignaciomartin.site</a>

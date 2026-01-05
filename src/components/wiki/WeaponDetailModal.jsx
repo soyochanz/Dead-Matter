@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Target, Zap, Shield, Gem, Crosshair, Grip, Puzzle, Wind, Loader2, Box, Ban, DollarSign, Tag, Ruler, Weight, Swords, TrendingUp, Hand, Clock, Lightbulb as Bolt, SlidersHorizontal } from 'lucide-react';
 import { DndContext, useDraggable, useDroppable, DragOverlay } from '@dnd-kit/core';
@@ -113,7 +114,7 @@ const AccessorySlot = ({ id, type, equippedAccessory, onRemove, isCompatibleDrop
                     <span className="text-[9px] font-black uppercase tracking-tighter text-white/50 group-hover/slot:text-white transition-colors truncate w-full px-2 mb-1">{equippedAccessory.name}</span>
                     <div className="absolute inset-0 bg-red-600/90 flex flex-col items-center justify-center opacity-0 group-hover/slot:opacity-100 transition-all duration-300">
                         <X size={24} className="text-white mb-1" />
-                        <span className="text-[8px] font-black uppercase text-white tracking-widest">Remove</span>
+                        <span className="text-[8px] font-black uppercase text-white tracking-widest">{t('wiki.common.remove')}</span>
                     </div>
                 </motion.div>
             ) : (<>
@@ -154,6 +155,7 @@ const DraggableAccessory = ({ accessory }) => {
 const AmmoWeaponsModal = ({ ammo, onClose }) => {
     const [weapons, setWeapons] = useState([]);
     const [loading, setLoading] = useState(true);
+    const { t } = useTranslation();
 
     useEffect(() => {
         const fetchWeapons = async () => {
@@ -177,8 +179,8 @@ const AmmoWeaponsModal = ({ ammo, onClose }) => {
                 <div className="p-8 relative z-10">
                     <div className="flex justify-between items-center mb-8">
                         <div className="space-y-1">
-                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-600/50">Ballistic Registry</span>
-                            <h3 className="text-3xl font-black text-white uppercase tracking-tighter shrink-0">Compatible with <span className="text-blue-500">{ammo}</span></h3>
+                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-600/50">{t('wiki.weapon.ballistic_registry')}</span>
+                            <h3 className="text-3xl font-black text-white uppercase tracking-tighter shrink-0">{t('wiki.weapon.compatible_with')} <span className="text-blue-500">{ammo}</span></h3>
                         </div>
                         <button onClick={onClose} className="p-3 text-gray-500 hover:text-white transition-all bg-white/5 rounded-2xl border border-white/5"><X size={20} /></button>
                     </div>
@@ -186,7 +188,7 @@ const AmmoWeaponsModal = ({ ammo, onClose }) => {
                     {loading ? (
                         <div className="flex flex-col items-center justify-center py-20 gap-4">
                             <Loader2 className="animate-spin text-blue-500 h-10 w-10" />
-                            <span className="text-[10px] font-black uppercase tracking-widest text-gray-500 text-center">Scanning Armory Database...</span>
+                            <span className="text-[10px] font-black uppercase tracking-widest text-gray-500 text-center">{t('wiki.weapon.scanning_database')}</span>
                         </div>
                     ) : weapons.length > 0 ? (
                         <div className="max-h-[50vh] overflow-y-auto pr-2 space-y-3 custom-scrollbar">
@@ -216,8 +218,8 @@ const AmmoWeaponsModal = ({ ammo, onClose }) => {
                         </div>
                     ) : (
                         <div className="text-center py-16 bg-white/5 rounded-3xl border border-dashed border-white/10">
-                            <p className="text-gray-500 text-sm font-bold uppercase tracking-widest">No matching ballistic data</p>
-                            <p className="text-[10px] text-gray-600 mt-2 uppercase tracking-widest">Module Synchronization Unvavailable</p>
+                            <p className="text-gray-500 text-sm font-bold uppercase tracking-widest">{t('wiki.weapon.no_ballistic_data')}</p>
+                            <p className="text-[10px] text-gray-600 mt-2 uppercase tracking-widest">{t('wiki.weapon.module_sync_unavailable')}</p>
                         </div>
                     )}
                 </div>
@@ -230,6 +232,7 @@ const AmmoWeaponsModal = ({ ammo, onClose }) => {
 }
 
 const WeaponDetailModal = ({ weapon, onClose, onNpcSelect }) => {
+    const { t } = useTranslation();
     const [availableAttachments, setAvailableAttachments] = useState([]);
     const [loading, setLoading] = useState(true);
     const [equipped, setEquipped] = useState({});
@@ -324,20 +327,20 @@ const WeaponDetailModal = ({ weapon, onClose, onNpcSelect }) => {
                 </div>
 
                 <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-red-500/50 mb-6 flex items-center gap-3">
-                    <div className="w-8 h-px bg-red-500/20" /> Performance Analysis
+                    <div className="w-8 h-px bg-red-500/20" /> {t('wiki.weapon.performance_analysis')}
                 </h4>
 
-                <StatBar icon={Target} label="Lethality" value={calculatedStats.damage} max={100} unit="pt" color="#ef4444" />
-                <StatBar icon={Hand} label="Melee Range" value={calculatedStats.melee_range} max={10} unit="m" color="#3b82f6" />
-                <StatBar icon={Clock} label="Attack Speed" value={calculatedStats.attack_speed} max={100} unit="%" color="#10b981" />
-                <StatBar icon={Bolt} label="Stamina Efficiency" value={calculatedStats.stamina_efficiency} max={100} unit="%" color="#f59e0b" />
+                <StatBar icon={Target} label={t('wiki.weapon.stats.lethality')} value={calculatedStats.damage} max={100} unit="pt" color="#ef4444" />
+                <StatBar icon={Hand} label={t('wiki.weapon.stats.melee_range')} value={calculatedStats.melee_range} max={10} unit="m" color="#3b82f6" />
+                <StatBar icon={Clock} label={t('wiki.weapon.stats.attack_speed')} value={calculatedStats.attack_speed} max={100} unit="%" color="#10b981" />
+                <StatBar icon={Bolt} label={t('wiki.weapon.stats.stamina_efficiency')} value={calculatedStats.stamina_efficiency} max={100} unit="%" color="#f59e0b" />
                 {weapon.stats?.map(stat => <StatBar key={stat.label} label={stat.label} value={stat.value} max={stat.max} icon={stat.icon} color={stat.color} />)}
             </div>
         </div>
     ) : (
         <div className="space-y-8">
             <div className="space-y-4">
-                <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500 ml-1">Integrated Systems</h4>
+                <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500 ml-1">{t('wiki.weapon.integrated_systems')}</h4>
                 <div className="grid grid-cols-3 md:grid-cols-5 gap-4">
                     {slots.map(slotType => {
                         const isSlotAvailable = availableAttachments.some(att => att.slot_type === slotType);
@@ -349,10 +352,10 @@ const WeaponDetailModal = ({ weapon, onClose, onNpcSelect }) => {
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-                <SimpleStat icon={Ruler} label="Size" value={weapon.size || 'N/A'} unit="" />
-                <SimpleStat icon={Weight} label="Weight" value={weapon.weight || 0} unit="kg" />
-                <SimpleStat icon={Shield} label="Ammo Type" value={weapon.ammo || 'N/A'} unit="" onClick={() => setShowAmmoModal(true)} className="cursor-pointer border-blue-500/20 hover:border-blue-500/50" valueClassName="text-blue-400" />
-                <SimpleStat icon={Box} label="Capacity" value={calculatedStats.capacity} unit="rnd" />
+                <SimpleStat icon={Ruler} label={t('wiki.common.size')} value={weapon.size || 'N/A'} unit="" />
+                <SimpleStat icon={Weight} label={t('wiki.common.weight')} value={weapon.weight || 0} unit="kg" />
+                <SimpleStat icon={Shield} label={t('wiki.weapon.stats.ammo_type')} value={weapon.ammo || 'N/A'} unit="" onClick={() => setShowAmmoModal(true)} className="cursor-pointer border-blue-500/20 hover:border-blue-500/50" valueClassName="text-blue-400" />
+                <SimpleStat icon={Box} label={t('wiki.weapon.stats.capacity')} value={calculatedStats.capacity} unit="rnd" />
             </div>
 
             <div className="bg-white/5 border border-white/5 p-6 rounded-[2rem] space-y-6 shadow-inner relative overflow-hidden">
@@ -361,13 +364,13 @@ const WeaponDetailModal = ({ weapon, onClose, onNpcSelect }) => {
                 </div>
 
                 <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-red-500/50 mb-6 flex items-center gap-3">
-                    <div className="w-8 h-px bg-red-500/20" /> Ballistic Performance
+                    <div className="w-8 h-px bg-red-500/20" /> {t('wiki.weapon.ballistic_performance')}
                 </h4>
 
-                <StatBar icon={Target} label="Lethality" value={calculatedStats.damage} baseValue={weapon.damage} max={100} unit="pt" showModifier={true} color="#ef4444" />
-                <StatBar icon={Zap} label="Rate of Fire" value={calculatedStats.rate_of_fire} baseValue={weapon.rate_of_fire} max={1200} unit="rpm" showModifier={true} color="#3b82f6" />
-                <StatBar icon={Crosshair} label="Accuracy" value={calculatedStats.accuracy} baseValue={weapon.accuracy} max={100} unit="%" showModifier={true} color="#10b981" />
-                <StatBar icon={SlidersHorizontal} label="Handling" value={calculatedStats.handling} baseValue={weapon.handling} max={100} unit="%" showModifier={true} color="#f59e0b" />
+                <StatBar icon={Target} label={t('wiki.weapon.stats.lethality')} value={calculatedStats.damage} baseValue={weapon.damage} max={100} unit="pt" showModifier={true} color="#ef4444" />
+                <StatBar icon={Zap} label={t('wiki.weapon.stats.rate_of_fire')} value={calculatedStats.rate_of_fire} baseValue={weapon.rate_of_fire} max={1200} unit="rpm" showModifier={true} color="#3b82f6" />
+                <StatBar icon={Crosshair} label={t('wiki.weapon.stats.accuracy')} value={calculatedStats.accuracy} baseValue={weapon.accuracy} max={100} unit="%" showModifier={true} color="#10b981" />
+                <StatBar icon={SlidersHorizontal} label={t('wiki.weapon.stats.handling')} value={calculatedStats.handling} baseValue={weapon.handling} max={100} unit="%" showModifier={true} color="#f59e0b" />
                 {weapon.stats?.map(stat => <StatBar key={stat.label} label={stat.label} value={stat.value} max={stat.max} icon={stat.icon} color={stat.color} />)}
             </div>
         </div>
@@ -429,25 +432,25 @@ const WeaponDetailModal = ({ weapon, onClose, onNpcSelect }) => {
                                         {/* Technical Label for Image */}
                                         <div className="absolute bottom-6 right-8 flex items-center gap-2">
                                             <div className="w-2 h-2 rounded-full bg-red-600 animate-pulse shadow-[0_0_10px_#ef4444]" />
-                                            <span className="text-[10px] font-black font-mono text-gray-500 uppercase tracking-widest">Visual Confirm</span>
+                                            <span className="text-[10px] font-black font-mono text-gray-500 uppercase tracking-widest">{t('wiki.weapon.visual_confirm')}</span>
                                         </div>
                                     </div>
 
                                     {!isMelee && (
                                         <div className="space-y-4">
                                             <div className="flex items-center justify-between">
-                                                <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">Inventory Attachments</h4>
+                                                <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">{t('wiki.weapon.inventory_attachments')}</h4>
                                                 {loading && <Loader2 className="w-4 h-4 animate-spin text-red-500" />}
                                             </div>
                                             <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 p-4 bg-black/40 border border-white/5 rounded-[2rem] min-h-[140px] shadow-inner relative">
                                                 {!loading && availableAttachments.length === 0 && (
                                                     <div className="absolute inset-0 flex items-center justify-center text-gray-700 pointer-events-none">
-                                                        <span className="text-[8px] font-black uppercase tracking-widest">No Mods Available</span>
+                                                        <span className="text-[8px] font-black uppercase tracking-widest">{t('wiki.weapon.no_mods_available')}</span>
                                                     </div>
                                                 )}
                                                 {availableAttachments.filter(att => !Object.values(equipped).some(eq => eq && eq.id === att.accessories.id)).map(att => <DraggableAccessory key={att.accessories.id} accessory={att.accessories} />)}
                                             </div>
-                                            <p className="text-[8px] font-black uppercase tracking-widest text-center text-gray-600">Drag items to install modules</p>
+                                            <p className="text-[8px] font-black uppercase tracking-widest text-center text-gray-600">{t('wiki.weapon.drag_instruction')}</p>
                                         </div>
                                     )}
                                 </div>
@@ -460,7 +463,7 @@ const WeaponDetailModal = ({ weapon, onClose, onNpcSelect }) => {
                                             className="flex items-center gap-2 mb-4"
                                         >
                                             <span className="text-[10px] font-black px-4 py-1.5 rounded-full tracking-widest uppercase shadow-lg border border-red-500/20" style={{ backgroundColor: `${weapon.rarity.color}20`, color: weapon.rarity.color }}>
-                                                {weapon.rarity.name} GRADE
+                                                {weapon.rarity.name} {t('wiki.common.grade')}
                                             </span>
                                         </motion.div>
 
@@ -475,8 +478,8 @@ const WeaponDetailModal = ({ weapon, onClose, onNpcSelect }) => {
                                         </p>
 
                                         <div className="grid grid-cols-2 gap-4 mb-12">
-                                            <SimpleStat icon={DollarSign} label="Market Value" value={weapon.price || 0} unit="$" valueClassName="text-red-500" className="cursor-pointer border-red-500/10 hover:border-red-500/40 shadow-lg" onClick={() => setShowNpcSellers(true)} />
-                                            <SimpleStat icon={TrendingUp} label="Resale Factor" value={weapon.sell_price || 'N/A'} unit="$" valueClassName="text-green-500" />
+                                            <SimpleStat icon={DollarSign} label={t('wiki.common.market_value')} value={weapon.price || 0} unit="$" valueClassName="text-red-500" className="cursor-pointer border-red-500/10 hover:border-red-500/40 shadow-lg" onClick={() => setShowNpcSellers(true)} />
+                                            <SimpleStat icon={TrendingUp} label={t('wiki.common.resale_factor')} value={weapon.sell_price || 'N/A'} unit="$" valueClassName="text-green-500" />
                                         </div>
 
                                         {mainContent}

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BookOpen, MapPin, Image as ImageIcon, ArrowRight, Bell, X, Calendar, Tag, GitCommit, Shield, Car, Backpack, Hammer, ThumbsUp, User, UserCircle, Zap, Video, ExternalLink, ChevronUp, Loader2, Sword, Soup, Stethoscope, Users, Package } from 'lucide-react';
@@ -84,15 +85,16 @@ const VersionTag = ({ version }) => (
 );
 
 const WikiShortcuts = () => {
+  const { t } = useTranslation();
   const categories = [
-    { name: 'Weapons', icon: Sword, color: 'text-red-500', path: '/wiki/weapons' },
-    { name: 'Vehicles', icon: Car, color: 'text-blue-500', path: '/wiki/vehicles' },
-    { name: 'Gear', icon: Backpack, color: 'text-emerald-500', path: '/wiki/gear' },
-    { name: 'Basebuilding', icon: Hammer, color: 'text-orange-500', path: '/wiki/basebuilding' },
-    { name: 'Consumables', icon: Soup, color: 'text-yellow-500', path: '/wiki/consumables' },
-    { name: 'Medical', icon: Stethoscope, color: 'text-pink-500', path: '/wiki/meds' },
-    { name: 'NPCs', icon: Users, color: 'text-purple-500', path: '/wiki/npcs' },
-    { name: 'Keys', icon: Package, color: 'text-slate-400', path: '/wiki/keys' },
+    { name: t('home.shortcuts.weapons'), icon: Sword, color: 'text-red-500', path: '/wiki/weapons' },
+    { name: t('home.shortcuts.vehicles'), icon: Car, color: 'text-blue-500', path: '/wiki/vehicles' },
+    { name: t('home.shortcuts.gear'), icon: Backpack, color: 'text-emerald-500', path: '/wiki/gear' },
+    { name: t('home.shortcuts.basebuilding'), icon: Hammer, color: 'text-orange-500', path: '/wiki/basebuilding' },
+    { name: t('home.shortcuts.consumables'), icon: Soup, color: 'text-yellow-500', path: '/wiki/consumables' },
+    { name: t('home.shortcuts.medical'), icon: Stethoscope, color: 'text-pink-500', path: '/wiki/meds' },
+    { name: t('home.shortcuts.npcs'), icon: Users, color: 'text-purple-500', path: '/wiki/npcs' },
+    { name: t('home.shortcuts.keys'), icon: Package, color: 'text-slate-400', path: '/wiki/keys' },
   ];
 
   return (
@@ -122,6 +124,7 @@ const WikiShortcuts = () => {
 };
 
 const Home = () => {
+  const { t, i18n } = useTranslation();
   const [latestUpdates, setLatestUpdates] = useState([]);
   const [latestMedia, setLatestMedia] = useState([]);
   const [latestCommits, setLatestCommits] = useState([]);
@@ -188,23 +191,23 @@ const Home = () => {
             initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
             className="text-6xl md:text-8xl font-black text-white tracking-tighter"
           >
-            DEAD MATTER <span className="text-red-500">WIKI</span>
+            {t('home.hero_title')} <span className="text-red-500">WIKI</span>
           </motion.h1>
           <motion.p
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
             className="text-xl text-slate-400 font-medium leading-relaxed"
           >
-            The definitive technical guide for the survival in the Canadian Rockies. Databases for weapons, vehicles, survival mechanics and community guides.
+            {t('home.hero_subtitle')}
           </motion.p>
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.4 }}
             className="flex flex-wrap justify-center gap-4 pt-8"
           >
             <Button asChild size="lg" className="bg-red-600 hover:bg-red-500 text-white rounded-full px-8">
-              <Link to="/map"><MapPin className="mr-2 h-4 w-4" /> Interactive Map</Link>
+              <Link to="/map"><MapPin className="mr-2 h-4 w-4" /> {t('home.interactive_map')}</Link>
             </Button>
             <Button asChild variant="outline" size="lg" className="rounded-full px-8 border-white/10 hover:bg-white/5">
-              <Link to="/wiki"><BookOpen className="mr-2 h-4 w-4" /> Wiki</Link>
+              <Link to="/wiki"><BookOpen className="mr-2 h-4 w-4" /> {t('home.wiki_button')}</Link>
             </Button>
           </motion.div>
         </section>
@@ -215,10 +218,10 @@ const Home = () => {
         <section className="space-y-8">
           <div className="flex justify-between items-end">
             <div>
-              <h2 className="text-3xl font-bold text-white">Top Community Guides</h2>
-              <p className="text-slate-500 mt-1">Learner from the experts</p>
+              <h2 className="text-3xl font-bold text-white">{t('home.top_guides')}</h2>
+              <p className="text-slate-500 mt-1">{t('home.learn_experts')}</p>
             </div>
-            <Link to="/guides" className="text-red-500 text-sm font-bold flex items-center hover:translate-x-1 transition-transform">VIEW ALL <ArrowRight size={14} className="ml-1" /></Link>
+            <Link to="/guides" className="text-red-500 text-sm font-bold flex items-center hover:translate-x-1 transition-transform">{t('home.view_all')} <ArrowRight size={14} className="ml-1" /></Link>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {loading.guides ? Array(4).fill(0).map((_, i) => <SkeletonCard key={i} />) :
@@ -232,7 +235,7 @@ const Home = () => {
           <div className="lg:col-span-8 space-y-8">
             <div className="flex items-center gap-3">
               <Bell size={24} className="text-red-500" />
-              <h2 className="text-3xl font-bold text-white">Latest Patch Notes</h2>
+              <h2 className="text-3xl font-bold text-white">{t('home.latest_patch_notes')}</h2>
             </div>
             {loading.update ? <SkeletonCard /> : (
               <div className="space-y-6">
@@ -247,7 +250,7 @@ const Home = () => {
           <div className="lg:col-span-4 space-y-8">
             <div className="flex items-center gap-3">
               <GitCommit size={24} className="text-blue-500" />
-              <h2 className="text-2xl font-bold text-white">Micro Changes</h2>
+              <h2 className="text-2xl font-bold text-white">{t('home.micro_changes')}</h2>
             </div>
             <div className="bg-[#0a0a0c] border border-white/5 rounded-2xl p-6 relative overflow-hidden">
               {loading.commits && <SkeletonPulse />}
@@ -256,7 +259,7 @@ const Home = () => {
                   <div key={c.id} className="p-3 bg-white/[0.02] rounded-xl border border-white/5">
                     <p className="text-sm text-slate-300 line-clamp-2">{c.message}</p>
                     <div className="flex justify-between items-center mt-2">
-                      <span className="text-[10px] uppercase font-bold text-slate-500">{new Date(c.created_at).toLocaleDateString()}</span>
+                      <span className="text-[10px] uppercase font-bold text-slate-500">{new Date(c.created_at).toLocaleDateString(i18n.language)}</span>
                       <span className="text-[10px] font-mono text-blue-400">#{c.id.substring(0, 6)}</span>
                     </div>
                   </div>
@@ -270,7 +273,7 @@ const Home = () => {
         <section className="space-y-8">
           <div className="flex items-center gap-3">
             <ImageIcon size={24} className="text-purple-500" />
-            <h2 className="text-3xl font-bold text-white">Latest Media Highlights</h2>
+            <h2 className="text-3xl font-bold text-white">{t('home.latest_media')}</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             {loading.media ? Array(3).fill(0).map((_, i) => <SkeletonCard key={i} />) :
@@ -282,7 +285,7 @@ const Home = () => {
         <section className="space-y-8">
           <div className="flex items-center gap-3">
             <Video size={24} className="text-red-500" />
-            <h2 className="text-3xl font-bold text-white">Official Trailer</h2>
+            <h2 className="text-3xl font-bold text-white">{t('home.official_trailer')}</h2>
           </div>
           <div className="aspect-video w-full rounded-2xl overflow-hidden border border-white/5 shadow-2xl">
             <iframe
