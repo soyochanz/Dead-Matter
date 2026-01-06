@@ -231,11 +231,11 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
         });
     };
 
-    const createClusterIcon = (cluster) => {
+    const createClusterIcon = (cluster, className, color) => {
         return L.divIcon({
-            html: `<div style="background-color: rgba(255, 68, 68, 0.8); width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; border: 2px solid white; box-shadow: 0 0 10px rgba(255,0,0,0.5);">${cluster.getChildCount()}</div>`,
-            className: 'custom-cluster-icon',
-            iconSize: [30, 30]
+            html: `<div style="background-color: ${color}; width: 16px; height: 16px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 10px ${color}80;"></div>`,
+            className: className,
+            iconSize: [16, 16]
         });
     };
 
@@ -475,7 +475,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                     {/* CLUSTER: CIVILIAN (Green) */}
                     <MarkerClusterGroup
                         iconCreateFunction={(cluster) => createClusterIcon(cluster, 'civilian-cluster', '#10b981')}
-                        maxClusterRadius={60}
+                        maxClusterRadius={30}
                         disableClusteringAtZoom={18}
                         spiderfyOnMaxZoom={false}
                         animate={false}
@@ -494,7 +494,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                     {/* CLUSTER: MEDICAL (Purple) */}
                     <MarkerClusterGroup
                         iconCreateFunction={(cluster) => createClusterIcon(cluster, 'medical-cluster', '#a855f7')}
-                        maxClusterRadius={60}
+                        maxClusterRadius={30}
                         disableClusteringAtZoom={18}
                         spiderfyOnMaxZoom={false}
                         animate={true}
@@ -513,7 +513,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                     {/* CLUSTER: MILITARY (Red) */}
                     <MarkerClusterGroup
                         iconCreateFunction={(cluster) => createClusterIcon(cluster, 'military-cluster', '#ef4444')}
-                        maxClusterRadius={60}
+                        maxClusterRadius={30}
                         disableClusteringAtZoom={18}
                         spiderfyOnMaxZoom={false}
                         animate={true}
@@ -532,7 +532,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                     {/* CLUSTER: INDUSTRIAL (Orange) */}
                     <MarkerClusterGroup
                         iconCreateFunction={(cluster) => createClusterIcon(cluster, 'industrial-cluster', '#f97316')}
-                        maxClusterRadius={60}
+                        maxClusterRadius={30}
                         disableClusteringAtZoom={18}
                         spiderfyOnMaxZoom={false}
                         animate={true}
