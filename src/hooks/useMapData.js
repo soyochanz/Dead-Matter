@@ -10,6 +10,7 @@ export const useMapData = (refreshTrigger = 0, { enabled = true } = {}) => {
     const [groups, setGroups] = useState([]);
     const [keys, setKeys] = useState([]);
     const [missions, setMissions] = useState([]);
+    const [polygons, setPolygons] = useState([]);
     const [loading, setLoading] = useState(enabled);
     const [error, setError] = useState(null);
 
@@ -77,6 +78,15 @@ export const useMapData = (refreshTrigger = 0, { enabled = true } = {}) => {
                     console.warn('Missions fetch failed:', e);
                 }
 
+                let polygonsData = [];
+                try {
+                    const { data, error } = await supabase.from('map_polygons').select('*');
+                    if (error) console.warn('Polygons warning:', error.message);
+                    else polygonsData = data;
+                } catch (e) {
+                    console.warn('Polygons fetch failed:', e);
+                }
+
 
 
                 let userMarkersData = [];
@@ -102,6 +112,7 @@ export const useMapData = (refreshTrigger = 0, { enabled = true } = {}) => {
                 setGroups(userGroupsData || []);
                 setKeys(keysData || []);
                 setMissions(missionsData || []);
+                setPolygons(polygonsData || []);
             } catch (err) {
                 console.error('Error fetching map data:', err);
                 setError(err.message);
@@ -122,6 +133,7 @@ export const useMapData = (refreshTrigger = 0, { enabled = true } = {}) => {
         groups,
         keys,
         missions,
+        polygons,
         loading,
         error
     };

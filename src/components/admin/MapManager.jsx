@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { supabase } from '@/lib/mySupabaseClient';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
-import { Loader2, Plus, MapPin, Trash2, Edit, Compass } from 'lucide-react';
+import { Loader2, Plus, MapPin, Trash2, Edit, Compass, Square, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
@@ -34,14 +34,16 @@ const MapManager = () => {
     const [dialogOpen, setDialogOpen] = useState(false);
     // State for categories, markers, and tags
     // We use refreshTrigger=0 to fetch initial data once, then manage locally
-    const { categories, markers: initialMarkers, lootTags: initialTags, keys: availableKeys, missions: initialMissions } = useMapData(0);
+    const { categories, markers: initialMarkers, lootTags: initialTags, keys: availableKeys, missions: initialMissions, polygons: initialPolygons } = useMapData(0);
 
     // Local state for optimistic updates
     const [markers, setMarkers] = useState([]);
     const [missions, setMissions] = useState([]);
+    const [polygons, setPolygons] = useState([]);
     const [lootTags, setLootTags] = useState([]);
-    const [viewMode, setViewMode] = useState('markers'); // 'markers' or 'missions'
+    const [viewMode, setViewMode] = useState('markers'); // 'markers', 'missions', 'zones'
     const [isAddingStep, setIsAddingStep] = useState(false); // If true, next map click adds a step
+    const [activeZonePoints, setActiveZonePoints] = useState([]); // [lat, lng] array for current polygon 
 
     // Initialize local state when data is fetched (ONLY if local is empty)
     useEffect(() => {
@@ -62,6 +64,18 @@ const MapManager = () => {
         }
     }, [initialMissions]);
 
+    useEffect(() => {
+        if (initialPolygons && initialPolygons.length > 0) {
+            setPolygons(prev => prev.length === 0 ? initialPolygons : prev);
+        }
+    }, [initialPolygons]);
+
+    useEffect(() => {
+        if (initialPolygons && initialPolygons.length > 0) {
+            setPolygons(prev => prev.length === 0 ? initialPolygons : prev);
+        }
+    }, [initialPolygons]);
+
     // State, form data, etc
     const [formData, setFormData] = useState({
         title: '',
@@ -71,6 +85,7 @@ const MapManager = () => {
         infected_level: 'Low',
         selectedTags: [],
         requires_key: false,
+        required_key_ids: [],
         required_key_id: ''
     });
 
@@ -129,6 +144,18 @@ const MapManager = () => {
                 }));
                 setIsAddingStep(false);
                 setDialogOpen(true); // Re-open dialog
+            }
+            return;
+        }
+
+        if (viewMode === 'zones') {
+            const newPoints = [...activeZonePoints, [latlng.lat, latlng.lng]];
+            setActiveZonePoints(newPoints);
+
+            if (newPoints.length === 4) {
+                // Auto-save polygon
+                handleZoneSave(newPoints);
+                setActiveZonePoints([]); // Reset
             }
             return;
         }
@@ -226,7 +253,7 @@ const MapManager = () => {
                 infected_level: marker.infected_level || 'Low',
                 selectedTags: currentTags,
                 requires_key: marker.requires_key || false,
-                required_key_id: marker.required_key_id || ''
+                required_key_ids: marker.required_key_ids || (marker.required_key_id ? [marker.required_key_id] : [])
             });
             setDialogOpen(true);
         } catch (error) {
@@ -253,6 +280,17 @@ const MapManager = () => {
         });
     };
 
+    const handleKeyToggle = (keyId) => {
+        setFormData(prev => {
+            const current = prev.required_key_ids || [];
+            if (current.includes(keyId)) {
+                return { ...prev, required_key_ids: current.filter(k => k !== keyId) };
+            } else {
+                return { ...prev, required_key_ids: [...current, keyId] };
+            }
+        });
+    };
+
     const handleSave = async () => {
         setLoading(true);
         // Generate a temporary ID for new markers to display them immediately
@@ -268,7 +306,8 @@ const MapManager = () => {
                 image_url: formData.image_url || null,
                 infected_level: formData.infected_level,
                 requires_key: formData.requires_key,
-                required_key_id: formData.requires_key ? formData.required_key_id : null
+                required_key_ids: formData.requires_key ? formData.required_key_ids : [],
+                required_key_id: (formData.requires_key && formData.required_key_ids?.length > 0) ? formData.required_key_ids[0] : null
             };
 
             // 1. OPTIMISTIC UPDATE: MARKER
@@ -403,6 +442,52 @@ const MapManager = () => {
         }
     };
 
+    const handleZoneSave = async (points) => {
+        setLoading(true);
+        try {
+            // Optimistic update
+            const tempZone = {
+                id: `temp-${Date.now()}`,
+                points: points,
+                type: 'house',
+                color: '#e0f2fe'
+            };
+            setPolygons(prev => [...prev, tempZone]);
+            toast({ title: 'Zone Added', description: 'Building zone marked.' });
+
+            // DB Insert
+            const { data, error } = await supabase.from('map_polygons').insert({
+                points: points,
+                type: 'house',
+                color: '#e0f2fe'
+            }).select().single();
+
+            if (error) throw error;
+
+            // Update temp ID
+            setPolygons(prev => prev.map(p => p.id === tempZone.id ? data : p));
+
+        } catch (e) {
+            console.error(e);
+            toast({ title: 'Error saving zone', description: e.message, variant: 'destructive' });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleZoneDelete = async (id) => {
+        if (!confirm('Delete this zone?')) return;
+        setLoading(true);
+        try {
+            setPolygons(prev => prev.filter(p => p.id !== id));
+            await supabase.from('map_polygons').delete().eq('id', id);
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     // Calculate manual polylines for interactive map
     const manualPolylines = useMemo(() => {
         if (viewMode === 'missions' && missionForm.steps.length > 0) {
@@ -454,7 +539,29 @@ const MapManager = () => {
                     <Compass className="w-4 h-4 mr-2" />
                     Missions ({missions.length})
                 </Button>
+                <Button
+                    variant={viewMode === 'zones' ? "default" : "outline"}
+                    onClick={() => setViewMode('zones')}
+                    className={viewMode === 'zones' ? "bg-blue-600 hover:bg-blue-700" : "border-white/10 text-gray-400 hover:text-white"}
+                >
+                    <Square className="w-4 h-4 mr-2" />
+                    Zones ({polygons.length})
+                </Button>
             </div>
+
+            {viewMode === 'zones' && (
+                <div className="bg-blue-900/20 border border-blue-500/30 p-3 rounded-lg mb-4 flex items-center justify-between">
+                    <div className="text-sm text-blue-200">
+                        <strong className="text-blue-400">Add Building Zone:</strong> Click 4 corner points on the map.
+                        {activeZonePoints.length > 0 && <span className="ml-2 text-white bg-blue-600 px-2 py-0.5 rounded-full text-xs">{activeZonePoints.length} / 4 points</span>}
+                    </div>
+                    {activeZonePoints.length > 0 && (
+                        <Button size="sm" variant="ghost" className="h-6 text-red-400 hover:text-red-300 hover:bg-red-900/20" onClick={() => setActiveZonePoints([])}>
+                            <X className="w-3 h-3 mr-1" /> Clear Points
+                        </Button>
+                    )}
+                </div>
+            )}
 
             <div className="flex-grow border border-white/10 rounded-xl overflow-hidden relative min-h-[500px]">
                 <InteractiveMap
@@ -467,6 +574,9 @@ const MapManager = () => {
                     categories={categories}
                     keys={availableKeys}
                     manualPolylines={manualPolylines}
+                    polygons={polygons}
+                    activePolygonPoints={activeZonePoints}
+                    onPolygonClick={viewMode === 'zones' ? handleZoneDelete : undefined}
                 />
             </div>
 
@@ -681,19 +791,24 @@ const MapManager = () => {
 
                                         {formData.requires_key && (
                                             <div className="grid gap-2 pl-4 border-l-2 border-amber-500/30">
-                                                <Label htmlFor="required_key_id" className="text-amber-500">Select Key</Label>
-                                                <select
-                                                    id="required_key_id"
-                                                    name="required_key_id"
-                                                    value={formData.required_key_id}
-                                                    onChange={handleInputChange}
-                                                    className="flex h-10 w-full rounded-md border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm text-white capitalize"
-                                                >
-                                                    <option value="">-- Choose a Key --</option>
-                                                    {availableKeys && availableKeys.sort((a, b) => a.name.localeCompare(b.name)).map(key => (
-                                                        <option key={key.id} value={key.id}>{key.name}</option>
-                                                    ))}
-                                                </select>
+                                                <div className="grid gap-2 pl-4 border-l-2 border-amber-500/30">
+                                                    <Label className="text-amber-500">Select Keys (Multi-select)</Label>
+                                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 p-2 bg-neutral-800 rounded-md border border-neutral-700 max-h-[200px] overflow-y-auto">
+                                                        {availableKeys && availableKeys.sort((a, b) => a.name.localeCompare(b.name)).map(key => (
+                                                            <div key={key.id} className="flex items-center space-x-2 p-1 hover:bg-white/5 rounded">
+                                                                <Checkbox
+                                                                    id={`key-${key.id}`}
+                                                                    checked={(formData.required_key_ids || []).includes(key.id)}
+                                                                    onCheckedChange={() => handleKeyToggle(key.id)}
+                                                                    className="border-amber-500/50 data-[state=checked]:bg-amber-500 data-[state=checked]:text-black"
+                                                                />
+                                                                <label htmlFor={`key-${key.id}`} className="text-sm cursor-pointer select-none text-gray-300">
+                                                                    {key.name}
+                                                                </label>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
                                             </div>
                                         )}
 

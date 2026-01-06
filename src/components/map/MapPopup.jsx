@@ -4,9 +4,12 @@ import { supabase } from '@/lib/mySupabaseClient';
 
 const MapPopup = ({ marker, tags, keys = [] }) => {
 
-    const requiredKeyId = marker.required_key_id;
     const isLocked = marker.requires_key;
-    const requiredKeyName = isLocked && requiredKeyId ? (keys.find(k => k.id === requiredKeyId)?.name || 'Unknown Key') : (isLocked ? 'Unknown Key' : null);
+
+    // Resolve multiple keys
+    const requiredKeyIds = marker.required_key_ids || (marker.required_key_id ? [marker.required_key_id] : []);
+    const requiredKeyNames = requiredKeyIds.map(id => keys.find(k => k.id === id)?.name || 'Unknown Key');
+    const requiredKeyText = requiredKeyNames.length > 0 ? requiredKeyNames.join(', ') : 'Unknown Key';
 
     const infectedColors = {
         high: '#ef4444',   // red-500
@@ -64,7 +67,7 @@ const MapPopup = ({ marker, tags, keys = [] }) => {
                         <div className="text-amber-500">🔐</div>
                         <div>
                             <span className="block text-xs font-bold text-amber-500 uppercase tracking-wider">Locked Area</span>
-                            <span className="text-sm text-amber-200">Requires: <span className="font-semibold text-white">{requiredKeyName}</span></span>
+                            <span className="text-sm text-amber-200">Requires: <span className="font-semibold text-white">{requiredKeyText}</span></span>
                         </div>
                     </div>
                 )}

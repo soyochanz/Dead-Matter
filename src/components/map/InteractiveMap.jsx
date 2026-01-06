@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents, LayersControl, Circle, ZoomControl, Polyline, CircleMarker } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents, LayersControl, Circle, ZoomControl, Polyline, CircleMarker, Polygon } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -97,7 +97,7 @@ const ClickHelper = ({ setClickedCoords, adminMode, onMapClick, onContextMenu })
 // --- Personal Markers Config ---
 
 
-const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMarkerClick, refreshTrigger = 0, markers: propMarkers, lootTags: propLootTags, categories: propCategories, keys: propKeys, missions: propMissions, manualPolylines = [] }) => {
+const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMarkerClick, refreshTrigger = 0, markers: propMarkers, lootTags: propLootTags, categories: propCategories, keys: propKeys, missions: propMissions, manualPolylines = [], polygons = [], activePolygonPoints = [], onPolygonClick }) => {
     // Note: refreshTrigger increments after save, triggering re-fetch in hook
     const [internalRefresh, setInternalRefresh] = useState(0);
     const [showTips, setShowTips] = useState(true);
@@ -151,8 +151,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
 
     // --- ICON HELPER FUNCTIONS (Moved to component scope for access in Mission Loop) ---
     // Helper 3: Small Circular Icon (Water, Keys)
-    const createCircleIcon = (content, color) => {
-        const size = 24;
+    const createCircleIcon = (content, color, size = 24) => {
         return L.divIcon({
             html: `<div style="background-color: ${color}; width: ${size}px; height: ${size}px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">
                 <div style="width: 14px; height: 14px; color: white;">${content}</div>
@@ -325,9 +324,10 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
         }
 
         // 9. Special Circles (Water, Keys, Butane)
-        if (catName.includes('water') && !catName.includes('tower')) return createCircleIcon(personalIcons.water.svg, '#06b6d4'); // Cyan
-        if (catName.includes('key')) return createCircleIcon(mapIcons.key, '#eab308'); // Gold
-        if (catName.includes('butane') || catName.includes('propane') || catName.includes('fuel') || (catName.includes('gas') && !catName.includes('station'))) return createCircleIcon(mapIcons.propane, '#f97316'); // Orange
+        // 9. Special Circles (Water, Keys, Butane)
+        if (catName.includes('water') && !catName.includes('tower')) return createCircleIcon(personalIcons.water.svg, '#06b6d4', 18); // Smaller Cyan
+        if (catName.includes('key')) return createCircleIcon(mapIcons.key, '#eab308'); // Gold (Default 24)
+        if (catName.includes('butane') || catName.includes('propane') || catName.includes('fuel') || (catName.includes('gas') && !catName.includes('station'))) return createCircleIcon(mapIcons.propane, '#f97316', 18); // Smaller Orange
 
         // 10. Red Group (Specific & Generic Military)
         if (catName.includes('shooting range')) return createPinIcon(mapIcons.target, '#ef4444');
@@ -347,14 +347,32 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
         // 11. Landmarks
         if (category?.group_name === 'landmarks') {
             const iconUrl = category?.icon_url;
-            if (iconUrl) return createCustomIcon(iconUrl, [37, 37], 'precise-icon');
+            if (iconUrl) {
+                if (isLocked) {
+                    const badge = `<div style="position: absolute; top: -5px; right: -5px; width: 15px; height: 15px; background: #fbbf24; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid #1a1a1a; box-shadow: 0 2px 4px rgba(0,0,0,0.5); z-index: 10; color: #1a1a1a;">
+                        <svg viewBox="0 0 24 24" fill="currentColor" style="width: 10px; height: 10px;"><path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
+                    </div>`;
+
+                    return L.divIcon({
+                        html: `<div style="position: relative; width: 37px; height: 37px;">
+                            <img src="${iconUrl}" style="width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));" />
+                            ${badge}
+                        </div>`,
+                        className: 'precise-icon',
+                        iconSize: [37, 37],
+                        iconAnchor: [18.5, 37],
+                        popupAnchor: [0, -18.5]
+                    });
+                }
+                return createCustomIcon(iconUrl, [37, 37], 'precise-icon');
+            }
         }
 
         // 12. Fallback
         const iconUrl = category?.icon_url;
         if (iconUrl) {
             const content = `<img src="${iconUrl}" style="width: 18px; height: 18px; filter: invert(1);" />`;
-            return createPinIcon(content, '#94a3b8');
+            return createPinIcon(content, '#94a3b8', isLocked);
         }
 
         return new L.Icon.Default();
@@ -543,58 +561,73 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                     </div>
 
                     <div className="flex-1 overflow-y-auto p-4 space-y-6">
-                        {/* Markers List */}
-                        <div>
-                            <h3 className="text-xs font-bold text-neutral-500 uppercase mb-3">Your Locations</h3>
-                            <div className="space-y-3">
-                                {personalMarkers.length === 0 ? (
-                                    <div className="text-center text-neutral-500 py-4 text-sm bg-white/5 rounded-lg">
-                                        <p>No markers yet.</p>
-                                        <p className="mt-1 text-xs">Right-click map to add.</p>
-                                    </div>
-                                ) : (
-                                    personalMarkers.map(pm => {
-                                        const IconObj = personalIcons[pm.icon_name] || personalIcons.star;
-                                        const groupName = pm.group_id ? groups.find(g => g.id === pm.group_id)?.name : null;
-
-                                        return (
-                                            <div key={pm.id} onClick={() => handleFlyToMarker(pm)} className="group flex items-center justify-between p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/20 cursor-pointer transition-all">
-                                                <div className="flex items-center gap-3">
-                                                    <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-black/40 text-black border border-white/10" style={{ color: pm.color }}>
-                                                        <div dangerouslySetInnerHTML={{ __html: IconObj.svg }} className="w-5 h-5" />
-                                                    </div>
-                                                    <div className="flex flex-col items-start text-left">
-                                                        <span className="font-semibold text-sm text-gray-200 group-hover:text-white truncate max-w-[140px]">{pm.title}</span>
-                                                        <span className="text-[10px] text-gray-500 uppercase tracking-wide flex items-center gap-1">
-                                                            {IconObj.label}
-                                                            {groupName && <span className="text-blue-400 bg-blue-500/10 px-1 rounded ml-1">{groupName}</span>}
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <button
-                                                    onClick={(e) => { e.stopPropagation(); handleDeletePersonal(pm.id); }}
-                                                    className="opacity-0 group-hover:opacity-100 p-1.5 text-red-500 hover:bg-red-500/20 rounded transition-all"
-                                                    title="Delete"
-                                                >
-                                                    <Loader2 className="w-4 h-4" style={{ display: 'none' }} />
-                                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                                </button>
-                                            </div>
-                                        );
-                                    })
-                                )}
+                        {!currentUser ? (
+                            <div className="h-full flex flex-col items-center justify-center text-center p-4 opacity-50">
+                                <div className="w-16 h-16 bg-neutral-800 rounded-full flex items-center justify-center mb-4">
+                                    <span className="text-3xl">🔒</span>
+                                </div>
+                                <h3 className="text-lg font-bold text-white mb-2">Login Required</h3>
+                                <p className="text-sm text-gray-400 mb-6 max-w-[200px]">You must be logged in to manage your personal markers and groups.</p>
+                                <a href="/login" className="px-6 py-2 bg-white text-black font-bold rounded-full hover:bg-neutral-200 transition-colors">
+                                    Log In
+                                </a>
                             </div>
-                        </div>
+                        ) : (
+                            <>
+                                {/* Markers List */}
+                                <div>
+                                    <h3 className="text-xs font-bold text-neutral-500 uppercase mb-3">Your Locations</h3>
+                                    <div className="space-y-3">
+                                        {personalMarkers.length === 0 ? (
+                                            <div className="text-center text-neutral-500 py-4 text-sm bg-white/5 rounded-lg">
+                                                <p>No markers yet.</p>
+                                                <p className="mt-1 text-xs">Right-click map to add.</p>
+                                            </div>
+                                        ) : (
+                                            personalMarkers.map(pm => {
+                                                const IconObj = personalIcons[pm.icon_name] || personalIcons.star;
+                                                const groupName = pm.group_id ? groups.find(g => g.id === pm.group_id)?.name : null;
 
-                        {/* Group Manager */}
-                        <div className="pt-4 border-t border-white/10">
-                            <h3 className="text-xs font-bold text-neutral-500 uppercase mb-3">Groups</h3>
-                            <GroupManager
-                                currentUser={currentUser}
-                                groups={groups}
-                                onGroupUpdate={() => setInternalRefresh(prev => prev + 1)}
-                            />
-                        </div>
+                                                return (
+                                                    <div key={pm.id} onClick={() => handleFlyToMarker(pm)} className="group flex items-center justify-between p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/20 cursor-pointer transition-all">
+                                                        <div className="flex items-center gap-3">
+                                                            <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-black/40 text-black border border-white/10" style={{ color: pm.color }}>
+                                                                <div dangerouslySetInnerHTML={{ __html: IconObj.svg }} className="w-5 h-5" />
+                                                            </div>
+                                                            <div className="flex flex-col items-start text-left">
+                                                                <span className="font-semibold text-sm text-gray-200 group-hover:text-white truncate max-w-[140px]">{pm.title}</span>
+                                                                <span className="text-[10px] text-gray-500 uppercase tracking-wide flex items-center gap-1">
+                                                                    {IconObj.label}
+                                                                    {groupName && <span className="text-blue-400 bg-blue-500/10 px-1 rounded ml-1">{groupName}</span>}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <button
+                                                            onClick={(e) => { e.stopPropagation(); handleDeletePersonal(pm.id); }}
+                                                            className="opacity-0 group-hover:opacity-100 p-1.5 text-red-500 hover:bg-red-500/20 rounded transition-all"
+                                                            title="Delete"
+                                                        >
+                                                            <Loader2 className="w-4 h-4" style={{ display: 'none' }} />
+                                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                                        </button>
+                                                    </div>
+                                                );
+                                            })
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* Group Manager */}
+                                <div className="pt-4 border-t border-white/10">
+                                    <h3 className="text-xs font-bold text-neutral-500 uppercase mb-3">Groups</h3>
+                                    <GroupManager
+                                        currentUser={currentUser}
+                                        groups={groups}
+                                        onGroupUpdate={() => setInternalRefresh(prev => prev + 1)}
+                                    />
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
             )}
@@ -790,6 +823,34 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                                         </button>
                                     ))}
                                 </div>
+                            )}
+
+                            {/* POLAGONS (Building Zones) */}
+                            {polygons.map(poly => (
+                                <Polygon
+                                    key={poly.id}
+                                    positions={poly.points}
+                                    pathOptions={{ color: poly.color || '#e0f2fe', fillColor: poly.color || '#e0f2fe', fillOpacity: 0.2, weight: 1 }}
+                                    eventHandlers={{
+                                        click: (e) => {
+                                            if (onPolygonClick) {
+                                                L.DomEvent.stopPropagation(e);
+                                                onPolygonClick(poly.id);
+                                            }
+                                        }
+                                    }}
+                                />
+                            ))}
+                            {/* Active Drawing Polygon */}
+                            {activePolygonPoints && activePolygonPoints.length > 0 && (
+                                <>
+                                    {activePolygonPoints.map((pt, idx) => (
+                                        <CircleMarker key={`pt-${idx}`} center={pt} radius={4} pathOptions={{ color: '#60a5fa', fillColor: 'white', fillOpacity: 1 }} />
+                                    ))}
+                                    {activePolygonPoints.length > 1 && (
+                                        <Polyline positions={activePolygonPoints} pathOptions={{ color: '#60a5fa', dashArray: '5, 10', weight: 2 }} />
+                                    )}
+                                </>
                             )}
 
                             {filteredMissions.map(mission => {
