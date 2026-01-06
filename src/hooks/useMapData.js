@@ -1,17 +1,22 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/mySupabaseClient';
 
-export const useMapData = (refreshTrigger = 0) => {
+export const useMapData = (refreshTrigger = 0, { enabled = true } = {}) => {
     const [categories, setCategories] = useState([]);
     const [markers, setMarkers] = useState([]);
     const [lootTags, setLootTags] = useState([]);
 
     const [personalMarkers, setPersonalMarkers] = useState([]);
     const [groups, setGroups] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(enabled);
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        if (!enabled) {
+            setLoading(false);
+            return;
+        }
+
         const fetchMapData = async () => {
             try {
                 // Only show loading spinner on initial fetch, not refreshes

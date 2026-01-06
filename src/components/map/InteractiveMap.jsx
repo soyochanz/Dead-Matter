@@ -115,16 +115,18 @@ const ClickHelper = ({ setClickedCoords, adminMode, onMapClick, onContextMenu })
     return null;
 };
 
-const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMarkerClick, refreshTrigger = 0, markers: propMarkers, lootTags: propLootTags }) => {
+const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMarkerClick, refreshTrigger = 0, markers: propMarkers, lootTags: propLootTags, categories: propCategories }) => {
     // Note: refreshTrigger increments after save, triggering re-fetch in hook
     const [internalRefresh, setInternalRefresh] = useState(0);
     const combinedRefresh = refreshTrigger + internalRefresh;
 
-    const { markers: hookMarkers, personalMarkers, groups, categories, lootTags: hookLootTags, loading: dataLoading, error: dataError } = useMapData(combinedRefresh);
+    // Disable internal fetching if markers are provided via props (Admin mode)
+    const { markers: hookMarkers, personalMarkers, groups, categories: hookCategories, lootTags: hookLootTags, loading: dataLoading, error: dataError } = useMapData(combinedRefresh, { enabled: !propMarkers });
 
     // Use props if provided, otherwise fallback to hook
     const markers = propMarkers || hookMarkers;
     const lootTags = propLootTags || hookLootTags;
+    const categories = propCategories || hookCategories;
     const [activeFilters, setActiveFilters] = useState({});
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     // mouseCoords moved to isolated component to prevent re-renders

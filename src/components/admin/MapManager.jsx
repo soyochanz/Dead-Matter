@@ -326,6 +326,7 @@ const MapManager = () => {
                     onMarkerClick={handleMarkerClick}
                     markers={markers}
                     lootTags={lootTags}
+                    categories={categories}
                 />
             </div>
 
