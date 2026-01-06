@@ -79,6 +79,7 @@ const MapManager = () => {
         title: '',
         description: '',
         npc_id: '',
+        start_npc_id: '',
         steps: [] // Array of { title, description, lat, lng, image_url }
     });
     const [markerPos, setMarkerPos] = useState({ lat: 0, lng: 0 });
@@ -148,7 +149,7 @@ const MapManager = () => {
     };
 
     const handleCreateMission = () => {
-        setMissionForm({ title: '', description: '', npc_id: '', steps: [] });
+        setMissionForm({ title: '', description: '', npc_id: '', start_npc_id: '', steps: [] });
         setIsAddingStep(false);
         setEditingMarker(null); // Ensure we aren't editing a marker
         setDialogOpen(true);
@@ -163,7 +164,8 @@ const MapManager = () => {
                 .insert({
                     title: missionForm.title,
                     description: missionForm.description,
-                    npc_id: missionForm.npc_id || null
+                    npc_id: missionForm.npc_id || null,
+                    start_npc_id: missionForm.start_npc_id || null
                 })
                 .select()
                 .single();
@@ -571,24 +573,44 @@ const MapManager = () => {
                                     </div>
                                 </div>
 
-                                <div className="grid gap-2">
-                                    <Label>End NPC (Goal)</Label>
-                                    <select
-                                        value={missionForm.npc_id}
-                                        onChange={e => setMissionForm({ ...missionForm, npc_id: e.target.value })}
-                                        className="flex h-10 w-full rounded-md border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm text-white capitalize"
-                                    >
-                                        <option value="">-- Select NPC --</option>
-                                        {markers.filter(m => {
-                                            const cat = categories.find(c => c.id === m.category_id);
-                                            // Broadened Filter for NPCs
-                                            const name = cat?.name?.toLowerCase() || '';
-                                            const group = cat?.group_name?.toLowerCase() || '';
-                                            return name.includes('npc') || name.includes('vendor') || name.includes('trader') || group.includes('npc');
-                                        }).map(m => (
-                                            <option key={m.id} value={m.id}>{m.title}</option>
-                                        ))}
-                                    </select>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="grid gap-2">
+                                        <Label>Start NPC (Origin)</Label>
+                                        <select
+                                            value={missionForm.start_npc_id}
+                                            onChange={e => setMissionForm({ ...missionForm, start_npc_id: e.target.value })}
+                                            className="flex h-10 w-full rounded-md border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm text-white capitalize"
+                                        >
+                                            <option value="">-- Select NPC --</option>
+                                            {markers.filter(m => {
+                                                const cat = categories.find(c => c.id === m.category_id);
+                                                const name = cat?.name?.toLowerCase() || '';
+                                                const group = cat?.group_name?.toLowerCase() || '';
+                                                return name.includes('npc') || name.includes('vendor') || name.includes('trader') || group.includes('npc');
+                                            }).map(m => (
+                                                <option key={m.id} value={m.id}>{m.title}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+
+                                    <div className="grid gap-2">
+                                        <Label>End NPC (Goal)</Label>
+                                        <select
+                                            value={missionForm.npc_id}
+                                            onChange={e => setMissionForm({ ...missionForm, npc_id: e.target.value })}
+                                            className="flex h-10 w-full rounded-md border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm text-white capitalize"
+                                        >
+                                            <option value="">-- Select NPC --</option>
+                                            {markers.filter(m => {
+                                                const cat = categories.find(c => c.id === m.category_id);
+                                                const name = cat?.name?.toLowerCase() || '';
+                                                const group = cat?.group_name?.toLowerCase() || '';
+                                                return name.includes('npc') || name.includes('vendor') || name.includes('trader') || group.includes('npc');
+                                            }).map(m => (
+                                                <option key={m.id} value={m.id}>{m.title}</option>
+                                            ))}
+                                        </select>
+                                    </div>
                                 </div>
                             </>
                         ) : (
@@ -743,7 +765,7 @@ const MapManager = () => {
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
-        </div>
+        </div >
     );
 };
 

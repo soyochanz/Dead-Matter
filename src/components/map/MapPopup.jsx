@@ -6,7 +6,7 @@ const MapPopup = ({ marker, tags, keys = [] }) => {
 
     const requiredKeyId = marker.required_key_id;
     const isLocked = marker.requires_key;
-    const requiredKeyName = isLocked && requiredKeyId ? keys.find(k => k.id === requiredKeyId)?.name : (isLocked ? 'Unknown Key' : null);
+    const requiredKeyName = isLocked && requiredKeyId ? (keys.find(k => k.id === requiredKeyId)?.name || 'Unknown Key') : (isLocked ? 'Unknown Key' : null);
 
     const infectedColors = {
         high: '#ef4444',   // red-500

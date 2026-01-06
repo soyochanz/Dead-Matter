@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents, LayersControl, Circle, ZoomControl, Polyline } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents, LayersControl, Circle, ZoomControl, Polyline, CircleMarker } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -103,13 +103,14 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
     const [showTips, setShowTips] = useState(true);
     const [currentTipIndex, setCurrentTipIndex] = useState(0);
     const [isMissionMode, setIsMissionMode] = useState(false); // Mission Mode State
+    const [selectedNpcFilter, setSelectedNpcFilter] = useState('All'); // Mission Filter State
     const combinedRefresh = refreshTrigger + internalRefresh;
 
     // Disable internal fetching if markers are provided via props (Admin mode)
     const { markers: hookMarkers, personalMarkers, groups, keys: fetchedKeys, categories: hookCategories, lootTags: hookLootTags, missions: hookMissions, loading: dataLoading, error: dataError } = useMapData(combinedRefresh, { enabled: !propMarkers });
 
     // Use props if provided, otherwise fallback to hook
-    const markers = propMarkers || hookMarkers;
+    const markers = propMarkers || hookMarkers || [];
     const categories = propCategories || hookCategories || [];
     const lootTags = propLootTags || hookLootTags || [];
     const keys = propKeys || fetchedKeys || [];
@@ -147,6 +148,61 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
     };
 
     const [zoomLevel, setZoomLevel] = useState(16);
+
+    // --- ICON HELPER FUNCTIONS (Moved to component scope for access in Mission Loop) ---
+    // Helper 3: Small Circular Icon (Water, Keys)
+    const createCircleIcon = (content, color) => {
+        const size = 24;
+        return L.divIcon({
+            html: `<div style="background-color: ${color}; width: ${size}px; height: ${size}px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+                <div style="width: 14px; height: 14px; color: white;">${content}</div>
+            </div>`,
+            className: 'circle-marker',
+            iconSize: [size, size],
+            iconAnchor: [size / 2, size / 2]
+        });
+    };
+
+    // Helper 1: Pin Style (Glass Teardrop)
+    const createPinIcon = (content, color, locked = false) => {
+        const badge = locked ? `<div style="position: absolute; top: -5px; right: -5px; width: 15px; height: 15px; background: #fbbf24; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid #1a1a1a; box-shadow: 0 2px 4px rgba(0,0,0,0.5); z-index: 10; color: #1a1a1a;">
+            <svg viewBox="0 0 24 24" fill="currentColor" style="width: 10px; height: 10px;"><path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
+        </div>` : '';
+
+        return L.divIcon({
+            html: `<div style="position: relative;">
+                <div style="background-color: #0f172aa6; width: 32px; height: 32px; border-radius: 50% 50% 50% 0; display: flex; align-items: center; justify-content: center; border: 2px solid ${color}; color: ${color}; box-shadow: 0 0 12px ${color}80; backdrop-filter: blur(2px); transform: rotate(-45deg);">
+                    <div style="width: 18px; height: 18px; transform: rotate(45deg); display: flex; align-items: center; justify-content: center;">${content}</div>
+                </div>
+                ${badge}
+            </div>`,
+            className: 'pin-marker',
+            iconSize: [32, 32],
+            iconAnchor: [16, 42]
+        });
+    };
+
+    // Helper 2: No Border Style (NPCs - Transparent)
+    const createNoBorderIcon = (content, color) => {
+        return L.divIcon({
+            html: `<div style="width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; color: ${color}; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));">
+                <div style="width: 30px; height: 30px;">${content}</div>
+            </div>`,
+            className: 'npc-marker',
+            iconSize: [30, 30],
+            iconAnchor: [15, 30]
+        });
+    };
+
+    // Helper 3: Dot Style (Loot)
+    const createDotIcon = (color) => {
+        return L.divIcon({
+            html: `<div style="width: 12px; height: 12px; background-color: ${color}; border-radius: 50%; box-shadow: 0 0 0 1px rgba(0,0,0,0.5), 0 2px 4px rgba(0,0,0,0.3);"></div>`,
+            className: 'loot-dot',
+            iconSize: [12, 12],
+            iconAnchor: [6, 6]
+        });
+    };
     const ZoomTracker = () => {
         useMapEvents({ zoomend: (e) => setZoomLevel(e.target.getZoom()) });
         return null;
@@ -216,59 +272,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
         const isLoot = (marker.title.toLowerCase().includes('loot') || catName.includes('loot'));
         const isLocked = marker.requires_key || ['federal stockpile bunker'].some(k => marker.title?.toLowerCase().includes(k));
 
-        // Helper 3: Small Circular Icon (Water, Keys)
-        const createCircleIcon = (content, color) => {
-            const size = 24;
-            return L.divIcon({
-                html: `<div style="background-color: ${color}; width: ${size}px; height: ${size}px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">
-                    <div style="width: 14px; height: 14px; color: white;">${content}</div>
-                </div>`,
-                className: 'circle-marker',
-                iconSize: [size, size],
-                iconAnchor: [size / 2, size / 2]
-            });
-        };
 
-        // Helper 1: Pin Style (Glass Teardrop)
-        const createPinIcon = (content, color, locked = false) => {
-            const badge = locked ? `<div style="position: absolute; top: -5px; right: -5px; width: 15px; height: 15px; background: #fbbf24; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid #1a1a1a; box-shadow: 0 2px 4px rgba(0,0,0,0.5); z-index: 10; color: #1a1a1a;">
-                <svg viewBox="0 0 24 24" fill="currentColor" style="width: 10px; height: 10px;"><path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
-            </div>` : '';
-
-            return L.divIcon({
-                html: `<div style="position: relative;">
-                    <div style="background-color: #0f172aa6; width: 32px; height: 32px; border-radius: 50% 50% 50% 0; display: flex; align-items: center; justify-content: center; border: 2px solid ${color}; color: ${color}; box-shadow: 0 0 12px ${color}80; backdrop-filter: blur(2px); transform: rotate(-45deg);">
-                        <div style="width: 18px; height: 18px; transform: rotate(45deg); display: flex; align-items: center; justify-content: center;">${content}</div>
-                    </div>
-                    ${badge}
-                </div>`,
-                className: 'pin-marker',
-                iconSize: [32, 32],
-                iconAnchor: [16, 42]
-            });
-        };
-
-        // Helper 2: No Border Style (NPCs - Transparent)
-        const createNoBorderIcon = (content, color) => {
-            return L.divIcon({
-                html: `<div style="width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; color: ${color}; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));">
-                    <div style="width: 30px; height: 30px;">${content}</div>
-                </div>`,
-                className: 'npc-marker',
-                iconSize: [30, 30],
-                iconAnchor: [15, 30]
-            });
-        };
-
-        // Helper 3: Dot Style (Loot)
-        const createDotIcon = (color) => {
-            return L.divIcon({
-                html: `<div style="width: 12px; height: 12px; background-color: ${color}; border-radius: 50%; box-shadow: 0 0 0 1px rgba(0,0,0,0.5), 0 2px 4px rgba(0,0,0,0.3);"></div>`,
-                className: 'loot-dot',
-                iconSize: [12, 12],
-                iconAnchor: [6, 6]
-            });
-        };
 
         // 1. Loot (Colored Dots)
         if (category?.group_name === 'military' && isLoot) return createDotIcon('#ef4444');
@@ -288,31 +292,31 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
         }
 
         // 3. Orange Group (Factory, Hangar)
-        if (catName.includes('factory')) return createPinIcon(mapIcons.factory, '#f97316');
-        if (catName.includes('hangar')) return createPinIcon(mapIcons.hangar, '#f97316');
+        if (catName.includes('factory')) return createPinIcon(mapIcons.factory, '#f97316', isLocked);
+        if (catName.includes('hangar')) return createPinIcon(mapIcons.hangar, '#f97316', isLocked);
 
         // 4. Green Group
-        if (catName.includes('bunker') && catName.includes('civilian')) return createPinIcon(mapIcons.bunker, '#22c55e');
-        if (catName.includes('deer stand')) return createPinIcon(mapIcons.tree, '#22c55e');
-        if (catName.includes('firestation')) return createPinIcon(mapIcons.fire, '#22c55e');
-        if (catName.includes('gas station')) return createPinIcon(personalIcons.gas.svg, '#22c55e');
-        if (catName.includes('golf')) return createPinIcon(mapIcons.golf, '#22c55e');
-        if (catName.includes('school')) return createPinIcon(mapIcons.school, '#22c55e');
+        if (catName.includes('bunker') && catName.includes('civilian')) return createPinIcon(mapIcons.bunker, '#22c55e', isLocked);
+        if (catName.includes('deer stand')) return createPinIcon(mapIcons.tree, '#22c55e', isLocked);
+        if (catName.includes('firestation')) return createPinIcon(mapIcons.fire, '#22c55e', isLocked);
+        if (catName.includes('gas station')) return createPinIcon(personalIcons.gas.svg, '#22c55e', isLocked);
+        if (catName.includes('golf')) return createPinIcon(mapIcons.golf, '#22c55e', isLocked);
+        if (catName.includes('school')) return createPinIcon(mapIcons.school, '#22c55e', isLocked);
 
         // 5. Pink Group (Hospital, Nera Tent)
-        if (catName.includes('hospital')) return createPinIcon(mapIcons.hospital, '#ec4899');
-        if (catName.includes('nera tent')) return createPinIcon(mapIcons.tent, '#ec4899');
+        if (catName.includes('hospital')) return createPinIcon(mapIcons.hospital, '#ec4899', isLocked);
+        if (catName.includes('nera tent')) return createPinIcon(mapIcons.tent, '#ec4899', isLocked);
 
         // 6. Vehicles
         if (catName === 'vehicles') {
             const carSvg = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/></svg>`;
-            return createPinIcon(carSvg, '#3b82f6');
+            return createPinIcon(carSvg, '#3b82f6', isLocked);
         }
 
         // 7. Trailers
         if (catName === 'trailers') {
             const simpleTrailer = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 7h-8v8h8V7zm2-2h-8c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zM7 11H4v4h3v-4zm-3 6h3c.55 0 1-.45 1-1v-4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1z"/></svg>`;
-            return createPinIcon(simpleTrailer, '#3b82f6');
+            return createPinIcon(simpleTrailer, '#3b82f6', isLocked);
         }
 
         // 8. NPCs (No Border, White)
@@ -461,6 +465,24 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
         const { error } = await supabase.from('user_personal_markers').delete().eq('id', id);
         if (!error) setInternalRefresh(prev => prev + 1);
     };
+
+    // --- MISSION FILTERS LOGIC ---
+    const missionNpcs = useMemo(() => {
+        if (!missions.length) return [];
+        const uniqueNpcs = new Set(missions.map(m => {
+            const npc = markers.find(mark => mark.id === m.npc_id);
+            return npc ? npc.title : null;
+        }).filter(Boolean));
+        return ['All', ...Array.from(uniqueNpcs).sort()];
+    }, [missions, markers]);
+
+    const filteredMissions = useMemo(() => {
+        if (selectedNpcFilter === 'All') return missions;
+        return missions.filter(m => {
+            const npcMarker = markers.find(mark => mark.id === m.npc_id);
+            return npcMarker && npcMarker.title === selectedNpcFilter;
+        });
+    }, [missions, selectedNpcFilter, markers]);
 
     if (dataError) return <div className="text-red-500 text-center p-10">Error loading map data: {dataError}</div>;
 
@@ -733,7 +755,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                             >
                                 {!adminMode && !isZone && (
                                     <Popup closeButton={false} offset={[0, -10]}>
-                                        <MapPopup marker={marker} tags={markerTags} />
+                                        <MapPopup marker={marker} tags={markerTags} keys={keys} />
                                     </Popup>
                                 )}
                             </Marker>
@@ -748,62 +770,114 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                     ))}
 
                     {/* MISSION MODE ENTITIES */}
-                    {(isMissionMode && !adminMode) && missions.map(mission => {
-                        const steps = mission.mission_steps || [];
-                        if (steps.length === 0) return null;
-                        const startStep = steps.sort((a, b) => a.step_order - b.step_order)[0];
+                    {(isMissionMode && !adminMode) && (
+                        <>
+                            {/* NPC FILTERS UI */}
+                            {!disableUI && (
+                                <div className="fixed top-[70px] left-1/2 -translate-x-1/2 z-[4000] flex gap-2 overflow-x-auto max-w-[90%] p-2 no-scrollbar pointer-events-auto">
+                                    {missionNpcs.map(npcName => (
+                                        <button
+                                            key={npcName}
+                                            onClick={() => setSelectedNpcFilter(npcName)}
+                                            className={`
+                                                px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap shadow-lg border backdrop-blur-md transition-all
+                                                ${selectedNpcFilter === npcName
+                                                    ? 'bg-amber-500 text-black border-amber-400 scale-105'
+                                                    : 'bg-black/90 text-white/80 border-white/10 hover:bg-black hover:border-amber-500/50'}
+                                            `}
+                                        >
+                                            {npcName}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
 
-                        // Create path positions
-                        const pathPositions = steps.map(s => [s.lat, s.lng]);
-                        // If NPC is set, add NPC location to path? 
-                        // Check matching marker for NPC ID
-                        const npcMarker = markers?.find(m => m.id === mission.npc_id);
-                        if (npcMarker) pathPositions.push([npcMarker.lat, npcMarker.lng]);
+                            {filteredMissions.map(mission => {
+                                const steps = mission.mission_steps || [];
+                                if (steps.length === 0) return null;
+                                const sortedSteps = [...steps].sort((a, b) => a.step_order - b.step_order);
+                                const startStep = sortedSteps[0];
 
-                        const missionIcon = L.divIcon({
-                            html: `<div style="background-color: #f59e0b; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 10px #f59e0b; border: 2px solid white;">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
-                                    </div>`,
-                            className: 'mission-icon-glow',
-                            iconSize: [32, 32],
-                            iconAnchor: [16, 16]
-                        });
+                                // Path Positions
+                                // Path Positions
+                                const startNpcMarker = markers?.find(m => m.id === mission.start_npc_id);
+                                const npcMarker = markers?.find(m => m.id === mission.npc_id);
 
-                        return (
-                            <React.Fragment key={mission.id}>
-                                <Marker position={[startStep.lat, startStep.lng]} icon={missionIcon}>
-                                    <Popup minWidth={300} maxWidth={300} className="mission-popup">
-                                        <div className="p-0">
-                                            <div className="bg-amber-600/20 p-3 rounded-t border-b border-amber-500/30">
-                                                <h3 className="font-bold text-amber-500 text-lg leading-none">{mission.title}</h3>
-                                                <p className="text-xs text-amber-200 mt-1">{mission.description}</p>
-                                            </div>
-                                            <div className="p-3 max-h-[300px] overflow-y-auto space-y-4">
-                                                {steps.map((step, i) => (
-                                                    <div key={step.id} className="relative pl-4 border-l-2 border-amber-500/30 pb-2 last:pb-0">
-                                                        <div className="absolute -left-[5px] top-0 w-2.5 h-2.5 rounded-full bg-amber-500"></div>
-                                                        <h4 className="font-bold text-white text-sm">Step {step.step_order}: {step.title}</h4>
-                                                        {step.image_url && (
-                                                            <img src={step.image_url} alt="Step" className="w-full h-32 object-cover rounded-md my-2 border border-white/10" />
+                                const pathPositions = [];
+                                if (startNpcMarker) pathPositions.push([startNpcMarker.lat, startNpcMarker.lng]);
+                                sortedSteps.forEach(s => pathPositions.push([s.lat, s.lng]));
+                                if (npcMarker) pathPositions.push([npcMarker.lat, npcMarker.lng]);
+
+                                // Determine Start Position & Icon
+                                const startPos = startNpcMarker ? [startNpcMarker.lat, startNpcMarker.lng] : [startStep.lat, startStep.lng];
+                                const startIcon = startNpcMarker
+                                    ? createNoBorderIcon(mapIcons.person, '#fbbf24') // Or specific NPC icon if available
+                                    : createPinIcon('👑', '#fbbf24');
+
+                                return (
+                                    <React.Fragment key={mission.id}>
+                                        {/* 1. PATH LINE (Thicker & Brighter) */}
+                                        <Polyline
+                                            positions={pathPositions}
+                                            pathOptions={{
+                                                color: '#fbbf24',
+                                                weight: 4,
+                                                opacity: 0.9,
+                                                dashArray: '8, 8',
+                                                lineCap: 'round'
+                                            }}
+                                        />
+
+                                        {/* 2. START MARKER */}
+                                        <Marker position={startPos} icon={startIcon} zIndexOffset={1000}>
+                                            <Popup minWidth={300} maxWidth={300} className="mission-popup">
+                                                <div className="p-0">
+                                                    <div className="bg-amber-600/20 p-3 rounded-t border-b border-amber-500/30">
+                                                        <h3 className="font-bold text-amber-500 text-lg leading-none">{mission.title}</h3>
+                                                        <p className="text-xs text-amber-200 mt-1">{mission.content || mission.description}</p>
+                                                    </div>
+                                                    <div className="p-3 max-h-[300px] overflow-y-auto space-y-4">
+                                                        {sortedSteps.map((step, i) => (
+                                                            <div key={step.id} className="relative pl-4 border-l-2 border-amber-500/30 pb-2 last:pb-0">
+                                                                <div className="absolute -left-[5px] top-0 w-2.5 h-2.5 rounded-full bg-amber-500"></div>
+                                                                <h4 className="font-bold text-white text-sm">Step {step.step_order}: {step.title}</h4>
+                                                                {step.image_url && (
+                                                                    <img src={step.image_url} alt="Step" className="w-full h-32 object-cover rounded-md my-2 border border-white/10" />
+                                                                )}
+                                                                <p className="text-xs text-gray-300">{step.description}</p>
+                                                            </div>
+                                                        ))}
+                                                        {npcMarker && (
+                                                            <div className="relative pl-4 border-l-2 border-amber-500/30 pt-2">
+                                                                <div className="absolute -left-[5px] top-2 w-2.5 h-2.5 rounded-full bg-green-500"></div>
+                                                                <h4 className="font-bold text-green-400 text-sm">Final: Report to {npcMarker.title}</h4>
+                                                            </div>
                                                         )}
-                                                        <p className="text-xs text-gray-300">{step.description}</p>
                                                     </div>
-                                                ))}
-                                                {npcMarker && (
-                                                    <div className="relative pl-4 border-l-2 border-amber-500/30 pt-2">
-                                                        <div className="absolute -left-[5px] top-2 w-2.5 h-2.5 rounded-full bg-green-500"></div>
-                                                        <h4 className="font-bold text-green-400 text-sm">Final: Report to {npcMarker.title}</h4>
+                                                </div>
+                                            </Popup>
+                                        </Marker>
+
+                                        {/* 3. STEP MARKERS (Intermediate Pins) - Hide Last Step */}
+                                        {sortedSteps.slice(0, -1).map((step, idx) => (
+                                            <Marker
+                                                key={`${mission.id}-step-${idx}`}
+                                                position={[step.lat, step.lng]}
+                                                icon={createPinIcon(step.step_order, '#fbbf24')}
+                                            >
+                                                <Popup closeButton={false} offset={[0, -5]}>
+                                                    <div className="text-center">
+                                                        <strong className="text-amber-500 block text-xs uppercase tracking-wide">Step {step.step_order}</strong>
+                                                        <span className="text-sm font-bold text-white">{step.title}</span>
                                                     </div>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </Popup>
-                                </Marker>
-                                {/* Draw faint path */}
-                                <Polyline positions={pathPositions} pathOptions={{ color: '#f59e0b', weight: 2, opacity: 0.6, dashArray: '4' }} />
-                            </React.Fragment>
-                        );
-                    })}
+                                                </Popup>
+                                            </Marker>
+                                        ))}
+                                    </React.Fragment>
+                                );
+                            })}
+                        </>
+                    )}
 
                     {/* Personal Markers */}
                     {visiblePersonalMarkers.map(pm => {
@@ -905,7 +979,17 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                 )}
 
                 {!disableUI && (
-                    <MapFilters categories={categories} activeFilters={activeFilters} onToggleFilter={handleToggleFilter} isOpen={isFilterOpen} onClose={() => setIsFilterOpen(false)} />
+                    <MapFilters
+                        categories={categories}
+                        activeFilters={activeFilters}
+                        onToggleFilter={handleToggleFilter}
+                        isOpen={isFilterOpen}
+                        onClose={() => setIsFilterOpen(false)}
+                        isMissionMode={isMissionMode}
+                        missionNpcs={missionNpcs}
+                        selectedNpcFilter={selectedNpcFilter}
+                        onSelectNpcFilter={setSelectedNpcFilter}
+                    />
                 )}
                 {dataLoading && (
                     <div className="absolute inset-0 z-[5000] flex items-center justify-center bg-black/50 backdrop-blur-sm"><Loader2 className="w-12 h-12 text-red-500 animate-spin" /></div>
