@@ -449,8 +449,7 @@ const MapManager = () => {
             const tempZone = {
                 id: `temp-${Date.now()}`,
                 points: points,
-                type: 'house',
-                color: '#e0f2fe'
+                type: 'house'
             };
             setPolygons(prev => [...prev, tempZone]);
             toast({ title: 'Zone Added', description: 'Building zone marked.' });
@@ -458,8 +457,7 @@ const MapManager = () => {
             // DB Insert
             const { data, error } = await supabase.from('map_polygons').insert({
                 points: points,
-                type: 'house',
-                color: '#e0f2fe'
+                type: 'house'
             }).select().single();
 
             if (error) throw error;

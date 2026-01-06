@@ -80,7 +80,7 @@ export const useMapData = (refreshTrigger = 0, { enabled = true } = {}) => {
 
                 let polygonsData = [];
                 try {
-                    const { data, error } = await supabase.from('map_polygons').select('*');
+                    const { data, error } = await supabase.from('map_polygons').select('id, points, type, created_at');
                     if (error) console.warn('Polygons warning:', error.message);
                     else polygonsData = data;
                 } catch (e) {

@@ -7,6 +7,13 @@ body {
   color: white;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  cursor: url('/cursor.png'), auto;
+}
+
+a,
+button,
+[role="button"] {
+  cursor: url('/cursor.png'), pointer;
 }
 
 .bg-pattern {
