@@ -9,9 +9,9 @@ import {
 import { Globe, Check } from 'lucide-react';
 
 const languages = [
-    { code: 'en', label: 'English', flag: '🇺🇸' },
-    { code: 'es', label: 'Español', flag: '🇪🇸' },
-    { code: 'pt', label: 'Português', flag: '🇧🇷' }
+    { code: 'en', label: 'English', flag: 'https://flagcdn.com/w40/us.png' },
+    { code: 'es', label: 'Español', flag: 'https://flagcdn.com/w40/es.png' },
+    { code: 'pt', label: 'Português', flag: 'https://flagcdn.com/w40/br.png' }
 ];
 
 const LanguageSelector = () => {
@@ -39,26 +39,23 @@ const LanguageSelector = () => {
 
             <DropdownMenuContent
                 align="end"
-                className="w-48 bg-[#0a0a0c]/95 backdrop-blur-2xl border border-white/10 text-white shadow-2xl p-1"
+                className="w-auto min-w-[3.5rem] bg-[#0a0a0c]/95 backdrop-blur-2xl border border-white/10 text-white shadow-2xl p-1.5 rounded-xl"
             >
                 {languages.map((lang) => (
                     <DropdownMenuItem
                         key={lang.code}
                         onClick={() => i18n.changeLanguage(lang.code)}
                         className={`
-              cursor-pointer flex items-center justify-between px-3 py-2.5 rounded-lg transition-all
-              ${i18n.language === lang.code ? 'bg-white/10' : 'hover:bg-white/5'}
+              cursor-pointer flex items-center justify-center px-2 py-2 rounded-lg transition-all mb-1 last:mb-0
+              ${i18n.language === lang.code ? 'bg-white/10 border border-white/5' : 'hover:bg-white/5 border border-transparent'}
             `}
+                        title={lang.label}
                     >
-                        <div className="flex items-center gap-3">
-                            <span className="text-lg leading-none">{lang.flag}</span>
-                            <span className={`text-sm font-medium ${i18n.language === lang.code ? 'text-white' : 'text-gray-400'}`}>
-                                {lang.label}
-                            </span>
-                        </div>
-                        {i18n.language === lang.code && (
-                            <Check className="h-3.5 w-3.5 text-emerald-500" />
-                        )}
+                        <img
+                            src={lang.flag}
+                            alt={lang.label}
+                            className="w-6 h-auto rounded-[2px] shadow-sm filter contrast-125 saturate-110"
+                        />
                     </DropdownMenuItem>
                 ))}
             </DropdownMenuContent>
