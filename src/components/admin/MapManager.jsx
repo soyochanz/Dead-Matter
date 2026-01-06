@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { supabase } from '@/lib/mySupabaseClient';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
@@ -42,7 +43,14 @@ const MapManager = () => {
     const [missions, setMissions] = useState([]);
     const [polygons, setPolygons] = useState([]);
     const [lootTags, setLootTags] = useState([]);
-    const [viewMode, setViewMode] = useState('markers'); // 'markers', 'missions', 'zones'
+    const [searchParams, setSearchParams] = useSearchParams();
+    const viewMode = searchParams.get('mode') || 'markers'; // 'markers', 'missions', 'zones'
+
+    const setViewMode = (mode) => {
+        const newParams = new URLSearchParams(searchParams);
+        newParams.set('mode', mode);
+        setSearchParams(newParams);
+    };
     const [isAddingStep, setIsAddingStep] = useState(false); // If true, next map click adds a step
     const [activeZonePoints, setActiveZonePoints] = useState([]); // [lat, lng] array for current polygon 
 
@@ -64,12 +72,6 @@ const MapManager = () => {
             setMissions(prev => prev.length === 0 ? initialMissions : prev);
         }
     }, [initialMissions]);
-
-    useEffect(() => {
-        if (initialPolygons && initialPolygons.length > 0) {
-            setPolygons(prev => prev.length === 0 ? initialPolygons : prev);
-        }
-    }, [initialPolygons]);
 
     useEffect(() => {
         if (initialPolygons && initialPolygons.length > 0) {
@@ -133,18 +135,21 @@ const MapManager = () => {
     const handleMapClick = (latlng) => {
         if (viewMode === 'missions') {
             if (isAddingStep) {
-                setMissionForm(prev => ({
-                    ...prev,
-                    steps: [...prev.steps, {
-                        title: `Step ${prev.steps.length + 1}`,
-                        description: '',
-                        lat: latlng.lat,
-                        lng: latlng.lng,
-                        image_url: ''
-                    }]
-                }));
+                setMissionForm(prev => {
+                    const updated = {
+                        ...prev,
+                        steps: [...prev.steps, {
+                            title: `Step ${prev.steps.length + 1}`,
+                            description: '',
+                            lat: latlng.lat,
+                            lng: latlng.lng,
+                            image_url: ''
+                        }]
+                    };
+                    return updated;
+                });
                 setIsAddingStep(false);
-                setMissionDialogOpen(true); // Re-open mission dialog specifically
+                setMissionDialogOpen(true);
             }
             return;
         }
@@ -154,13 +159,13 @@ const MapManager = () => {
             setActiveZonePoints(newPoints);
 
             if (newPoints.length === 4) {
-                // Auto-save polygon
                 handleZoneSave(newPoints);
-                setActiveZonePoints([]); // Reset
+                setActiveZonePoints([]);
             }
             return;
         }
 
+        // Default: Marker Mode
         setEditingMarker(null);
         setMarkerPos(latlng);
         setFormData({
