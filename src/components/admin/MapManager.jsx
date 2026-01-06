@@ -32,10 +32,26 @@ const MapManager = () => {
     const [loading, setLoading] = useState(false);
     const { toast } = useToast();
     const [dialogOpen, setDialogOpen] = useState(false);
-    const [refreshTrigger, setRefreshTrigger] = useState(0);
+    // State for categories, markers, and tags
+    // We use refreshTrigger=0 to fetch initial data once, then manage locally
+    const { categories, markers: initialMarkers, lootTags: initialTags } = useMapData(0);
 
-    // Fetch categories using the hook (robust against errors)
-    const { categories } = useMapData(refreshTrigger);
+    // Local state for optimistic updates
+    const [markers, setMarkers] = useState([]);
+    const [lootTags, setLootTags] = useState([]);
+
+    // Initialize local state when data is fetched
+    useEffect(() => {
+        if (initialMarkers && initialMarkers.length > 0) {
+            setMarkers(initialMarkers);
+        }
+    }, [initialMarkers]);
+
+    useEffect(() => {
+        if (initialTags && initialTags.length > 0) {
+            setLootTags(initialTags);
+        }
+    }, [initialTags]);
 
     // State, form data, etc
     const [formData, setFormData] = useState({
@@ -144,6 +160,9 @@ const MapManager = () => {
 
     const handleSave = async () => {
         setLoading(true);
+        // Generate a temporary ID for new markers to display them immediately
+        const tempId = editingMarker ? editingMarker.id : `temp-${Date.now()}`;
+
         try {
             const payload = {
                 lat: markerPos.lat,
@@ -155,43 +174,105 @@ const MapManager = () => {
                 infected_level: formData.infected_level,
             };
 
-            let targetMarkerId = editingMarker?.id;
+            // 1. OPTIMISTIC UPDATE: MARKER
+            let optimisticMarker = { ...payload, id: tempId };
 
             if (editingMarker) {
-                const { error } = await supabase.from('map_markers').update(payload).eq('id', editingMarker.id);
+                setMarkers(prev => prev.map(m => m.id === tempId ? { ...m, ...optimisticMarker } : m));
+            } else {
+                setMarkers(prev => [...prev, optimisticMarker]);
+            }
+
+            // 2. OPTIMISTIC UPDATE: TAGS
+            // First remove old tags for this marker (simulated)
+            setLootTags(prev => prev.filter(t => t.marker_id !== tempId));
+
+            // Then add new ones locally
+            const optimisticTags = formData.selectedTags.map(label => {
+                const tagConfig = TAG_OPTIONS.find(t => t.label === label);
+                return {
+                    id: `temp-tag-${Math.random()}`,
+                    marker_id: tempId,
+                    label: label,
+                    color: tagConfig ? tagConfig.color : '#ffffff'
+                };
+            });
+            setLootTags(prev => [...prev, ...optimisticTags]);
+
+            setDialogOpen(false); // Close immediately for smooth UX
+
+            // 3. DATABASE OPERATIONS
+            let targetMarkerId = editingMarker?.id;
+            let finalMarker = null;
+
+            if (editingMarker) {
+                const { data, error } = await supabase
+                    .from('map_markers')
+                    .update(payload)
+                    .eq('id', editingMarker.id)
+                    .select()
+                    .single();
+
                 if (error) throw error;
+                finalMarker = data;
                 toast({ title: 'Success', description: 'Marker updated!' });
             } else {
-                const { data: newMarker, error } = await supabase.from('map_markers').insert(payload).select().single();
+                const { data, error } = await supabase
+                    .from('map_markers')
+                    .insert(payload)
+                    .select()
+                    .single();
+
                 if (error) throw error;
-                targetMarkerId = newMarker.id;
+                finalMarker = data;
+                targetMarkerId = finalMarker.id;
                 toast({ title: 'Success', description: 'Marker created!' });
+
+                // Replace temp ID with real ID in local state
+                setMarkers(prev => prev.map(m => m.id === tempId ? finalMarker : m));
+
+                // Also update the marker_id in our local text tags to match the real ID
+                setLootTags(prev => prev.map(t => t.marker_id === tempId ? { ...t, marker_id: finalMarker.id } : t));
             }
 
             if (targetMarkerId) {
-                // Tags Logic
+                // Handle Tags in DB
                 const { error: deleteError } = await supabase.from('marker_loot_tags').delete().eq('marker_id', targetMarkerId);
                 if (deleteError) throw deleteError;
+
                 if (formData.selectedTags.length > 0) {
                     const tagInserts = formData.selectedTags.map(label => {
                         const tagConfig = TAG_OPTIONS.find(t => t.label === label);
                         return { marker_id: targetMarkerId, label: label, color: tagConfig ? tagConfig.color : '#ffffff' };
                     });
-                    const { error: insertError } = await supabase.from('marker_loot_tags').insert(tagInserts);
+                    // We select * to get the real IDs of tags too, if we wanted to be perfectly precise, 
+                    // but for tags, re-fetching or just keeping optimistic ones is mostly fine until next reload.
+                    // However, better to update them if possible. 
+                    const { data: newTags, error: insertError } = await supabase.from('marker_loot_tags').insert(tagInserts).select();
                     if (insertError) throw insertError;
+
+                    // Replace optimistic tags with real DB tags to ensure IDs are correct (future proofing)
+                    setLootTags(prev => {
+                        const otherTags = prev.filter(t => t.marker_id !== targetMarkerId);
+                        return [...otherTags, ...newTags];
+                    });
+                } else {
+                    // Ensure local tags are cleared if DB cleared them (already done optimistically, but safety check)
+                    setLootTags(prev => prev.filter(t => t.marker_id !== targetMarkerId));
                 }
             }
 
-            if (!editingMarker && newMarker) {
-                setEditingMarker(newMarker);
-            }
-
-            // setDialogOpen(false); // Keep open for continuous editing
-            setRefreshTrigger(prev => prev + 1);
+            // No refreshTrigger needed!
 
         } catch (error) {
             console.error("Save Error:", error);
             toast({ title: 'Error saving', description: error.message, variant: 'destructive' });
+            // Ideally: Revert optimistic updates here by re-fetching or undoing
+            // For now, we trust the optimistic update or user will reload if verified error.
+            if (!editingMarker) {
+                // If create failed, remove the temp marker
+                setMarkers(prev => prev.filter(m => String(m.id).startsWith('temp-')));
+            }
         } finally {
             setLoading(false);
         }
@@ -202,15 +283,24 @@ const MapManager = () => {
         if (!confirm('Are you sure you want to delete this marker?')) return;
 
         setLoading(true);
+        const idToDelete = editingMarker.id;
+
         try {
-            const { error } = await supabase.from('map_markers').delete().eq('id', editingMarker.id);
+            // OPTIMISTIC DELETE
+            setMarkers(prev => prev.filter(m => m.id !== idToDelete));
+            setLootTags(prev => prev.filter(t => t.marker_id !== idToDelete));
+            setDialogOpen(false);
+
+            // DB DELETE
+            const { error } = await supabase.from('map_markers').delete().eq('id', idToDelete);
+
             if (error) throw error;
             toast({ title: 'Deleted', description: 'Marker deleted successfully.' });
-            setDialogOpen(false);
-            setRefreshTrigger(prev => prev + 1);
+
         } catch (error) {
             console.error("Delete Error:", error);
             toast({ title: 'Error deleting', description: error.message, variant: 'destructive' });
+            // Revert would require re-fetching or keeping backup
         } finally {
             setLoading(false);
         }
@@ -234,7 +324,8 @@ const MapManager = () => {
                     disableUI={true}
                     onMapClick={handleMapClick}
                     onMarkerClick={handleMarkerClick}
-                    refreshTrigger={refreshTrigger}
+                    markers={markers}
+                    lootTags={lootTags}
                 />
             </div>
 

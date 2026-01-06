@@ -23,7 +23,7 @@ const UpdatesManager = () => {
     // First get total count
     const { count, error: countError } = await supabase
       .from('updates')
-      .select('*', { count: 'exact', head: true });
+      .select('*', { count: 'planned', head: true });
 
     if (countError) {
       console.error("Error counting updates:", countError);
