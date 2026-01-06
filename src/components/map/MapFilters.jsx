@@ -137,7 +137,7 @@ const MapFilters = ({ categories, activeFilters, onToggleFilter, isOpen, onClose
                                                         src={cat.icon_url}
                                                         alt={cat.name}
                                                         // Only invert Landmarks
-                                                        className={`w-5 h-5 object-contain ${group === 'landmarks' ? 'invert brightness-0' : ''}`}
+                                                        className={`w-5 h-5 object-contain ${group === 'landmarks' ? 'invert brightness-0' : ''} ${cat.name === 'Trailers' ? 'invert' : ''}`}
                                                     />
                                                 </div>
                                             )}
