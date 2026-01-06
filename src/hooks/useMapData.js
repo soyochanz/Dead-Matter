@@ -124,11 +124,10 @@ export const useMapData = (refreshTrigger = 0, { enabled = true } = {}) => {
         fetchMapData();
     }, [refreshTrigger]);
 
-    return {
+    return useMemo(() => ({
         categories,
         markers,
         lootTags,
-
         personalMarkers,
         groups,
         keys,
@@ -136,7 +135,7 @@ export const useMapData = (refreshTrigger = 0, { enabled = true } = {}) => {
         polygons,
         loading,
         error
-    };
+    }), [categories, markers, lootTags, personalMarkers, groups, keys, missions, polygons, loading, error]);
 };
 // End of file
 

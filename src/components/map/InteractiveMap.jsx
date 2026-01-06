@@ -97,9 +97,14 @@ const ClickHelper = ({ setClickedCoords, adminMode, onMapClick, onContextMenu })
 // --- Personal Markers Config ---
 
 
-const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMarkerClick, refreshTrigger = 0, markers: propMarkers, lootTags: propLootTags, categories: propCategories, keys: propKeys, missions: propMissions, manualPolylines = [], polygons = [], activePolygonPoints = [], onPolygonClick }) => {
+const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMarkerClick, refreshTrigger = 0, markers: propMarkers, lootTags: propLootTags, categories: propCategories, keys: propKeys, missions: propMissions, manualPolylines = [], polygons = [], activePolygonPoints = [], onPolygonClick, viewMode, currentMissionSteps = [] }) => {
     // Note: refreshTrigger increments after save, triggering re-fetch in hook
     const [internalRefresh, setInternalRefresh] = useState(0);
+
+    useEffect(() => {
+        console.log('--- [InteractiveMap] MOUNTED ---');
+        return () => console.log('--- [InteractiveMap] UNMOUNTED ---');
+    }, []);
     const [showTips, setShowTips] = useState(true);
     const [currentTipIndex, setCurrentTipIndex] = useState(0);
     const [isMissionMode, setIsMissionMode] = useState(false); // Mission Mode State
@@ -107,7 +112,18 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
     const combinedRefresh = refreshTrigger + internalRefresh;
 
     // Disable internal fetching if markers are provided via props (Admin mode)
-    const { markers: hookMarkers, personalMarkers, groups, keys: fetchedKeys, categories: hookCategories, lootTags: hookLootTags, missions: hookMissions, loading: dataLoading, error: dataError } = useMapData(combinedRefresh, { enabled: !propMarkers });
+    const {
+        markers: hookMarkers,
+        personalMarkers,
+        groups,
+        keys: fetchedKeys,
+        categories: hookCategories,
+        lootTags: hookLootTags,
+        missions: hookMissions,
+        polygons: hookPolygons,
+        loading: dataLoading,
+        error: dataError
+    } = useMapData(combinedRefresh, { enabled: !propMarkers });
 
     // Use props if provided, otherwise fallback to hook
     const markers = propMarkers || hookMarkers || [];
@@ -115,6 +131,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
     const lootTags = propLootTags || hookLootTags || [];
     const keys = propKeys || fetchedKeys || [];
     const missions = propMissions || hookMissions || [];
+    const polygonsToRender = (polygons && polygons.length > 0) ? polygons : (hookPolygons || []);
     const [activeFilters, setActiveFilters] = useState({});
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     // mouseCoords moved to isolated component to prevent re-renders
@@ -135,13 +152,21 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
     // Initialize filters
     useEffect(() => {
         if (categories.length > 0) {
-            const initialFilters = { 'safe-zones': true, 'personal': true }; // Enable personal by default
+            const initialFilters = { 'safe-zones': true, 'personal': true };
             categories.forEach(cat => {
                 initialFilters[cat.id] = true;
             });
             setActiveFilters(initialFilters);
         }
     }, [categories]);
+
+    useEffect(() => {
+        if (viewMode === 'missions') {
+            setIsMissionMode(true);
+        } else if (viewMode) {
+            setIsMissionMode(false);
+        }
+    }, [viewMode]);
 
     const handleToggleFilter = (catId, isChecked) => {
         setActiveFilters(prev => ({ ...prev, [catId]: isChecked }));
@@ -702,7 +727,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                         maxClusterRadius={30}
                         disableClusteringAtZoom={18}
                         spiderfyOnMaxZoom={false}
-                        animate={false}
+                        animate={!adminMode}
                     >
                         {civilianLoot.map(marker => (
                             <Marker key={marker.id} position={[marker.lat, marker.lng]} icon={getIconForMarker(marker)} eventHandlers={{ click: (e) => { if (adminMode && onMarkerClick) { L.DomEvent.stopPropagation(e.originalEvent || e); onMarkerClick(marker); } } }}>
@@ -721,7 +746,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                         maxClusterRadius={30}
                         disableClusteringAtZoom={18}
                         spiderfyOnMaxZoom={false}
-                        animate={true}
+                        animate={!adminMode}
                     >
                         {medicalLoot.map(marker => (
                             <Marker key={marker.id} position={[marker.lat, marker.lng]} icon={getIconForMarker(marker)} eventHandlers={{ click: (e) => { if (adminMode && onMarkerClick) { L.DomEvent.stopPropagation(e.originalEvent || e); onMarkerClick(marker); } } }}>
@@ -740,7 +765,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                         maxClusterRadius={30}
                         disableClusteringAtZoom={18}
                         spiderfyOnMaxZoom={false}
-                        animate={true}
+                        animate={!adminMode}
                     >
                         {militaryLoot.map(marker => (
                             <Marker key={marker.id} position={[marker.lat, marker.lng]} icon={getIconForMarker(marker)} eventHandlers={{ click: (e) => { if (adminMode && onMarkerClick) { L.DomEvent.stopPropagation(e.originalEvent || e); onMarkerClick(marker); } } }}>
@@ -759,7 +784,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                         maxClusterRadius={30}
                         disableClusteringAtZoom={18}
                         spiderfyOnMaxZoom={false}
-                        animate={true}
+                        animate={!adminMode}
                     >
                         {industrialLoot.map(marker => (
                             <Marker key={marker.id} position={[marker.lat, marker.lng]} icon={getIconForMarker(marker)} eventHandlers={{ click: (e) => { if (adminMode && onMarkerClick) { L.DomEvent.stopPropagation(e.originalEvent || e); onMarkerClick(marker); } } }}>
@@ -803,7 +828,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                     ))}
 
                     {/* MISSION MODE ENTITIES */}
-                    {(isMissionMode && !adminMode) && (
+                    {(isMissionMode || (adminMode && viewMode === 'missions')) && (
                         <>
                             {/* NPC FILTERS UI */}
                             {!disableUI && (
@@ -824,6 +849,22 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                                     ))}
                                 </div>
                             )}
+
+                            {/* CURRENTLY EDITING MISSION STEPS */}
+                            {adminMode && currentMissionSteps.map((step, idx) => (
+                                <Marker
+                                    key={`current-step-${idx}`}
+                                    position={[step.lat, step.lng]}
+                                    icon={createPinIcon(step.step_order || (idx + 1), '#fbbf24')}
+                                >
+                                    <Popup closeButton={false} offset={[0, -5]}>
+                                        <div className="text-center">
+                                            <strong className="text-amber-500 block text-xs uppercase tracking-wide">New Step {step.step_order || (idx + 1)}</strong>
+                                            <span className="text-sm font-bold text-white">{step.title}</span>
+                                        </div>
+                                    </Popup>
+                                </Marker>
+                            ))}
 
                             {filteredMissions.map(mission => {
                                 const steps = mission.mission_steps || [];
@@ -912,15 +953,14 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                     )}
 
                     {/* POLYGONS (Building Zones) - Always visible or filtered */}
-                    {polygons.map(poly => (
+                    {polygonsToRender.map(poly => (
                         <Polygon
                             key={poly.id}
                             positions={poly.points}
                             pathOptions={{
-                                color: poly.color || '#3b82f6', // Light blue (Blue-500)
+                                stroke: false,
                                 fillColor: poly.color || '#3b82f6',
-                                fillOpacity: 0.2,
-                                weight: 1.5
+                                fillOpacity: 0.2
                             }}
                             eventHandlers={{
                                 click: (e) => {
@@ -1133,4 +1173,5 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
     );
 };
 
-export default InteractiveMap;
+const InteractiveMapMemo = React.memo(InteractiveMap);
+export default InteractiveMapMemo;

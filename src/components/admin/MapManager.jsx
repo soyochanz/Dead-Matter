@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { supabase } from '@/lib/mySupabaseClient';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
@@ -43,14 +42,7 @@ const MapManager = () => {
     const [missions, setMissions] = useState([]);
     const [polygons, setPolygons] = useState([]);
     const [lootTags, setLootTags] = useState([]);
-    const [searchParams, setSearchParams] = useSearchParams();
-    const viewMode = searchParams.get('mode') || 'markers'; // 'markers', 'missions', 'zones'
-
-    const setViewMode = (mode) => {
-        const newParams = new URLSearchParams(searchParams);
-        newParams.set('mode', mode);
-        setSearchParams(newParams);
-    };
+    const [viewMode, setViewMode] = useState('markers'); // 'markers', 'missions', 'zones'
     const [isAddingStep, setIsAddingStep] = useState(false); // If true, next map click adds a step
     const [activeZonePoints, setActiveZonePoints] = useState([]); // [lat, lng] array for current polygon 
 
@@ -68,16 +60,21 @@ const MapManager = () => {
     }, [initialTags]);
 
     useEffect(() => {
-        if (initialMissions && initialMissions.length > 0) {
+        if (initialMissions) {
             setMissions(prev => prev.length === 0 ? initialMissions : prev);
         }
     }, [initialMissions]);
 
     useEffect(() => {
-        if (initialPolygons && initialPolygons.length > 0) {
+        if (initialPolygons) {
             setPolygons(prev => prev.length === 0 ? initialPolygons : prev);
         }
     }, [initialPolygons]);
+
+    useEffect(() => {
+        console.log('--- [MapManager] MOUNTED ---');
+        return () => console.log('--- [MapManager] UNMOUNTED ---');
+    }, []);
 
     // State, form data, etc
     const [formData, setFormData] = useState({
@@ -129,10 +126,74 @@ const MapManager = () => {
         }
     };
 
+    const handleZoneSave = useCallback(async (points) => {
+        setLoading(true);
+        try {
+            // Optimistic update
+            const tempZone = {
+                id: `temp-${Date.now()}`,
+                points: points,
+                type: 'house'
+            };
+            setPolygons(prev => [...prev, tempZone]);
+            toast({ title: 'Zone Added', description: 'Building zone marked.' });
+
+            // DB Insert
+            const { data, error } = await supabase.from('map_polygons').insert({
+                points: points,
+                type: 'house'
+            }).select().single();
+
+            if (error) throw error;
+
+            // Update temp ID
+            setPolygons(prev => prev.map(p => p.id === tempZone.id ? data : p));
+
+        } catch (e) {
+            console.error(e);
+            toast({ title: 'Error saving zone', description: e.message, variant: 'destructive' });
+        } finally {
+            setLoading(false);
+        }
+    }, [toast]);
+
+    const handleMarkerClick = useCallback(async (marker) => {
+        setLoading(true);
+        try {
+            setEditingMarker(marker);
+            setMarkerPos({ lat: marker.lat, lng: marker.lng });
+
+            // 1. Fetch tags
+            const { data: tags, error: tagError } = await supabase
+                .from('marker_loot_tags')
+                .select('label')
+                .eq('marker_id', marker.id);
+            if (tagError) throw tagError;
+
+            const currentTags = tags ? tags.map(t => t.label) : [];
+
+            setFormData({
+                title: marker.title,
+                description: marker.description || '',
+                category_id: marker.category_id,
+                image_url: marker.image_url || '',
+                infected_level: marker.infected_level || 'Low',
+                selectedTags: currentTags,
+                requires_key: marker.requires_key || false,
+                required_key_ids: marker.required_key_ids || (marker.required_key_id ? [marker.required_key_id] : [])
+            });
+            setDialogOpen(true);
+        } catch (error) {
+            console.error("Error preparing edit:", error);
+            toast({ title: 'Error loading marker', description: error.message, variant: 'destructive' });
+        } finally {
+            setLoading(false);
+        }
+    }, [toast]);
 
 
-    // Handlers
-    const handleMapClick = (latlng) => {
+
+    const handleMapClick = useCallback((latlng) => {
         if (viewMode === 'missions') {
             if (isAddingStep) {
                 setMissionForm(prev => {
@@ -179,7 +240,7 @@ const MapManager = () => {
             required_key_id: ''
         });
         setDialogOpen(true);
-    };
+    }, [viewMode, isAddingStep, activeZonePoints, categories, handleZoneSave]);
 
     const handleCreateMission = () => {
         setMissionForm({ title: '', description: '', npc_id: '', start_npc_id: '', steps: [] });
@@ -229,42 +290,6 @@ const MapManager = () => {
         } catch (e) {
             console.error(e);
             toast({ title: 'Error', variant: 'destructive', description: e.message });
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const handleMarkerClick = async (marker) => {
-        setLoading(true);
-        try {
-            setEditingMarker(marker);
-            setMarkerPos({ lat: marker.lat, lng: marker.lng });
-
-            // 1. Fetch tags
-            const { data: tags, error: tagError } = await supabase
-                .from('marker_loot_tags')
-                .select('label')
-                .eq('marker_id', marker.id);
-            if (tagError) throw tagError;
-
-
-
-            const currentTags = tags ? tags.map(t => t.label) : [];
-
-            setFormData({
-                title: marker.title,
-                description: marker.description || '',
-                category_id: marker.category_id,
-                image_url: marker.image_url || '',
-                infected_level: marker.infected_level || 'Low',
-                selectedTags: currentTags,
-                requires_key: marker.requires_key || false,
-                required_key_ids: marker.required_key_ids || (marker.required_key_id ? [marker.required_key_id] : [])
-            });
-            setDialogOpen(true);
-        } catch (error) {
-            console.error("Error preparing edit:", error);
-            toast({ title: 'Error loading marker', description: error.message, variant: 'destructive' });
         } finally {
             setLoading(false);
         }
@@ -448,36 +473,6 @@ const MapManager = () => {
         }
     };
 
-    const handleZoneSave = async (points) => {
-        setLoading(true);
-        try {
-            // Optimistic update
-            const tempZone = {
-                id: `temp-${Date.now()}`,
-                points: points,
-                type: 'house'
-            };
-            setPolygons(prev => [...prev, tempZone]);
-            toast({ title: 'Zone Added', description: 'Building zone marked.' });
-
-            // DB Insert
-            const { data, error } = await supabase.from('map_polygons').insert({
-                points: points,
-                type: 'house'
-            }).select().single();
-
-            if (error) throw error;
-
-            // Update temp ID
-            setPolygons(prev => prev.map(p => p.id === tempZone.id ? data : p));
-
-        } catch (e) {
-            console.error(e);
-            toast({ title: 'Error saving zone', description: e.message, variant: 'destructive' });
-        } finally {
-            setLoading(false);
-        }
-    };
 
     const handleZoneDelete = async (id) => {
         if (!confirm('Delete this zone?')) return;
@@ -581,6 +576,8 @@ const MapManager = () => {
                     polygons={polygons}
                     activePolygonPoints={activeZonePoints}
                     onPolygonClick={viewMode === 'zones' ? handleZoneDelete : undefined}
+                    viewMode={viewMode}
+                    currentMissionSteps={viewMode === 'missions' ? missionForm.steps : []}
                 />
             </div>
 
