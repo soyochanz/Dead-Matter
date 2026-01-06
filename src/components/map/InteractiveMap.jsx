@@ -825,41 +825,12 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                                 </div>
                             )}
 
-                            {/* POLAGONS (Building Zones) */}
-                            {polygons.map(poly => (
-                                <Polygon
-                                    key={poly.id}
-                                    positions={poly.points}
-                                    pathOptions={{ color: poly.color || '#e0f2fe', fillColor: poly.color || '#e0f2fe', fillOpacity: 0.2, weight: 1 }}
-                                    eventHandlers={{
-                                        click: (e) => {
-                                            if (onPolygonClick) {
-                                                L.DomEvent.stopPropagation(e);
-                                                onPolygonClick(poly.id);
-                                            }
-                                        }
-                                    }}
-                                />
-                            ))}
-                            {/* Active Drawing Polygon */}
-                            {activePolygonPoints && activePolygonPoints.length > 0 && (
-                                <>
-                                    {activePolygonPoints.map((pt, idx) => (
-                                        <CircleMarker key={`pt-${idx}`} center={pt} radius={4} pathOptions={{ color: '#60a5fa', fillColor: 'white', fillOpacity: 1 }} />
-                                    ))}
-                                    {activePolygonPoints.length > 1 && (
-                                        <Polyline positions={activePolygonPoints} pathOptions={{ color: '#60a5fa', dashArray: '5, 10', weight: 2 }} />
-                                    )}
-                                </>
-                            )}
-
                             {filteredMissions.map(mission => {
                                 const steps = mission.mission_steps || [];
                                 if (steps.length === 0) return null;
                                 const sortedSteps = [...steps].sort((a, b) => a.step_order - b.step_order);
                                 const startStep = sortedSteps[0];
 
-                                // Path Positions
                                 // Path Positions
                                 const startNpcMarker = markers?.find(m => m.id === mission.start_npc_id);
                                 const npcMarker = markers?.find(m => m.id === mission.npc_id);
@@ -872,7 +843,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                                 // Determine Start Position & Icon
                                 const startPos = startNpcMarker ? [startNpcMarker.lat, startNpcMarker.lng] : [startStep.lat, startStep.lng];
                                 const startIcon = startNpcMarker
-                                    ? createNoBorderIcon(mapIcons.person, '#fbbf24') // Or specific NPC icon if available
+                                    ? createNoBorderIcon(mapIcons.person, '#fbbf24')
                                     : createPinIcon('👑', '#fbbf24');
 
                                 return (
@@ -937,6 +908,40 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                                     </React.Fragment>
                                 );
                             })}
+                        </>
+                    )}
+
+                    {/* POLYGONS (Building Zones) - Always visible or filtered */}
+                    {polygons.map(poly => (
+                        <Polygon
+                            key={poly.id}
+                            positions={poly.points}
+                            pathOptions={{
+                                color: poly.color || '#3b82f6', // Light blue (Blue-500)
+                                fillColor: poly.color || '#3b82f6',
+                                fillOpacity: 0.2,
+                                weight: 1.5
+                            }}
+                            eventHandlers={{
+                                click: (e) => {
+                                    if (onPolygonClick) {
+                                        L.DomEvent.stopPropagation(e.originalEvent || e);
+                                        onPolygonClick(poly.id);
+                                    }
+                                }
+                            }}
+                        />
+                    ))}
+
+                    {/* Active Drawing Polygon */}
+                    {activePolygonPoints && activePolygonPoints.length > 0 && (
+                        <>
+                            {activePolygonPoints.map((pt, idx) => (
+                                <CircleMarker key={`pt-${idx}`} center={pt} radius={4} pathOptions={{ color: '#60a5fa', fillColor: 'white', fillOpacity: 1 }} />
+                            ))}
+                            {activePolygonPoints.length > 1 && (
+                                <Polyline positions={activePolygonPoints} pathOptions={{ color: '#60a5fa', dashArray: '5, 10', weight: 2 }} />
+                            )}
                         </>
                     )}
 
