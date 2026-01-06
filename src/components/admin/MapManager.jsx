@@ -32,6 +32,7 @@ const MapManager = () => {
     const [loading, setLoading] = useState(false);
     const { toast } = useToast();
     const [dialogOpen, setDialogOpen] = useState(false);
+    const [missionDialogOpen, setMissionDialogOpen] = useState(false);
     // State for categories, markers, and tags
     // We use refreshTrigger=0 to fetch initial data once, then manage locally
     const { categories, markers: initialMarkers, lootTags: initialTags, keys: availableKeys, missions: initialMissions, polygons: initialPolygons } = useMapData(0);
@@ -143,7 +144,7 @@ const MapManager = () => {
                     }]
                 }));
                 setIsAddingStep(false);
-                setDialogOpen(true); // Re-open dialog
+                setMissionDialogOpen(true); // Re-open mission dialog specifically
             }
             return;
         }
@@ -179,7 +180,7 @@ const MapManager = () => {
         setMissionForm({ title: '', description: '', npc_id: '', start_npc_id: '', steps: [] });
         setIsAddingStep(false);
         setEditingMarker(null); // Ensure we aren't editing a marker
-        setDialogOpen(true);
+        setMissionDialogOpen(true);
     };
 
     const handleMissionSave = async () => {
@@ -214,7 +215,7 @@ const MapManager = () => {
             }
 
             toast({ title: 'Mission Created', description: `Added ${mission.title} with ${missionForm.steps.length} steps.` });
-            setDialogOpen(false);
+            setMissionDialogOpen(false);
 
             // Re-fetch or manually update local state if needed
             // For now we rely on refresh or reload, but let's push locally
@@ -578,6 +579,7 @@ const MapManager = () => {
                 />
             </div>
 
+            {/* MARKER / ZONE DIALOG */}
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                 <DialogContent
                     className="bg-neutral-900 border-white/10 text-white max-w-lg max-h-[90vh] overflow-y-auto"
@@ -591,275 +593,136 @@ const MapManager = () => {
                     </DialogHeader>
 
                     <div className="grid gap-4 py-4">
-                        {viewMode === 'missions' ? (
+                        <div className="grid gap-2">
+                            <Label htmlFor="title">Name / Text</Label>
+                            <Input
+                                id="title"
+                                name="title"
+                                value={formData.title}
+                                onChange={handleInputChange}
+                                className="bg-neutral-800 border-neutral-700"
+                                placeholder="e.g., Hidden Cache"
+                            />
+                        </div>
+
+                        <div className="grid gap-2">
+                            <Label htmlFor="category">Type / Category</Label>
+                            <select
+                                id="category"
+                                name="category_id"
+                                value={formData.category_id}
+                                onChange={handleInputChange}
+                                className="flex h-10 w-full rounded-md border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm text-white capitalize text-left"
+                            >
+                                <option value="" disabled>Select Type</option>
+                                {[...new Set(categories.map(c => c.group_name))].sort().map(group => {
+                                    let label = group;
+                                    if (group === 'meta') label = 'Zones (Text Labels)';
+                                    return (
+                                        <optgroup key={group} label={label.charAt(0).toUpperCase() + label.slice(1)}>
+                                            {categories.filter(c => c.group_name === group).map(cat => (
+                                                <option key={cat.id} value={cat.id}>{cat.name}</option>
+                                            ))}
+                                        </optgroup>
+                                    );
+                                })}
+                            </select>
+                        </div>
+
+                        {(!formData.category_id || !categories.find(c => c.id === formData.category_id)?.name.startsWith('Zones')) && (
                             <>
+                                {/* FEATURED IMAGE */}
                                 <div className="grid gap-2">
-                                    <Label htmlFor="title">Mission Title</Label>
+                                    <Label htmlFor="image_url">Featured Image</Label>
                                     <Input
-                                        id="title"
-                                        value={missionForm.title}
-                                        onChange={e => setMissionForm({ ...missionForm, title: e.target.value })}
+                                        id="image_url"
+                                        name="image_url"
+                                        placeholder="https://..."
+                                        value={formData.image_url}
+                                        onChange={handleInputChange}
                                         className="bg-neutral-800 border-neutral-700"
-                                        placeholder="e.g., The Lost Shipment"
-                                    />
-                                </div>
-                                <div className="grid gap-2">
-                                    <Label htmlFor="description">Mission Description</Label>
-                                    <Textarea
-                                        id="description"
-                                        value={missionForm.description}
-                                        onChange={e => setMissionForm({ ...missionForm, description: e.target.value })}
-                                        className="bg-neutral-800 border-neutral-700"
-                                        placeholder="Brief overview..."
                                     />
                                 </div>
 
-                                <div className="border border-white/10 rounded-lg p-3 space-y-3 bg-white/5">
-                                    <h4 className="font-semibold text-sm text-amber-500 flex justify-between items-center">
-                                        Mission Steps
-                                        <Button
-                                            size="sm"
-                                            variant="outline"
-                                            className="h-7 text-xs border-amber-500/50 text-amber-500 hover:bg-amber-500/10"
-                                            onClick={() => {
-                                                setIsAddingStep(true);
-                                                setDialogOpen(false); // Hide dialog to pick location
-                                                toast({ description: "Click on the map to set the step location.", duration: 3000 });
-                                            }}
-                                        >
-                                            <Plus className="w-3 h-3 mr-1" /> Add Step
-                                        </Button>
-                                    </h4>
+                                {/* Requires Key Checkbox */}
+                                <div className="flex items-center space-x-2 border border-neutral-700 bg-neutral-800 p-3 rounded-md">
+                                    <Checkbox
+                                        id="requires_key"
+                                        checked={formData.requires_key}
+                                        onCheckedChange={(checked) => setFormData(prev => ({ ...prev, requires_key: checked }))}
+                                    />
+                                    <Label htmlFor="requires_key" className="text-sm font-medium cursor-pointer text-amber-500">
+                                        Requires Key 🔐
+                                    </Label>
+                                </div>
 
-                                    {missionForm.steps.length === 0 && (
-                                        <p className="text-xs text-neutral-500 italic">No steps added yet. Add steps to guide the player.</p>
-                                    )}
-
-                                    <div className="space-y-2 max-h-[200px] overflow-y-auto">
-                                        {missionForm.steps.map((step, idx) => (
-                                            <div key={idx} className="bg-black/30 p-2 rounded text-xs border border-white/5">
-                                                <div className="flex justify-between mb-1">
-                                                    <span className="font-bold text-gray-300">Step {idx + 1}</span>
-                                                    <button onClick={() => {
-                                                        const newSteps = [...missionForm.steps];
-                                                        newSteps.splice(idx, 1);
-                                                        setMissionForm({ ...missionForm, steps: newSteps });
-                                                    }} className="text-red-500 hover:text-red-400"><Trash2 size={12} /></button>
+                                {formData.requires_key && (
+                                    <div className="grid gap-2 pl-4 border-l-2 border-amber-500/30">
+                                        <Label className="text-amber-500">Select Keys (Multi-select)</Label>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 p-2 bg-neutral-800 rounded-md border border-neutral-700 max-h-[200px] overflow-y-auto">
+                                            {availableKeys && availableKeys.sort((a, b) => a.name.localeCompare(b.name)).map(key => (
+                                                <div key={key.id} className="flex items-center space-x-2 p-1 hover:bg-white/5 rounded">
+                                                    <Checkbox
+                                                        id={`key-${key.id}`}
+                                                        checked={(formData.required_key_ids || []).includes(key.id)}
+                                                        onCheckedChange={() => handleKeyToggle(key.id)}
+                                                        className="border-amber-500/50 data-[state=checked]:bg-amber-500 data-[state=checked]:text-black"
+                                                    />
+                                                    <label htmlFor={`key-${key.id}`} className="text-sm cursor-pointer select-none text-gray-300">
+                                                        {key.name}
+                                                    </label>
                                                 </div>
-                                                <Input
-                                                    value={step.title}
-                                                    onChange={e => {
-                                                        const newSteps = [...missionForm.steps];
-                                                        newSteps[idx].title = e.target.value;
-                                                        setMissionForm({ ...missionForm, steps: newSteps });
-                                                    }}
-                                                    className="h-6 text-xs bg-transparent border-none p-0 focus-visible:ring-0 placeholder-gray-600 mb-1"
-                                                    placeholder="Step Title"
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                <div className="grid gap-2">
+                                    <Label>Loot Tags (Multi-select)</Label>
+                                    <div className="grid grid-cols-2 gap-2 p-3 bg-neutral-800 rounded-md border border-neutral-700">
+                                        {TAG_OPTIONS.map((tag) => (
+                                            <div key={tag.label} className="flex items-center space-x-2">
+                                                <Checkbox
+                                                    id={`tag-${tag.label}`}
+                                                    checked={formData.selectedTags.includes(tag.label)}
+                                                    onCheckedChange={() => handleTagToggle(tag.label)}
                                                 />
-                                                <Input
-                                                    value={step.image_url}
-                                                    onChange={e => {
-                                                        const newSteps = [...missionForm.steps];
-                                                        newSteps[idx].image_url = e.target.value;
-                                                        setMissionForm({ ...missionForm, steps: newSteps });
-                                                    }}
-                                                    className="h-6 text-xs bg-white/5 border-white/10 mb-1"
-                                                    placeholder="Image URL (Optional)"
-                                                />
-                                                <Textarea
-                                                    value={step.description}
-                                                    onChange={e => {
-                                                        const newSteps = [...missionForm.steps];
-                                                        newSteps[idx].description = e.target.value;
-                                                        setMissionForm({ ...missionForm, steps: newSteps });
-                                                    }}
-                                                    className="min-h-[40px] text-xs bg-transparent border-white/10 p-1 focus-visible:ring-0 placeholder-gray-600"
-                                                    placeholder="Step instructions..."
-                                                />
+                                                <label htmlFor={`tag-${tag.label}`} className="text-sm font-medium" style={{ color: tag.color }}>
+                                                    {tag.label}
+                                                </label>
                                             </div>
                                         ))}
                                     </div>
                                 </div>
 
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div className="grid gap-2">
-                                        <Label>Start NPC (Origin)</Label>
-                                        <select
-                                            value={missionForm.start_npc_id}
-                                            onChange={e => setMissionForm({ ...missionForm, start_npc_id: e.target.value })}
-                                            className="flex h-10 w-full rounded-md border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm text-white capitalize"
-                                        >
-                                            <option value="">-- Select NPC --</option>
-                                            {markers.filter(m => {
-                                                const cat = categories.find(c => c.id === m.category_id);
-                                                const name = cat?.name?.toLowerCase() || '';
-                                                const group = cat?.group_name?.toLowerCase() || '';
-                                                return name.includes('npc') || name.includes('vendor') || name.includes('trader') || group.includes('npc');
-                                            }).map(m => (
-                                                <option key={m.id} value={m.id}>{m.title}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-
-                                    <div className="grid gap-2">
-                                        <Label>End NPC (Goal)</Label>
-                                        <select
-                                            value={missionForm.npc_id}
-                                            onChange={e => setMissionForm({ ...missionForm, npc_id: e.target.value })}
-                                            className="flex h-10 w-full rounded-md border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm text-white capitalize"
-                                        >
-                                            <option value="">-- Select NPC --</option>
-                                            {markers.filter(m => {
-                                                const cat = categories.find(c => c.id === m.category_id);
-                                                const name = cat?.name?.toLowerCase() || '';
-                                                const group = cat?.group_name?.toLowerCase() || '';
-                                                return name.includes('npc') || name.includes('vendor') || name.includes('trader') || group.includes('npc');
-                                            }).map(m => (
-                                                <option key={m.id} value={m.id}>{m.title}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                </div>
-                            </>
-                        ) : (
-                            // STANDARD MARKER FORM
-                            <>
                                 <div className="grid gap-2">
-                                    <Label htmlFor="title">Name / Text</Label>
-                                    <Input
-                                        id="title"
-                                        name="title"
-                                        value={formData.title}
-                                        onChange={handleInputChange}
-                                        className="bg-neutral-800 border-neutral-700"
-                                        placeholder="e.g., Hidden Cache"
-                                    />
-                                </div>
-
-                                <div className="grid gap-2">
-                                    <Label htmlFor="category">Type / Category</Label>
+                                    <Label htmlFor="infected_level">Infected Level</Label>
                                     <select
-                                        id="category"
-                                        name="category_id"
-                                        value={formData.category_id}
+                                        id="infected_level"
+                                        name="infected_level"
+                                        value={formData.infected_level}
                                         onChange={handleInputChange}
-                                        className="flex h-10 w-full rounded-md border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm text-white capitalize text-left"
+                                        className="flex h-10 w-full rounded-md border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm text-white"
                                     >
-                                        <option value="" disabled>Select Type</option>
-                                        {[...new Set(categories.map(c => c.group_name))].sort().map(group => {
-                                            let label = group;
-                                            if (group === 'meta') label = 'Zones (Text Labels)';
-                                            return (
-                                                <optgroup key={group} label={label.charAt(0).toUpperCase() + label.slice(1)}>
-                                                    {categories.filter(c => c.group_name === group).map(cat => (
-                                                        <option key={cat.id} value={cat.id}>{cat.name}</option>
-                                                    ))}
-                                                </optgroup>
-                                            );
-                                        })}
+                                        <option value="None">None</option>
+                                        <option value="Low">Low</option>
+                                        <option value="Medium">Medium</option>
+                                        <option value="High">High</option>
                                     </select>
                                 </div>
 
-                                {(!formData.category_id || !categories.find(c => c.id === formData.category_id)?.name.startsWith('Zones')) && (
-                                    <>
-                                        {/* FEATURED IMAGE */}
-                                        <div className="grid gap-2">
-                                            <Label htmlFor="image_url">Featured Image</Label>
-                                            <Input
-                                                id="image_url"
-                                                name="image_url"
-                                                placeholder="https://..."
-                                                value={formData.image_url}
-                                                onChange={handleInputChange}
-                                                className="bg-neutral-800 border-neutral-700"
-                                            />
-                                        </div>
-
-                                        {/* Requires Key Checkbox */}
-                                        <div className="flex items-center space-x-2 border border-neutral-700 bg-neutral-800 p-3 rounded-md">
-                                            <Checkbox
-                                                id="requires_key"
-                                                checked={formData.requires_key}
-                                                onCheckedChange={(checked) => setFormData(prev => ({ ...prev, requires_key: checked }))}
-                                            />
-                                            <Label htmlFor="requires_key" className="text-sm font-medium cursor-pointer text-amber-500">
-                                                Requires Key 🔐
-                                            </Label>
-                                        </div>
-
-                                        {formData.requires_key && (
-                                            <div className="grid gap-2 pl-4 border-l-2 border-amber-500/30">
-                                                <div className="grid gap-2 pl-4 border-l-2 border-amber-500/30">
-                                                    <Label className="text-amber-500">Select Keys (Multi-select)</Label>
-                                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 p-2 bg-neutral-800 rounded-md border border-neutral-700 max-h-[200px] overflow-y-auto">
-                                                        {availableKeys && availableKeys.sort((a, b) => a.name.localeCompare(b.name)).map(key => (
-                                                            <div key={key.id} className="flex items-center space-x-2 p-1 hover:bg-white/5 rounded">
-                                                                <Checkbox
-                                                                    id={`key-${key.id}`}
-                                                                    checked={(formData.required_key_ids || []).includes(key.id)}
-                                                                    onCheckedChange={() => handleKeyToggle(key.id)}
-                                                                    className="border-amber-500/50 data-[state=checked]:bg-amber-500 data-[state=checked]:text-black"
-                                                                />
-                                                                <label htmlFor={`key-${key.id}`} className="text-sm cursor-pointer select-none text-gray-300">
-                                                                    {key.name}
-                                                                </label>
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        )}
-
-
-
-                                        <div className="grid gap-2">
-                                            <Label>Loot Tags (Multi-select)</Label>
-                                            <div className="grid grid-cols-2 gap-2 p-3 bg-neutral-800 rounded-md border border-neutral-700">
-                                                {TAG_OPTIONS.map((tag) => (
-                                                    <div key={tag.label} className="flex items-center space-x-2">
-                                                        <Checkbox
-                                                            id={`tag-${tag.label}`}
-                                                            checked={formData.selectedTags.includes(tag.label)}
-                                                            onCheckedChange={() => handleTagToggle(tag.label)}
-                                                        />
-                                                        <label htmlFor={`tag-${tag.label}`} className="text-sm font-medium" style={{ color: tag.color }}>
-                                                            {tag.label}
-                                                        </label>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </div>
-
-                                        <div className="grid gap-2">
-                                            <Label htmlFor="infected_level">Infected Level</Label>
-                                            <select
-                                                id="infected_level"
-                                                name="infected_level"
-                                                value={formData.infected_level}
-                                                onChange={handleInputChange}
-                                                className="flex h-10 w-full rounded-md border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm text-white"
-                                            >
-                                                <option value="None">None</option>
-                                                <option value="Low">Low</option>
-                                                <option value="Medium">Medium</option>
-                                                <option value="High">High</option>
-                                            </select>
-                                        </div>
-
-                                        <div className="grid gap-2">
-                                            <Label htmlFor="description">Description</Label>
-                                            <Textarea
-                                                id="description"
-                                                name="description"
-                                                value={formData.description}
-                                                onChange={handleInputChange}
-                                                className="bg-neutral-800 border-neutral-700"
-                                                rows={4}
-                                            />
-                                        </div>
-                                    </>
-                                )}
-                            </> // END STANDARD FORM
+                                <div className="grid gap-2">
+                                    <Label htmlFor="description">Description</Label>
+                                    <Textarea
+                                        id="description"
+                                        name="description"
+                                        value={formData.description}
+                                        onChange={handleInputChange}
+                                        className="bg-neutral-800 border-neutral-700"
+                                        rows={4}
+                                    />
+                                </div>
+                            </>
                         )}
                     </div>
 
@@ -871,9 +734,162 @@ const MapManager = () => {
                             </Button>
                         )}
                         <Button variant="ghost" onClick={() => setDialogOpen(false)}>Cancel</Button>
-                        <Button onClick={viewMode === 'missions' ? handleMissionSave : handleSave} disabled={loading} className="bg-red-600 hover:bg-red-700">
+                        <Button onClick={handleSave} disabled={loading} className="bg-red-600 hover:bg-red-700">
                             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                             Save
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            {/* MISSION DIALOG */}
+            <Dialog open={missionDialogOpen} onOpenChange={setMissionDialogOpen}>
+                <DialogContent
+                    className="bg-neutral-900 border-white/10 text-white max-w-lg max-h-[90vh] overflow-y-auto"
+                    onInteractOutside={(e) => e.preventDefault()} // Prevent closing on outside click
+                >
+                    <DialogHeader>
+                        <DialogTitle>New Mission</DialogTitle>
+                        <DialogDescription>
+                            Define steps and NPC targets.
+                        </DialogDescription>
+                    </DialogHeader>
+
+                    <div className="grid gap-4 py-4">
+                        <div className="grid gap-2">
+                            <Label htmlFor="m-title">Mission Title</Label>
+                            <Input
+                                id="m-title"
+                                value={missionForm.title}
+                                onChange={e => setMissionForm({ ...missionForm, title: e.target.value })}
+                                className="bg-neutral-800 border-neutral-700"
+                                placeholder="e.g., The Lost Shipment"
+                            />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="m-desc">Mission Description</Label>
+                            <Textarea
+                                id="m-desc"
+                                value={missionForm.description}
+                                onChange={e => setMissionForm({ ...missionForm, description: e.target.value })}
+                                className="bg-neutral-800 border-neutral-700"
+                                placeholder="Brief overview..."
+                            />
+                        </div>
+
+                        <div className="border border-white/10 rounded-lg p-3 space-y-3 bg-white/5">
+                            <h4 className="font-semibold text-sm text-amber-500 flex justify-between items-center">
+                                Mission Steps
+                                <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="h-7 text-xs border-amber-500/50 text-amber-500 hover:bg-amber-500/10"
+                                    onClick={() => {
+                                        setIsAddingStep(true);
+                                        setMissionDialogOpen(false); // Hide dialog to pick location
+                                        toast({ description: "Click on the map to set the step location.", duration: 3000 });
+                                    }}
+                                >
+                                    <Plus className="w-3 h-3 mr-1" /> Add Step
+                                </Button>
+                            </h4>
+
+                            {missionForm.steps.length === 0 && (
+                                <p className="text-xs text-neutral-500 italic">No steps added yet. Add steps to guide the player.</p>
+                            )}
+
+                            <div className="space-y-2 max-h-[200px] overflow-y-auto">
+                                {missionForm.steps.map((step, idx) => (
+                                    <div key={idx} className="bg-black/30 p-2 rounded text-xs border border-white/5">
+                                        <div className="flex justify-between mb-1">
+                                            <span className="font-bold text-gray-300">Step {idx + 1}</span>
+                                            <button onClick={() => {
+                                                const newSteps = [...missionForm.steps];
+                                                newSteps.splice(idx, 1);
+                                                setMissionForm({ ...missionForm, steps: newSteps });
+                                            }} className="text-red-500 hover:text-red-400"><Trash2 size={12} /></button>
+                                        </div>
+                                        <Input
+                                            value={step.title}
+                                            onChange={e => {
+                                                const newSteps = [...missionForm.steps];
+                                                newSteps[idx].title = e.target.value;
+                                                setMissionForm({ ...missionForm, steps: newSteps });
+                                            }}
+                                            className="h-6 text-xs bg-transparent border-none p-0 focus-visible:ring-0 placeholder-gray-600 mb-1"
+                                            placeholder="Step Title"
+                                        />
+                                        <Input
+                                            value={step.image_url}
+                                            onChange={e => {
+                                                const newSteps = [...missionForm.steps];
+                                                newSteps[idx].image_url = e.target.value;
+                                                setMissionForm({ ...missionForm, steps: newSteps });
+                                            }}
+                                            className="h-6 text-xs bg-white/5 border-white/10 mb-1"
+                                            placeholder="Image URL (Optional)"
+                                        />
+                                        <Textarea
+                                            value={step.description}
+                                            onChange={e => {
+                                                const newSteps = [...missionForm.steps];
+                                                newSteps[idx].description = e.target.value;
+                                                setMissionForm({ ...missionForm, steps: newSteps });
+                                            }}
+                                            className="min-h-[40px] text-xs bg-transparent border-white/10 p-1 focus-visible:ring-0 placeholder-gray-600"
+                                            placeholder="Step instructions..."
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="grid gap-2">
+                                <Label>Start NPC (Origin)</Label>
+                                <select
+                                    value={missionForm.start_npc_id}
+                                    onChange={e => setMissionForm({ ...missionForm, start_npc_id: e.target.value })}
+                                    className="flex h-10 w-full rounded-md border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm text-white capitalize"
+                                >
+                                    <option value="">-- Select NPC --</option>
+                                    {markers.filter(m => {
+                                        const cat = categories.find(c => c.id === m.category_id);
+                                        const name = cat?.name?.toLowerCase() || '';
+                                        const group = cat?.group_name?.toLowerCase() || '';
+                                        return name.includes('npc') || name.includes('vendor') || name.includes('trader') || group.includes('npc');
+                                    }).map(m => (
+                                        <option key={m.id} value={m.id}>{m.title}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div className="grid gap-2">
+                                <Label>End NPC (Goal)</Label>
+                                <select
+                                    value={missionForm.npc_id}
+                                    onChange={e => setMissionForm({ ...missionForm, npc_id: e.target.value })}
+                                    className="flex h-10 w-full rounded-md border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm text-white capitalize"
+                                >
+                                    <option value="">-- Select NPC --</option>
+                                    {markers.filter(m => {
+                                        const cat = categories.find(c => c.id === m.category_id);
+                                        const name = cat?.name?.toLowerCase() || '';
+                                        const group = cat?.group_name?.toLowerCase() || '';
+                                        return name.includes('npc') || name.includes('vendor') || name.includes('trader') || group.includes('npc');
+                                    }).map(m => (
+                                        <option key={m.id} value={m.id}>{m.title}</option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <DialogFooter>
+                        <Button variant="ghost" onClick={() => setMissionDialogOpen(false)}>Cancel</Button>
+                        <Button onClick={handleMissionSave} disabled={loading} className="bg-amber-600 hover:bg-amber-700 text-white">
+                            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                            Create Mission
                         </Button>
                     </DialogFooter>
                 </DialogContent>
