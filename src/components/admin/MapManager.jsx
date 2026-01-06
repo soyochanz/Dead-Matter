@@ -469,7 +469,10 @@ const MapManager = () => {
             </div>
 
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-                <DialogContent className="bg-neutral-900 border-white/10 text-white max-w-lg max-h-[90vh] overflow-y-auto">
+                <DialogContent
+                    className="bg-neutral-900 border-white/10 text-white max-w-lg max-h-[90vh] overflow-y-auto"
+                    onInteractOutside={(e) => e.preventDefault()} // Prevent closing on outside click
+                >
                     <DialogHeader>
                         <DialogTitle>{editingMarker ? 'Edit Item' : 'Add New Item'}</DialogTitle>
                         <DialogDescription>
@@ -578,7 +581,10 @@ const MapManager = () => {
                                         <option value="">-- Select NPC --</option>
                                         {markers.filter(m => {
                                             const cat = categories.find(c => c.id === m.category_id);
-                                            return cat && (cat.name === 'NPC' || cat.name === 'Vendors' || cat.group_name === 'NPCs');
+                                            // Broadened Filter for NPCs
+                                            const name = cat?.name?.toLowerCase() || '';
+                                            const group = cat?.group_name?.toLowerCase() || '';
+                                            return name.includes('npc') || name.includes('vendor') || name.includes('trader') || group.includes('npc');
                                         }).map(m => (
                                             <option key={m.id} value={m.id}>{m.title}</option>
                                         ))}
