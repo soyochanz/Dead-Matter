@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { supabase } from '@/lib/mySupabaseClient';
 
 export const useMapData = (refreshTrigger = 0, { enabled = true } = {}) => {
