@@ -40,16 +40,16 @@ const MapManager = () => {
     const [markers, setMarkers] = useState([]);
     const [lootTags, setLootTags] = useState([]);
 
-    // Initialize local state when data is fetched
+    // Initialize local state when data is fetched (ONLY if local is empty)
     useEffect(() => {
         if (initialMarkers && initialMarkers.length > 0) {
-            setMarkers(initialMarkers);
+            setMarkers(prev => prev.length === 0 ? initialMarkers : prev);
         }
     }, [initialMarkers]);
 
     useEffect(() => {
         if (initialTags && initialTags.length > 0) {
-            setLootTags(initialTags);
+            setLootTags(prev => prev.length === 0 ? initialTags : prev);
         }
     }, [initialTags]);
 

@@ -15,28 +15,19 @@ const UpdatesManager = () => {
   /* Pagination State */
   const [page, setPage] = useState(0);
   const pageSize = 5;
-  const [totalCount, setTotalCount] = useState(0);
+  // totalCount removed for performance
 
   const loadItems = useCallback(async () => {
     setLoading(true);
 
-    // First get total count
-    const { count, error: countError } = await supabase
-      .from('updates')
-      .select('*', { count: 'planned', head: true });
-
-    if (countError) {
-      console.error("Error counting updates:", countError);
-    } else {
-      setTotalCount(count || 0);
-    }
-
-    // Then fetch paginated data
+    // Optimized: No COUNT query, minimal columns
+    // We fetch one extra item to know if there's a next page
     const from = page * pageSize;
-    const to = from + pageSize - 1;
+    const to = from + pageSize; // Fetch 6 items for a page size of 5
 
     const { data, error } = await supabase
       .from('updates')
+      .select('id, title, date, version, category')
       .order('date', { ascending: false })
       .range(from, to);
 
@@ -116,7 +107,7 @@ const UpdatesManager = () => {
         </div>
       ) : (
         <div className="space-y-4 mt-6">
-          {items.map(item => (
+          {items.slice(0, pageSize).map(item => (
             <div key={item.id} className="bg-white/5 border border-white/10 rounded-lg p-4 flex justify-between items-start gap-4">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between">
@@ -156,7 +147,7 @@ const UpdatesManager = () => {
           {/* Pagination Controls */}
           <div className="flex items-center justify-between py-4 border-t border-white/5 mt-4">
             <span className="text-sm text-gray-400">
-              Page {page + 1} of {Math.ceil(totalCount / pageSize)}
+              Page {page + 1}
             </span>
             <div className="flex gap-2">
               <Button
@@ -171,7 +162,7 @@ const UpdatesManager = () => {
                 variant="outline"
                 size="sm"
                 onClick={() => setPage(p => p + 1)}
-                disabled={(page + 1) * pageSize >= totalCount}
+                disabled={items.length <= pageSize} // If we didn't get more than pageSize, we are at the end
               >
                 Next
               </Button>
