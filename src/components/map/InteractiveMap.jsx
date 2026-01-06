@@ -384,14 +384,14 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
 
     const getPersonalIcon = (marker) => {
         const iconDef = personalIcons[marker.icon_name] || personalIcons.star;
-        // Improved Elegant Design: Glassmorphism Circle with Colored Border
+        // REDESIGN: Solid White Rounded Square (Squircle) to distinguish from Pins (Teardrop) and Loot (Dots)
         return L.divIcon({
-            html: `<div style="background-color: #0f172aa6; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid ${marker.color}; color: ${marker.color}; box-shadow: 0 4px 10px rgba(0,0,0,0.5); backdrop-filter: blur(2px);">
-                <div style="width: 18px; height: 18px;">${iconDef.svg}</div>
+            html: `<div style="background-color: #ffffff; width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; border: 3px solid ${marker.color}; color: ${marker.color}; box-shadow: 0 4px 10px rgba(0,0,0,0.5); transform: rotate(45deg);">
+                <div style="width: 20px; height: 20px; transform: rotate(-45deg); display: flex; align-items: center; justify-content: center;">${iconDef.svg}</div>
             </div>`,
             className: 'personal-marker-icon',
-            iconSize: [32, 32],
-            iconAnchor: [16, 16]
+            iconSize: [34, 34],
+            iconAnchor: [17, 17]
         });
     };
 
