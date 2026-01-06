@@ -2,7 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { MapPin, Navigation, Link as LinkIcon } from 'lucide-react';
 import { supabase } from '@/lib/mySupabaseClient';
 
-const MapPopup = ({ marker, tags }) => {
+const MapPopup = ({ marker, tags, keys = [] }) => {
+
+    const requiredKeyId = marker.required_key_id;
+    const isLocked = marker.requires_key;
+    const requiredKeyName = isLocked && requiredKeyId ? keys.find(k => k.id === requiredKeyId)?.name : (isLocked ? 'Unknown Key' : null);
 
     const infectedColors = {
         high: '#ef4444',   // red-500
@@ -53,6 +57,16 @@ const MapPopup = ({ marker, tags }) => {
                 {/* Title (if no image) */}
                 {!hasImage && (
                     <h3 className="text-xl font-bold mb-2 text-white">{marker.title}</h3>
+                )}
+
+                {isLocked && (
+                    <div className="mb-3 px-3 py-2 bg-amber-500/10 border border-amber-500/30 rounded-lg flex items-center gap-2">
+                        <div className="text-amber-500">🔐</div>
+                        <div>
+                            <span className="block text-xs font-bold text-amber-500 uppercase tracking-wider">Locked Area</span>
+                            <span className="text-sm text-amber-200">Requires: <span className="font-semibold text-white">{requiredKeyName}</span></span>
+                        </div>
+                    </div>
                 )}
 
                 {/* Description */}

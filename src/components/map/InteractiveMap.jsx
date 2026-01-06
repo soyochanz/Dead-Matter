@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents, LayersControl, Circle, ZoomControl } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents, LayersControl, Circle, ZoomControl, Polyline } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -9,7 +9,8 @@ import MapPopup from './MapPopup';
 import MapFilters from './MapFilters';
 import MapSearch from './MapSearch';
 import GroupManager from './GroupManager';
-import { Loader2, Menu } from 'lucide-react';
+import { Loader2, Menu, X, Compass, ChevronLeft, ChevronRight } from 'lucide-react';
+import { personalIcons, personalColors, mapIcons } from '@/utils/mapIcons';
 
 // Fix for default Leaflet icons
 delete L.Icon.Default.prototype._getIconUrl;
@@ -30,6 +31,31 @@ const createCustomIcon = (url, size = [30, 30], className = 'precise-icon') => {
     });
 };
 // ... (keep createDivIcon, createClusterIcon) ...
+
+// --- TIPS CONSTANT ---
+const MAP_TIPS = [
+    {
+        id: 'loot',
+        icon: '⚠️',
+        title: 'Loot Color Info',
+        text: 'The marker color represents the <strong>primary</strong> loot type in that area. However, fully exploring a zone may reveal additional loot categories mixed in.',
+        theme: 'yellow'
+    },
+    {
+        id: 'locked',
+        icon: '🔐',
+        title: 'Locked Zones',
+        text: 'Some high-value areas require a specific key to enter. These are marked with a <strong>Gold Key Badge</strong> on the map pin.',
+        theme: 'amber'
+    },
+    {
+        id: 'groups',
+        icon: '👥',
+        title: 'Groups & Sharing',
+        text: 'Create groups to share marker locations with your friends! Use the "Groups" panel on the left to manage your squad.',
+        theme: 'blue'
+    }
+];
 
 // --- Subcomponents for Map Logic ---
 
@@ -69,65 +95,25 @@ const ClickHelper = ({ setClickedCoords, adminMode, onMapClick, onContextMenu })
 };
 
 // --- Personal Markers Config ---
-const personalIcons = {
-    // Basics
-    star: { label: 'Interest', svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>' },
-    home: { label: 'Base', svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>' },
-    flag: { label: 'Rally', svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/></svg>' },
-    map: { label: 'Location', svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg>' },
 
-    // Combat
-    skull: { label: 'Danger', svg: '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="9" r="2"/><circle cx="15" cy="9" r="2"/><path d="M12 2C7.58 2 4 5.58 4 10c0 2.42 1.09 4.6 2.82 6.09L6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2l-.82-2.91C18.91 14.6 20 12.42 20 10c0-4.42-3.58-8-8-8zm-3 8c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm6 0c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm.5 4H8.5v-1h7v1z"/></svg>' },
-    sword: { label: 'Attack', svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14h-2v-4H6v-2h4V7h2v4h4v2h-4v4z"/></svg>' }, // Crosshair/Target style
-    shield: { label: 'Defense', svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>' },
-    target: { label: 'Target', svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-4-8c0 2.21 1.79 4 4 4s4-1.79 4-4-1.79-4-4-4-4 1.79-4 4z"/></svg>' },
 
-    // Resources
-    loot: { label: 'Loot', svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 12h3v8h6v-6h2v6h6v-8h3L12 2z"/></svg>' }, // Diamond/Gem shape is better: M12 2l-9.5 5.5 3 13.5h13l3-13.5L12 2zm0 2.2l6.5 3.8h-13L12 4.2z
-    car: { label: 'Vehicle', svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/></svg>' },
-    gas: { label: 'Fuel', svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.77 7.23l.01-.01-3.72-3.72L15 4.56l2.11 2.11c-.94.36-1.61 1.26-1.61 2.33a2.5 2.5 0 002.5 2.5c.36 0 .69-.08 1-.21v7.21c0 .55-.45 1-1 1s-1-.45-1-1V14c0-1.1-.9-2-2-2h-1V5c0-1.1-.9-2-2-2H6c-1.1 0-2 .9-2 2v16h10v-7.5h1.5v5c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V9c0-.69-.28-1.32-.73-1.77z"/></svg>' },
-    medical: { label: 'Meds', svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-8.5 13h-1v-2.5H7v-1h2.5V10h1v2.5H13v1h-2.5V16z"/></svg>' }, // First aid cross similar
-    food: { label: 'Food', svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97V22h2.5v-9.03C11.34 12.84 13 11.12 13 9V2h-2v7zm5-3v8h2.5v8H21V2c-2.76 0-5 2.24-5 4z"/></svg>' },
-    water: { label: 'Water', svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c-5.33 4.55-8 8.48-8 11.8 0 4.98 3.8 8.2 8 8.2s8-3.22 8-8.2c0-3.32-2.67-7.25-8-11.8zm0 18c-3.31 0-6-2.63-6-6.2 0-2.42 1.94-5.32 5-8.49l1-1.02 1 1.02c3.06 3.17 5 6.07 5 8.49 0 3.57-2.69 6.2-6 6.2z"/></svg>' },
-
-    // Misc
-    ammo: { label: 'Ammo', svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 2h10v6l-5 5-5-5zM7 22l3.5-12h3l3.5 12z"/></svg>' }, // Rough bullet shape
-    chat: { label: 'Note', svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>' }
-};
-
-const personalColors = [
-    '#ef4444', // Red
-    '#f97316', // Orange
-    '#f59e0b', // Amber
-    '#eab308', // Yellow
-    '#84cc16', // Lime
-    '#22c55e', // Green
-    '#10b981', // Emerald
-    '#14b8a6', // Teal
-    '#06b6d4', // Cyan
-    '#3b82f6', // Blue
-    '#6366f1', // Indigo
-    '#8b5cf6', // Violet
-    '#a855f7', // Purple
-    '#d946ef', // Fuchsia
-    '#ec4899', // Pink
-    '#f43f5e', // Rose
-    '#ffffff', // White
-    '#94a3b8'  // Slate
-];
-
-const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMarkerClick, refreshTrigger = 0, markers: propMarkers, lootTags: propLootTags, categories: propCategories }) => {
+const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMarkerClick, refreshTrigger = 0, markers: propMarkers, lootTags: propLootTags, categories: propCategories, keys: propKeys, missions: propMissions, manualPolylines = [] }) => {
     // Note: refreshTrigger increments after save, triggering re-fetch in hook
     const [internalRefresh, setInternalRefresh] = useState(0);
+    const [showTips, setShowTips] = useState(true);
+    const [currentTipIndex, setCurrentTipIndex] = useState(0);
+    const [isMissionMode, setIsMissionMode] = useState(false); // Mission Mode State
     const combinedRefresh = refreshTrigger + internalRefresh;
 
     // Disable internal fetching if markers are provided via props (Admin mode)
-    const { markers: hookMarkers, personalMarkers, groups, categories: hookCategories, lootTags: hookLootTags, loading: dataLoading, error: dataError } = useMapData(combinedRefresh, { enabled: !propMarkers });
+    const { markers: hookMarkers, personalMarkers, groups, keys: fetchedKeys, categories: hookCategories, lootTags: hookLootTags, missions: hookMissions, loading: dataLoading, error: dataError } = useMapData(combinedRefresh, { enabled: !propMarkers });
 
     // Use props if provided, otherwise fallback to hook
     const markers = propMarkers || hookMarkers;
-    const lootTags = propLootTags || hookLootTags;
-    const categories = propCategories || hookCategories;
+    const categories = propCategories || hookCategories || [];
+    const lootTags = propLootTags || hookLootTags || [];
+    const keys = propKeys || fetchedKeys || [];
+    const missions = propMissions || hookMissions || [];
     const [activeFilters, setActiveFilters] = useState({});
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     // mouseCoords moved to isolated component to prevent re-renders
@@ -192,6 +178,19 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
 
         visibleMarkers.forEach(marker => {
             const category = categories.find(c => c.id === marker.category_id);
+            const catName = category?.name?.toLowerCase() || '';
+
+            // Mission Mode Filtering
+            if (isMissionMode) {
+                const isNPC = catName.includes('npc') || catName.includes('vendor') || catName === 'traders';
+                // Check for 'zones' (meta) or significant landmarks if needed. User said "nombres de las locations".
+                // Usually 'zones' category covers the text labels.
+                // Assuming 'zones' implies names.
+                const isZone = catName.includes('zone') || category?.group_name === 'meta';
+
+                if (!isNPC && !isZone) return; // Skip everything else
+            }
+
             const isLoot = (marker.title.toLowerCase().includes('loot') || category?.name.toLowerCase().includes('loot'));
             const groupName = category?.group_name;
 
@@ -209,35 +208,77 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
         });
 
         return grouped;
-    }, [visibleMarkers, categories]);
+    }, [visibleMarkers, categories, isMissionMode]);
 
     const getIconForMarker = (marker) => {
-        // Find category
         const category = categories.find(c => c.id === marker.category_id);
-        const isLoot = (marker.title.toLowerCase().includes('loot') || category?.name.toLowerCase().includes('loot'));
+        const catName = category?.name?.toLowerCase() || '';
+        const isLoot = (marker.title.toLowerCase().includes('loot') || catName.includes('loot'));
+        const isLocked = marker.requires_key || ['federal stockpile bunker'].some(k => marker.title?.toLowerCase().includes(k));
 
-        // Custom Black Icons for Vehicles
-        if (category?.name === 'Vehicles') {
-            const carSvg = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/></svg>`;
+        // Helper 3: Small Circular Icon (Water, Keys)
+        const createCircleIcon = (content, color) => {
+            const size = 24;
             return L.divIcon({
-                html: `<div style="background-color: #0f172aa6; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid #f97316; color: #f97316; box-shadow: 0 0 12px rgba(249, 115, 22, 0.5); backdrop-filter: blur(2px);">
-                    <div style="width: 18px; height: 18px;">${carSvg}</div>
+                html: `<div style="background-color: ${color}; width: ${size}px; height: ${size}px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+                    <div style="width: 14px; height: 14px; color: white;">${content}</div>
                 </div>`,
-                className: 'vehicle-marker',
-                iconSize: [32, 32],
-                iconAnchor: [16, 16]
+                className: 'circle-marker',
+                iconSize: [size, size],
+                iconAnchor: [size / 2, size / 2]
             });
-        }
+        };
 
-        // Removed hardcoded Trailers logic to use DB icon
+        // Helper 1: Pin Style (Glass Teardrop)
+        const createPinIcon = (content, color, locked = false) => {
+            const badge = locked ? `<div style="position: absolute; top: -5px; right: -5px; width: 15px; height: 15px; background: #fbbf24; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid #1a1a1a; box-shadow: 0 2px 4px rgba(0,0,0,0.5); z-index: 10; color: #1a1a1a;">
+                <svg viewBox="0 0 24 24" fill="currentColor" style="width: 10px; height: 10px;"><path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
+            </div>` : '';
 
-        if (category?.group_name === 'military' && isLoot) return createDivIcon('red-icon');
-        if (category?.group_name === 'industrial' && isLoot) return createDivIcon('orange-icon');
-        if (category?.group_name === 'civilian' && isLoot) return createDivIcon('green-icon');
-        if (category?.group_name === 'medical' && isLoot) return createDivIcon('purple-icon');
+            return L.divIcon({
+                html: `<div style="position: relative;">
+                    <div style="background-color: #0f172aa6; width: 32px; height: 32px; border-radius: 50% 50% 50% 0; display: flex; align-items: center; justify-content: center; border: 2px solid ${color}; color: ${color}; box-shadow: 0 0 12px ${color}80; backdrop-filter: blur(2px); transform: rotate(-45deg);">
+                        <div style="width: 18px; height: 18px; transform: rotate(45deg); display: flex; align-items: center; justify-content: center;">${content}</div>
+                    </div>
+                    ${badge}
+                </div>`,
+                className: 'pin-marker',
+                iconSize: [32, 32],
+                iconAnchor: [16, 42]
+            });
+        };
 
-        if (category?.name === 'Zones (Major)' || category?.name === 'Zones (Minor)') {
-            const isMinor = category.name === 'Zones (Minor)';
+        // Helper 2: No Border Style (NPCs - Transparent)
+        const createNoBorderIcon = (content, color) => {
+            return L.divIcon({
+                html: `<div style="width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; color: ${color}; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));">
+                    <div style="width: 30px; height: 30px;">${content}</div>
+                </div>`,
+                className: 'npc-marker',
+                iconSize: [30, 30],
+                iconAnchor: [15, 30]
+            });
+        };
+
+        // Helper 3: Dot Style (Loot)
+        const createDotIcon = (color) => {
+            return L.divIcon({
+                html: `<div style="width: 12px; height: 12px; background-color: ${color}; border-radius: 50%; box-shadow: 0 0 0 1px rgba(0,0,0,0.5), 0 2px 4px rgba(0,0,0,0.3);"></div>`,
+                className: 'loot-dot',
+                iconSize: [12, 12],
+                iconAnchor: [6, 6]
+            });
+        };
+
+        // 1. Loot (Colored Dots)
+        if (category?.group_name === 'military' && isLoot) return createDotIcon('#ef4444');
+        if (category?.group_name === 'industrial' && isLoot) return createDotIcon('#f97316');
+        if (category?.group_name === 'civilian' && isLoot) return createDotIcon('#22c55e');
+        if (category?.group_name === 'medical' && isLoot) return createDotIcon('#ec4899');
+
+        // 2. Zones (Unchanged)
+        if (catName.includes('zones')) {
+            const isMinor = catName.includes('minor');
             return L.divIcon({
                 className: `zone-label ${isMinor ? 'zone-minor' : 'zone-major'}`,
                 html: `<span>${marker.title}</span>`,
@@ -246,21 +287,72 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
             });
         }
 
-        const iconUrl = category?.icon_url;
+        // 3. Orange Group (Factory, Hangar)
+        if (catName.includes('factory')) return createPinIcon(mapIcons.factory, '#f97316');
+        if (catName.includes('hangar')) return createPinIcon(mapIcons.hangar, '#f97316');
 
-        if (iconUrl) {
-            let size = [30, 30];
-            let extraClass = 'precise-icon';
-            if (category.group_name === 'landmarks') size = [37, 37];
-            if (['barracks', 'hangar', 'firestation'].some(k => marker.title.toLowerCase().includes(k))) size = [22, 22];
+        // 4. Green Group
+        if (catName.includes('bunker') && catName.includes('civilian')) return createPinIcon(mapIcons.bunker, '#22c55e');
+        if (catName.includes('deer stand')) return createPinIcon(mapIcons.tree, '#22c55e');
+        if (catName.includes('firestation')) return createPinIcon(mapIcons.fire, '#22c55e');
+        if (catName.includes('gas station')) return createPinIcon(personalIcons.gas.svg, '#22c55e');
+        if (catName.includes('golf')) return createPinIcon(mapIcons.golf, '#22c55e');
+        if (catName.includes('school')) return createPinIcon(mapIcons.school, '#22c55e');
 
-            // Invert Trailers to white (assuming icon is black)
-            if (category?.name === 'Trailers') {
-                extraClass = 'precise-icon invert';
-            }
+        // 5. Pink Group (Hospital, Nera Tent)
+        if (catName.includes('hospital')) return createPinIcon(mapIcons.hospital, '#ec4899');
+        if (catName.includes('nera tent')) return createPinIcon(mapIcons.tent, '#ec4899');
 
-            return createCustomIcon(iconUrl, size, extraClass);
+        // 6. Vehicles
+        if (catName === 'vehicles') {
+            const carSvg = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/></svg>`;
+            return createPinIcon(carSvg, '#3b82f6');
         }
+
+        // 7. Trailers
+        if (catName === 'trailers') {
+            const simpleTrailer = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 7h-8v8h8V7zm2-2h-8c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zM7 11H4v4h3v-4zm-3 6h3c.55 0 1-.45 1-1v-4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1z"/></svg>`;
+            return createPinIcon(simpleTrailer, '#3b82f6');
+        }
+
+        // 8. NPCs (No Border, White)
+        if (catName.includes('npc') || catName.includes('vendors') || catName === 'traders') {
+            return createNoBorderIcon(mapIcons.person, '#ffffff');
+        }
+
+        // 9. Special Circles (Water, Keys, Butane)
+        if (catName.includes('water') && !catName.includes('tower')) return createCircleIcon(personalIcons.water.svg, '#06b6d4'); // Cyan
+        if (catName.includes('key')) return createCircleIcon(mapIcons.key, '#eab308'); // Gold
+        if (catName.includes('butane') || catName.includes('propane') || catName.includes('fuel') || (catName.includes('gas') && !catName.includes('station'))) return createCircleIcon(mapIcons.propane, '#f97316'); // Orange
+
+        // 10. Red Group (Specific & Generic Military)
+        if (catName.includes('shooting range')) return createPinIcon(mapIcons.target, '#ef4444');
+        if (catName.includes('helicrash')) return createPinIcon(mapIcons.helicopter, '#ef4444');
+        if (catName.includes('military bunker')) return createPinIcon(mapIcons.bunker, '#ef4444', isLocked);
+        if (catName.includes('barracks')) return createPinIcon(mapIcons.barracks, '#ef4444');
+        if (catName.includes('military base')) return createPinIcon(mapIcons.helmet, '#ef4444');
+        if (catName.includes('camping tent')) return createPinIcon(mapIcons.tent, '#ef4444');
+
+        const redGroup = ['military'];
+        if (redGroup.some(k => catName.includes(k))) {
+            const iconUrl = category?.icon_url;
+            const content = iconUrl ? `<img src="${iconUrl}" style="width: 18px; height: 18px; filter: invert(1);" />` : personalIcons.skull.svg;
+            return createPinIcon(content, '#ef4444');
+        }
+
+        // 11. Landmarks
+        if (category?.group_name === 'landmarks') {
+            const iconUrl = category?.icon_url;
+            if (iconUrl) return createCustomIcon(iconUrl, [37, 37], 'precise-icon');
+        }
+
+        // 12. Fallback
+        const iconUrl = category?.icon_url;
+        if (iconUrl) {
+            const content = `<img src="${iconUrl}" style="width: 18px; height: 18px; filter: invert(1);" />`;
+            return createPinIcon(content, '#94a3b8');
+        }
+
         return new L.Icon.Default();
     };
 
@@ -272,6 +364,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
         if (colorClassName.includes('orange')) color = '#f5a623';
         if (colorClassName.includes('green')) color = '#7ee24a';
         if (colorClassName.includes('purple')) color = '#b860f0';
+        if (colorClassName.includes('pink')) color = '#ec4899';
 
         return L.divIcon({
             html: `<div style="background-color: ${color}; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.4);"></div>`,
@@ -489,6 +582,17 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                         <div className="flex-1">
                             <MapSearch markers={markers} categories={categories} onLocationSelect={setSelectedLocation} />
                         </div>
+
+                        {/* Mission Mode Button */}
+                        <button
+                            onClick={() => setIsMissionMode(!isMissionMode)}
+                            className={`flex items-center gap-2 px-3 py-2.5 rounded-xl font-semibold text-sm transition-all duration-300 border ${isMissionMode ? 'bg-amber-500 text-black border-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.4)]' : 'bg-white/5 text-gray-300 hover:bg-white/10 border-white/10'}`}
+                            title="Mission Mode"
+                        >
+                            <Compass className="w-4 h-4" />
+                            <span className="hidden sm:inline">Missions</span>
+                        </button>
+
                         <button onClick={() => setIsFilterOpen(!isFilterOpen)} className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm transition-all duration-300 ${isFilterOpen ? 'bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.3)]' : 'bg-white/5 text-white hover:bg-white/10 border border-white/10'}`}>
                             <Menu className="w-4 h-4" />
                             <span className="hidden sm:inline">Filters</span>
@@ -501,20 +605,13 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
             <div className="w-full h-full absolute inset-0 z-0">
                 <MapContainer center={[0.01221, 0.01914]} zoom={16} minZoom={17} maxZoom={20} style={{ height: '100%', width: '100%', background: '#1a1a1a' }} zoomControl={false}>
                     <ZoomControl position="bottomright" />
-                    <LayersControl position="topright">
-                        <LayersControl.BaseLayer checked name="Dead Matter Terrain">
-                            <TileLayer url="https://deadmatterdb.com/leaflet/{z}/{x}/{y}.webp" minZoom={0} maxZoom={20} tms={false} />
-                        </LayersControl.BaseLayer>
-                        <LayersControl.BaseLayer name="OpenStreetMap (Fallback)">
-                            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution='&copy; OpenStreetMap' />
-                        </LayersControl.BaseLayer>
-                    </LayersControl>
+                    <TileLayer url="https://deadmatterdb.com/leaflet/{z}/{x}/{y}.webp" minZoom={0} maxZoom={20} tms={false} />
 
                     <MouseCoordinatesDisplay />
                     <ZoomTracker />
                     <MapFlyTo location={selectedLocation} />
 
-                    {activeFilters['safe-zones'] && (
+                    {(activeFilters['safe-zones'] || isMissionMode) && (
                         <>
                             <Circle center={[0.01464, 0.00776]} pathOptions={{ color: '#10b981', fillColor: '#10b981', fillOpacity: 0.1 }} radius={40} />
                             <Circle center={[0.00560, 0.01299]} pathOptions={{ color: '#10b981', fillColor: '#10b981', fillOpacity: 0.1 }} radius={30} />
@@ -535,7 +632,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                             <Marker key={marker.id} position={[marker.lat, marker.lng]} icon={getIconForMarker(marker)} eventHandlers={{ click: (e) => { if (adminMode && onMarkerClick) { L.DomEvent.stopPropagation(e.originalEvent || e); onMarkerClick(marker); } } }}>
                                 {!adminMode && (
                                     <Popup closeButton={false} offset={[0, -10]}>
-                                        <MapPopup marker={marker} tags={lootTags.filter(t => t.marker_id === marker.id)} />
+                                        <MapPopup marker={marker} tags={lootTags.filter(t => t.marker_id === marker.id)} keys={keys} />
                                     </Popup>
                                 )}
                             </Marker>
@@ -554,7 +651,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                             <Marker key={marker.id} position={[marker.lat, marker.lng]} icon={getIconForMarker(marker)} eventHandlers={{ click: (e) => { if (adminMode && onMarkerClick) { L.DomEvent.stopPropagation(e.originalEvent || e); onMarkerClick(marker); } } }}>
                                 {!adminMode && (
                                     <Popup closeButton={false} offset={[0, -10]}>
-                                        <MapPopup marker={marker} tags={lootTags.filter(t => t.marker_id === marker.id)} />
+                                        <MapPopup marker={marker} tags={lootTags.filter(t => t.marker_id === marker.id)} keys={keys} />
                                     </Popup>
                                 )}
                             </Marker>
@@ -573,7 +670,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                             <Marker key={marker.id} position={[marker.lat, marker.lng]} icon={getIconForMarker(marker)} eventHandlers={{ click: (e) => { if (adminMode && onMarkerClick) { L.DomEvent.stopPropagation(e.originalEvent || e); onMarkerClick(marker); } } }}>
                                 {!adminMode && (
                                     <Popup closeButton={false} offset={[0, -10]}>
-                                        <MapPopup marker={marker} tags={lootTags.filter(t => t.marker_id === marker.id)} />
+                                        <MapPopup marker={marker} tags={lootTags.filter(t => t.marker_id === marker.id)} keys={keys} />
                                     </Popup>
                                 )}
                             </Marker>
@@ -592,7 +689,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                             <Marker key={marker.id} position={[marker.lat, marker.lng]} icon={getIconForMarker(marker)} eventHandlers={{ click: (e) => { if (adminMode && onMarkerClick) { L.DomEvent.stopPropagation(e.originalEvent || e); onMarkerClick(marker); } } }}>
                                 {!adminMode && (
                                     <Popup closeButton={false} offset={[0, -10]}>
-                                        <MapPopup marker={marker} tags={lootTags.filter(t => t.marker_id === marker.id)} />
+                                        <MapPopup marker={marker} tags={lootTags.filter(t => t.marker_id === marker.id)} keys={keys} />
                                     </Popup>
                                 )}
                             </Marker>
@@ -619,6 +716,71 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                                     </Popup>
                                 )}
                             </Marker>
+                        );
+                    })}
+
+
+
+                    {/* MANUAL POLYLINES (ADMIN PREVIEW) */}
+                    {manualPolylines.map((positions, idx) => (
+                        <Polyline key={`manual-poly-${idx}`} positions={positions} pathOptions={{ color: '#f59e0b', dashArray: '5, 10', weight: 2 }} />
+                    ))}
+
+                    {/* MISSION MODE ENTITIES */}
+                    {(isMissionMode && !adminMode) && missions.map(mission => {
+                        const steps = mission.mission_steps || [];
+                        if (steps.length === 0) return null;
+                        const startStep = steps.sort((a, b) => a.step_order - b.step_order)[0];
+
+                        // Create path positions
+                        const pathPositions = steps.map(s => [s.lat, s.lng]);
+                        // If NPC is set, add NPC location to path? 
+                        // Check matching marker for NPC ID
+                        const npcMarker = markers?.find(m => m.id === mission.npc_id);
+                        if (npcMarker) pathPositions.push([npcMarker.lat, npcMarker.lng]);
+
+                        const missionIcon = L.divIcon({
+                            html: `<div style="background-color: #f59e0b; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 10px #f59e0b; border: 2px solid white;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+                                    </div>`,
+                            className: 'mission-icon-glow',
+                            iconSize: [32, 32],
+                            iconAnchor: [16, 16]
+                        });
+
+                        return (
+                            <React.Fragment key={mission.id}>
+                                <Marker position={[startStep.lat, startStep.lng]} icon={missionIcon}>
+                                    <Popup minWidth={300} maxWidth={300} className="mission-popup">
+                                        <div className="p-0">
+                                            <div className="bg-amber-600/20 p-3 rounded-t border-b border-amber-500/30">
+                                                <h3 className="font-bold text-amber-500 text-lg leading-none">{mission.title}</h3>
+                                                <p className="text-xs text-amber-200 mt-1">{mission.description}</p>
+                                            </div>
+                                            <div className="p-3 max-h-[300px] overflow-y-auto space-y-4">
+                                                {steps.map((step, i) => (
+                                                    <div key={step.id} className="relative pl-4 border-l-2 border-amber-500/30 pb-2 last:pb-0">
+                                                        <div className="absolute -left-[5px] top-0 w-2.5 h-2.5 rounded-full bg-amber-500"></div>
+                                                        <h4 className="font-bold text-white text-sm">Step {step.step_order}: {step.title}</h4>
+                                                        {step.image_url && (
+                                                            <img src={step.image_url} alt="Step" className="w-full h-32 object-cover rounded-md my-2 border border-white/10" />
+                                                        )}
+                                                        <p className="text-xs text-gray-300">{step.description}</p>
+                                                    </div>
+                                                ))}
+                                                {npcMarker && (
+                                                    <div className="relative pl-4 border-l-2 border-amber-500/30 pt-2">
+                                                        <div className="absolute -left-[5px] top-2 w-2.5 h-2.5 rounded-full bg-green-500"></div>
+                                                        <h4 className="font-bold text-green-400 text-sm">Final: Report to {npcMarker.title}</h4>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </Popup>
+                                </Marker>
+                                {/* Draw faint path */}
+                                <Polyline positions={pathPositions} pathOptions={{ color: '#f59e0b', weight: 2, opacity: 0.6, dashArray: '4' }} />
+                            </React.Fragment>
                         );
                     })}
 
@@ -727,6 +889,65 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                 {dataLoading && (
                     <div className="absolute inset-0 z-[5000] flex items-center justify-center bg-black/50 backdrop-blur-sm"><Loader2 className="w-12 h-12 text-red-500 animate-spin" /></div>
                 )}
+
+                {/* Tips Carousel */}
+                {!disableUI && showTips && (
+                    <div className="fixed top-24 left-1/2 -translate-x-1/2 z-[4000] bg-black/80 backdrop-blur-md border border-white/10 text-white px-4 py-3 rounded-xl shadow-2xl max-w-md w-[90%] animate-in fade-in slide-in-from-top-4">
+                        {(() => {
+                            const tip = MAP_TIPS[currentTipIndex];
+                            // Theme colors
+                            let titleColor = 'text-white';
+                            if (tip.theme === 'yellow') titleColor = 'text-yellow-400';
+                            if (tip.theme === 'amber') titleColor = 'text-amber-400';
+                            if (tip.theme === 'blue') titleColor = 'text-blue-400';
+
+                            return (
+                                <div className="flex flex-col gap-2">
+                                    <div className="flex items-start gap-3">
+                                        <div className="text-xl mt-0.5 shrink-0">{tip.icon}</div>
+                                        <div className="flex-1">
+                                            <div className="flex justify-between items-start">
+                                                <strong className={`block text-sm mb-1 ${titleColor}`}>{tip.title}</strong>
+                                                <button onClick={() => setShowTips(false)} className="text-white/30 hover:text-white transition-colors p-1 -mt-1 -mr-1">
+                                                    <X size={14} />
+                                                </button>
+                                            </div>
+                                            <p className="text-xs text-gray-300 leading-relaxed" dangerouslySetInnerHTML={{ __html: tip.text }} />
+                                        </div>
+                                    </div>
+
+                                    {/* Navigation Dots & Arrows */}
+                                    <div className="flex items-center justify-between mt-1 pt-2 border-t border-white/5">
+                                        <button
+                                            onClick={() => setCurrentTipIndex(prev => prev === 0 ? MAP_TIPS.length - 1 : prev - 1)}
+                                            className="p-1 hover:bg-white/10 rounded-full transition-colors text-gray-400 hover:text-white"
+                                        >
+                                            <ChevronLeft size={16} />
+                                        </button>
+
+                                        <div className="flex gap-1.5">
+                                            {MAP_TIPS.map((_, idx) => (
+                                                <div
+                                                    key={idx}
+                                                    className={`w-1.5 h-1.5 rounded-full transition-all ${idx === currentTipIndex ? 'bg-white scale-125' : 'bg-white/20'}`}
+                                                />
+                                            ))}
+                                        </div>
+
+                                        <button
+                                            onClick={() => setCurrentTipIndex(prev => prev === MAP_TIPS.length - 1 ? 0 : prev + 1)}
+                                            className="p-1 hover:bg-white/10 rounded-full transition-colors text-gray-400 hover:text-white"
+                                        >
+                                            <ChevronRight size={16} />
+                                        </button>
+                                    </div>
+                                </div>
+                            );
+                        })()}
+                    </div>
+                )}
+
+
 
                 {/* --- VERSION LABEL --- */}
                 {!disableUI && (

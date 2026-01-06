@@ -1,6 +1,7 @@
 import React from 'react';
 import { X, Filter, ChevronDown, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { personalIcons, mapIcons } from '@/utils/mapIcons';
 
 const MapFilters = ({ categories, activeFilters, onToggleFilter, isOpen, onClose }) => {
 
@@ -24,7 +25,7 @@ const MapFilters = ({ categories, activeFilters, onToggleFilter, isOpen, onClose
     }, {});
 
     // Ordered groups
-    const orderedGroups = ['landmarks', 'military', 'industrial', 'civilian', 'medical', 'misc', 'meta', 'Other']
+    const orderedGroups = ['landmarks', 'military', 'industrial', 'civilian', 'medical', 'misc', 'Other']
         .filter(g => groupedCategories[g] && groupedCategories[g].length > 0);
 
     const handleGroupToggle = (group, isChecked) => {
@@ -83,6 +84,22 @@ const MapFilters = ({ categories, activeFilters, onToggleFilter, isOpen, onClose
                         </label>
                     </div>
 
+                    {/* Zones / Towns Toggle */}
+                    <div className="flex items-center justify-between p-4 bg-amber-500/10 border border-amber-500/20 rounded-xl mt-2">
+                        <span className="flex items-center gap-3 font-semibold text-amber-400">
+                            📍 Zones / Towns
+                        </span>
+                        <label className="relative inline-flex items-center cursor-pointer">
+                            <input
+                                type="checkbox"
+                                className="sr-only peer"
+                                checked={isGroupChecked('meta')}
+                                onChange={(e) => handleGroupToggle('meta', e.target.checked)}
+                            />
+                            <div className="w-11 h-6 bg-neutral-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500"></div>
+                        </label>
+                    </div>
+
                     {/* Personal Markers Toggle */}
                     <div className="flex items-center justify-between p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl">
                         <span className="flex items-center gap-3 font-semibold text-blue-400">
@@ -102,7 +119,30 @@ const MapFilters = ({ categories, activeFilters, onToggleFilter, isOpen, onClose
                     {orderedGroups.map(group => {
                         const meta = groupMetadata[group] || { label: group, icon: '📍', color: 'text-white' };
                         const allChecked = isGroupChecked(group);
-                        const cats = groupedCategories[group].sort((a, b) => a.name.localeCompare(b.name));
+                        // Sort: Loot at bottom, alphabetical otherwise
+                        let cats = groupedCategories[group] || [];
+                        cats = [...cats].sort((a, b) => {
+                            const aLoot = a.name.toLowerCase().includes('loot');
+                            const bLoot = b.name.toLowerCase().includes('loot');
+                            if (aLoot && !bLoot) return 1;
+                            if (!aLoot && bLoot) return -1;
+                            return a.name.localeCompare(b.name);
+                        });
+
+                        // Special rendering list (for Civilian Resources)
+                        let renderItems = cats;
+                        if (group === 'civilian') {
+                            const resources = cats.filter(c => {
+                                const n = c.name.toLowerCase();
+                                return (n.includes('water') || n.includes('gas') || n.includes('fuel') || n.includes('butane') || n.includes('propane')) && !n.includes('station');
+                            });
+                            const others = cats.filter(c => !resources.includes(c));
+                            renderItems = [...others];
+                            if (resources.length > 0) {
+                                renderItems.push({ isHeader: true, label: 'Resources' });
+                                renderItems.push(...resources);
+                            }
+                        }
 
                         return (
                             <div key={group} className="space-y-3">
@@ -119,34 +159,112 @@ const MapFilters = ({ categories, activeFilters, onToggleFilter, isOpen, onClose
                                 </div>
 
                                 <div className="grid grid-cols-1 gap-2">
-                                    {cats.map(cat => (
-                                        <label key={cat.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 cursor-pointer group transition-colors select-none">
-                                            <div className="relative flex items-center justify-center">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={!!activeFilters[cat.id]}
-                                                    onChange={(e) => onToggleFilter(cat.id, e.target.checked)}
-                                                    className="appearance-none w-5 h-5 rounded border border-neutral-600 bg-neutral-800 checked:bg-red-600 checked:border-red-600 transition-all cursor-pointer"
-                                                />
-                                                <Check size={12} className={`absolute text-white pointer-events-none transition-opacity ${activeFilters[cat.id] ? 'opacity-100' : 'opacity-0'}`} />
-                                            </div>
-
-                                            {cat.icon_url && (
-                                                <div className="w-8 h-8 rounded-lg bg-neutral-800 flex items-center justify-center shrink-0 border border-white/5">
-                                                    <img
-                                                        src={cat.icon_url}
-                                                        alt={cat.name}
-                                                        // Only invert Landmarks
-                                                        className={`w-5 h-5 object-contain ${group === 'landmarks' ? 'invert brightness-0' : ''} ${cat.name === 'Trailers' ? 'invert' : ''}`}
+                                    {renderItems.map((item, idx) => {
+                                        if (item.isHeader) {
+                                            return <div key={`header-${idx}`} className="text-xs font-bold text-gray-500 uppercase mt-2 mb-1 pl-1">{item.label}</div>;
+                                        }
+                                        const cat = item;
+                                        return (
+                                            <label key={cat.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 cursor-pointer group transition-colors select-none">
+                                                <div className="relative flex items-center justify-center">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={!!activeFilters[cat.id]}
+                                                        onChange={(e) => onToggleFilter(cat.id, e.target.checked)}
+                                                        className="appearance-none w-5 h-5 rounded border border-neutral-600 bg-neutral-800 checked:bg-red-600 checked:border-red-600 transition-all cursor-pointer"
                                                     />
+                                                    <Check size={12} className={`absolute text-white pointer-events-none transition-opacity ${activeFilters[cat.id] ? 'opacity-100' : 'opacity-0'}`} />
                                                 </div>
-                                            )}
 
-                                            <span className={`text-sm font-medium transition-colors ${activeFilters[cat.id] ? 'text-gray-200' : 'text-gray-500'}`}>
-                                                {cat.name}
-                                            </span>
-                                        </label>
-                                    ))}
+                                                {(() => {
+                                                    const name = cat.name.toLowerCase();
+                                                    let bgColor = '#262626'; // Default neutral
+                                                    let iconContent = null;
+                                                    let isImg = false;
+                                                    let textColor = '#ffffff';
+
+                                                    // 1. Orange
+                                                    if (name.includes('factory')) { bgColor = '#f97316'; iconContent = mapIcons.factory; }
+                                                    else if (name.includes('hangar')) { bgColor = '#f97316'; iconContent = mapIcons.hangar; }
+
+                                                    // 2. Green
+                                                    else if (name.includes('bunker') && name.includes('civilian')) { bgColor = '#22c55e'; iconContent = mapIcons.bunker; }
+                                                    else if (name.includes('deer')) { bgColor = '#22c55e'; iconContent = mapIcons.tree; }
+                                                    else if (name.includes('fire')) { bgColor = '#22c55e'; iconContent = mapIcons.fire; }
+                                                    else if (name.includes('gas station')) { bgColor = '#22c55e'; iconContent = personalIcons.gas.svg; }
+                                                    else if (name.includes('golf')) { bgColor = '#22c55e'; iconContent = mapIcons.golf; }
+                                                    else if (name.includes('school')) { bgColor = '#22c55e'; iconContent = mapIcons.school; }
+
+                                                    // 3. Pink
+                                                    else if (name.includes('hospital')) { bgColor = '#ec4899'; iconContent = mapIcons.hospital; }
+                                                    else if (name.includes('nera tent')) { bgColor = '#ec4899'; iconContent = mapIcons.tent; }
+
+                                                    // 3.5 Gold (Keys)
+                                                    else if (name.includes('key')) { bgColor = '#eab308'; iconContent = mapIcons.key; }
+
+                                                    // 4. Blue
+                                                    else if (name === 'vehicles') { bgColor = '#3b82f6'; iconContent = mapIcons.car; }
+                                                    else if (name === 'trailers') { bgColor = '#3b82f6'; iconContent = mapIcons.trailer; }
+
+                                                    // 5. White/NPC
+                                                    else if (name.includes('npc') || name.includes('vendors') || name === 'traders') { bgColor = '#ffffff'; iconContent = mapIcons.person; textColor = '#000000'; }
+
+                                                    // 6. Cyan (Water) & Amber (Butane/Gas)
+                                                    else if (name.includes('water') && !name.includes('tower')) { bgColor = '#06b6d4'; iconContent = personalIcons.water.svg; }
+                                                    else if (name.includes('butane') || name.includes('propane') || name.includes('fuel') || (name.includes('gas') && !name.includes('station'))) { bgColor = '#f97316'; iconContent = mapIcons.propane; }
+
+                                                    // 7. Red Group
+                                                    else if (name.includes('shooting range')) { bgColor = '#ef4444'; iconContent = mapIcons.target; }
+                                                    else if (name.includes('helicrash')) { bgColor = '#ef4444'; iconContent = mapIcons.helicopter; }
+                                                    else if (name.includes('military bunker')) { bgColor = '#ef4444'; iconContent = mapIcons.bunker; }
+                                                    else if (name.includes('barracks')) { bgColor = '#ef4444'; iconContent = mapIcons.barracks; }
+                                                    else if (name.includes('military base')) { bgColor = '#ef4444'; iconContent = mapIcons.helmet; }
+                                                    else if (name.includes('camping tent')) { bgColor = '#ef4444'; iconContent = mapIcons.tent; }
+
+                                                    // 8. Loot
+                                                    else if (name.includes('loot') && name.includes('civilian')) { bgColor = '#22c55e'; iconContent = null; }
+                                                    else if (name.includes('loot') && name.includes('medical')) { bgColor = '#ec4899'; iconContent = mapIcons.medical; }
+                                                    else if (name.includes('loot') && name.includes('military')) { bgColor = '#ef4444'; iconContent = null; }
+                                                    else if (name.includes('loot') && name.includes('industrial')) { bgColor = '#f97316'; iconContent = mapIcons.loot; }
+
+                                                    // 9. Generic Red Checks
+                                                    else if (['military base', 'camping tents'].some(k => name.includes(k))) { bgColor = '#ef4444'; isImg = true; }
+
+                                                    // Fallback
+                                                    else { isImg = true; }
+
+                                                    if (isImg && cat.icon_url) {
+                                                        const hasColor = bgColor !== '#262626';
+                                                        return (
+                                                            <div className="w-8 h-8 rounded-md flex items-center justify-center shrink-0 border border-white/5 overflow-hidden" style={{ backgroundColor: hasColor ? bgColor : '#171717' }}>
+                                                                <img
+                                                                    src={cat.icon_url}
+                                                                    alt={cat.name}
+                                                                    className={`w-5 h-5 object-contain ${hasColor || group === 'landmarks' || cat.name === 'Trailers' ? 'invert brightness-0' : ''}`}
+                                                                />
+                                                            </div>
+                                                        );
+                                                    }
+
+                                                    if (iconContent) {
+                                                        return (
+                                                            <div className="w-8 h-8 rounded-md flex items-center justify-center shrink-0 border border-white/5 shadow-sm" style={{ backgroundColor: bgColor, color: textColor }}>
+                                                                <div style={{ width: '20px', height: '20px' }} dangerouslySetInnerHTML={{ __html: iconContent }} />
+                                                            </div>
+                                                        );
+                                                    }
+                                                    if (bgColor !== '#262626' && !isImg && !iconContent) {
+                                                        return <div className="w-8 h-8 rounded-md shrink-0 border border-white/5 shadow-sm" style={{ backgroundColor: bgColor }} />;
+                                                    }
+                                                    return <div className="w-8 h-8 rounded-md bg-neutral-800 shrink-0 border border-white/10" />;
+                                                })()}
+
+                                                <span className={`text-sm font-medium transition-colors ${activeFilters[cat.id] ? 'text-gray-200' : 'text-gray-500'}`}>
+                                                    {cat.name}
+                                                </span>
+                                            </label>
+                                        );
+                                    })}
                                 </div>
                             </div>
                         );

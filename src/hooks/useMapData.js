@@ -8,6 +8,8 @@ export const useMapData = (refreshTrigger = 0, { enabled = true } = {}) => {
 
     const [personalMarkers, setPersonalMarkers] = useState([]);
     const [groups, setGroups] = useState([]);
+    const [keys, setKeys] = useState([]);
+    const [missions, setMissions] = useState([]);
     const [loading, setLoading] = useState(enabled);
     const [error, setError] = useState(null);
 
@@ -42,12 +44,37 @@ export const useMapData = (refreshTrigger = 0, { enabled = true } = {}) => {
                 // We wrap these in try-catch blocks to prevent breaking the map if tables are missing or RLS fails.
 
                 let lootTagsData = [];
+                let keysData = [];
+                let missionsData = [];
                 try {
                     const { data, error } = await supabase.from('marker_loot_tags').select('*');
                     if (error) console.warn('Loot tags fetch warning:', error.message);
                     else lootTagsData = data;
                 } catch (e) {
                     console.warn('Loot tags fetch failed:', e);
+                }
+
+                try {
+                    const { data, error } = await supabase.from('keys').select('*');
+                    if (error) console.warn('Keys fetch warning:', error.message);
+                    else keysData = data;
+                } catch (e) {
+                    console.warn('Keys fetch failed:', e);
+                }
+
+                try {
+                    const { data, error } = await supabase
+                        .from('missions')
+                        .select(`
+                            *,
+                            mission_steps (*)
+                        `)
+                        .order('created_at', { ascending: false });
+
+                    if (error) console.warn('Missions warning:', error.message);
+                    else missionsData = data;
+                } catch (e) {
+                    console.warn('Missions fetch failed:', e);
                 }
 
 
@@ -73,6 +100,8 @@ export const useMapData = (refreshTrigger = 0, { enabled = true } = {}) => {
                 setLootTags(lootTagsData || []);
                 setPersonalMarkers(userMarkersData || []);
                 setGroups(userGroupsData || []);
+                setKeys(keysData || []);
+                setMissions(missionsData || []);
             } catch (err) {
                 console.error('Error fetching map data:', err);
                 setError(err.message);
@@ -91,7 +120,11 @@ export const useMapData = (refreshTrigger = 0, { enabled = true } = {}) => {
 
         personalMarkers,
         groups,
+        keys,
+        missions,
         loading,
         error
     };
 };
+// End of file
+
