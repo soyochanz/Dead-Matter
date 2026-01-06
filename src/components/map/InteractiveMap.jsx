@@ -384,14 +384,35 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
 
     const getPersonalIcon = (marker) => {
         const iconDef = personalIcons[marker.icon_name] || personalIcons.star;
-        // REDESIGN: Solid White Rounded Square (Squircle) to distinguish from Pins (Teardrop) and Loot (Dots)
+        // REDESIGN: "Glass Jewel" - Elegant, Dark, Frosted Diamond with Glowing Border
         return L.divIcon({
-            html: `<div style="background-color: #ffffff; width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; border: 3px solid ${marker.color}; color: ${marker.color}; box-shadow: 0 4px 10px rgba(0,0,0,0.5); transform: rotate(45deg);">
-                <div style="width: 20px; height: 20px; transform: rotate(-45deg); display: flex; align-items: center; justify-content: center;">${iconDef.svg}</div>
+            html: `<div style="
+                background-color: rgba(15, 23, 42, 0.6);
+                width: 36px;
+                height: 36px;
+                border-radius: 6px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: 2px solid ${marker.color};
+                color: ${marker.color};
+                box-shadow: 0 0 15px ${marker.color}80, inset 0 0 10px ${marker.color}20;
+                backdrop-filter: blur(4px);
+                transform: rotate(45deg);
+            ">
+                <div style="
+                    width: 22px;
+                    height: 22px;
+                    transform: rotate(-45deg);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    filter: drop-shadow(0 0 2px rgba(255,255,255,0.5));
+                ">${iconDef.svg}</div>
             </div>`,
-            className: 'personal-marker-icon',
-            iconSize: [34, 34],
-            iconAnchor: [17, 17]
+            className: 'personal-marker-icon', // Ensure CSS doesn't override transformation
+            iconSize: [36, 36],
+            iconAnchor: [18, 18]
         });
     };
 
