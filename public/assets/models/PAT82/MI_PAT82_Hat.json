@@ -1,0 +1,38 @@
+{
+  "Textures": {
+    "PM_Diffuse": "deadmatter/Content/DM_Characters/Textures/Clothing/PAT82/T_pat82_hat_BaseColor.T_pat82_hat_BaseColor",
+    "Albedo": "deadmatter/Content/DM_Characters/Textures/Clothing/PAT82/T_pat82_hat_BaseColor.T_pat82_hat_BaseColor",
+    "Anisotropy": "deadmatter/Content/DEV_TEMP/Dusty/DM_Weapons/Materials/melee/baseball_bat/materials/base/textures/white.white",
+    "white": "deadmatter/Content/DEV_TEMP/Dusty/DM_Weapons/Materials/melee/baseball_bat/materials/base/textures/white.white",
+    "Mask": "deadmatter/Content/DM_Characters/Textures/Clothing/PAT82/T_pat82_hat_OcclusionRoughnessMetallic.T_pat82_hat_OcclusionRoughnessMetallic",
+    "T_pat82_hat_OcclusionRoughnessMetallic": "deadmatter/Content/DM_Characters/Textures/Clothing/PAT82/T_pat82_hat_OcclusionRoughnessMetallic.T_pat82_hat_OcclusionRoughnessMetallic",
+    "PM_Normals": "deadmatter/Content/DM_Characters/Textures/Clothing/PAT82/T_pat82_hat_Normal.T_pat82_hat_Normal",
+    "Normal": "deadmatter/Content/DM_Characters/Textures/Clothing/PAT82/T_pat82_hat_Normal.T_pat82_hat_Normal"
+  },
+  "Parameters": {
+    "BlendMode": 0,
+    "ShadingModel": 0,
+    "Colors": {},
+    "Scalars": {
+      "normal adjust": 1.5,
+      "RefractionDepthBias": 0.0
+    },
+    "Switches": {
+      "isCotton": true,
+      "isORM": true,
+      "sRGBcorrect": true
+    },
+    "Properties": {
+      "bHasStaticPermutationResource": true,
+      "BasePropertyOverrides": {
+        "OpacityMaskClipValue": 0.3333
+      }
+    },
+    "HasTopDiffuse": true,
+    "HasTopNormals": true,
+    "HasTopSpecularMasks": false,
+    "HasTopEmissive": false,
+    "IsTranslucent": false,
+    "IsNull": false
+  }
+}

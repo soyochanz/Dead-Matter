@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Target, Zap, Shield, Gem, Crosshair, Grip, Puzzle, Wind, Loader2, Box, Ban, DollarSign, Tag, Ruler, Weight, Swords, TrendingUp, Hand, Clock, Lightbulb as Bolt, SlidersHorizontal, Volume2 } from 'lucide-react';
+import { X, Target, Zap, Shield, Gem, Crosshair, Grip, Puzzle, Wind, Loader2, Box, Ban, DollarSign, Tag, Ruler, Weight, Swords, TrendingUp, Hand, Clock, Lightbulb as Bolt, SlidersHorizontal, Volume2, ArrowRight } from 'lucide-react';
 import { DndContext, useDraggable, useDroppable, DragOverlay } from '@dnd-kit/core';
 import { supabase } from '@/lib/mySupabaseClient';
 import * as LucideIcons from 'lucide-react';
@@ -81,6 +81,7 @@ const SimpleStat = ({ icon: Icon, label, value, unit, onClick, className = "", v
 );
 
 const AccessorySlot = ({ id, type, equippedAccessory, onRemove, isCompatibleDrop, activeId }) => {
+    const { t } = useTranslation();
     const { isOver, setNodeRef } = useDroppable({ id, data: { type } });
     const rarityColor = equippedAccessory?.rarity?.color || 'transparent';
 
@@ -152,80 +153,251 @@ const DraggableAccessory = ({ accessory }) => {
     );
 };
 
-const AmmoWeaponsModal = ({ ammo, onClose }) => {
+const AmmoWeaponsModal = ({ ammo: ammoName, onClose }) => {
     const [weapons, setWeapons] = useState([]);
+    const [ammoData, setAmmoData] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [viewType, setViewType] = useState('box'); // 'box' or 'bullet'
     const { t } = useTranslation();
 
     useEffect(() => {
-        const fetchWeapons = async () => {
+        const fetchData = async () => {
             setLoading(true);
-            const { data, error } = await supabase.from('weapons').select('id, name, image_url, subcategory:wiki_subcategories(name), rarity:rarities(color, name)').eq('ammo', ammo);
-            if (error) console.error(error); else setWeapons(data);
-            setLoading(false);
+            try {
+                // Fetch compatible weapons
+                const weaponsPromise = supabase
+                    .from('weapons')
+                    .select('id, name, image_url, subcategory:wiki_subcategories(name), rarity:rarities(color, name)')
+                    .eq('ammo', ammoName);
+
+                // Fetch ammo metadata
+                const ammoPromise = supabase
+                    .from('ammo_types')
+                    .select('*')
+                    .eq('name', ammoName)
+                    .single();
+
+                const [weaponsRes, ammoRes] = await Promise.all([weaponsPromise, ammoPromise]);
+
+                if (weaponsRes.data) setWeapons(weaponsRes.data);
+                if (ammoRes.data) {
+                    setAmmoData(ammoRes.data);
+                }
+            } catch (error) {
+                console.error("Error fetching ammo data:", error);
+            } finally {
+                setLoading(false);
+            }
         };
-        fetchWeapons();
-    }, [ammo]);
+        fetchData();
+    }, [ammoName]);
 
     return (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/95 backdrop-blur-3xl z-[70] flex items-center justify-center p-4" onClick={onClose}>
-            {/* Background Noise/Scanline Effect */}
             <div className="absolute inset-0 pointer-events-none opacity-5 mix-blend-overlay bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
 
-            <motion.div initial={{ scale: 0.9, y: 50, opacity: 0 }} animate={{ scale: 1, y: 0, opacity: 1 }} exit={{ scale: 0.9, y: 50, opacity: 0 }} transition={{ type: 'spring', damping: 25, stiffness: 200 }} className="bg-[#050505] border border-white/5 rounded-[2.5rem] w-full max-w-lg overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,1)] relative flex flex-col" onClick={e => e.stopPropagation()}>
+            <motion.div
+                initial={{ scale: 0.9, y: 50, opacity: 0 }}
+                animate={{ scale: 1, y: 0, opacity: 1 }}
+                exit={{ scale: 0.9, y: 50, opacity: 0 }}
+                transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                className="bg-[#050505] border border-white/5 rounded-[3rem] w-full max-w-6xl max-h-[90vh] overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,1)] relative flex flex-col"
+                onClick={e => e.stopPropagation()}
+            >
                 {/* Technical Grid Overlay */}
-                <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:30px_30px] pointer-events-none" />
+                <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
 
-                <div className="p-8 relative z-10">
-                    <div className="flex justify-between items-center mb-8">
-                        <div className="space-y-1">
-                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-600/50">{t('wiki.weapon.ballistic_registry')}</span>
-                            <h3 className="text-3xl font-black text-white uppercase tracking-tighter shrink-0">{t('wiki.weapon.compatible_with')} <span className="text-blue-500">{ammo}</span></h3>
+                <div className="p-8 md:p-12 relative z-10 overflow-y-auto custom-scrollbar">
+                    <div className="flex justify-between items-start mb-12">
+                        <div className="space-y-2">
+                            <div className="flex items-center gap-3">
+                                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-500">{t('wiki.weapon.ballistic_registry')}</span>
+                                <div className="h-px w-12 bg-blue-500/20" />
+                            </div>
+                            <h3 className="text-5xl font-black text-white uppercase tracking-tighter">
+                                {ammoName} <span className="text-blue-500 text-2xl ml-4 block md:inline font-mono opacity-50">CALIBRE MODULE</span>
+                            </h3>
                         </div>
-                        <button onClick={onClose} className="p-3 text-gray-500 hover:text-white transition-all bg-white/5 rounded-2xl border border-white/5"><X size={20} /></button>
+                        <button onClick={onClose} className="p-4 text-gray-500 hover:text-white transition-all bg-white/5 rounded-2xl border border-white/5 hover:bg-red-500/10 hover:text-red-500">
+                            <X size={24} />
+                        </button>
                     </div>
 
                     {loading ? (
-                        <div className="flex flex-col items-center justify-center py-20 gap-4">
-                            <Loader2 className="animate-spin text-blue-500 h-10 w-10" />
-                            <span className="text-[10px] font-black uppercase tracking-widest text-gray-500 text-center">{t('wiki.weapon.scanning_database')}</span>
-                        </div>
-                    ) : weapons.length > 0 ? (
-                        <div className="max-h-[50vh] overflow-y-auto pr-2 space-y-3 custom-scrollbar">
-                            {weapons.map(w => (
-                                <motion.div
-                                    key={w.id}
-                                    whileHover={{ x: 5 }}
-                                    className="flex items-center gap-5 bg-white/5 border border-white/5 p-4 rounded-2xl transition-all hover:bg-white/10 hover:border-blue-500/20 group cursor-default"
-                                >
-                                    <div className="w-24 h-16 rounded-xl bg-[#0a0a0c] border border-white/5 overflow-hidden flex-shrink-0 relative group-hover:border-blue-500/40 transition-colors p-2">
-                                        <div className="absolute inset-0 bg-blue-600/10 opacity-0 group-hover:opacity-100 transition-opacity" />
-                                        <img src={w.image_url} alt={w.name} className="w-full h-full object-contain relative z-10 drop-shadow-lg" />
-                                    </div>
-                                    <div className="flex-grow">
-                                        <div className="flex items-center gap-2 mb-1">
-                                            <span className="text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-500 border border-blue-500/20">
-                                                {w.rarity?.name || 'COMMON'}
-                                            </span>
-                                            <span className="text-[8px] font-black uppercase tracking-widest text-gray-600">
-                                                {w.subcategory?.name || 'Classified'}
-                                            </span>
-                                        </div>
-                                        <h4 className="font-black text-white uppercase tracking-tight group-hover:text-blue-500 transition-colors">{w.name}</h4>
-                                    </div>
-                                </motion.div>
-                            ))}
+                        <div className="flex flex-col items-center justify-center py-32 gap-6">
+                            <Loader2 className="animate-spin text-blue-500 h-16 w-16" />
+                            <span className="text-xs font-black uppercase tracking-[0.4em] text-gray-500 animate-pulse">{t('wiki.weapon.scanning_database')}</span>
                         </div>
                     ) : (
-                        <div className="text-center py-16 bg-white/5 rounded-3xl border border-dashed border-white/10">
-                            <p className="text-gray-500 text-sm font-bold uppercase tracking-widest">{t('wiki.weapon.no_ballistic_data')}</p>
-                            <p className="text-[10px] text-gray-600 mt-2 uppercase tracking-widest">{t('wiki.weapon.module_sync_unavailable')}</p>
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                            {/* Left - Visual / 3D */}
+                            <div className="lg:col-span-1 space-y-6">
+                                <div className="relative group/ammo aspect-square bg-[#0a0a0c] border border-white/5 rounded-[2.5rem] overflow-hidden shadow-inner flex items-center justify-center p-8">
+                                    <div className="absolute inset-0 bg-blue-500/5 blur-[100px] pointer-events-none" />
+
+                                    <div className="absolute top-6 left-6 z-20 flex gap-2">
+                                        <div className="flex bg-black/60 backdrop-blur-md rounded-xl p-1 border border-white/5">
+                                            <button
+                                                onClick={() => setViewType('box')}
+                                                className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${viewType === 'box' ? 'bg-blue-600 text-white shadow-[0_0_15px_rgba(37,99,235,0.4)]' : 'text-gray-500 hover:text-white'}`}
+                                            >
+                                                BOX
+                                            </button>
+                                            <button
+                                                onClick={() => setViewType('bullet')}
+                                                className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${viewType === 'bullet' ? 'bg-blue-600 text-white shadow-[0_0_15px_rgba(37,99,235,0.4)]' : 'text-gray-500 hover:text-white'}`}
+                                            >
+                                                BULLET
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    {(viewType === 'box' ? ammoData?.box_model_url : ammoData?.bullet_model_url) ? (
+                                        <model-viewer
+                                            src={viewType === 'box' ? ammoData.box_model_url : ammoData.bullet_model_url}
+                                            alt={ammoName}
+                                            auto-rotate
+                                            camera-controls
+                                            shadow-intensity="0.2"
+                                            shadow-softness="1"
+                                            exposure="1"
+                                            environment-image="neutral"
+                                            tone-mapping="neutral"
+                                            render-scale="2"
+                                            field-of-view="35deg"
+                                            interaction-prompt="none"
+                                            style={{ width: '100%', height: '100%', backgroundColor: 'transparent' }}
+                                            className="relative z-10"
+                                        />
+                                    ) : (
+                                        <div className="flex flex-col items-center justify-center text-gray-700 opacity-20 text-center">
+                                            <Box size={80} className="mb-4" />
+                                            <span className="text-[10px] font-black tracking-[0.3em] uppercase">3D MODEL UNAVAILABLE</span>
+                                        </div>
+                                    )}
+
+                                    <div className="absolute bottom-6 right-6 z-20">
+                                        <div className="flex items-center gap-2 bg-black/40 backdrop-blur-md px-4 py-2 rounded-xl border border-white/5">
+                                            <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse shadow-[0_0_10px_#3b82f6]" />
+                                            <span className="text-[10px] font-black font-mono text-gray-500 uppercase tracking-widest">3D VISUAL</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="bg-white/5 border border-white/5 p-8 rounded-[2rem] space-y-4">
+                                    <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-500/50 mb-6">{t('wiki.weapon.ballistic_notes')}</h4>
+                                    <p className="text-gray-400 text-sm leading-relaxed font-medium pl-4 border-l-2 border-blue-500/20">
+                                        {ammoData?.description || "No specific ballistic data found for this caliber in current records."}
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* Center - Variations */}
+                            <div className="lg:col-span-1 space-y-8">
+                                <div className="space-y-4">
+                                    <div className="flex items-center justify-between px-2">
+                                        <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">{t('wiki.weapon.ammo_variations')}</h4>
+                                        <span className="text-[10px] font-mono text-blue-500/40">{ammoData?.variations?.length || 0} RECORDS</span>
+                                    </div>
+
+                                    <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                                        {ammoData?.variations && ammoData.variations.length > 0 ? (
+                                            ammoData.variations.map((v, i) => (
+                                                <motion.div
+                                                    key={i}
+                                                    initial={{ opacity: 0, x: -10 }}
+                                                    animate={{ opacity: 1, x: 0 }}
+                                                    transition={{ delay: i * 0.1 }}
+                                                    className="bg-white/5 border border-white/5 p-5 rounded-[1.5rem] group hover:bg-white/10 hover:border-blue-500/20 transition-all cursor-default"
+                                                >
+                                                    <div className="flex items-center justify-between mb-3">
+                                                        <h5 className="font-black text-white uppercase tracking-tight group-hover:text-blue-500 transition-colors">{v.name}</h5>
+                                                        <div className="h-1.5 w-1.5 rounded-full bg-blue-500 shadow-[0_0_10px_#3b82f6]" />
+                                                    </div>
+                                                    <p className="text-[11px] text-gray-500 leading-relaxed mb-4 group-hover:text-gray-300 transition-colors">{v.description}</p>
+                                                    <div className="flex flex-wrap gap-2">
+                                                        {v.stat_benefit && (
+                                                            <span className="text-[8px] font-black uppercase tracking-widest px-2 py-1 rounded bg-green-500/10 text-green-500 border border-green-500/10">
+                                                                + {v.stat_benefit}
+                                                            </span>
+                                                        )}
+                                                        {v.stat_penalty && (
+                                                            <span className="text-[8px] font-black uppercase tracking-widest px-2 py-1 rounded bg-red-500/10 text-red-500 border border-red-500/10">
+                                                                - {v.stat_penalty}
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                </motion.div>
+                                            ))
+                                        ) : (
+                                            <div className="py-12 border border-dashed border-white/5 rounded-[2rem] flex flex-col items-center justify-center text-gray-600">
+                                                <Puzzle size={32} className="mb-2 opacity-20" />
+                                                <span className="text-[10px] font-black uppercase tracking-widest opacity-40">NO VARIATIONS REGISTERED</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Right - Compatible Weapons */}
+                            <div className="lg:col-span-1 space-y-8">
+                                <div className="space-y-4">
+                                    <div className="flex items-center justify-between px-2">
+                                        <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">{t('wiki.weapon.compatible_with')}</h4>
+                                        <span className="text-[10px] font-mono text-blue-500/40">{weapons.length} SYSTEMS</span>
+                                    </div>
+
+                                    <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                                        {weapons.length > 0 ? (
+                                            weapons.map((w, i) => (
+                                                <motion.div
+                                                    key={w.id}
+                                                    initial={{ opacity: 0, x: 10 }}
+                                                    animate={{ opacity: 1, x: 0 }}
+                                                    transition={{ delay: i * 0.05 }}
+                                                    whileHover={{ x: 5 }}
+                                                    className="flex items-center gap-4 bg-black/40 border border-white/5 p-4 rounded-2xl transition-all hover:bg-white/5 hover:border-blue-500/20 group cursor-default"
+                                                >
+                                                    <div className="w-20 h-14 rounded-xl bg-[#0a0a0c] border border-white/5 overflow-hidden flex-shrink-0 relative group-hover:border-blue-500/40 transition-colors p-2 shadow-inner">
+                                                        <div className="absolute inset-0 bg-blue-600/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                                        <img src={w.image_url} alt={w.name} className="w-full h-full object-contain relative z-10 drop-shadow-lg" />
+                                                    </div>
+                                                    <div className="flex-grow min-w-0">
+                                                        <div className="flex items-center gap-2 mb-1">
+                                                            <span className="text-[7px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-500 border border-blue-500/10">
+                                                                {w.rarity?.name || 'COMMON'}
+                                                            </span>
+                                                            <span className="text-[7px] font-black uppercase tracking-widest text-gray-600 truncate">
+                                                                {w.subcategory?.name || 'Classified'}
+                                                            </span>
+                                                        </div>
+                                                        <h4 className="font-extrabold text-xs text-white uppercase tracking-tight group-hover:text-blue-500 transition-colors truncate">{w.name}</h4>
+                                                    </div>
+                                                    <ArrowRight size={14} className="text-gray-800 group-hover:text-blue-500 transition-colors" />
+                                                </motion.div>
+                                            ))
+                                        ) : (
+                                            <div className="py-12 border border-dashed border-white/5 rounded-[2rem] flex flex-col items-center justify-center text-gray-600">
+                                                <Ban size={32} className="mb-2 opacity-20" />
+                                                <span className="text-[10px] font-black uppercase tracking-widest opacity-40">{t('wiki.weapon.no_ballistic_data')}</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     )}
                 </div>
 
                 {/* Bottom Accents */}
-                <div className="h-1 bg-gradient-to-r from-blue-600/0 via-blue-600 to-blue-600/0 opacity-30" />
+                <div className="h-2 bg-[#0a0a0c] border-t border-white/5 flex">
+                    <div className="w-1/3 h-full bg-blue-600" />
+                    <div className="w-2/3 h-full flex justify-between px-6">
+                        {[...Array(15)].map((_, i) => (
+                            <div key={i} className="w-px h-full bg-white/[0.03]" />
+                        ))}
+                    </div>
+                </div>
             </motion.div>
         </motion.div>
     )
@@ -240,6 +412,7 @@ const WeaponDetailModal = ({ weapon, onClose, onNpcSelect }) => {
     const [showAmmoModal, setShowAmmoModal] = useState(false);
     const [showNpcSellers, setShowNpcSellers] = useState(false);
 
+    const [viewMode, setViewMode] = useState('static'); // 'static' or '3d'
     const [audio] = useState(weapon.audio_url ? new Audio(weapon.audio_url) : null);
     const [isPlaying, setIsPlaying] = useState(false);
 
@@ -306,7 +479,7 @@ const WeaponDetailModal = ({ weapon, onClose, onNpcSelect }) => {
 
         const modified = Object.values(equipped).reduce((stats, accessory) => {
             if (!accessory) return stats;
-            const accessoryDetails = availableAttachments.find(a => a.accessories.id === accessory.id)?.accessories;
+            const accessoryDetails = availableAttachments.find(a => a.accessories?.id === accessory.id)?.accessories;
             if (!accessoryDetails) return stats;
             return {
                 ...stats,
@@ -335,14 +508,14 @@ const WeaponDetailModal = ({ weapon, onClose, onNpcSelect }) => {
         if (over && active.data.current?.accessory) {
             const { accessory } = active.data.current;
             const slotType = over.data.current?.type;
-            const isCompatible = availableAttachments.some(att => att.accessories.id === accessory.id && att.slot_type === slotType);
+            const isCompatible = availableAttachments.some(att => att.accessories?.id === accessory.id && att.slot_type === slotType);
             if (isCompatible) setEquipped(prev => ({ ...prev, [slotType]: accessory }));
         }
     };
 
     const handleRemoveAccessory = (slotType) => setEquipped(prev => { const newEquipped = { ...prev }; delete newEquipped[slotType]; return newEquipped; });
 
-    const activeAccessoryData = activeId ? availableAttachments.find(a => a.accessories.id === activeId) : null;
+    const activeAccessoryData = activeId ? availableAttachments.find(a => a.accessories?.id === activeId) : null;
     const activeAccessory = activeAccessoryData ? activeAccessoryData.accessories : null;
     const rarityColor = weapon.rarity?.color || 'transparent';
 
@@ -452,15 +625,20 @@ const WeaponDetailModal = ({ weapon, onClose, onNpcSelect }) => {
                                                 <Target size={120} className="text-white/5" />
                                             </div>
 
-                                            {hasModel ? (
+                                            {viewMode === '3d' && hasModel ? (
                                                 <model-viewer
                                                     src={weapon.model_url}
                                                     alt={weapon.name}
                                                     auto-rotate
                                                     camera-controls
-                                                    shadow-intensity="1"
-                                                    environment-image="neutral"
+                                                    shadow-intensity="0.2"
+                                                    shadow-softness="1"
                                                     exposure="1"
+                                                    environment-image="neutral"
+                                                    tone-mapping="neutral"
+                                                    render-scale="2"
+                                                    field-of-view="35deg"
+                                                    interaction-prompt="none"
                                                     style={{ width: '100%', height: '100%', backgroundColor: 'transparent' }}
                                                     className="relative z-10"
                                                 ></model-viewer>
@@ -475,13 +653,34 @@ const WeaponDetailModal = ({ weapon, onClose, onNpcSelect }) => {
                                                 />
                                             )}
                                         </div>
-                                        {/* Technical Label for Image/Model & Audio Button */}
+
+                                        {/* View Toggles & Technical Labels */}
                                         <div className="absolute bottom-6 right-8 left-8 flex items-center justify-between z-20">
-                                            <div className="flex items-center gap-2">
-                                                <div className="w-2 h-2 rounded-full bg-red-600 animate-pulse shadow-[0_0_10px_#ef4444]" />
-                                                <span className="text-[10px] font-black font-mono text-gray-500 uppercase tracking-widest">
-                                                    {hasModel ? t('wiki.weapon.3d_module_active') : t('wiki.weapon.visual_confirm')}
-                                                </span>
+                                            <div className="flex items-center gap-4">
+                                                {/* 2D/3D Toggle if model exists */}
+                                                {hasModel && (
+                                                    <div className="flex bg-black/40 backdrop-blur-md rounded-xl p-1 border border-white/5">
+                                                        <button
+                                                            onClick={() => setViewMode('static')}
+                                                            className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${viewMode === 'static' ? 'bg-red-600 text-white' : 'text-gray-500 hover:text-white'}`}
+                                                        >
+                                                            2D
+                                                        </button>
+                                                        <button
+                                                            onClick={() => setViewMode('3d')}
+                                                            className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${viewMode === '3d' ? 'bg-red-600 text-white shadow-[0_0_15px_rgba(220,38,38,0.5)]' : 'text-gray-500 hover:text-white'}`}
+                                                        >
+                                                            3D
+                                                        </button>
+                                                    </div>
+                                                )}
+
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-2 h-2 rounded-full bg-red-600 animate-pulse shadow-[0_0_10px_#ef4444]" />
+                                                    <span className="text-[10px] font-black font-mono text-gray-500 uppercase tracking-widest">
+                                                        {viewMode === '3d' ? "3D Visual" : t('wiki.weapon.visual_confirm')}
+                                                    </span>
+                                                </div>
                                             </div>
 
                                             {hasAudio && (
@@ -512,7 +711,7 @@ const WeaponDetailModal = ({ weapon, onClose, onNpcSelect }) => {
                                                         <span className="text-[8px] font-black uppercase tracking-widest">{t('wiki.weapon.no_mods_available')}</span>
                                                     </div>
                                                 )}
-                                                {availableAttachments.filter(att => !Object.values(equipped).some(eq => eq && eq.id === att.accessories.id)).map(att => <DraggableAccessory key={att.accessories.id} accessory={att.accessories} />)}
+                                                {availableAttachments.filter(att => att.accessories && !Object.values(equipped).some(eq => eq && eq.id === att.accessories.id)).map(att => <DraggableAccessory key={att.accessories.id} accessory={att.accessories} />)}
                                             </div>
                                             <p className="text-[8px] font-black uppercase tracking-widest text-center text-gray-600">{t('wiki.weapon.drag_instruction')}</p>
                                         </div>

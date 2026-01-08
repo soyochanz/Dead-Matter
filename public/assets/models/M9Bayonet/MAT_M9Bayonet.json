@@ -1,0 +1,42 @@
+{
+  "Textures": {
+    "PM_Diffuse": "deadmatter/Content/DEV_TEMP/Dusty/DM_Weapons/Materials/melee/m9bayonet/textures/melee_m9bayonet_a.melee_m9bayonet_a",
+    "BaseColor": "deadmatter/Content/DEV_TEMP/Dusty/DM_Weapons/Materials/melee/m9bayonet/textures/melee_m9bayonet_a.melee_m9bayonet_a",
+    "PM_Normals": "deadmatter/Content/DEV_TEMP/Dusty/DM_Weapons/Materials/melee/m9bayonet/textures/melee_m9bayonet_n.melee_m9bayonet_n",
+    "Normal": "deadmatter/Content/DEV_TEMP/Dusty/DM_Weapons/Materials/melee/m9bayonet/textures/melee_m9bayonet_n.melee_m9bayonet_n",
+    "R_AO_M_H": "deadmatter/Content/DEV_TEMP/Dusty/DM_Weapons/Materials/melee/m9bayonet/textures/melee_m9bayonet_r_ao_m.melee_m9bayonet_r_ao_m",
+    "melee_m9bayonet_r_ao_m": "deadmatter/Content/DEV_TEMP/Dusty/DM_Weapons/Materials/melee/m9bayonet/textures/melee_m9bayonet_r_ao_m.melee_m9bayonet_r_ao_m",
+    "RGB Color Mask": "deadmatter/Content/DEV_TEMP/Dusty/DM_Weapons/Materials/guns/mp5/textures/mp5a3_core_01_cm_c1_c2.mp5a3_core_01_cm_c1_c2",
+    "mp5a3_core_01_cm_c1_c2": "deadmatter/Content/DEV_TEMP/Dusty/DM_Weapons/Materials/guns/mp5/textures/mp5a3_core_01_cm_c1_c2.mp5a3_core_01_cm_c1_c2"
+  },
+  "Parameters": {
+    "BlendMode": 0,
+    "ShadingModel": 0,
+    "Colors": {
+      "Base Color Tint": {
+        "R": 1.0,
+        "G": 1.0,
+        "B": 1.0,
+        "A": 1.0,
+        "Hex": "FFFFFF"
+      }
+    },
+    "Scalars": {
+      "Metallic Amount": 2.5,
+      "Roughness Boost": -0.27619,
+      "RefractionDepthBias": 0.0
+    },
+    "Switches": {},
+    "Properties": {
+      "BasePropertyOverrides": {
+        "OpacityMaskClipValue": 0.3333
+      }
+    },
+    "HasTopDiffuse": true,
+    "HasTopNormals": true,
+    "HasTopSpecularMasks": false,
+    "HasTopEmissive": false,
+    "IsTranslucent": false,
+    "IsNull": false
+  }
+}

@@ -61,7 +61,40 @@ const CustomStatBar = ({ label, value, max, icon, color }) => {
 const GearDetailModal = ({ gear, onClose, onNpcSelect }) => {
     const { t } = useTranslation();
     const [showNpcSellers, setShowNpcSellers] = useState(false);
+    const [viewMode, setViewMode] = useState('static'); // 'static' or '3d'
+    const [audio] = useState(gear?.audio_url ? new Audio(gear.audio_url) : null);
+    const [isPlaying, setIsPlaying] = useState(false);
+
+    React.useEffect(() => {
+        if (audio) {
+            audio.onended = () => setIsPlaying(false);
+        }
+        return () => {
+            if (audio) {
+                audio.pause();
+                audio.src = '';
+            }
+        };
+    }, [audio]);
+
     if (!gear) return null;
+
+    const playAudio = (e) => {
+        e.stopPropagation();
+        if (audio) {
+            if (isPlaying) {
+                audio.pause();
+                audio.currentTime = 0;
+                setIsPlaying(false);
+            } else {
+                audio.play();
+                setIsPlaying(true);
+            }
+        }
+    };
+
+    const hasModel = !!gear.model_url;
+    const hasAudio = !!gear.audio_url;
 
     // Función para obtener gradiente basado en rareza
     const getRarityGradient = (rarityName) => {
@@ -125,14 +158,78 @@ const GearDetailModal = ({ gear, onClose, onNpcSelect }) => {
                                         {/* Rarity Glow */}
                                         <div className="absolute inset-0 opacity-10 blur-[80px] pointer-events-none" style={{ backgroundColor: rarityColor }} />
 
-                                        <motion.img
-                                            initial={{ y: 20, opacity: 0 }}
-                                            animate={{ y: 0, opacity: 1 }}
-                                            transition={{ delay: 0.2, duration: 0.8 }}
-                                            src={gear.image_url}
-                                            alt={gear.name}
-                                            className="max-h-full max-w-full object-contain relative z-10 drop-shadow-[0_25px_25px_rgba(0,0,0,0.8)]"
-                                        />
+                                        {viewMode === '3d' && hasModel ? (
+                                            <model-viewer
+                                                src={gear.model_url}
+                                                alt={gear.name}
+                                                auto-rotate
+                                                camera-controls
+                                                shadow-intensity="0.2"
+                                                shadow-softness="1"
+                                                exposure="1"
+                                                environment-image="neutral"
+                                                tone-mapping="neutral"
+                                                render-scale="2"
+                                                field-of-view="35deg"
+                                                interaction-prompt="none"
+                                                style={{ width: '100%', height: '100%', backgroundColor: 'transparent' }}
+                                                className="relative z-10"
+                                            ></model-viewer>
+                                        ) : (
+                                            <motion.img
+                                                initial={{ y: 20, opacity: 0 }}
+                                                animate={{ y: 0, opacity: 1 }}
+                                                transition={{ delay: 0.2, duration: 0.8 }}
+                                                src={gear.image_url}
+                                                alt={gear.name}
+                                                className="max-h-full max-w-full object-contain relative z-10 drop-shadow-[0_25px_25px_rgba(0,0,0,0.8)]"
+                                            />
+                                        )}
+                                    </div>
+
+                                    {/* View Toggles & Technical Labels */}
+                                    <div className="absolute bottom-6 right-8 left-8 flex items-center justify-between z-20">
+                                        <div className="flex items-center gap-4">
+                                            {/* 2D/3D Toggle if model exists */}
+                                            {hasModel && (
+                                                <div className="flex bg-black/40 backdrop-blur-md rounded-xl p-1 border border-white/5">
+                                                    <button
+                                                        onClick={() => setViewMode('static')}
+                                                        className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${viewMode === 'static' ? 'bg-red-600 text-white' : 'text-gray-500 hover:text-white'}`}
+                                                    >
+                                                        2D
+                                                    </button>
+                                                    <button
+                                                        onClick={() => setViewMode('3d')}
+                                                        className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${viewMode === '3d' ? 'bg-red-600 text-white shadow-[0_0_15px_rgba(220,38,38,0.5)]' : 'text-gray-500 hover:text-white'}`}
+                                                    >
+                                                        3D
+                                                    </button>
+                                                </div>
+                                            )}
+
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-2 h-2 rounded-full bg-red-600 animate-pulse shadow-[0_0_10px_#ef4444]" />
+                                                <span className="text-[10px] font-black font-mono text-gray-500 uppercase tracking-widest">
+                                                    {viewMode === '3d' ? "3D Visual" : t('wiki.weapon.visual_confirm')}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        {hasAudio && (
+                                            <motion.button
+                                                whileHover={{ scale: 1.1 }}
+                                                whileTap={{ scale: 0.9 }}
+                                                onClick={playAudio}
+                                                className={`flex items-center gap-3 px-5 py-2.5 rounded-xl border transition-all duration-500 font-black uppercase tracking-widest text-[10px] shadow-lg backdrop-blur-md ${isPlaying
+                                                    ? 'bg-red-600 border-red-500 text-white shadow-[0_0_20px_rgba(220,38,38,0.4)] animate-pulse'
+                                                    : 'bg-black/60 border-white/5 text-gray-400 hover:text-white hover:border-red-500/50'
+                                                    }`}
+                                            >
+                                                <LucideIcons.Volume2 size={16} />
+                                                <span>{isPlaying ? t('wiki.weapon.playing_sfx') : t('wiki.weapon.play_sfx')}</span>
+                                            </motion.button>
+                                        )}
                                     </div>
                                 </div>
 
