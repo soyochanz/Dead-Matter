@@ -49,21 +49,21 @@ const MapFilters = ({ categories, activeFilters, onToggleFilter, isOpen, onClose
             )}
 
             <div
-                className={`fixed top-0 right-0 h-full w-[350px] max-w-[85vw] bg-neutral-900/95 backdrop-blur-xl border-l border-white/10 z-[4000] shadow-2xl transition-transform duration-300 ease-bun
+                className={`fixed top-0 right-0 h-full w-[350px] max-w-[90vw] bg-neutral-900/98 backdrop-blur-2xl border-l border-white/10 z-[4000] shadow-2xl transition-transform duration-300 ease-in-out
                 ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
             >
                 {/* Header */}
-                <div className="flex items-center justify-between p-6 border-b border-white/10 bg-neutral-900/50">
-                    <div className="flex items-center gap-3">
-                        <div className={`w-10 h-10 rounded-full flex items-center justify-center ${isMissionMode ? 'bg-amber-600/20 text-amber-500' : 'bg-red-600/20 text-red-500'}`}>
-                            <Filter size={20} />
+                <div className="flex items-center justify-between p-4 md:p-6 border-b border-white/10 bg-neutral-900/50">
+                    <div className="flex items-center gap-2 md:gap-3">
+                        <div className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center shrink-0 ${isMissionMode ? 'bg-amber-600/20 text-amber-500' : 'bg-red-600/20 text-red-500'}`}>
+                            <Filter size={18} className="md:w-5 md:h-5" />
                         </div>
-                        <div>
-                            <h2 className="text-xl font-bold text-white tracking-tight">{isMissionMode ? 'Mission Filters' : 'Filters'}</h2>
-                            <p className="text-xs text-neutral-400">{isMissionMode ? 'Filter by Mission Giver' : 'Toggle map markers'}</p>
+                        <div className="min-w-0">
+                            <h2 className="text-lg md:text-xl font-bold text-white tracking-tight truncate">{isMissionMode ? 'Mission Filters' : 'Filters'}</h2>
+                            <p className="text-[10px] md:text-xs text-neutral-400 truncate">{isMissionMode ? 'Filter by Mission Giver' : 'Toggle map markers'}</p>
                         </div>
                     </div>
-                    <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full hover:bg-white/10 text-neutral-400 hover:text-white">
+                    <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full hover:bg-white/10 text-neutral-400 hover:text-white shrink-0">
                         <X size={20} />
                     </Button>
                 </div>
@@ -83,8 +83,8 @@ const MapFilters = ({ categories, activeFilters, onToggleFilter, isOpen, onClose
                                         key={npcName}
                                         onClick={() => onSelectNpcFilter(npcName)}
                                         className={`flex items-center justify-between p-3 rounded-xl border transition-all ${selectedNpcFilter === npcName
-                                                ? 'bg-amber-500/10 border-amber-500 text-white'
-                                                : 'bg-white/5 border-white/5 text-gray-400 hover:bg-white/10 hover:border-white/10'
+                                            ? 'bg-amber-500/10 border-amber-500 text-white'
+                                            : 'bg-white/5 border-white/5 text-gray-400 hover:bg-white/10 hover:border-white/10'
                                             }`}
                                     >
                                         <span className="font-semibold">{npcName}</span>
