@@ -1,0 +1,32 @@
+{
+  "Textures": {
+    "PM_Diffuse": "deadmatter/Content/DM_Items/Textures/Ammo/PaperBox/cal22_PaperBox_Label_albedo.cal22_PaperBox_Label_albedo",
+    "Albedo": "deadmatter/Content/DM_Items/Textures/Ammo/PaperBox/cal22_PaperBox_Label_albedo.cal22_PaperBox_Label_albedo",
+    "gloss": "deadmatter/Content/DM_Items/Textures/Ammo/PaperBox/PaperBox_Label_gloss.PaperBox_Label_gloss",
+    "PaperBox_Label_gloss": "deadmatter/Content/DM_Items/Textures/Ammo/PaperBox/PaperBox_Label_gloss.PaperBox_Label_gloss",
+    "PM_Normals": "deadmatter/Content/DM_Items/Textures/Ammo/PaperBox/PaperBox_Label_normals.PaperBox_Label_normals",
+    "normals": "deadmatter/Content/DM_Items/Textures/Ammo/PaperBox/PaperBox_Label_normals.PaperBox_Label_normals"
+  },
+  "Parameters": {
+    "BlendMode": 1,
+    "ShadingModel": 0,
+    "Colors": {},
+    "Scalars": {
+      "Specular": 0.2,
+      "RefractionDepthBias": 0.0
+    },
+    "Switches": {},
+    "Properties": {
+      "BasePropertyOverrides": {
+        "BlendMode": "BLEND_Masked",
+        "OpacityMaskClipValue": 0.3333
+      }
+    },
+    "HasTopDiffuse": true,
+    "HasTopNormals": false,
+    "HasTopSpecularMasks": false,
+    "HasTopEmissive": false,
+    "IsTranslucent": false,
+    "IsNull": false
+  }
+}

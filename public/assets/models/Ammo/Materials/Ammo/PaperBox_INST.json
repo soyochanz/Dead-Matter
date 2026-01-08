@@ -1,0 +1,34 @@
+{
+  "Textures": {
+    "PM_Diffuse": "deadmatter/Content/DM_Items/Textures/Ammo/PaperBox/PaperBox_albedo.PaperBox_albedo",
+    "Albedo": "deadmatter/Content/DM_Items/Textures/Ammo/PaperBox/PaperBox_albedo.PaperBox_albedo",
+    "AO": "deadmatter/Content/DM_Items/Textures/Ammo/PaperBox/PaperBox_ao.PaperBox_ao",
+    "PaperBox_ao": "deadmatter/Content/DM_Items/Textures/Ammo/PaperBox/PaperBox_ao.PaperBox_ao",
+    "Gloss": "deadmatter/Content/DM_Items/Textures/Ammo/PaperBox/PaperBox_roughness.PaperBox_roughness",
+    "PaperBox_roughness": "deadmatter/Content/DM_Items/Textures/Ammo/PaperBox/PaperBox_roughness.PaperBox_roughness",
+    "PM_Normals": "deadmatter/Content/DM_Items/Textures/Ammo/PaperBox/PaperBox_normal.PaperBox_normal",
+    "Normal": "deadmatter/Content/DM_Items/Textures/Ammo/PaperBox/PaperBox_normal.PaperBox_normal",
+    "PM_SpecularMasks": "deadmatter/Content/DM_Items/Textures/Ammo/PaperBox/PaperBox_specular.PaperBox_specular",
+    "Specular": "deadmatter/Content/DM_Items/Textures/Ammo/PaperBox/PaperBox_specular.PaperBox_specular"
+  },
+  "Parameters": {
+    "BlendMode": 0,
+    "ShadingModel": 0,
+    "Colors": {},
+    "Scalars": {
+      "RefractionDepthBias": 0.0
+    },
+    "Switches": {},
+    "Properties": {
+      "BasePropertyOverrides": {
+        "OpacityMaskClipValue": 0.3333
+      }
+    },
+    "HasTopDiffuse": true,
+    "HasTopNormals": true,
+    "HasTopSpecularMasks": true,
+    "HasTopEmissive": false,
+    "IsTranslucent": false,
+    "IsNull": false
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "Textures": {
+    "PM_Diffuse": "deadmatter/Content/DM_Items/Textures/Ammo/SmallCalibres/SmallCalibres_albedo.SmallCalibres_albedo",
+    "Albedo": "deadmatter/Content/DM_Items/Textures/Ammo/SmallCalibres/SmallCalibres_albedo.SmallCalibres_albedo",
+    "AO": "deadmatter/Content/DM_Items/Textures/Ammo/SmallCalibres/SmallCalibres_ao.SmallCalibres_ao",
+    "SmallCalibres_ao": "deadmatter/Content/DM_Items/Textures/Ammo/SmallCalibres/SmallCalibres_ao.SmallCalibres_ao",
+    "Gloss": "deadmatter/Content/DM_Items/Textures/Ammo/SmallCalibres/SmallCalibres_roughness.SmallCalibres_roughness",
+    "SmallCalibres_roughness": "deadmatter/Content/DM_Items/Textures/Ammo/SmallCalibres/SmallCalibres_roughness.SmallCalibres_roughness",
+    "Metalness": "deadmatter/Content/DM_Items/Textures/Ammo/SmallCalibres/SmallCalibres_metallic.SmallCalibres_metallic",
+    "SmallCalibres_metallic": "deadmatter/Content/DM_Items/Textures/Ammo/SmallCalibres/SmallCalibres_metallic.SmallCalibres_metallic",
+    "PM_Normals": "deadmatter/Content/DM_Items/Textures/Ammo/SmallCalibres/SmallCalibres_normal.SmallCalibres_normal",
+    "Normal": "deadmatter/Content/DM_Items/Textures/Ammo/SmallCalibres/SmallCalibres_normal.SmallCalibres_normal"
+  },
+  "Parameters": {
+    "BlendMode": 0,
+    "ShadingModel": 0,
+    "Colors": {},
+    "Scalars": {
+      "RefractionDepthBias": 0.0
+    },
+    "Switches": {},
+    "Properties": {
+      "bHasStaticPermutationResource": true,
+      "BasePropertyOverrides": {
+        "bOverride_TwoSided": true,
+        "TwoSided": true,
+        "OpacityMaskClipValue": 0.3333
+      }
+    },
+    "HasTopDiffuse": true,
+    "HasTopNormals": true,
+    "HasTopSpecularMasks": true,
+    "HasTopEmissive": false,
+    "IsTranslucent": false,
+    "IsNull": false
+  }
+}

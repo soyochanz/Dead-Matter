@@ -37,18 +37,20 @@ const WeaponCard = ({ weapon, index, onClick }) => {
 
             <div className="relative p-1">
                 {/* Image Container */}
-                <div className="relative h-56 w-full flex items-center justify-center p-8 bg-gradient-to-b from-white/[0.02] to-transparent rounded-t-[1.4rem] overflow-hidden">
+                <div className="relative h-64 w-full flex items-center justify-center p-2 bg-gradient-to-b from-white/[0.02] to-transparent rounded-t-[1.4rem] overflow-hidden">
                     {/* Subtle Glow Behind Item */}
                     <div className={`absolute w-32 h-32 blur-[60px] opacity-0 group-hover:opacity-100 transition-opacity duration-700 ${style.bgGlow}`} />
 
                     {weapon.image_url ? (
-                        <motion.img
-                            whileHover={{ scale: 1.1, rotate: 2 }}
-                            transition={{ type: "spring", stiffness: 300, damping: 15 }}
-                            src={weapon.image_url}
-                            alt={weapon.name}
-                            className="relative z-10 max-h-full max-w-full object-contain drop-shadow-[0_20px_30px_rgba(0,0,0,0.5)]"
-                        />
+                        <div className="w-full h-full flex items-center justify-center p-2">
+                            <motion.img
+                                whileHover={{ scale: 1.05, rotate: 1 }}
+                                transition={{ type: "spring", stiffness: 300, damping: 15 }}
+                                src={weapon.image_url}
+                                alt={weapon.name}
+                                className="max-h-[90%] max-w-[90%] object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.6)] transition-transform duration-500"
+                            />
+                        </div>
                     ) : (
                         <div className={`relative z-10 p-6 rounded-2xl bg-white/5 border border-white/10 transition-colors ${style.hoverBorder}`}>
                             {isMelee ? <Sword className={`w-12 h-12 ${style.text}`} /> : <Target className={`w-12 h-12 ${style.text}`} />}
