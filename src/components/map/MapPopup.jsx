@@ -25,8 +25,6 @@ const MapPopup = ({ marker, tags, keys = [] }) => {
 
     const hasImage = !!marker.image_url;
 
-
-
     return (
         <div className="flex flex-col text-white font-sans bg-[#0e1116] rounded-[15px] overflow-hidden min-w-[300px]">
             {/* Hero Image Section */}

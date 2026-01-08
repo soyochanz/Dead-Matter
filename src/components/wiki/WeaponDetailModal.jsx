@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Target, Zap, Shield, Gem, Crosshair, Grip, Puzzle, Wind, Loader2, Box, Ban, DollarSign, Tag, Ruler, Weight, Swords, TrendingUp, Hand, Clock, Lightbulb as Bolt, SlidersHorizontal } from 'lucide-react';
+import { X, Target, Zap, Shield, Gem, Crosshair, Grip, Puzzle, Wind, Loader2, Box, Ban, DollarSign, Tag, Ruler, Weight, Swords, TrendingUp, Hand, Clock, Lightbulb as Bolt, SlidersHorizontal, Volume2 } from 'lucide-react';
 import { DndContext, useDraggable, useDroppable, DragOverlay } from '@dnd-kit/core';
 import { supabase } from '@/lib/mySupabaseClient';
 import * as LucideIcons from 'lucide-react';
@@ -240,8 +240,40 @@ const WeaponDetailModal = ({ weapon, onClose, onNpcSelect }) => {
     const [showAmmoModal, setShowAmmoModal] = useState(false);
     const [showNpcSellers, setShowNpcSellers] = useState(false);
 
+    const [audio] = useState(weapon.audio_url ? new Audio(weapon.audio_url) : null);
+    const [isPlaying, setIsPlaying] = useState(false);
+
+    useEffect(() => {
+        if (audio) {
+            audio.onended = () => setIsPlaying(false);
+        }
+        return () => {
+            if (audio) {
+                audio.pause();
+                audio.src = '';
+            }
+        };
+    }, [audio]);
+
+    const playAudio = (e) => {
+        e.stopPropagation();
+        if (audio) {
+            if (isPlaying) {
+                audio.pause();
+                audio.currentTime = 0;
+                setIsPlaying(false);
+            } else {
+                audio.play();
+                setIsPlaying(true);
+            }
+        }
+    };
+
     const isMelee = useMemo(() => weapon.subcategory.name.toLowerCase().includes('melee'), [weapon]);
     const slots = ['Sights', 'Muzzle', 'Grip', 'Magazine', 'Stock'];
+
+    const hasModel = !!weapon.model_url;
+    const hasAudio = !!weapon.audio_url;
 
     useEffect(() => {
         setEquipped({});
@@ -420,19 +452,51 @@ const WeaponDetailModal = ({ weapon, onClose, onNpcSelect }) => {
                                                 <Target size={120} className="text-white/5" />
                                             </div>
 
-                                            <motion.img
-                                                initial={{ y: 20, opacity: 0 }}
-                                                animate={{ y: 0, opacity: 1 }}
-                                                transition={{ delay: 0.2, duration: 0.8 }}
-                                                className="max-h-full max-w-full object-contain relative z-10 drop-shadow-[0_25px_25px_rgba(0,0,0,0.8)]"
-                                                alt={weapon.name}
-                                                src={weapon.image_url}
-                                            />
+                                            {hasModel ? (
+                                                <model-viewer
+                                                    src={weapon.model_url}
+                                                    alt={weapon.name}
+                                                    auto-rotate
+                                                    camera-controls
+                                                    shadow-intensity="1"
+                                                    environment-image="neutral"
+                                                    exposure="1"
+                                                    style={{ width: '100%', height: '100%', backgroundColor: 'transparent' }}
+                                                    className="relative z-10"
+                                                ></model-viewer>
+                                            ) : (
+                                                <motion.img
+                                                    initial={{ y: 20, opacity: 0 }}
+                                                    animate={{ y: 0, opacity: 1 }}
+                                                    transition={{ delay: 0.2, duration: 0.8 }}
+                                                    className="max-h-full max-w-full object-contain relative z-10 drop-shadow-[0_25px_25px_rgba(0,0,0,0.8)]"
+                                                    alt={weapon.name}
+                                                    src={weapon.image_url}
+                                                />
+                                            )}
                                         </div>
-                                        {/* Technical Label for Image */}
-                                        <div className="absolute bottom-6 right-8 flex items-center gap-2">
-                                            <div className="w-2 h-2 rounded-full bg-red-600 animate-pulse shadow-[0_0_10px_#ef4444]" />
-                                            <span className="text-[10px] font-black font-mono text-gray-500 uppercase tracking-widest">{t('wiki.weapon.visual_confirm')}</span>
+                                        {/* Technical Label for Image/Model & Audio Button */}
+                                        <div className="absolute bottom-6 right-8 left-8 flex items-center justify-between z-20">
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-2 h-2 rounded-full bg-red-600 animate-pulse shadow-[0_0_10px_#ef4444]" />
+                                                <span className="text-[10px] font-black font-mono text-gray-500 uppercase tracking-widest">
+                                                    {hasModel ? t('wiki.weapon.3d_module_active') : t('wiki.weapon.visual_confirm')}
+                                                </span>
+                                            </div>
+
+                                            {hasAudio && (
+                                                <motion.button
+                                                    whileHover={{ scale: 1.1 }}
+                                                    whileTap={{ scale: 0.9 }}
+                                                    onClick={playAudio}
+                                                    className={`p-3 rounded-2xl border transition-all duration-300 flex items-center gap-3 ${isPlaying ? 'bg-red-600 border-red-500 shadow-[0_0_20px_rgba(239,68,68,0.4)] text-white' : 'bg-white/5 border-white/10 text-gray-400 hover:text-white hover:bg-white/10'}`}
+                                                >
+                                                    <Volume2 size={18} className={isPlaying ? 'animate-pulse' : ''} />
+                                                    <span className="text-[10px] font-black uppercase tracking-widest">
+                                                        {isPlaying ? t('wiki.weapon.playing_sfx') : t('wiki.weapon.play_sfx')}
+                                                    </span>
+                                                </motion.button>
+                                            )}
                                         </div>
                                     </div>
 
