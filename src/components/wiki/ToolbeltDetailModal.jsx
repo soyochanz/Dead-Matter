@@ -23,6 +23,7 @@ const StatDisplay = ({ icon, label, value, colorClass = 'text-white', onClick, c
 
 const ToolbeltDetailModal = ({ item, onClose }) => {
     const [showNpcSellers, setShowNpcSellers] = useState(false);
+    const [viewType, setViewType] = useState('2d');
     const navigate = useNavigate();
 
     if (!item) return null;
@@ -76,14 +77,51 @@ const ToolbeltDetailModal = ({ item, onClose }) => {
                                             <Zap size={200} className="text-white" />
                                         </div>
 
-                                        <motion.img
-                                            initial={{ y: 20, opacity: 0, scale: 0.8 }}
-                                            animate={{ y: 0, opacity: 1, scale: 1 }}
-                                            transition={{ duration: 0.6 }}
-                                            src={item.image_url}
-                                            alt={item.name}
-                                            className="max-h-full max-w-full object-contain relative z-10 drop-shadow-[0_25px_25px_rgba(0,0,0,0.8)]"
-                                        />
+                                        {item.model_url && viewType === '3d' ? (
+                                            <model-viewer
+                                                src={item.model_url}
+                                                alt={item.name}
+                                                auto-rotate
+                                                camera-controls
+                                                shadow-intensity="0.2"
+                                                shadow-softness="1"
+                                                exposure="1"
+                                                environment-image="neutral"
+                                                tone-mapping="neutral"
+                                                render-scale="2"
+                                                field-of-view="35deg"
+                                                interaction-prompt="none"
+                                                style={{ width: '100%', height: '100%', backgroundColor: 'transparent' }}
+                                                className="relative z-10"
+                                            />
+                                        ) : (
+                                            <motion.img
+                                                initial={{ y: 20, opacity: 0, scale: 0.8 }}
+                                                animate={{ y: 0, opacity: 1, scale: 1 }}
+                                                transition={{ duration: 0.6 }}
+                                                src={item.image_url}
+                                                alt={item.name}
+                                                className="max-h-full max-w-full object-contain relative z-10 drop-shadow-[0_25px_25px_rgba(0,0,0,0.8)]"
+                                            />
+                                        )}
+
+                                        {/* View Toggle */}
+                                        {item.model_url && (
+                                            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 p-1.5 bg-black/60 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl">
+                                                <button
+                                                    onClick={() => setViewType('2d')}
+                                                    className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300 ${viewType === '2d' ? 'bg-red-600 text-white shadow-lg' : 'text-gray-500 hover:text-white'}`}
+                                                >
+                                                    Visual 2D
+                                                </button>
+                                                <button
+                                                    onClick={() => setViewType('3d')}
+                                                    className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300 ${viewType === '3d' ? 'bg-red-600 text-white shadow-lg' : 'text-gray-500 hover:text-white'}`}
+                                                >
+                                                    3D Static
+                                                </button>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
 

@@ -31,7 +31,7 @@ const ToolbeltCard = ({ item, index, onClick }) => {
             <div className="relative bg-[#0a0a0c] border border-white/5 rounded-[2rem] overflow-hidden transition-all duration-500 group-hover:border-red-500/30 group-hover:shadow-[0_20px_50px_-15px_rgba(239,68,68,0.15)] h-full flex flex-col shadow-2xl backdrop-blur-3xl">
 
                 {/* Image Section */}
-                <div className="relative h-48 bg-black/40 flex items-center justify-center p-8 overflow-hidden group-hover:bg-black/60 transition-colors">
+                <div className="relative h-64 bg-black/40 flex items-center justify-center p-2 overflow-hidden group-hover:bg-black/60 transition-colors">
                     {/* Rarity Aura */}
                     <div
                         className="absolute inset-0 opacity-10 group-hover:opacity-20 blur-[60px] transition-opacity duration-500"
@@ -42,14 +42,18 @@ const ToolbeltCard = ({ item, index, onClick }) => {
                     <div className="absolute inset-0 opacity-5 pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay" />
 
                     {item.image_url ? (
-                        <img
-                            className="relative z-10 max-h-full max-w-full object-contain group-hover:scale-110 transition-transform duration-700 drop-shadow-[0_15px_15px_rgba(0,0,0,0.5)]"
-                            alt={item.name}
-                            src={item.image_url}
-                        />
+                        <div className="w-full h-full flex items-center justify-center p-1">
+                            <motion.img
+                                whileHover={{ scale: 1.05, rotate: 1 }}
+                                transition={{ type: "spring", stiffness: 300, damping: 15 }}
+                                className="relative z-10 max-h-[90%] max-w-[90%] object-contain transition-transform duration-700 drop-shadow-[0_20px_40px_rgba(0,0,0,0.6)]"
+                                alt={item.name}
+                                src={item.image_url}
+                            />
+                        </div>
                     ) : (
                         <div className="relative z-10 p-5 rounded-2xl bg-white/5 border border-white/5 group-hover:border-red-500/30 transition-colors">
-                            <Wrench className="w-12 h-12 text-gray-500 group-hover:text-red-500 transition-colors" />
+                            <Wrench className="w-16 h-16 text-gray-500 group-hover:text-red-500 transition-colors" />
                         </div>
                     )}
 
