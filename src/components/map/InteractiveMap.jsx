@@ -207,14 +207,14 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
     };
 
     // Helper 2: No Border Style (NPCs - Transparent)
-    const createNoBorderIcon = (content, color) => {
+    const createNoBorderIcon = (content, color, size = 30) => {
         return L.divIcon({
-            html: `<div style="width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; color: ${color}; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));">
-                <div style="width: 30px; height: 30px;">${content}</div>
+            html: `<div style="width: ${size}px; height: ${size}px; display: flex; align-items: center; justify-content: center; color: ${color}; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));">
+                <div style="width: ${size}px; height: ${size}px;">${content}</div>
             </div>`,
             className: 'npc-marker',
-            iconSize: [30, 30],
-            iconAnchor: [15, 30]
+            iconSize: [size, size],
+            iconAnchor: [size / 2, size]
         });
     };
 
@@ -350,9 +350,9 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
 
         // 9. Special Circles (Water, Keys, Butane)
         // 9. Special Circles (Water, Keys, Butane)
-        if (catName.includes('water') && !catName.includes('tower')) return createCircleIcon(personalIcons.water.svg, '#06b6d4', 18); // Smaller Cyan
+        if (catName.includes('water') && !catName.includes('tower')) return createNoBorderIcon(personalIcons.water.svg, '#06b6d4', 18); // Smaller filled blue drop
         if (catName.includes('key')) return createCircleIcon(mapIcons.key, '#eab308'); // Gold (Default 24)
-        if (catName.includes('butane') || catName.includes('propane') || catName.includes('fuel') || (catName.includes('gas') && !catName.includes('station'))) return createCircleIcon(mapIcons.propane, '#f97316', 18); // Smaller Orange
+        if (catName.includes('butane') || catName.includes('propane') || catName.includes('fuel') || (catName.includes('gas') && !catName.includes('station'))) return createNoBorderIcon(mapIcons.propane, '#fb923c', 18); // Smaller light orange propane
 
         // 10. Red Group (Specific & Generic Military)
         if (catName.includes('shooting range')) return createPinIcon(mapIcons.target, '#ef4444');
@@ -742,7 +742,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
 
                     {/* CLUSTER: MEDICAL (Purple) */}
                     <MarkerClusterGroup
-                        iconCreateFunction={(cluster) => createClusterIcon(cluster, 'medical-cluster', '#a855f7')}
+                        iconCreateFunction={(cluster) => createClusterIcon(cluster, 'medical-cluster', '#ec4899')}
                         maxClusterRadius={30}
                         disableClusteringAtZoom={18}
                         spiderfyOnMaxZoom={false}
