@@ -293,15 +293,23 @@ const MediaForm = ({ item, onSave, onCancel }) => {
                 }
             } catch (err) {
                 console.error("Failed to generate/upload thumbnail:", err);
+                let detailedError = "Failed to generate video thumbnail. CORS might be restricted by the host.";
+                if (err.message && err.message.includes("CORS")) {
+                    detailedError = "CORS Error: Video host (e.g. Discord) is blocking frame capture. Please upload a manual thumbnail.";
+                } else if (err.message && err.message.includes("timed out")) {
+                    detailedError = "Timeout: Video took too long to load for thumbnail capture.";
+                }
+
                 toast({
-                    title: "Thumbnail Error",
-                    description: "Failed to generate video thumbnail. CORS might be restricted.",
-                    variant: "destructive"
+                    title: "Thumbnail Warning",
+                    description: detailedError,
+                    variant: "default" // Using default instead of destructive to not look like a crash
                 });
             } finally {
                 setUploading(false);
             }
         } else {
+
 
             setFormData(prev => ({
                 ...prev,
@@ -390,14 +398,26 @@ const MediaForm = ({ item, onSave, onCancel }) => {
                             </div>
 
                         ) : formData.type === 'video' && formData.url ? (
-                            <div className="h-48 bg-gray-800 rounded-md border border-white/10 flex items-center justify-center">
-                                <div className="text-gray-400 text-center">
-                                    <Loader2 className="w-12 h-12 mx-auto mb-2 animate-spin text-red-500" />
-                                    <p>Processing video...</p>
-                                </div>
+                            <div className="h-48 bg-gray-800 rounded-md border border-white/10 flex flex-col items-center justify-center p-6 text-center">
+                                {uploading ? (
+                                    <>
+                                        <Loader2 className="w-12 h-12 mx-auto mb-2 animate-spin text-red-500" />
+                                        <p className="text-sm font-medium">Processing video...</p>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Video className="w-12 h-12 text-gray-600 mb-2" />
+                                        <p className="text-gray-400 text-sm">Video URL detected.</p>
+                                        {!formData.thumbnail && (
+                                            <p className="text-xs text-orange-400 mt-2">
+                                                Note: Some hosts block automatic thumbnails. <br />You may need to provide one manually below.
+                                            </p>
+                                        )}
+                                    </>
+                                )}
                             </div>
-
                         ) : null}
+
                     </div>
                 )}
             </div>
@@ -616,10 +636,10 @@ const Media = () => {
                             {/* Overlay sutil al hacer hover */}
                             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300" />
                         </>
-                    ) : (item.thumbnail || item.url) ? (
+                    ) : item.thumbnail ? (
                         <>
                             <img
-                                src={item.thumbnail || item.url}
+                                src={item.thumbnail}
                                 alt={item.title}
                                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                             />
@@ -627,11 +647,12 @@ const Media = () => {
                             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300" />
                         </>
                     ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-800 to-gray-900">
-                            <div className="text-center">
-                                <Video className="w-12 h-12 text-gray-400 mx-auto mb-2" />
-                                <p className="text-gray-400 font-medium">Video</p>
+                        <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-gray-800 to-gray-900 group-hover:from-gray-700 group-hover:to-gray-800 transition-all duration-500">
+                            <div className="relative">
+                                <Video className="w-12 h-12 text-gray-500 mb-2" />
+                                <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse" />
                             </div>
+                            <p className="text-gray-500 text-xs font-medium uppercase tracking-widest">No Thumbnail</p>
                         </div>
                     )}
 

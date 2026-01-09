@@ -4,16 +4,21 @@
  * @returns {Blob} - The resulting Blob.
  */
 export const dataURLtoBlob = (dataurl) => {
-    if (!dataurl) return null;
-    const arr = dataurl.split(',');
-    const mime = arr[0].match(/:(.*?);/)[1];
-    const bstr = atob(arr[1]);
-    let n = bstr.length;
-    const u8arr = new Uint8Array(n);
-    while (n--) {
-        u8arr[n] = bstr.charCodeAt(n);
+    if (!dataurl || !dataurl.includes(',')) return null;
+    try {
+        const arr = dataurl.split(',');
+        const mime = arr[0].match(/:(.*?);/)[1];
+        const bstr = atob(arr[1]);
+        let n = bstr.length;
+        const u8arr = new Uint8Array(n);
+        while (n--) {
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+        return new Blob([u8arr], { type: mime });
+    } catch (e) {
+        console.error("Error converting dataURL to blob:", e);
+        return null;
     }
-    return new Blob([u8arr], { type: mime });
 };
 
 /**
@@ -34,7 +39,7 @@ export const generateVideoThumbnail = (videoUrl, seekTime = 1) => {
 
         const timeout = setTimeout(() => {
             cleanup();
-            reject(new Error('Thumbnail generation timed out (8s)'));
+            reject(new Error('Thumbnail generation timed out (8s). The video server might be blocking access (CORS).'));
         }, 8000);
 
         const cleanup = () => {
@@ -53,7 +58,7 @@ export const generateVideoThumbnail = (videoUrl, seekTime = 1) => {
                 canvas.height = video.videoHeight;
 
                 if (canvas.width === 0 || canvas.height === 0) {
-                    // If video size is not yet available, we can't capture
+                    // Try waiting a bit more or retry
                     return false;
                 }
 
@@ -66,27 +71,35 @@ export const generateVideoThumbnail = (videoUrl, seekTime = 1) => {
                 return true;
             } catch (err) {
                 cleanup();
-                reject(err);
+                if (err.name === 'SecurityError') {
+                    reject(new Error('CORS Error: Cannot capture frame from this video source.'));
+                } else {
+                    reject(err);
+                }
                 return true;
             }
         };
 
         video.onloadedmetadata = () => {
-            // Seek to the desired time once metadata (duration, dimensions) is ready
             video.currentTime = Math.max(0, Math.min(seekTime, video.duration || seekTime));
         };
 
         video.onseeked = () => {
-            captureFrame();
+            // Give it a tiny bit of time to render the frame
+            setTimeout(captureFrame, 100);
         };
 
         video.onerror = (e) => {
             cleanup();
             console.error("Video element error for URL:", videoUrl, video.error);
-            reject(new Error(`Video load error: ${video.error?.message || 'Unknown error'}`));
+            const errorMsg = video.error?.code === 4
+                ? "Format not supported or access denied by CORS."
+                : (video.error?.message || 'Unknown error');
+            reject(new Error(`Video load error: ${errorMsg}`));
         };
 
-        // Start loading
+        // If the URL is a Discord link, we might need to handle specific behaviors
+        // but for now, we just set the src and hope for the best.
         video.src = videoUrl;
         video.load();
     });

@@ -93,7 +93,13 @@ const MediaManager = () => {
           {items.map(item => (
             <div key={item.id} className="bg-white/5 border border-white/10 rounded-lg overflow-hidden">
               <div className="relative aspect-video bg-gray-800">
-                <img src={item.thumbnail || item.url} alt={item.title} className="w-full h-full object-cover" />
+                {item.thumbnail || item.type === 'image' ? (
+                  <img src={item.thumbnail || item.url} alt={item.title} className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-gray-900">
+                    <Video className="h-12 w-12 text-gray-700" />
+                  </div>
+                )}
                 {item.type === 'video' && (
                   <div className="absolute inset-0 flex items-center justify-center bg-black/20">
                     <div className="bg-black/50 p-2 rounded-full">

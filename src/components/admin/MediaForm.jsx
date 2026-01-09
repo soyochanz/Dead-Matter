@@ -130,15 +130,23 @@ const MediaForm = ({ item, onSave, onCancel }) => {
         }
       } catch (err) {
         console.error("Failed to generate/upload thumbnail:", err);
+        let detailedError = "Failed to generate video thumbnail. CORS might be restricted by the host.";
+        if (err.message && err.message.includes("CORS")) {
+          detailedError = "CORS Error: Video host (e.g. Discord) is blocking frame capture. Please upload a manual thumbnail.";
+        } else if (err.message && err.message.includes("timed out")) {
+          detailedError = "Timeout: Video took too long to load for thumbnail capture.";
+        }
+
         toast({
-          title: "Thumbnail Error",
-          description: "Failed to generate video thumbnail. CORS might be restricted.",
-          variant: "destructive"
+          title: "Thumbnail Warning",
+          description: detailedError,
+          variant: "default"
         });
       } finally {
         setUploading(false);
       }
     } else {
+
 
       setFormData(prev => ({
         ...prev,
@@ -215,11 +223,17 @@ const MediaForm = ({ item, onSave, onCancel }) => {
             ) : formData.thumbnail || formData.url ? (
               <>
                 <img src={formData.thumbnail || formData.url} alt="Thumbnail" className="w-full h-full object-cover" />
-                <div className="absolute inset-0 flex items-center justify-center bg-black/20">
-                  <Video className="w-12 h-12 text-white/50" />
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/20 text-center p-2">
+                  <Video className="w-12 h-12 text-white/50 mb-2" />
+                  {!formData.thumbnail && (
+                    <span className="text-[10px] text-orange-400 bg-black/60 px-2 py-1 rounded">
+                      Generation Failed (CORS)
+                    </span>
+                  )}
                 </div>
               </>
             ) : (
+
               <div className="w-full h-full flex items-center justify-center">
                 <Video className="w-12 h-12 text-gray-700" />
               </div>
