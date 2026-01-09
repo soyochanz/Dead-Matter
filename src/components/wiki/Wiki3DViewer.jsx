@@ -41,7 +41,8 @@ const Wiki3DViewer = ({
                     `${baseDir}${fileName}.json`,
                     `${baseDir}Materials/material.json`,
                     `${baseDir}Materials/${fileName}.json`,
-
+                    // Specific to user's provided structure for backpack
+                    `${baseDir}Materials/MI_Backpack_01a.json`
                 ];
 
                 let materialData = null;
