@@ -54,7 +54,7 @@ const MediaCard = ({ item, index }) => (
   <motion.div
     initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
     transition={{ delay: index * 0.1 }}
-    className="group relative aspect-square rounded-xl overflow-hidden bg-[#0a0a0c] border border-white/5"
+    className="group relative aspect-video rounded-xl overflow-hidden bg-[#0a0a0c] border border-white/5"
   >
     <Link to="/media" className="block h-full w-full">
       <img src={item.thumbnail} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" alt="" />
