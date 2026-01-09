@@ -7,6 +7,8 @@ import { Loader2, ArrowLeft, Image, Video, Filter, X, Play, Expand, User, Calend
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
+import { generateVideoThumbnail } from '@/lib/videoUtils';
+
 
 // Componente Modal para vista ampliada
 const MediaModal = ({ item, onClose }) => {
@@ -201,29 +203,28 @@ const MediaForm = ({ item, onSave, onCancel }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // Si es video de YouTube, extraer ID y generar thumbnail
+        // Procesamiento de videos
         if (formData.type === 'video') {
             const videoId = extractYouTubeId(formData.url);
+
             if (videoId) {
+                // Es video de YouTube
                 const embedUrl = `https://www.youtube.com/embed/${videoId}`;
                 const thumbnail = getYouTubeThumbnail(formData.url);
 
                 const processedData = {
                     ...formData,
-                    url: embedUrl, // URL de embed para iframe
-                    video_url: formData.url, // Guardar URL original
+                    url: embedUrl,
+                    video_url: formData.url,
                     video_id: videoId,
-                    thumbnail: formData.thumbnail || thumbnail // Usar custom o auto-generado
+                    thumbnail: formData.thumbnail || thumbnail
                 };
 
                 onSave(processedData);
                 return;
             } else {
-                toast({
-                    title: "Invalid YouTube URL",
-                    description: "Please enter a valid YouTube URL",
-                    variant: "destructive"
-                });
+                // Es video directo (Discord, etc.)
+                onSave(formData);
                 return;
             }
         }
@@ -252,19 +253,38 @@ const MediaForm = ({ item, onSave, onCancel }) => {
         setUploading(false);
     };
 
-    const handleUrlChange = (url) => {
+    const handleUrlChange = async (url) => {
         let thumbnail = '';
 
         // Si es YouTube URL, generar thumbnail automáticamente
         if (formData.type === 'video' && (url.includes('youtube.com') || url.includes('youtu.be'))) {
             thumbnail = getYouTubeThumbnail(url);
+            setFormData(prev => ({
+                ...prev,
+                url: url,
+                thumbnail: thumbnail || prev.thumbnail
+            }));
+        } else if (formData.type === 'video' && (url.match(/\.(mp4|webm|ogg|mov)$/i) || url.includes('discordapp.net') || url.includes('cdn.discordapp.com'))) {
+            // Es un video directo, intentar generar thumbnail
+            setFormData(prev => ({ ...prev, url }));
+            setUploading(true);
+            try {
+                const generatedThumbnail = await generateVideoThumbnail(url);
+                setFormData(prev => ({
+                    ...prev,
+                    thumbnail: prev.thumbnail || generatedThumbnail
+                }));
+            } catch (err) {
+                console.error("Failed to generate thumbnail:", err);
+            } finally {
+                setUploading(false);
+            }
+        } else {
+            setFormData(prev => ({
+                ...prev,
+                url: url
+            }));
         }
-
-        setFormData(prev => ({
-            ...prev,
-            url: url,
-            thumbnail: thumbnail || prev.thumbnail
-        }));
     };
 
     return (
@@ -561,6 +581,16 @@ const Media = () => {
                             {/* Overlay sutil al hacer hover */}
                             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300" />
                         </>
+                    ) : (item.thumbnail || item.url) ? (
+                        <>
+                            <img
+                                src={item.thumbnail || item.url}
+                                alt={item.title}
+                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                            />
+                            {/* Overlay sutil al hacer hover */}
+                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300" />
+                        </>
                     ) : (
                         <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-800 to-gray-900">
                             <div className="text-center">
@@ -573,8 +603,8 @@ const Media = () => {
                     {/* Badge SOLO con "Video" */}
                     <div className="absolute top-3 left-3">
                         <div className={`px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1 ${item.type === 'image'
-                                ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
-                                : 'bg-red-500/20 text-red-300 border border-red-500/30'
+                            ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
+                            : 'bg-red-500/20 text-red-300 border border-red-500/30'
                             }`}>
                             {item.type === 'image' ? <Image className="w-3 h-3" /> : <Video className="w-3 h-3" />}
                             <span className="capitalize">{item.type}</span>
@@ -693,15 +723,15 @@ const Media = () => {
                                     whileTap={{ scale: 0.95 }}
                                     onClick={() => setActiveFilter(filter.key)}
                                     className={`flex items-center gap-4 px-8 py-4 rounded-[1.5rem] font-black uppercase tracking-wider text-xs transition-all duration-500 shadow-xl border ${activeFilter === filter.key
-                                            ? 'bg-gradient-to-r from-red-600 to-rose-700 text-white border-transparent shadow-red-900/40 ring-2 ring-red-500/20'
-                                            : 'bg-[#0a0a0c] text-gray-500 hover:text-white hover:bg-[#121214] border-white/5'
+                                        ? 'bg-gradient-to-r from-red-600 to-rose-700 text-white border-transparent shadow-red-900/40 ring-2 ring-red-500/20'
+                                        : 'bg-[#0a0a0c] text-gray-500 hover:text-white hover:bg-[#121214] border-white/5'
                                         }`}
                                 >
                                     <filter.icon className="h-5 w-5" />
                                     <span>{filter.label}</span>
                                     <span className={`px-2 py-1 rounded-full text-xs ${activeFilter === filter.key
-                                            ? 'bg-white/20'
-                                            : 'bg-white/10'
+                                        ? 'bg-white/20'
+                                        : 'bg-white/10'
                                         }`}>
                                         {filter.count}
                                     </span>

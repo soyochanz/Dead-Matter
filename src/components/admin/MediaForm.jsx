@@ -1,23 +1,74 @@
 import React, { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
-import { Upload, Loader2 } from 'lucide-react';
+import { Upload, Loader2, Video, Image } from 'lucide-react';
 import { supabase } from '@/lib/mySupabaseClient';
 import { useToast } from '@/components/ui/use-toast';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
+import { generateVideoThumbnail } from '@/lib/videoUtils';
 
 const MediaForm = ({ item, onSave, onCancel }) => {
   const { profile } = useAuth();
   const [formData, setFormData] = useState(
-    item || { title: '', type: 'image', url: '', description: '', image_path: '', meta_name: '', author: profile?.username || '' }
+    item || {
+      title: '',
+      type: 'image',
+      url: '',
+      description: '',
+      image_path: '',
+      meta_name: '',
+      author: profile?.username || '',
+      thumbnail: ''
+    }
   );
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef(null);
   const { toast } = useToast();
-  
+
   const formInputClass = "w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-red-500";
 
-  const handleSubmit = (e) => { e.preventDefault(); onSave(formData); };
-  
+  // Extraer ID de video de YouTube
+  const extractYouTubeId = (url) => {
+    if (!url) return null;
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
+  };
+
+  // Generar thumbnail de YouTube
+  const getYouTubeThumbnail = (url) => {
+    const videoId = extractYouTubeId(url);
+    if (!videoId) return '';
+    return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // Procesamiento de videos
+    if (formData.type === 'video') {
+      const videoId = extractYouTubeId(formData.url);
+
+      if (videoId) {
+        // Es video de YouTube
+        const embedUrl = `https://www.youtube.com/embed/${videoId}`;
+        const thumbnail = getYouTubeThumbnail(formData.url);
+
+        const processedData = {
+          ...formData,
+          url: embedUrl,
+          video_url: formData.url,
+          video_id: videoId,
+          thumbnail: formData.thumbnail || thumbnail
+        };
+
+        onSave(processedData);
+        return;
+      }
+    }
+
+    onSave(formData);
+  };
+
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
@@ -26,63 +77,153 @@ const MediaForm = ({ item, onSave, onCancel }) => {
     const filePath = `public/${fileName}`;
     const { error } = await supabase.storage.from('Items').upload(filePath, file);
     if (error) {
-        toast({ title: "Upload Error", description: error.message, variant: "destructive" });
+      toast({ title: "Upload Error", description: error.message, variant: "destructive" });
     } else {
-        const { data: { publicUrl } } = supabase.storage.from('Items').getPublicUrl(filePath);
-        setFormData(prev => ({ ...prev, url: publicUrl, image_path: filePath }));
+      const { data: { publicUrl } } = supabase.storage.from('Items').getPublicUrl(filePath);
+      setFormData(prev => ({
+        ...prev,
+        url: publicUrl,
+        image_path: filePath,
+        thumbnail: file.type.startsWith('video/') ? '' : publicUrl
+      }));
     }
     setUploading(false);
   };
 
+  const handleUrlChange = async (url) => {
+    let thumbnail = '';
+
+    // Si es YouTube URL, generar thumbnail automáticamente
+    if (formData.type === 'video' && (url.includes('youtube.com') || url.includes('youtu.be'))) {
+      thumbnail = getYouTubeThumbnail(url);
+      setFormData(prev => ({
+        ...prev,
+        url: url,
+        thumbnail: thumbnail || prev.thumbnail
+      }));
+    } else if (formData.type === 'video' && (url.match(/\.(mp4|webm|ogg|mov)$/i) || url.includes('discordapp.net') || url.includes('cdn.discordapp.com'))) {
+      // Es un video directo, intentar generar thumbnail
+      setFormData(prev => ({ ...prev, url }));
+      setUploading(true);
+      try {
+        const generatedThumbnail = await generateVideoThumbnail(url);
+        setFormData(prev => ({
+          ...prev,
+          thumbnail: prev.thumbnail || generatedThumbnail
+        }));
+      } catch (err) {
+        console.error("Failed to generate thumbnail:", err);
+      } finally {
+        setUploading(false);
+      }
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        url: url
+      }));
+    }
+  };
+
   return (
     <form onSubmit={handleSubmit} className="bg-white/5 border border-white/10 rounded-lg p-6 space-y-4">
-      <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">Title</label>
-        <input type="text" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} className={formInputClass} required />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-300 mb-2">Title</label>
+          <input type="text" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} className={formInputClass} required />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-300 mb-2">Author</label>
+          <input type="text" value={formData.author} onChange={(e) => setFormData({ ...formData, author: e.target.value })} className={formInputClass} />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-300 mb-2">Meta Name</label>
+          <input type="text" value={formData.meta_name} onChange={(e) => setFormData({ ...formData, meta_name: e.target.value })} className={formInputClass} />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-300 mb-2">Type</label>
+          <select value={formData.type} onChange={(e) => setFormData({ ...formData, type: e.target.value, url: '', thumbnail: '' })} className={formInputClass}>
+            <option value="image">Image</option>
+            <option value="video">Video</option>
+          </select>
+        </div>
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">Meta Name</label>
-        <input type="text" value={formData.meta_name} onChange={(e) => setFormData({ ...formData, meta_name: e.target.value })} className={formInputClass} />
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">Author</label>
-        <input type="text" value={formData.author} onChange={(e) => setFormData({ ...formData, author: e.target.value })} className={formInputClass} />
-      </div>
-      
-      <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">Type</label>
-        <select value={formData.type} onChange={(e) => setFormData({ ...formData, type: e.target.value })} className={formInputClass}>
-          <option value="image">Image</option>
-          <option value="video">Video</option>
-        </select>
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">Media</label>
+        <label className="block text-sm font-medium text-gray-300 mb-2">Media URL</label>
         {formData.type === 'image' && (
-            <div className="flex items-center gap-4 mb-2">
-                <Button type="button" onClick={() => fileInputRef.current.click()} disabled={uploading} className="gap-2"><Upload /> Upload Image</Button>
-                <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept="image/*" />
-                {uploading && <Loader2 className="h-5 w-5 animate-spin"/>}
-            </div>
+          <div className="flex items-center gap-4 mb-2">
+            <Button type="button" onClick={() => fileInputRef.current.click()} disabled={uploading} className="gap-2"><Upload /> Upload Image</Button>
+            <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept="image/*" />
+            {uploading && <Loader2 className="h-5 w-5 animate-spin" />}
+          </div>
         )}
-        <input type="url" placeholder={formData.type === 'image' ? "Or paste image URL" : "Paste video URL"} value={formData.url} onChange={(e) => setFormData({ ...formData, url: e.target.value })} className={formInputClass} required />
-        {formData.url && formData.type === 'image' && <img src={formData.url} alt="Preview" className="mt-4 h-32 w-auto object-cover rounded-md bg-gray-700" />}
+        <input
+          type="url"
+          placeholder={formData.type === 'image' ? "Or paste image URL" : "Paste YouTube or direct video URL"}
+          value={formData.url}
+          onChange={(e) => handleUrlChange(e.target.value)}
+          className={formInputClass}
+          required
+        />
       </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-300 mb-2">Thumbnail URL (Optional)</label>
+        <input
+          type="url"
+          placeholder="Custom thumbnail URL (auto-generated for videos)"
+          value={formData.thumbnail}
+          onChange={(e) => setFormData({ ...formData, thumbnail: e.target.value })}
+          className={formInputClass}
+        />
+      </div>
+
+      {formData.url && (
+        <div className="mt-4 p-4 bg-black/30 rounded-lg border border-white/5">
+          <label className="block text-sm font-medium text-gray-400 mb-2">Preview</label>
+          <div className="relative aspect-video max-w-sm rounded-md overflow-hidden bg-gray-900 border border-white/10">
+            {formData.type === 'image' ? (
+              <img src={formData.url} alt="Preview" className="w-full h-full object-cover" />
+            ) : formData.thumbnail || formData.url ? (
+              <>
+                <img src={formData.thumbnail || formData.url} alt="Thumbnail" className="w-full h-full object-cover" />
+                <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+                  <Video className="w-12 h-12 text-white/50" />
+                </div>
+              </>
+            ) : (
+              <div className="w-full h-full flex items-center justify-center">
+                <Video className="w-12 h-12 text-gray-700" />
+              </div>
+            )}
+            {uploading && (
+              <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                <Loader2 className="h-8 w-8 animate-spin text-red-500" />
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       <div>
         <label className="block text-sm font-medium text-gray-300 mb-2">Description</label>
         <textarea value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} className={`${formInputClass} min-h-[100px]`} />
       </div>
 
-      <div className="flex gap-2">
-        <Button type="submit" className="bg-red-600 hover:bg-red-700">{item ? 'Update' : 'Create'}</Button>
-        <Button type="button" onClick={onCancel} variant="outline">Cancel</Button>
+      <div className="flex gap-2 justify-end">
+        <Button type="button" onClick={onCancel} variant="outline" className="border-white/10 text-gray-400">Cancel</Button>
+        <Button type="submit" className="bg-red-600 hover:bg-red-700 text-white px-8" disabled={uploading}>
+          {item ? 'Update Media' : 'Create Media'}
+        </Button>
       </div>
     </form>
   );
 };
 
 export default MediaForm;
+

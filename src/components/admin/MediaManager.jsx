@@ -29,9 +29,9 @@ const MediaManager = () => {
 
   const handleSave = async (item) => {
     const { id, ...itemData } = item;
-    const { error } = id ? 
-        await supabase.from('media_items').update(itemData).eq('id', id) : 
-        await supabase.from('media_items').insert(itemData);
+    const { error } = id ?
+      await supabase.from('media_items').update(itemData).eq('id', id) :
+      await supabase.from('media_items').insert(itemData);
 
     if (error) {
       toast({ title: "Error", description: error.message, variant: "destructive" });
@@ -45,7 +45,7 @@ const MediaManager = () => {
 
   const handleDelete = async (item) => {
     if (item.image_path) {
-        await supabase.storage.from('Items').remove([item.image_path]);
+      await supabase.storage.from('Items').remove([item.image_path]);
     }
     const { error } = await supabase.from('media_items').delete().eq('id', item.id);
     if (error) {
@@ -92,16 +92,23 @@ const MediaManager = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {items.map(item => (
             <div key={item.id} className="bg-white/5 border border-white/10 rounded-lg overflow-hidden">
-              <div className="aspect-video bg-gray-800">
-                <img src={item.url} alt={item.title} className="w-full h-full object-cover" />
+              <div className="relative aspect-video bg-gray-800">
+                <img src={item.thumbnail || item.url} alt={item.title} className="w-full h-full object-cover" />
+                {item.type === 'video' && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+                    <div className="bg-black/50 p-2 rounded-full">
+                      <Video className="h-6 w-6 text-white" />
+                    </div>
+                  </div>
+                )}
               </div>
               <div className="p-4">
                 <h3 className="text-lg font-bold text-white mb-2">{item.title}</h3>
                 {item.author && (
-                    <div className="flex items-center gap-2 text-sm text-gray-400 mb-2">
-                        <User className="h-4 w-4" />
-                        <span>{item.author}</span>
-                    </div>
+                  <div className="flex items-center gap-2 text-sm text-gray-400 mb-2">
+                    <User className="h-4 w-4" />
+                    <span>{item.author}</span>
+                  </div>
                 )}
                 <p className="text-gray-400 text-sm mb-3 line-clamp-2">{item.description}</p>
                 <div className="flex gap-2">
