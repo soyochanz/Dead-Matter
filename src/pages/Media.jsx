@@ -7,7 +7,8 @@ import { Loader2, ArrowLeft, Image, Video, Filter, X, Play, Expand, User, Calend
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
-import { generateVideoThumbnail } from '@/lib/videoUtils';
+import { generateVideoThumbnail, dataURLtoBlob } from '@/lib/videoUtils';
+
 
 
 // Componente Modal para vista ampliada
@@ -264,22 +265,44 @@ const MediaForm = ({ item, onSave, onCancel }) => {
                 url: url,
                 thumbnail: thumbnail || prev.thumbnail
             }));
-        } else if (formData.type === 'video' && (url.match(/\.(mp4|webm|ogg|mov)$/i) || url.includes('discordapp.net') || url.includes('cdn.discordapp.com'))) {
+        } else if (formData.type === 'video' && (url.toLowerCase().includes('.mp4') || url.toLowerCase().includes('.webm') || url.toLowerCase().includes('.mov') || url.includes('discordapp.net') || url.includes('cdn.discordapp.com'))) {
+
             // Es un video directo, intentar generar thumbnail
             setFormData(prev => ({ ...prev, url }));
             setUploading(true);
             try {
-                const generatedThumbnail = await generateVideoThumbnail(url);
-                setFormData(prev => ({
-                    ...prev,
-                    thumbnail: prev.thumbnail || generatedThumbnail
-                }));
+                const generatedThumbnailDataUrl = await generateVideoThumbnail(url);
+                if (generatedThumbnailDataUrl) {
+                    // Convertir a blob y subir a Storage
+                    const blob = dataURLtoBlob(generatedThumbnailDataUrl);
+                    const fileName = `thumb_${Date.now()}.jpg`;
+                    const filePath = `public/thumbnails/${fileName}`;
+
+                    const { error: uploadError } = await supabase.storage.from('Items').upload(filePath, blob, {
+                        contentType: 'image/jpeg'
+                    });
+
+                    if (uploadError) throw uploadError;
+
+                    const { data: { publicUrl } } = supabase.storage.from('Items').getPublicUrl(filePath);
+
+                    setFormData(prev => ({
+                        ...prev,
+                        thumbnail: prev.thumbnail || publicUrl
+                    }));
+                }
             } catch (err) {
-                console.error("Failed to generate thumbnail:", err);
+                console.error("Failed to generate/upload thumbnail:", err);
+                toast({
+                    title: "Thumbnail Error",
+                    description: "Failed to generate video thumbnail. CORS might be restricted.",
+                    variant: "destructive"
+                });
             } finally {
                 setUploading(false);
             }
         } else {
+
             setFormData(prev => ({
                 ...prev,
                 url: url
@@ -351,25 +374,29 @@ const MediaForm = ({ item, onSave, onCancel }) => {
                                 alt="Preview"
                                 className="h-48 w-auto object-cover rounded-md bg-gray-700 border border-white/10"
                             />
-                        ) : formData.type === 'video' && formData.thumbnail ? (
+                        ) : formData.type === 'video' && (formData.thumbnail || formData.url) ? (
                             <div className="relative">
                                 <img
-                                    src={formData.thumbnail}
+                                    src={formData.thumbnail || formData.url}
                                     alt="Video Thumbnail"
                                     className="h-48 w-full object-cover rounded-md bg-gray-700 border border-white/10"
                                 />
+                                <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+                                    <Video className="w-12 h-12 text-white/50" />
+                                </div>
                                 <div className="mt-2 text-sm text-gray-400">
-                                    YouTube video detected: {extractYouTubeId(formData.url) || 'Invalid URL'}
+                                    {extractYouTubeId(formData.url) ? 'YouTube video detected' : 'Direct video detected'}
                                 </div>
                             </div>
+
                         ) : formData.type === 'video' && formData.url ? (
                             <div className="h-48 bg-gray-800 rounded-md border border-white/10 flex items-center justify-center">
                                 <div className="text-gray-400 text-center">
-                                    <Video className="w-12 h-12 mx-auto mb-2" />
-                                    <p>Video URL entered</p>
-                                    <p className="text-xs mt-1">(Preview will show after saving)</p>
+                                    <Loader2 className="w-12 h-12 mx-auto mb-2 animate-spin text-red-500" />
+                                    <p>Processing video...</p>
                                 </div>
                             </div>
+
                         ) : null}
                     </div>
                 )}
@@ -396,9 +423,17 @@ const MediaForm = ({ item, onSave, onCancel }) => {
             </div>
 
             <div className="flex gap-2">
-                <Button type="submit" className="bg-red-600 hover:bg-red-700">{item ? 'Update' : 'Create'}</Button>
+                <Button type="submit" className="bg-red-600 hover:bg-red-700" disabled={uploading}>
+                    {uploading ? (
+                        <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Processing...
+                        </>
+                    ) : (item ? 'Update' : 'Create')}
+                </Button>
                 <Button type="button" onClick={onCancel} variant="outline">Cancel</Button>
             </div>
+
         </form>
     );
 };

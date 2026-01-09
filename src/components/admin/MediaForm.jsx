@@ -4,7 +4,8 @@ import { Upload, Loader2, Video, Image } from 'lucide-react';
 import { supabase } from '@/lib/mySupabaseClient';
 import { useToast } from '@/components/ui/use-toast';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
-import { generateVideoThumbnail } from '@/lib/videoUtils';
+import { generateVideoThumbnail, dataURLtoBlob } from '@/lib/videoUtils';
+
 
 const MediaForm = ({ item, onSave, onCancel }) => {
   const { profile } = useAuth();
@@ -101,22 +102,44 @@ const MediaForm = ({ item, onSave, onCancel }) => {
         url: url,
         thumbnail: thumbnail || prev.thumbnail
       }));
-    } else if (formData.type === 'video' && (url.match(/\.(mp4|webm|ogg|mov)$/i) || url.includes('discordapp.net') || url.includes('cdn.discordapp.com'))) {
+    } else if (formData.type === 'video' && (url.toLowerCase().includes('.mp4') || url.toLowerCase().includes('.webm') || url.toLowerCase().includes('.mov') || url.includes('discordapp.net') || url.includes('cdn.discordapp.com'))) {
+
       // Es un video directo, intentar generar thumbnail
       setFormData(prev => ({ ...prev, url }));
       setUploading(true);
       try {
-        const generatedThumbnail = await generateVideoThumbnail(url);
-        setFormData(prev => ({
-          ...prev,
-          thumbnail: prev.thumbnail || generatedThumbnail
-        }));
+        const generatedThumbnailDataUrl = await generateVideoThumbnail(url);
+        if (generatedThumbnailDataUrl) {
+          // Convertir a blob y subir a Storage
+          const blob = dataURLtoBlob(generatedThumbnailDataUrl);
+          const fileName = `thumb_${Date.now()}.jpg`;
+          const filePath = `public/thumbnails/${fileName}`;
+
+          const { error: uploadError } = await supabase.storage.from('Items').upload(filePath, blob, {
+            contentType: 'image/jpeg'
+          });
+
+          if (uploadError) throw uploadError;
+
+          const { data: { publicUrl } } = supabase.storage.from('Items').getPublicUrl(filePath);
+
+          setFormData(prev => ({
+            ...prev,
+            thumbnail: prev.thumbnail || publicUrl
+          }));
+        }
       } catch (err) {
-        console.error("Failed to generate thumbnail:", err);
+        console.error("Failed to generate/upload thumbnail:", err);
+        toast({
+          title: "Thumbnail Error",
+          description: "Failed to generate video thumbnail. CORS might be restricted.",
+          variant: "destructive"
+        });
       } finally {
         setUploading(false);
       }
     } else {
+
       setFormData(prev => ({
         ...prev,
         url: url
