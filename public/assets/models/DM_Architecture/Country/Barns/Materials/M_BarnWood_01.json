@@ -1,0 +1,43 @@
+{
+  "Textures": {
+    "PM_Diffuse": "deadmatter/Content/DM_Architecture/Textures/T_Ext_BarnWood_01_Diffuse.T_Ext_BarnWood_01_Diffuse",
+    "BaseColor": "deadmatter/Content/DM_Architecture/Textures/T_Ext_BarnWood_01_Diffuse.T_Ext_BarnWood_01_Diffuse",
+    "PM_Normals": "deadmatter/Content/DM_Architecture/Textures/T_Ext_BarnWood_01_Normal.T_Ext_BarnWood_01_Normal",
+    "Normal": "deadmatter/Content/DM_Architecture/Textures/T_Ext_BarnWood_01_Normal.T_Ext_BarnWood_01_Normal",
+    "R_AO_M_H": "deadmatter/Content/DM_Architecture/Textures/T_Ext_BarnWood_01_Mask.T_Ext_BarnWood_01_Mask",
+    "T_Ext_BarnWood_01_Mask": "deadmatter/Content/DM_Architecture/Textures/T_Ext_BarnWood_01_Mask.T_Ext_BarnWood_01_Mask"
+  },
+  "Parameters": {
+    "BlendMode": 0,
+    "ShadingModel": 0,
+    "Colors": {
+      "Base Color Tint": {
+        "R": 0.5,
+        "G": 0.5,
+        "B": 0.5,
+        "A": 1.0,
+        "Hex": "BCBCBC"
+      }
+    },
+    "Scalars": {
+      "Roughness Boost": 0.0,
+      "RefractionDepthBias": 0.0
+    },
+    "Switches": {},
+    "Properties": {
+      "PhysMaterial": {
+        "ObjectName": "PhysicalMaterial'Wood'",
+        "ObjectPath": "deadmatter/Content/MP_Effects/BallisticsVFX/PhysMats/Wood.0"
+      },
+      "BasePropertyOverrides": {
+        "OpacityMaskClipValue": 0.3333
+      }
+    },
+    "HasTopDiffuse": true,
+    "HasTopNormals": true,
+    "HasTopSpecularMasks": false,
+    "HasTopEmissive": false,
+    "IsTranslucent": false,
+    "IsNull": false
+  }
+}

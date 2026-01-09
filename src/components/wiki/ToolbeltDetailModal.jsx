@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, Wrench, Weight, Ruler, Package, Cog, DollarSign, TrendingUp, Zap } from 'lucide-react';
 import NpcSellersModal from '@/components/wiki/NpcSellersModal';
 import { useNavigate } from 'react-router-dom';
+import Wiki3DViewer from './Wiki3DViewer';
 
 const StatDisplay = ({ icon, label, value, colorClass = 'text-white', onClick, className = '' }) => (
     <div
@@ -78,21 +79,9 @@ const ToolbeltDetailModal = ({ item, onClose }) => {
                                         </div>
 
                                         {item.model_url && viewType === '3d' ? (
-                                            <model-viewer
+                                            <Wiki3DViewer
                                                 src={item.model_url}
                                                 alt={item.name}
-                                                auto-rotate
-                                                camera-controls
-                                                shadow-intensity="0.2"
-                                                shadow-softness="1"
-                                                exposure="1"
-                                                environment-image="neutral"
-                                                tone-mapping="neutral"
-                                                render-scale="2"
-                                                field-of-view="35deg"
-                                                interaction-prompt="none"
-                                                style={{ width: '100%', height: '100%', backgroundColor: 'transparent' }}
-                                                className="relative z-10"
                                             />
                                         ) : (
                                             <motion.img

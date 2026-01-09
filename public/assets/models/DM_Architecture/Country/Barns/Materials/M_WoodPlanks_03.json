@@ -1,0 +1,44 @@
+{
+  "Textures": {
+    "PM_Diffuse": "deadmatter/Content/DM_Architecture/Textures/T_Int_WoodPlanks_03_Diffuse.T_Int_WoodPlanks_03_Diffuse",
+    "BaseColor": "deadmatter/Content/DM_Architecture/Textures/T_Int_WoodPlanks_03_Diffuse.T_Int_WoodPlanks_03_Diffuse",
+    "PM_Normals": "deadmatter/Content/DM_Architecture/Textures/T_Int_WoodPlanks_03_Normal.T_Int_WoodPlanks_03_Normal",
+    "Normal": "deadmatter/Content/DM_Architecture/Textures/T_Int_WoodPlanks_03_Normal.T_Int_WoodPlanks_03_Normal",
+    "R_AO_M_H": "deadmatter/Content/DM_Architecture/Textures/T_Int_WoodPlanks_03_Mask.T_Int_WoodPlanks_03_Mask",
+    "T_Int_WoodPlanks_03_Mask": "deadmatter/Content/DM_Architecture/Textures/T_Int_WoodPlanks_03_Mask.T_Int_WoodPlanks_03_Mask"
+  },
+  "Parameters": {
+    "BlendMode": 0,
+    "ShadingModel": 0,
+    "Colors": {
+      "Base Color Tint": {
+        "R": 0.322917,
+        "G": 0.296678,
+        "B": 0.273252,
+        "A": 1.0,
+        "Hex": "9A948F"
+      }
+    },
+    "Scalars": {
+      "Porosity Max": 0.358092,
+      "Porosity Min": 0.206283,
+      "RefractionDepthBias": 0.0
+    },
+    "Switches": {},
+    "Properties": {
+      "PhysMaterial": {
+        "ObjectName": "PhysicalMaterial'Wood'",
+        "ObjectPath": "deadmatter/Content/MP_Effects/BallisticsVFX/PhysMats/Wood.0"
+      },
+      "BasePropertyOverrides": {
+        "OpacityMaskClipValue": 0.3333
+      }
+    },
+    "HasTopDiffuse": true,
+    "HasTopNormals": true,
+    "HasTopSpecularMasks": false,
+    "HasTopEmissive": false,
+    "IsTranslucent": false,
+    "IsNull": false
+  }
+}

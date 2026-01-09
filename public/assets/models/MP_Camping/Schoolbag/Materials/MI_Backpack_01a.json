@@ -1,0 +1,30 @@
+{
+  "Textures": {
+    "PM_Diffuse": "deadmatter/Content/MP_Camping/Textures/Unique/TX_Bookbag_01a_ALB.TX_Bookbag_01a_ALB",
+    "Albedo": "deadmatter/Content/MP_Camping/Textures/Unique/TX_Bookbag_01a_ALB.TX_Bookbag_01a_ALB",
+    "PM_Normals": "deadmatter/Content/MP_Camping/Textures/Unique/TX_Bookbag_01a_NRM.TX_Bookbag_01a_NRM",
+    "Normal": "deadmatter/Content/MP_Camping/Textures/Unique/TX_Bookbag_01a_NRM.TX_Bookbag_01a_NRM",
+    "PM_SpecularMasks": "deadmatter/Content/MP_Camping/Textures/Unique/TX_Bookbag_01a_RMA.TX_Bookbag_01a_RMA",
+    "RMA": "deadmatter/Content/MP_Camping/Textures/Unique/TX_Bookbag_01a_RMA.TX_Bookbag_01a_RMA"
+  },
+  "Parameters": {
+    "BlendMode": 0,
+    "ShadingModel": 0,
+    "Colors": {},
+    "Scalars": {
+      "RefractionDepthBias": 0.0
+    },
+    "Switches": {},
+    "Properties": {
+      "BasePropertyOverrides": {
+        "OpacityMaskClipValue": 0.3333
+      }
+    },
+    "HasTopDiffuse": true,
+    "HasTopNormals": true,
+    "HasTopSpecularMasks": false,
+    "HasTopEmissive": false,
+    "IsTranslucent": false,
+    "IsNull": false
+  }
+}

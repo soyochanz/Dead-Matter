@@ -6,6 +6,7 @@ import { DndContext, useDraggable, useDroppable, DragOverlay } from '@dnd-kit/co
 import { supabase } from '@/lib/mySupabaseClient';
 import * as LucideIcons from 'lucide-react';
 import NpcSellersModal from '@/components/wiki/NpcSellersModal';
+import Wiki3DViewer from './Wiki3DViewer';
 
 const StatBar = ({ icon, label, value, max = 100, unit = '', higherIsBetter = true, baseValue, showModifier = false, color }) => {
     const clampedValue = Math.min(value, max);
@@ -253,21 +254,9 @@ const AmmoWeaponsModal = ({ ammo: ammoName, onClose }) => {
                                     </div>
 
                                     {(viewType === 'box' ? ammoData?.box_model_url : ammoData?.bullet_model_url) ? (
-                                        <model-viewer
+                                        <Wiki3DViewer
                                             src={viewType === 'box' ? ammoData.box_model_url : ammoData.bullet_model_url}
                                             alt={ammoName}
-                                            auto-rotate
-                                            camera-controls
-                                            shadow-intensity="0.2"
-                                            shadow-softness="1"
-                                            exposure="1"
-                                            environment-image="neutral"
-                                            tone-mapping="neutral"
-                                            render-scale="2"
-                                            field-of-view="35deg"
-                                            interaction-prompt="none"
-                                            style={{ width: '100%', height: '100%', backgroundColor: 'transparent' }}
-                                            className="relative z-10"
                                         />
                                     ) : (
                                         <div className="flex flex-col items-center justify-center text-gray-700 opacity-20 text-center">
@@ -626,22 +615,10 @@ const WeaponDetailModal = ({ weapon, onClose, onNpcSelect }) => {
                                             </div>
 
                                             {viewMode === '3d' && hasModel ? (
-                                                <model-viewer
+                                                <Wiki3DViewer
                                                     src={weapon.model_url}
                                                     alt={weapon.name}
-                                                    auto-rotate
-                                                    camera-controls
-                                                    shadow-intensity="0.2"
-                                                    shadow-softness="1"
-                                                    exposure="1"
-                                                    environment-image="neutral"
-                                                    tone-mapping="neutral"
-                                                    render-scale="2"
-                                                    field-of-view="35deg"
-                                                    interaction-prompt="none"
-                                                    style={{ width: '100%', height: '100%', backgroundColor: 'transparent' }}
-                                                    className="relative z-10"
-                                                ></model-viewer>
+                                                />
                                             ) : (
                                                 <motion.img
                                                     initial={{ y: 20, opacity: 0 }}
