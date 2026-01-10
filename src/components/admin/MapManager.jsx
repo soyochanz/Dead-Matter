@@ -25,7 +25,10 @@ const TAG_OPTIONS = [
     { label: 'Civilian', color: '#22c55e' },   // Green-500
     { label: 'Medical', color: '#a855f7' },    // Purple-500
     { label: 'Food', color: '#eab308' },       // Yellow-500
-    { label: 'Calculated', color: '#3b82f6' }  // Blue-500
+    { label: 'Calculated', color: '#3b82f6' }, // Blue-500
+    { label: 'Clothes', color: '#ec4899' },    // Pink-500
+    { label: 'Weapons', color: '#64748b' },    // Slate-500
+    { label: 'Base Items', color: '#a16207' }  // Yellow-700
 ];
 
 const MapManager = () => {
