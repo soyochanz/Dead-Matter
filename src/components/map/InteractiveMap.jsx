@@ -267,7 +267,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
             const catName = cat?.name?.toLowerCase() || '';
 
             if (catName === 'zones (minor)' && zoomLevel < 18) return false;
-            if (catName.includes('lootable vehicle') && zoomLevel < 16) return false;
+            if (catName.includes('lootable vehicle') && zoomLevel < 17) return false;
 
             return true;
         });
@@ -328,11 +328,21 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
         const title = marker.title?.toLowerCase() || '';
 
         const isLocked = marker.requires_key || ['federal stockpile bunker'].some(k => title.includes(k));
-
         // Water Badge Filter Logic
         const waterCat = categories.find(c => c.name?.toLowerCase() === 'water source');
         const showWaterBadgeFilter = waterCat ? !!activeFilters[waterCat.id] : true;
         const hasWater = (marker.has_water_source && showWaterBadgeFilter);
+
+        // 0. LOOTABLE VEHICLES (High Priority Override)
+        // These must be small and subtle, checked before generic loot
+        if (catName.includes('lootable vehicle')) {
+            return L.divIcon({
+                html: `<div style="width: 6px; height: 6px; background-color: rgba(163, 163, 163, 0.4); border-radius: 50%; box-shadow: 0 0 0 1px rgba(0,0,0,0.2);"></div>`,
+                className: 'loot-dot-vehicle',
+                iconSize: [6, 6],
+                iconAnchor: [3, 3]
+            });
+        }
 
         // 1. LOOT DETECTION (Explicit)
         // We treat it as loot if 'loot' is in the name OR if it belongs to a primary loot group
@@ -397,15 +407,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
             return createNoBorderIcon(mapIcons.person, '#ffffff', 30, hasWater);
         }
 
-        // New: Lootable Vehicles (Smaller Grey Dot, 30% Opacity)
-        if (catName.includes('lootable vehicle')) {
-            return L.divIcon({
-                html: `<div style="width: 8px; height: 8px; background-color: #a3a3a3; border-radius: 50%; box-shadow: 0 0 0 1px rgba(0,0,0,0.5); opacity: 0.3;"></div>`,
-                className: 'loot-dot-vehicle',
-                iconSize: [8, 8],
-                iconAnchor: [4, 4]
-            });
-        }
+
 
         // 9. Special Circles
         if (catName.includes('water') && !catName.includes('tower')) return createNoBorderIcon(personalIcons.water.svg, '#06b6d4', 18); // This is already water, no need for badge
