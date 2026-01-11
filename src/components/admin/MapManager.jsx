@@ -653,6 +653,18 @@ const MapManager = () => {
                                     />
                                 </div>
 
+                                {/* Water Source Checkbox */}
+                                <div className="flex items-center space-x-2 border border-neutral-700 bg-neutral-800 p-3 rounded-md">
+                                    <Checkbox
+                                        id="has_water_source"
+                                        checked={formData.has_water_source}
+                                        onCheckedChange={(checked) => setFormData(prev => ({ ...prev, has_water_source: checked }))}
+                                    />
+                                    <Label htmlFor="has_water_source" className="text-sm font-medium cursor-pointer text-cyan-400">
+                                        Water Source 💧
+                                    </Label>
+                                </div>
+
                                 {/* Requires Key Checkbox */}
                                 <div className="flex items-center space-x-2 border border-neutral-700 bg-neutral-800 p-3 rounded-md">
                                     <Checkbox
@@ -686,17 +698,7 @@ const MapManager = () => {
                                     </div>
                                 )}
 
-                                {/* Water Source Checkbox */}
-                                <div className="flex items-center space-x-2 border border-neutral-700 bg-neutral-800 p-3 rounded-md">
-                                    <Checkbox
-                                        id="has_water_source"
-                                        checked={formData.has_water_source}
-                                        onCheckedChange={(checked) => setFormData(prev => ({ ...prev, has_water_source: checked }))}
-                                    />
-                                    <Label htmlFor="has_water_source" className="text-sm font-medium cursor-pointer text-cyan-400">
-                                        Water Source 💧
-                                    </Label>
-                                </div>
+
 
                                 <div className="grid gap-2">
                                     <Label>Loot Tags (Multi-select)</Label>
