@@ -29,36 +29,29 @@ const MapPopup = ({ marker, tags, keys = [] }) => {
         <div className="flex flex-col text-white font-sans bg-[#0e1116] rounded-[15px] overflow-hidden min-w-[300px]">
             {/* Hero Image Section */}
             {hasImage && (
-                <div className="relative w-full h-48 group bg-black/40 overflow-hidden">
-                    {/* Blurred Background Layer */}
+                <div className="relative w-full h-48 group bg-neutral-900 overflow-hidden border-b border-white/5">
+                    {/* Blurred Background Layer (Fallback for gaps) */}
                     <img
                         src={marker.image_url}
                         alt=""
-                        className="absolute inset-0 w-full h-full object-cover blur-md opacity-30 scale-110"
+                        className="absolute inset-0 w-full h-full object-cover blur-lg opacity-20 scale-110"
                     />
 
-                    {/* Main Image Layer (Fully Visible) */}
+                    {/* Main Image Layer (Uniform Cover) */}
                     <img
                         src={marker.image_url}
                         alt={marker.title}
-                        className="relative w-full h-full object-contain transition-transform duration-500 group-hover:scale-105 z-10"
+                        className="relative w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 z-10"
                     />
 
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0e1116] via-transparent to-transparent opacity-60 z-20" />
-
-                    {/* Floating Title on Image */}
-                    <div className="absolute bottom-3 left-4 right-4">
-                        <h3 className="text-xl font-bold leading-tight text-white drop-shadow-md">{marker.title}</h3>
-                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent z-20" />
                 </div>
             )}
 
             {/* Content Body */}
-            <div className={`px-4 pb-4 ${hasImage ? 'pt-1' : 'pt-4'}`}>
-                {/* Title (if no image) */}
-                {!hasImage && (
-                    <h3 className="text-xl font-bold mb-2 text-white">{marker.title}</h3>
-                )}
+            <div className={`px-5 pb-5 pt-4`}>
+                <h3 className="text-xl font-bold mb-3 text-white leading-tight">{marker.title}</h3>
+
 
                 {isLocked && (
                     <div className="mb-3 px-3 py-2 bg-amber-500/10 border border-amber-500/30 rounded-lg flex items-center gap-2">

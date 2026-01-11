@@ -397,10 +397,10 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
             return createNoBorderIcon(mapIcons.person, '#ffffff', 30, hasWater);
         }
 
-        // New: Lootable Vehicles (Smaller Grey Dot, 50% Opacity)
+        // New: Lootable Vehicles (Smaller Grey Dot, 30% Opacity)
         if (catName.includes('lootable vehicle')) {
             return L.divIcon({
-                html: `<div style="width: 8px; height: 8px; background-color: #a3a3a3; border-radius: 50%; box-shadow: 0 0 0 1px rgba(0,0,0,0.5); opacity: 0.5;"></div>`,
+                html: `<div style="width: 8px; height: 8px; background-color: #a3a3a3; border-radius: 50%; box-shadow: 0 0 0 1px rgba(0,0,0,0.5); opacity: 0.3;"></div>`,
                 className: 'loot-dot-vehicle',
                 iconSize: [8, 8],
                 iconAnchor: [4, 4]
