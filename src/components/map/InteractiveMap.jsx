@@ -232,9 +232,24 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
     };
 
     // Helper 3: Dot Style (Loot)
-    const createDotIcon = (color, size = 12) => {
+    const createDotIcon = (color, size = 12, locked = false, hasWater = false) => {
+        const badges = [];
+        if (locked) {
+            badges.push(`<div style="position: absolute; top: -6px; right: -6px; width: 12px; height: 12px; background: #fbbf24; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid #1a1a1a; box-shadow: 0 1px 2px rgba(0,0,0,0.5); z-index: 10; color: #1a1a1a;">
+                <svg viewBox="0 0 24 24" fill="currentColor" style="width: 8px; height: 8px;"><path d="M21 10h-8.35C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H13v2h2v-2h2v2h2v-2h2v-4zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
+            </div>`);
+        }
+        if (hasWater) {
+            badges.push(`<div style="position: absolute; top: -6px; left: -6px; width: 12px; height: 12px; background: #06b6d4; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid #1a1a1a; box-shadow: 0 1px 2px rgba(0,0,0,0.5); z-index: 10; color: white;">
+                <svg viewBox="0 0 24 24" fill="currentColor" style="width: 8px; height: 8px;"><path d="M12 2c-5.33 4.55-8 8.48-8 11.8 0 4.98 3.8 8.2 8 8.2s8-3.22 8-8.2c0-3.32-2.67-7.25-8-11.8z"/></svg>
+            </div>`);
+        }
+
         return L.divIcon({
-            html: `<div style="width: ${size}px; height: ${size}px; background-color: ${color}; border-radius: 50%; box-shadow: 0 0 0 1px rgba(0,0,0,0.5), 0 2px 4px rgba(0,0,0,0.3);"></div>`,
+            html: `<div style="position: relative;">
+                <div style="width: ${size}px; height: ${size}px; background-color: ${color}; border-radius: 50%; box-shadow: 0 0 0 1px rgba(0,0,0,0.5), 0 2px 4px rgba(0,0,0,0.3);"></div>
+                ${badges.join('')}
+            </div>`,
             className: 'loot-dot',
             iconSize: [size, size],
             iconAnchor: [size / 2, size / 2]
@@ -320,11 +335,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
             if (groupName === 'medical') dotColor = '#ec4899';
             if (groupName === 'calculated') dotColor = '#3b82f6';
 
-            // If it's a loot dot but also has water or is locked, use a pin with badges
-            if (isLocked || hasWater) {
-                return createPinIcon(personalIcons.loot.svg, dotColor, isLocked, hasWater);
-            }
-            return createDotIcon(dotColor);
+            return createDotIcon(dotColor, 12, isLocked, hasWater);
         }
 
         // 2. Zones
