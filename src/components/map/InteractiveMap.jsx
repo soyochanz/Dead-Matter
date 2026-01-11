@@ -348,9 +348,9 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
             return createNoBorderIcon(mapIcons.person, '#ffffff');
         }
 
-        // New: Lootable Vehicles (Grey Dot)
+        // New: Lootable Vehicles (Grey Dot, 50% Opacity)
         if (catName.includes('lootable vehicle')) {
-            return createDotIcon('#a3a3a3'); // Neutral Grey (approx. neutral-400)
+            return createDotIcon('rgba(163, 163, 163, 0.5)');
         }
 
         // 9. Special Circles (Water, Keys, Butane)

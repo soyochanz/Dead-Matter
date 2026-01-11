@@ -28,8 +28,7 @@ const TAG_OPTIONS = [
     { label: 'Calculated', color: '#3b82f6' }, // Blue-500
     { label: 'Clothes', color: '#ec4899' },    // Pink-500
     { label: 'Weapons', color: '#64748b' },    // Slate-500
-    { label: 'Base Items', color: '#a16207' }, // Yellow-700
-    { label: 'Vehicles', color: '#7c3aed' }    // Violet-600
+    { label: 'Base Items', color: '#a16207' }  // Yellow-700
 ];
 
 const MapManager = () => {
