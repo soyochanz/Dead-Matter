@@ -348,6 +348,11 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
             return createNoBorderIcon(mapIcons.person, '#ffffff');
         }
 
+        // New: Lootable Vehicles (Grey Dot)
+        if (catName.includes('lootable vehicle')) {
+            return createDotIcon('#a3a3a3'); // Neutral Grey (approx. neutral-400)
+        }
+
         // 9. Special Circles (Water, Keys, Butane)
         // 9. Special Circles (Water, Keys, Butane)
         if (catName.includes('water') && !catName.includes('tower')) return createNoBorderIcon(personalIcons.water.svg, '#06b6d4', 18); // Smaller filled blue drop
