@@ -188,17 +188,25 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
     };
 
     // Helper 1: Pin Style (Glass Teardrop)
-    const createPinIcon = (content, color, locked = false) => {
-        const badge = locked ? `<div style="position: absolute; top: -5px; right: -5px; width: 15px; height: 15px; background: #fbbf24; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid #1a1a1a; box-shadow: 0 2px 4px rgba(0,0,0,0.5); z-index: 10; color: #1a1a1a;">
-            <svg viewBox="0 0 24 24" fill="currentColor" style="width: 10px; height: 10px;"><path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
-        </div>` : '';
+    const createPinIcon = (content, color, locked = false, hasWater = false) => {
+        const badges = [];
+        if (locked) {
+            badges.push(`<div style="position: absolute; top: -5px; right: -5px; width: 15px; height: 15px; background: #fbbf24; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid #1a1a1a; box-shadow: 0 2px 4px rgba(0,0,0,0.5); z-index: 10; color: #1a1a1a;">
+                <svg viewBox="0 0 24 24" fill="currentColor" style="width: 10px; height: 10px;"><path d="M21 10h-8.35C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H13v2h2v-2h2v2h2v-2h2v-4zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
+            </div>`);
+        }
+        if (hasWater) {
+            badges.push(`<div style="position: absolute; top: -5px; left: -5px; width: 15px; height: 15px; background: #06b6d4; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid #1a1a1a; box-shadow: 0 2px 4px rgba(0,0,0,0.5); z-index: 10; color: white;">
+                <svg viewBox="0 0 24 24" fill="currentColor" style="width: 10px; height: 10px;"><path d="M12 2c-5.33 4.55-8 8.48-8 11.8 0 4.98 3.8 8.2 8 8.2s8-3.22 8-8.2c0-3.32-2.67-7.25-8-11.8z"/></svg>
+            </div>`);
+        }
 
         return L.divIcon({
             html: `<div style="position: relative;">
                 <div style="background-color: #0f172aa6; width: 32px; height: 32px; border-radius: 50% 50% 50% 0; display: flex; align-items: center; justify-content: center; border: 2px solid ${color}; color: ${color}; box-shadow: 0 0 12px ${color}80; backdrop-filter: blur(2px); transform: rotate(-45deg);">
                     <div style="width: 18px; height: 18px; transform: rotate(45deg); display: flex; align-items: center; justify-content: center;">${content}</div>
                 </div>
-                ${badge}
+                ${badges.join('')}
             </div>`,
             className: 'pin-marker',
             iconSize: [32, 32],
@@ -207,10 +215,15 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
     };
 
     // Helper 2: No Border Style (NPCs - Transparent)
-    const createNoBorderIcon = (content, color, size = 30) => {
+    const createNoBorderIcon = (content, color, size = 30, hasWater = false) => {
+        const badge = hasWater ? `<div style="position: absolute; top: -5px; left: -5px; width: 12px; height: 12px; background: #06b6d4; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid #1a1a1a; box-shadow: 0 2px 4px rgba(0,0,0,0.5); z-index: 10; color: white;">
+            <svg viewBox="0 0 24 24" fill="currentColor" style="width: 8px; height: 8px;"><path d="M12 2c-5.33 4.55-8 8.48-8 11.8 0 4.98 3.8 8.2 8 8.2s8-3.22 8-8.2c0-3.32-2.67-7.25-8-11.8z"/></svg>
+        </div>` : '';
+
         return L.divIcon({
-            html: `<div style="width: ${size}px; height: ${size}px; display: flex; align-items: center; justify-content: center; color: ${color}; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));">
+            html: `<div style="position: relative; width: ${size}px; height: ${size}px; display: flex; align-items: center; justify-content: center; color: ${color}; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));">
                 <div style="width: ${size}px; height: ${size}px;">${content}</div>
+                ${badge}
             </div>`,
             className: 'npc-marker',
             iconSize: [size, size],
@@ -219,12 +232,12 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
     };
 
     // Helper 3: Dot Style (Loot)
-    const createDotIcon = (color) => {
+    const createDotIcon = (color, size = 12) => {
         return L.divIcon({
-            html: `<div style="width: 12px; height: 12px; background-color: ${color}; border-radius: 50%; box-shadow: 0 0 0 1px rgba(0,0,0,0.5), 0 2px 4px rgba(0,0,0,0.3);"></div>`,
+            html: `<div style="width: ${size}px; height: ${size}px; background-color: ${color}; border-radius: 50%; box-shadow: 0 0 0 1px rgba(0,0,0,0.5), 0 2px 4px rgba(0,0,0,0.3);"></div>`,
             className: 'loot-dot',
-            iconSize: [12, 12],
-            iconAnchor: [6, 6]
+            iconSize: [size, size],
+            iconAnchor: [size / 2, size / 2]
         });
     };
     const ZoomTracker = () => {
@@ -293,18 +306,28 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
     const getIconForMarker = (marker) => {
         const category = categories.find(c => c.id === marker.category_id);
         const catName = category?.name?.toLowerCase() || '';
+        const groupName = category?.group_name?.toLowerCase() || '';
         const isLoot = (marker.title.toLowerCase().includes('loot') || catName.includes('loot'));
         const isLocked = marker.requires_key || ['federal stockpile bunker'].some(k => marker.title?.toLowerCase().includes(k));
-
-
+        const hasWater = marker.has_water_source || false;
 
         // 1. Loot (Colored Dots)
-        if (category?.group_name === 'military' && isLoot) return createDotIcon('#ef4444');
-        if (category?.group_name === 'industrial' && isLoot) return createDotIcon('#f97316');
-        if (category?.group_name === 'civilian' && isLoot) return createDotIcon('#22c55e');
-        if (category?.group_name === 'medical' && isLoot) return createDotIcon('#ec4899');
+        if (isLoot) {
+            let dotColor = '#94a3b8'; // Default grey
+            if (groupName === 'military') dotColor = '#ef4444';
+            if (groupName === 'industrial') dotColor = '#f97316';
+            if (groupName === 'civilian') dotColor = '#22c55e';
+            if (groupName === 'medical') dotColor = '#ec4899';
+            if (groupName === 'calculated') dotColor = '#3b82f6';
 
-        // 2. Zones (Unchanged)
+            // If it's a loot dot but also has water or is locked, use a pin with badges
+            if (isLocked || hasWater) {
+                return createPinIcon(personalIcons.loot.svg, dotColor, isLocked, hasWater);
+            }
+            return createDotIcon(dotColor);
+        }
+
+        // 2. Zones
         if (catName.includes('zones')) {
             const isMinor = catName.includes('minor');
             return L.divIcon({
@@ -316,85 +339,88 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
         }
 
         // 3. Orange Group (Factory, Hangar)
-        if (catName.includes('factory')) return createPinIcon(mapIcons.factory, '#f97316', isLocked);
-        if (catName.includes('hangar')) return createPinIcon(mapIcons.hangar, '#f97316', isLocked);
+        if (catName.includes('factory')) return createPinIcon(mapIcons.factory, '#f97316', isLocked, hasWater);
+        if (catName.includes('hangar')) return createPinIcon(mapIcons.hangar, '#f97316', isLocked, hasWater);
 
         // 4. Green Group
-        if (catName.includes('bunker') && catName.includes('civilian')) return createPinIcon(mapIcons.bunker, '#22c55e', isLocked);
-        if (catName.includes('deer stand')) return createPinIcon(mapIcons.tree, '#22c55e', isLocked);
-        if (catName.includes('firestation')) return createPinIcon(mapIcons.fire, '#22c55e', isLocked);
-        if (catName.includes('gas station')) return createPinIcon(personalIcons.gas.svg, '#22c55e', isLocked);
-        if (catName.includes('golf')) return createPinIcon(mapIcons.golf, '#22c55e', isLocked);
-        if (catName.includes('school')) return createPinIcon(mapIcons.school, '#22c55e', isLocked);
+        if (catName.includes('bunker') && catName.includes('civilian')) return createPinIcon(mapIcons.bunker, '#22c55e', isLocked, hasWater);
+        if (catName.includes('deer stand')) return createPinIcon(mapIcons.tree, '#22c55e', isLocked, hasWater);
+        if (catName.includes('firestation')) return createPinIcon(mapIcons.fire, '#22c55e', isLocked, hasWater);
+        if (catName.includes('gas station')) return createPinIcon(personalIcons.gas.svg, '#22c55e', isLocked, hasWater);
+        if (catName.includes('golf')) return createPinIcon(mapIcons.golf, '#22c55e', isLocked, hasWater);
+        if (catName.includes('school')) return createPinIcon(mapIcons.school, '#22c55e', isLocked, hasWater);
 
         // 5. Pink Group (Hospital, Nera Tent)
-        if (catName.includes('hospital')) return createPinIcon(mapIcons.hospital, '#ec4899', isLocked);
-        if (catName.includes('nera tent')) return createPinIcon(mapIcons.tent, '#ec4899', isLocked);
+        if (catName.includes('hospital')) return createPinIcon(mapIcons.hospital, '#ec4899', isLocked, hasWater);
+        if (catName.includes('nera tent')) return createPinIcon(mapIcons.tent, '#ec4899', isLocked, hasWater);
 
         // 6. Vehicles
         if (catName === 'vehicles') {
             const carSvg = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/></svg>`;
-            return createPinIcon(carSvg, '#3b82f6', isLocked);
+            return createPinIcon(carSvg, '#3b82f6', isLocked, hasWater);
         }
 
         // 7. Trailers
         if (catName === 'trailers') {
             const simpleTrailer = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 7h-8v8h8V7zm2-2h-8c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zM7 11H4v4h3v-4zm-3 6h3c.55 0 1-.45 1-1v-4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1z"/></svg>`;
-            return createPinIcon(simpleTrailer, '#3b82f6', isLocked);
+            return createPinIcon(simpleTrailer, '#3b82f6', isLocked, hasWater);
         }
 
-        // 8. NPCs (No Border, White)
+        // 8. NPCs
         if (catName.includes('npc') || catName.includes('vendors') || catName === 'traders') {
-            return createNoBorderIcon(mapIcons.person, '#ffffff');
+            return createNoBorderIcon(mapIcons.person, '#ffffff', 30, hasWater);
         }
 
-        // New: Lootable Vehicles (Grey Dot, 50% Opacity)
+        // New: Lootable Vehicles (Smaller Grey Dot, 50% Opacity)
         if (catName.includes('lootable vehicle')) {
-            return createDotIcon('rgba(163, 163, 163, 0.5)');
+            return createDotIcon('rgba(163, 163, 163, 0.5)', 8);
         }
 
-        // 9. Special Circles (Water, Keys, Butane)
-        // 9. Special Circles (Water, Keys, Butane)
-        if (catName.includes('water') && !catName.includes('tower')) return createNoBorderIcon(personalIcons.water.svg, '#06b6d4', 18); // Smaller filled blue drop
-        if (catName.includes('key')) return createCircleIcon(mapIcons.key, '#eab308'); // Gold (Default 24)
-        if (catName.includes('butane') || catName.includes('propane') || catName.includes('fuel') || (catName.includes('gas') && !catName.includes('station'))) return createNoBorderIcon(mapIcons.propane, '#fb923c', 18); // Smaller light orange propane
+        // 9. Special Circles
+        if (catName.includes('water') && !catName.includes('tower')) return createNoBorderIcon(personalIcons.water.svg, '#06b6d4', 18); // This is already water, no need for badge
+        if (catName.includes('key')) return createCircleIcon(mapIcons.key, '#eab308');
+        if (catName.includes('butane') || catName.includes('propane') || catName.includes('fuel') || (catName.includes('gas') && !catName.includes('station'))) return createNoBorderIcon(mapIcons.propane, '#fb923c', 18);
 
-        // 10. Red Group (Specific & Generic Military)
-        if (catName.includes('shooting range')) return createPinIcon(mapIcons.target, '#ef4444');
-        if (catName.includes('helicrash')) return createPinIcon(mapIcons.helicopter, '#ef4444');
-        if (catName.includes('military bunker')) return createPinIcon(mapIcons.bunker, '#ef4444', isLocked);
-        if (catName.includes('barracks')) return createPinIcon(mapIcons.barracks, '#ef4444');
-        if (catName.includes('military base')) return createPinIcon(mapIcons.helmet, '#ef4444');
-        if (catName.includes('camping tent')) return createPinIcon(mapIcons.tent, '#ef4444');
+        // 10. Military Pins
+        if (catName.includes('shooting range')) return createPinIcon(mapIcons.target, '#ef4444', isLocked, hasWater);
+        if (catName.includes('helicrash')) return createPinIcon(mapIcons.helicopter, '#ef4444', isLocked, hasWater);
+        if (catName.includes('military bunker')) return createPinIcon(mapIcons.bunker, '#ef4444', isLocked, hasWater);
+        if (catName.includes('barracks')) return createPinIcon(mapIcons.barracks, '#ef4444', isLocked, hasWater);
+        if (catName.includes('military base')) return createPinIcon(mapIcons.helmet, '#ef4444', isLocked, hasWater);
+        if (catName.includes('camping tent')) return createPinIcon(mapIcons.tent, '#ef4444', isLocked, hasWater);
 
-        const redGroup = ['military'];
-        if (redGroup.some(k => catName.includes(k))) {
+        if (groupName === 'military') {
             const iconUrl = category?.icon_url;
             const content = iconUrl ? `<img src="${iconUrl}" style="width: 18px; height: 18px; filter: invert(1);" />` : personalIcons.skull.svg;
-            return createPinIcon(content, '#ef4444');
+            return createPinIcon(content, '#ef4444', isLocked, hasWater);
         }
 
         // 11. Landmarks
-        if (category?.group_name === 'landmarks') {
+        if (groupName === 'landmarks') {
             const iconUrl = category?.icon_url;
             if (iconUrl) {
+                const badges = [];
                 if (isLocked) {
-                    const badge = `<div style="position: absolute; top: -5px; right: -5px; width: 15px; height: 15px; background: #fbbf24; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid #1a1a1a; box-shadow: 0 2px 4px rgba(0,0,0,0.5); z-index: 10; color: #1a1a1a;">
-                        <svg viewBox="0 0 24 24" fill="currentColor" style="width: 10px; height: 10px;"><path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
-                    </div>`;
-
-                    return L.divIcon({
-                        html: `<div style="position: relative; width: 37px; height: 37px;">
-                            <img src="${iconUrl}" style="width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));" />
-                            ${badge}
-                        </div>`,
-                        className: 'precise-icon',
-                        iconSize: [37, 37],
-                        iconAnchor: [18.5, 37],
-                        popupAnchor: [0, -18.5]
-                    });
+                    badges.push(`<div style="position: absolute; top: -5px; right: -5px; width: 15px; height: 15px; background: #fbbf24; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid #1a1a1a; box-shadow: 0 2px 4px rgba(0,0,0,0.5); z-index: 10; color: #1a1a1a;">
+                        <svg viewBox="0 0 24 24" fill="currentColor" style="width: 10px; height: 10px;"><path d="M21 10h-8.35C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H13v2h2v-2h2v2h2v-2h2v-4zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
+                    </div>`);
                 }
-                return createCustomIcon(iconUrl, [37, 37], 'precise-icon');
+                if (hasWater) {
+                    badges.push(`<div style="position: absolute; top: -5px; left: -5px; width: 15px; height: 15px; background: #06b6d4; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid #1a1a1a; box-shadow: 0 2px 4px rgba(0,0,0,0.5); z-index: 10; color: white;">
+                        <svg viewBox="0 0 24 24" fill="currentColor" style="width: 10px; height: 10px;"><path d="M12 2c-5.33 4.55-8 8.48-8 11.8 0 4.98 3.8 8.2 8 8.2s8-3.22 8-8.2c0-3.32-2.67-7.25-8-11.8z"/></svg>
+                    </div>`);
+                }
+
+                return L.divIcon({
+                    html: `<div style="position: relative; width: 37px; height: 37px;">
+                        <img src="${iconUrl}" style="width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));" />
+                        ${badges.join('')}
+                    </div>`,
+                    className: 'precise-icon',
+                    iconSize: [37, 37],
+                    iconAnchor: [18.5, 37],
+                    popupAnchor: [0, -18.5]
+                });
             }
         }
 
@@ -402,8 +428,10 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
         const iconUrl = category?.icon_url;
         if (iconUrl) {
             const content = `<img src="${iconUrl}" style="width: 18px; height: 18px; filter: invert(1);" />`;
-            return createPinIcon(content, '#94a3b8', isLocked);
+            return createPinIcon(content, '#94a3b8', isLocked, hasWater);
         }
+
+        return createPinIcon(mapIcons.factory, category?.color || '#3b82f6', isLocked, hasWater);
 
         return new L.Icon.Default();
     };

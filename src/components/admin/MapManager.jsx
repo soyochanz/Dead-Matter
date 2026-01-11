@@ -89,7 +89,8 @@ const MapManager = () => {
         selectedTags: [],
         requires_key: false,
         required_key_ids: [],
-        required_key_id: ''
+        required_key_id: '',
+        has_water_source: false
     });
 
     // Mission Form Data
@@ -183,7 +184,8 @@ const MapManager = () => {
                 infected_level: marker.infected_level || 'Low',
                 selectedTags: currentTags,
                 requires_key: marker.requires_key || false,
-                required_key_ids: marker.required_key_ids || (marker.required_key_id ? [marker.required_key_id] : [])
+                required_key_ids: marker.required_key_ids || (marker.required_key_id ? [marker.required_key_id] : []),
+                has_water_source: marker.has_water_source || false
             });
             setDialogOpen(true);
         } catch (error) {
@@ -240,7 +242,8 @@ const MapManager = () => {
             infected_level: 'Low',
             selectedTags: [],
             requires_key: false,
-            required_key_id: ''
+            required_key_id: '',
+            has_water_source: false
         });
         setDialogOpen(true);
     }, [viewMode, isAddingStep, activeZonePoints, categories, handleZoneSave]);
@@ -341,7 +344,8 @@ const MapManager = () => {
                 infected_level: formData.infected_level,
                 requires_key: formData.requires_key,
                 required_key_ids: formData.requires_key ? formData.required_key_ids : [],
-                required_key_id: (formData.requires_key && formData.required_key_ids?.length > 0) ? formData.required_key_ids[0] : null
+                required_key_id: (formData.requires_key && formData.required_key_ids?.length > 0) ? formData.required_key_ids[0] : null,
+                has_water_source: formData.has_water_source
             };
 
             // 1. OPTIMISTIC UPDATE: MARKER
@@ -681,6 +685,18 @@ const MapManager = () => {
                                         </div>
                                     </div>
                                 )}
+
+                                {/* Water Source Checkbox */}
+                                <div className="flex items-center space-x-2 border border-neutral-700 bg-neutral-800 p-3 rounded-md">
+                                    <Checkbox
+                                        id="has_water_source"
+                                        checked={formData.has_water_source}
+                                        onCheckedChange={(checked) => setFormData(prev => ({ ...prev, has_water_source: checked }))}
+                                    />
+                                    <Label htmlFor="has_water_source" className="text-sm font-medium cursor-pointer text-cyan-400">
+                                        Water Source 💧
+                                    </Label>
+                                </div>
 
                                 <div className="grid gap-2">
                                     <Label>Loot Tags (Multi-select)</Label>
