@@ -317,17 +317,24 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
 
         return grouped;
     }, [visibleMarkers, categories, isMissionMode]);
-
     const getIconForMarker = (marker) => {
         const category = categories.find(c => c.id === marker.category_id);
         const catName = category?.name?.toLowerCase() || '';
         const groupName = category?.group_name?.toLowerCase() || '';
-        const isLoot = (marker.title.toLowerCase().includes('loot') || catName.includes('loot'));
-        const isLocked = marker.requires_key || ['federal stockpile bunker'].some(k => marker.title?.toLowerCase().includes(k));
+        const title = marker.title?.toLowerCase() || '';
+
+        const isLocked = marker.requires_key || ['federal stockpile bunker'].some(k => title.includes(k));
         const hasWater = marker.has_water_source || false;
 
-        // 1. Loot (Colored Dots)
-        if (isLoot) {
+        // 1. LOOT DETECTION (Explicit)
+        // We treat it as loot if 'loot' is in the name OR if it belongs to a primary loot group
+        const isLootGroup = ['military', 'industrial', 'civilian', 'medical', 'calculated'].includes(groupName);
+        const isLootName = catName.includes('loot') || title.includes('loot');
+
+        // Exclusions: even if in a loot group, some specific POIs should be pins
+        const isSpecificPOI = catName.includes('bunker') || catName.includes('tent') || catName.includes('station') || catName.includes('hospital') || catName.includes('factory') || catName.includes('hangar');
+
+        if ((isLootName || isLootGroup) && !isSpecificPOI) {
             let dotColor = '#94a3b8'; // Default grey
             if (groupName === 'military') dotColor = '#ef4444';
             if (groupName === 'industrial') dotColor = '#f97316';
