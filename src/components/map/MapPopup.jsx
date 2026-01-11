@@ -69,6 +69,15 @@ const MapPopup = ({ marker, tags, keys = [] }) => {
                         </div>
                     </div>
                 )}
+                {marker.has_water_source && (
+                    <div className="mb-3 px-3 py-2 bg-cyan-500/10 border border-cyan-500/30 rounded-lg flex items-center gap-2">
+                        <div className="text-cyan-400">💧</div>
+                        <div>
+                            <span className="block text-xs font-bold text-cyan-400 uppercase tracking-wider">Water Source</span>
+                            <span className="text-sm text-cyan-200">Dispone de Water Source</span>
+                        </div>
+                    </div>
+                )}
 
                 {/* Description */}
                 {marker.description && (

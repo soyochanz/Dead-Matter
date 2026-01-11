@@ -264,7 +264,11 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
         return markers.filter(m => {
             if (!activeFilters[m.category_id]) return false;
             const cat = categories.find(c => c.id === m.category_id);
-            if (cat?.name === 'Zones (Minor)' && zoomLevel < 18) return false;
+            const catName = cat?.name?.toLowerCase() || '';
+
+            if (catName === 'zones (minor)' && zoomLevel < 18) return false;
+            if (catName.includes('lootable vehicle') && zoomLevel < 16) return false;
+
             return true;
         });
     }, [markers, activeFilters, categories, zoomLevel]);
@@ -324,7 +328,11 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
         const title = marker.title?.toLowerCase() || '';
 
         const isLocked = marker.requires_key || ['federal stockpile bunker'].some(k => title.includes(k));
-        const hasWater = marker.has_water_source || false;
+
+        // Water Badge Filter Logic
+        const waterCat = categories.find(c => c.name?.toLowerCase() === 'water source');
+        const showWaterBadgeFilter = waterCat ? !!activeFilters[waterCat.id] : true;
+        const hasWater = (marker.has_water_source && showWaterBadgeFilter);
 
         // 1. LOOT DETECTION (Explicit)
         // We treat it as loot if 'loot' is in the name OR if it belongs to a primary loot group
@@ -391,7 +399,12 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
 
         // New: Lootable Vehicles (Smaller Grey Dot, 50% Opacity)
         if (catName.includes('lootable vehicle')) {
-            return createDotIcon('rgba(163, 163, 163, 0.5)', 8);
+            return L.divIcon({
+                html: `<div style="width: 8px; height: 8px; background-color: #a3a3a3; border-radius: 50%; box-shadow: 0 0 0 1px rgba(0,0,0,0.5); opacity: 0.5;"></div>`,
+                className: 'loot-dot-vehicle',
+                iconSize: [8, 8],
+                iconAnchor: [4, 4]
+            });
         }
 
         // 9. Special Circles
