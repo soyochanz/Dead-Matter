@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { supabase } from '@/lib/mySupabaseClient';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
@@ -41,13 +42,18 @@ const MapManager = () => {
     const { categories, markers: initialMarkers, lootTags: initialTags, keys: availableKeys, missions: initialMissions, polygons: initialPolygons } = useMapData(0);
 
     // Local state for optimistic updates
+    const [searchParams, setSearchParams] = useSearchParams();
     const [markers, setMarkers] = useState([]);
     const [missions, setMissions] = useState([]);
     const [polygons, setPolygons] = useState([]);
     const [lootTags, setLootTags] = useState([]);
-    const [viewMode, setViewMode] = useState('markers'); // 'markers', 'missions', 'zones'
+
+    // Get viewMode from URL, default to 'markers'
+    const viewMode = searchParams.get('mode') || 'markers';
+    const setViewMode = (mode) => setSearchParams({ ...Object.fromEntries(searchParams), mode });
+
     const [isAddingStep, setIsAddingStep] = useState(false); // If true, next map click adds a step
-    const [activeZonePoints, setActiveZonePoints] = useState([]); // [lat, lng] array for current polygon 
+    const [activeZonePoints, setActiveZonePoints] = useState([]); // [lat, lng] array for current polygon
 
     // Initialize local state when data is fetched (ONLY if local is empty)
     useEffect(() => {
@@ -162,6 +168,7 @@ const MapManager = () => {
     }, [toast]);
 
     const handleMarkerClick = useCallback(async (marker) => {
+        if (viewMode === 'missions' || viewMode === 'zones') return; // Ignore standard marker clicks in these modes
         setLoading(true);
         try {
             setEditingMarker(marker);
@@ -215,7 +222,7 @@ const MapManager = () => {
                     return updated;
                 });
                 setIsAddingStep(false);
-                setMissionDialogOpen(true);
+                // setMissionDialogOpen(true); // Don't re-open, let them edit via map popup or manually open later
             }
             return;
         }
@@ -509,6 +516,57 @@ const MapManager = () => {
         return [];
     }, [viewMode, missionForm.steps, missionForm.npc_id, markers]);
 
+    const handleUpdateMissionStep = useCallback((idx, data) => {
+        setMissionForm(prev => {
+            const newSteps = [...prev.steps];
+            newSteps[idx] = { ...newSteps[idx], ...data };
+            return { ...prev, steps: newSteps };
+        });
+    }, []);
+
+    const memoMap = useMemo(() => {
+        const memoProps = {
+            markers: markers,
+            lootTags: lootTags,
+            categories: categories,
+            keys: availableKeys,
+            manualPolylines: manualPolylines,
+            polygons: polygons,
+            activePolygonPoints: activeZonePoints,
+            currentMissionSteps: viewMode === 'missions' ? missionForm.steps : []
+        };
+
+        return (
+            <div className="flex flex-col flex-grow min-h-0">
+                {viewMode === 'zones' && (
+                    <div className="bg-blue-900/20 border border-blue-500/30 p-3 rounded-lg mb-4 flex items-center justify-between shrink-0">
+                        <div className="text-sm text-blue-200">
+                            <strong className="text-blue-400">Add Building Zone:</strong> Click 4 corner points on the map.
+                            {activeZonePoints.length > 0 && <span className="ml-2 text-white bg-blue-600 px-2 py-0.5 rounded-full text-xs">{activeZonePoints.length} / 4 points</span>}
+                        </div>
+                        {activeZonePoints.length > 0 && (
+                            <Button size="sm" variant="ghost" className="h-6 text-red-400 hover:text-red-300 hover:bg-red-900/20" onClick={() => setActiveZonePoints([])}>
+                                <X className="w-3 h-3 mr-1" /> Clear Points
+                            </Button>
+                        )}
+                    </div>
+                )}
+                <div className="flex-grow border border-white/10 rounded-xl overflow-hidden relative min-h-[500px]">
+                    <InteractiveMap
+                        adminMode={true}
+                        disableUI={true}
+                        onMapClick={handleMapClick}
+                        onMarkerClick={handleMarkerClick}
+                        {...memoProps}
+                        onPolygonClick={viewMode === 'zones' ? handleZoneDelete : undefined}
+                        viewMode={viewMode}
+                        onUpdateMissionStep={handleUpdateMissionStep}
+                    />
+                </div>
+            </div>
+        );
+    }, [markers, lootTags, categories, availableKeys, manualPolylines, polygons, activeZonePoints, viewMode, missionForm.steps, handleMapClick, handleMarkerClick, handleZoneDelete, handleUpdateMissionStep]);
+
     return (
         <div className="space-y-6 flex flex-col h-[calc(100vh-100px)]">
             <div className="flex justify-between items-center shrink-0">
@@ -555,38 +613,7 @@ const MapManager = () => {
                 </Button>
             </div>
 
-            {viewMode === 'zones' && (
-                <div className="bg-blue-900/20 border border-blue-500/30 p-3 rounded-lg mb-4 flex items-center justify-between">
-                    <div className="text-sm text-blue-200">
-                        <strong className="text-blue-400">Add Building Zone:</strong> Click 4 corner points on the map.
-                        {activeZonePoints.length > 0 && <span className="ml-2 text-white bg-blue-600 px-2 py-0.5 rounded-full text-xs">{activeZonePoints.length} / 4 points</span>}
-                    </div>
-                    {activeZonePoints.length > 0 && (
-                        <Button size="sm" variant="ghost" className="h-6 text-red-400 hover:text-red-300 hover:bg-red-900/20" onClick={() => setActiveZonePoints([])}>
-                            <X className="w-3 h-3 mr-1" /> Clear Points
-                        </Button>
-                    )}
-                </div>
-            )}
-
-            <div className="flex-grow border border-white/10 rounded-xl overflow-hidden relative min-h-[500px]">
-                <InteractiveMap
-                    adminMode={true}
-                    disableUI={true}
-                    onMapClick={handleMapClick}
-                    onMarkerClick={handleMarkerClick}
-                    markers={markers}
-                    lootTags={lootTags}
-                    categories={categories}
-                    keys={availableKeys}
-                    manualPolylines={manualPolylines}
-                    polygons={polygons}
-                    activePolygonPoints={activeZonePoints}
-                    onPolygonClick={viewMode === 'zones' ? handleZoneDelete : undefined}
-                    viewMode={viewMode}
-                    currentMissionSteps={viewMode === 'missions' ? missionForm.steps : []}
-                />
-            </div>
+            {memoMap}
 
             {/* MARKER / ZONE DIALOG */}
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>

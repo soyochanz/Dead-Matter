@@ -28,11 +28,13 @@ const LoginPage = () => {
     e.preventDefault();
     setLoading(true);
 
+    /* Temporarily removed captcha check
     if (!captchaToken) {
       toast({ variant: 'destructive', title: 'CAPTCHA Required', description: 'Please complete the CAPTCHA.' });
       setLoading(false);
       return;
     }
+    */
 
     try {
       const { error: signInError } = await signIn(email, password);
@@ -75,7 +77,7 @@ const LoginPage = () => {
               <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
             </div>
 
-            {/* CAPTCHA Section */}
+            {/* CAPTCHA Section - Temporarily Hidden
             <div className="bg-white/5 border border-white/10 rounded-xl p-6">
               <div className="text-center mb-4">
                 <p className="text-white font-semibold">Security Verification</p>
@@ -101,6 +103,7 @@ const LoginPage = () => {
                 </div>
               )}
             </div>
+            */}
 
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}

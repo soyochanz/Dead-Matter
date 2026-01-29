@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
-import { Plus, Edit, Trash2, Loader2, User } from 'lucide-react';
+import { Plus, Edit, Trash2, Loader2, User, Video } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import MediaForm from '@/components/admin/MediaForm';
 import { supabase } from '@/lib/mySupabaseClient';

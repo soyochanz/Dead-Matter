@@ -126,7 +126,15 @@ const AdminPanel = () => {
       </Helmet>
 
       {/* Modern Admin Layout Wrapper */}
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-950">
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-950" style={{ cursor: 'default' }}>
+        <style>{`
+          div, button, a, span, p, h1, h2, h3, h4, h5, h6, input, select, textarea {
+            cursor: default !important;
+          }
+          button:hover, a:hover, [role="button"]:hover {
+            cursor: pointer !important;
+          }
+        `}</style>
         {/* Header Bar - Fixed */}
         <div className="sticky top-0 z-50 border-b border-white/10 bg-gray-900/80 backdrop-blur-sm">
           <div className="px-4 py-3">

@@ -97,7 +97,7 @@ const ClickHelper = ({ setClickedCoords, adminMode, onMapClick, onContextMenu })
 // --- Personal Markers Config ---
 
 
-const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMarkerClick, refreshTrigger = 0, markers: propMarkers, lootTags: propLootTags, categories: propCategories, keys: propKeys, missions: propMissions, manualPolylines = [], polygons = [], activePolygonPoints = [], onPolygonClick, viewMode, currentMissionSteps = [] }) => {
+const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMarkerClick, refreshTrigger = 0, markers: propMarkers, lootTags: propLootTags, categories: propCategories, keys: propKeys, missions: propMissions, manualPolylines = [], polygons = [], activePolygonPoints = [], onPolygonClick, viewMode, currentMissionSteps = [], onUpdateMissionStep }) => {
     // Note: refreshTrigger increments after save, triggering re-fetch in hook
     const [internalRefresh, setInternalRefresh] = useState(0);
 
@@ -175,6 +175,18 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
     const [zoomLevel, setZoomLevel] = useState(16);
 
     // --- ICON HELPER FUNCTIONS (Moved to component scope for access in Mission Loop) ---
+    // Helper 4: Minor Resource Style (Small Circle with Icon)
+    const createMinorResourceIcon = (content, color, size = 18) => {
+        return L.divIcon({
+            html: `<div style="background-color: ${color}; width: ${size}px; height: ${size}px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.5);">
+                <div style="width: 10px; height: 10px; color: white;">${content}</div>
+            </div>`,
+            className: 'minor-resource-marker',
+            iconSize: [size, size],
+            iconAnchor: [size / 2, size / 2]
+        });
+    };
+
     // Helper 3: Small Circular Icon (Water, Keys)
     const createCircleIcon = (content, color, size = 24) => {
         return L.divIcon({
@@ -196,7 +208,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
             </div>`);
         }
         if (hasWater) {
-            badges.push(`<div style="position: absolute; top: -5px; left: -5px; width: 15px; height: 15px; background: #06b6d4; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid #1a1a1a; box-shadow: 0 2px 4px rgba(0,0,0,0.5); z-index: 10; color: white;">
+            badges.push(`<div style="position: absolute; top: -5px; left: -5px; width: 15px; height: 15px; background: #0369a1; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid #1a1a1a; box-shadow: 0 2px 4px rgba(0,0,0,0.5); z-index: 10; color: white;">
                 <svg viewBox="0 0 24 24" fill="currentColor" style="width: 10px; height: 10px;"><path d="M12 2c-5.33 4.55-8 8.48-8 11.8 0 4.98 3.8 8.2 8 8.2s8-3.22 8-8.2c0-3.32-2.67-7.25-8-11.8z"/></svg>
             </div>`);
         }
@@ -214,14 +226,13 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
         });
     };
 
-    // Helper 2: No Border Style (NPCs - Transparent)
     const createNoBorderIcon = (content, color, size = 30, hasWater = false) => {
-        const badge = hasWater ? `<div style="position: absolute; top: -5px; left: -5px; width: 12px; height: 12px; background: #06b6d4; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid #1a1a1a; box-shadow: 0 2px 4px rgba(0,0,0,0.5); z-index: 10; color: white;">
+        const badge = hasWater ? `<div style="position: absolute; top: -5px; left: -5px; width: 12px; height: 12px; background: #0369a1; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid #1a1a1a; box-shadow: 0 2px 4px rgba(0,0,0,0.5); z-index: 10; color: white;">
             <svg viewBox="0 0 24 24" fill="currentColor" style="width: 8px; height: 8px;"><path d="M12 2c-5.33 4.55-8 8.48-8 11.8 0 4.98 3.8 8.2 8 8.2s8-3.22 8-8.2c0-3.32-2.67-7.25-8-11.8z"/></svg>
         </div>` : '';
 
         return L.divIcon({
-            html: `<div style="position: relative; width: ${size}px; height: ${size}px; display: flex; align-items: center; justify-content: center; color: ${color}; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));">
+            html: `<div style="position: relative; width: ${size}px; height: ${size}px; display: flex; align-items: center; justify-content: center; color: ${color}; filter: drop-shadow(0 0 1px rgba(0,0,0,0.8)) drop-shadow(0 1px 2px rgba(0,0,0,0.5));">
                 <div style="width: ${size}px; height: ${size}px;">${content}</div>
                 ${badge}
             </div>`,
@@ -240,7 +251,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
             </div>`);
         }
         if (hasWater) {
-            badges.push(`<div style="position: absolute; top: -6px; left: -6px; width: 12px; height: 12px; background: #06b6d4; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid #1a1a1a; box-shadow: 0 1px 2px rgba(0,0,0,0.5); z-index: 10; color: white;">
+            badges.push(`<div style="position: absolute; top: -6px; left: -6px; width: 12px; height: 12px; background: #0369a1; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid #1a1a1a; box-shadow: 0 1px 2px rgba(0,0,0,0.5); z-index: 10; color: white;">
                 <svg viewBox="0 0 24 24" fill="currentColor" style="width: 8px; height: 8px;"><path d="M12 2c-5.33 4.55-8 8.48-8 11.8 0 4.98 3.8 8.2 8 8.2s8-3.22 8-8.2c0-3.32-2.67-7.25-8-11.8z"/></svg>
             </div>`);
         }
@@ -344,7 +355,12 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
             });
         }
 
-        // 1. LOOT DETECTION (Explicit)
+        // 1. RESOURCES (Water, Gas, Keys) - HIGH PRIORITY
+        if (catName.includes('water') && !catName.includes('tower')) return createMinorResourceIcon(personalIcons.water.svg, '#0369a1', 14); // Vibrant Blue (Match badge), size 14
+        if (catName.includes('butane') || catName.includes('propane') || catName.includes('fuel') || (catName.includes('gas') && !catName.includes('station'))) return createMinorResourceIcon(mapIcons.fire, '#ea580c', 14); // Darker Orange, size 14
+        if (catName.includes('key')) return createCircleIcon(mapIcons.key, '#eab308');
+
+        // 2. LOOT DETECTION (Explicit)
         // We treat it as loot if 'loot' is in the name OR if it belongs to a primary loot group
         const isLootGroup = ['military', 'industrial', 'civilian', 'medical', 'calculated'].includes(groupName);
         const isLootName = catName.includes('loot') || title.includes('loot');
@@ -363,7 +379,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
             return createDotIcon(dotColor, 12, isLocked, hasWater);
         }
 
-        // 2. Zones
+        // 3. Zones
         if (catName.includes('zones')) {
             const isMinor = catName.includes('minor');
             return L.divIcon({
@@ -374,11 +390,11 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
             });
         }
 
-        // 3. Orange Group (Factory, Hangar)
+        // 4. Orange Group (Factory, Hangar)
         if (catName.includes('factory')) return createPinIcon(mapIcons.factory, '#f97316', isLocked, hasWater);
         if (catName.includes('hangar')) return createPinIcon(mapIcons.hangar, '#f97316', isLocked, hasWater);
 
-        // 4. Green Group
+        // 5. Green Group
         if (catName.includes('bunker') && catName.includes('civilian')) return createPinIcon(mapIcons.bunker, '#22c55e', isLocked, hasWater);
         if (catName.includes('deer stand')) return createPinIcon(mapIcons.tree, '#22c55e', isLocked, hasWater);
         if (catName.includes('firestation')) return createPinIcon(mapIcons.fire, '#22c55e', isLocked, hasWater);
@@ -386,33 +402,26 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
         if (catName.includes('golf')) return createPinIcon(mapIcons.golf, '#22c55e', isLocked, hasWater);
         if (catName.includes('school')) return createPinIcon(mapIcons.school, '#22c55e', isLocked, hasWater);
 
-        // 5. Pink Group (Hospital, Nera Tent)
+        // 6. Pink Group (Hospital, Nera Tent)
         if (catName.includes('hospital')) return createPinIcon(mapIcons.hospital, '#ec4899', isLocked, hasWater);
         if (catName.includes('nera tent')) return createPinIcon(mapIcons.tent, '#ec4899', isLocked, hasWater);
 
-        // 6. Vehicles
+        // 7. Vehicles
         if (catName === 'vehicles') {
-            const carSvg = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/></svg>`;
-            return createPinIcon(carSvg, '#3b82f6', isLocked, hasWater);
+            const carSvg = `<svg viewBox="0 0 24 24" fill="#3b82f6"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z" stroke="black" stroke-width="0.8"/></svg>`;
+            return createNoBorderIcon(carSvg, '#3b82f6', 22, hasWater);
         }
 
-        // 7. Trailers
+        // 8. Trailers
         if (catName === 'trailers') {
-            const simpleTrailer = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 7h-8v8h8V7zm2-2h-8c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zM7 11H4v4h3v-4zm-3 6h3c.55 0 1-.45 1-1v-4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1z"/></svg>`;
-            return createPinIcon(simpleTrailer, '#3b82f6', isLocked, hasWater);
+            const simpleTrailer = `<svg viewBox="0 0 24 24" fill="#3b82f6"><path d="M1 5h14v10H1V5zm14 4h6v6h-6V9zm2 6a2 2 0 110 4 2 2 0 010-4zm-12 0a2 2 0 110 4 2 2 0 010-4z" stroke="black" stroke-width="0.8"/></svg>`;
+            return createNoBorderIcon(simpleTrailer, '#3b82f6', 22, hasWater);
         }
 
-        // 8. NPCs
+        // 9. NPCs
         if (catName.includes('npc') || catName.includes('vendors') || catName === 'traders') {
             return createNoBorderIcon(mapIcons.person, '#ffffff', 30, hasWater);
         }
-
-
-
-        // 9. Special Circles
-        if (catName.includes('water') && !catName.includes('tower')) return createNoBorderIcon(personalIcons.water.svg, '#06b6d4', 18); // This is already water, no need for badge
-        if (catName.includes('key')) return createCircleIcon(mapIcons.key, '#eab308');
-        if (catName.includes('butane') || catName.includes('propane') || catName.includes('fuel') || (catName.includes('gas') && !catName.includes('station'))) return createNoBorderIcon(mapIcons.propane, '#fb923c', 18);
 
         // 10. Military Pins
         if (catName.includes('shooting range')) return createPinIcon(mapIcons.target, '#ef4444', isLocked, hasWater);
@@ -439,7 +448,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                     </div>`);
                 }
                 if (hasWater) {
-                    badges.push(`<div style="position: absolute; top: -5px; left: -5px; width: 15px; height: 15px; background: #06b6d4; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid #1a1a1a; box-shadow: 0 2px 4px rgba(0,0,0,0.5); z-index: 10; color: white;">
+                    badges.push(`<div style="position: absolute; top: -5px; left: -5px; width: 15px; height: 15px; background: #0369a1; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid #1a1a1a; box-shadow: 0 2px 4px rgba(0,0,0,0.5); z-index: 10; color: white;">
                         <svg viewBox="0 0 24 24" fill="currentColor" style="width: 10px; height: 10px;"><path d="M12 2c-5.33 4.55-8 8.48-8 11.8 0 4.98 3.8 8.2 8 8.2s8-3.22 8-8.2c0-3.32-2.67-7.25-8-11.8z"/></svg>
                     </div>`);
                 }
@@ -769,7 +778,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
             )}
 
             {/* --- MAP --- */}
-            <div className="w-full h-full absolute inset-0 z-0">
+            <div className={`w-full h-full absolute inset-0 z-0 ${activePolygonPoints && activePolygonPoints.length > 0 ? 'cursor-crosshair' : ''}`}>
                 <MapContainer center={[0.01221, 0.01914]} zoom={16} minZoom={17} maxZoom={20} style={{ height: '100%', width: '100%', background: '#1a1a1a' }} zoomControl={false}>
                     <ZoomControl position="bottomright" />
                     <TileLayer url="https://deadmatterdb.com/leaflet/{z}/{x}/{y}.webp" minZoom={0} maxZoom={20} tms={false} />
@@ -924,9 +933,26 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                                     icon={createPinIcon(step.step_order || (idx + 1), '#fbbf24')}
                                 >
                                     <Popup closeButton={false} offset={[0, -5]}>
-                                        <div className="text-center">
-                                            <strong className="text-amber-500 block text-xs uppercase tracking-wide">New Step {step.step_order || (idx + 1)}</strong>
-                                            <span className="text-sm font-bold text-white">{step.title}</span>
+                                        <div className="p-2 min-w-[200px] flex flex-col gap-2">
+                                            <strong className="text-amber-500 text-xs uppercase tracking-wide">Step {step.step_order || (idx + 1)}</strong>
+                                            <input
+                                                className="bg-neutral-800 border border-white/10 rounded px-2 py-1 text-sm text-white focus:outline-none"
+                                                placeholder="Title"
+                                                value={step.title}
+                                                onChange={e => onUpdateMissionStep?.(idx, { title: e.target.value })}
+                                            />
+                                            <textarea
+                                                className="bg-neutral-800 border border-white/10 rounded px-2 py-1 text-xs text-white focus:outline-none min-h-[60px]"
+                                                placeholder="Instructions..."
+                                                value={step.description}
+                                                onChange={e => onUpdateMissionStep?.(idx, { description: e.target.value })}
+                                            />
+                                            <input
+                                                className="bg-neutral-800 border border-white/10 rounded px-2 py-1 text-[10px] text-white focus:outline-none"
+                                                placeholder="Image URL"
+                                                value={step.image_url}
+                                                onChange={e => onUpdateMissionStep?.(idx, { image_url: e.target.value })}
+                                            />
                                         </div>
                                     </Popup>
                                 </Marker>
@@ -1043,10 +1069,12 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                     {activePolygonPoints && activePolygonPoints.length > 0 && (
                         <>
                             {activePolygonPoints.map((pt, idx) => (
-                                <CircleMarker key={`pt-${idx}`} center={pt} radius={4} pathOptions={{ color: '#60a5fa', fillColor: 'white', fillOpacity: 1 }} />
+                                <CircleMarker key={`pt-${idx}`} center={pt} radius={5} pathOptions={{ color: '#ef4444', fillColor: 'white', fillOpacity: 1, weight: 2 }} />
                             ))}
-                            {activePolygonPoints.length > 1 && (
-                                <Polyline positions={activePolygonPoints} pathOptions={{ color: '#60a5fa', dashArray: '5, 10', weight: 2 }} />
+                            {activePolygonPoints.length > 2 ? (
+                                <Polygon positions={activePolygonPoints} pathOptions={{ color: '#ef4444', fillColor: '#ef4444', fillOpacity: 0.3, weight: 2, dashArray: '5, 5' }} />
+                            ) : activePolygonPoints.length > 1 && (
+                                <Polyline positions={activePolygonPoints} pathOptions={{ color: '#ef4444', dashArray: '5, 10', weight: 2 }} />
                             )}
                         </>
                     )}
