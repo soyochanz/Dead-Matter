@@ -54,7 +54,7 @@ export const mapIcons = {
     hangar: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 14l-7-5-7 5V21h14V14zm-2 5H7v-3l5-3.5 5 3.5v3z"/></svg>',
     bunker: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 6h-2.18c-1.39-2.36-3.73-4-6.82-4C6 2 2 6 2 11v6h2v5h2v-5h12v5h2v-5h2v-6c0-5-4-9-9-9zm-9 9H9v-2h2v2zm4 0h-2v-2h2v2z"/></svg>',
     fire: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.48 12.35c-1.57-4.08-7.16-4.3-5.81-10.23-1 .63-1.95 1.51-2.58 2.6C9.92 7.2 9 8.66 9 10.56c0 1.05.28 2.03.73 3-.43-.44-.81-.97-1.12-1.55a8.77 8.77 0 01-.6-6.01c-.13.06-.26.13-.39.2-2.3 2.5-1.94 5.95-1.09 8.16.85 2.22 3.1 4.67 5.48 4.67s4.65-2.45 5.5-4.67c.78-2.06.66-4.13-.03-6.01zM12 20c-1.66 0-3-1.34-3-3 0-1.31 1.25-2.5 3-4 1.8 1.5 3 2.69 3 4 0 1.66-1.34 3-3 3z"/></svg>',
-    golf: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/></svg>',
+    golf: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2v6.93L19 5.66v6.54l-6 3.4V22h-2V13.8L5 10.4V3.86l6 3.4V2H13zM11 15.2l6-3.4v-4l-6 3.4v4z"/></svg>',
     school: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>',
     hospital: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>',
     tent: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 17h20v2H2v-2zm10-15L2 15h20L12 2zm0 3.3L18.4 14H5.6L12 5.3z"/></svg>',

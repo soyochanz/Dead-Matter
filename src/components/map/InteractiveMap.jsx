@@ -366,7 +366,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
         const isLootName = catName.includes('loot') || title.includes('loot');
 
         // Exclusions: even if in a loot group, some specific POIs should be pins
-        const isSpecificPOI = catName.includes('bunker') || catName.includes('tent') || catName.includes('station') || catName.includes('hospital') || catName.includes('factory') || catName.includes('hangar');
+        const isSpecificPOI = catName.includes('bunker') || catName.includes('tent') || catName.includes('station') || catName.includes('hospital') || catName.includes('factory') || catName.includes('hangar') || catName.includes('golf') || catName.includes('school') || catName.includes('university') || catName.includes('college') || catName.includes('academy') || catName.includes('deer stand') || catName.includes('firestation');
 
         if ((isLootName || isLootGroup) && !isSpecificPOI) {
             let dotColor = '#94a3b8'; // Default grey
@@ -400,7 +400,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
         if (catName.includes('firestation')) return createPinIcon(mapIcons.fire, '#22c55e', isLocked, hasWater);
         if (catName.includes('gas station')) return createPinIcon(personalIcons.gas.svg, '#22c55e', isLocked, hasWater);
         if (catName.includes('golf')) return createPinIcon(mapIcons.golf, '#22c55e', isLocked, hasWater);
-        if (catName.includes('school')) return createPinIcon(mapIcons.school, '#22c55e', isLocked, hasWater);
+        if (catName.includes('school') || catName.includes('university') || catName.includes('college') || catName.includes('academy')) return createPinIcon(mapIcons.school, '#22c55e', isLocked, hasWater);
 
         // 6. Pink Group (Hospital, Nera Tent)
         if (catName.includes('hospital')) return createPinIcon(mapIcons.hospital, '#ec4899', isLocked, hasWater);
