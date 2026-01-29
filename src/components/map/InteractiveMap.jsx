@@ -97,7 +97,7 @@ const ClickHelper = ({ setClickedCoords, adminMode, onMapClick, onContextMenu })
 // --- Personal Markers Config ---
 
 
-const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMarkerClick, refreshTrigger = 0, markers: propMarkers, lootTags: propLootTags, categories: propCategories, keys: propKeys, missions: propMissions, manualPolylines = [], polygons = [], activePolygonPoints = [], onPolygonClick, viewMode, currentMissionSteps = [], onUpdateMissionStep }) => {
+const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMarkerClick, refreshTrigger = 0, markers: propMarkers, lootTags: propLootTags, categories: propCategories, keys: propKeys, missions: propMissions, paths: propPaths, manualPolylines = [], polygons = [], activePolygonPoints = [], onPolygonClick, viewMode, currentMissionSteps = [], onUpdateMissionStep }) => {
     // Note: refreshTrigger increments after save, triggering re-fetch in hook
     const [internalRefresh, setInternalRefresh] = useState(0);
 
@@ -121,6 +121,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
         lootTags: hookLootTags,
         missions: hookMissions,
         polygons: hookPolygons,
+        paths: hookPaths,
         loading: dataLoading,
         error: dataError
     } = useMapData(combinedRefresh, { enabled: !propMarkers });
@@ -132,6 +133,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
     const keys = propKeys || fetchedKeys || [];
     const missions = propMissions || hookMissions || [];
     const polygonsToRender = (polygons && polygons.length > 0) ? polygons : (hookPolygons || []);
+    const pathsToRender = propPaths || hookPaths || [];
     const [activeFilters, setActiveFilters] = useState({});
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     // mouseCoords moved to isolated component to prevent re-renders
@@ -347,17 +349,13 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
         // 0. LOOTABLE VEHICLES (High Priority Override)
         // These must be small and subtle, checked before generic loot
         if (catName.includes('lootable vehicle')) {
-            return L.divIcon({
-                html: `<div style="width: 6px; height: 6px; background-color: rgba(163, 163, 163, 0.4); border-radius: 50%; box-shadow: 0 0 0 1px rgba(0,0,0,0.2);"></div>`,
-                className: 'loot-dot-vehicle',
-                iconSize: [6, 6],
-                iconAnchor: [3, 3]
-            });
+            const carSvg = `<svg viewBox="0 0 24 24" fill="#d4d4d4"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z" stroke="black" stroke-width="0.8"/></svg>`;
+            return createNoBorderIcon(carSvg, '#d4d4d4', 18, hasWater);
         }
 
         // 1. RESOURCES (Water, Gas, Keys) - HIGH PRIORITY
         if (catName.includes('water') && !catName.includes('tower')) return createMinorResourceIcon(personalIcons.water.svg, '#0369a1', 14); // Vibrant Blue (Match badge), size 14
-        if (catName.includes('butane') || catName.includes('propane') || catName.includes('fuel') || (catName.includes('gas') && !catName.includes('station'))) return createMinorResourceIcon(mapIcons.fire, '#ea580c', 14); // Darker Orange, size 14
+        if (catName.includes('gas source') || catName.includes('butane') || catName.includes('propane') || catName.includes('fuel')) return createMinorResourceIcon(mapIcons.propane, '#ea580c', 14); // Darker Orange, size 14
         if (catName.includes('key')) return createCircleIcon(mapIcons.key, '#eab308');
 
         // 2. LOOT DETECTION (Explicit)
@@ -796,6 +794,54 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
 
                     <ClickHelper setClickedCoords={setClickedCoords} adminMode={adminMode} onMapClick={onMapClick} onContextMenu={handleContextMenu} />
 
+                    {/* Rendering Map Paths (Roads, Railways, Rivers) */}
+                    {pathsToRender.map(path => {
+                        let options = { color: '#333', weight: 3, opacity: 0.8 };
+
+                        if (path.type === 'railway' || path.type === 'train_rail') {
+                            options = { color: '#1a1a1a', weight: 4, dashArray: '10, 10', opacity: 0.9 };
+                        } else if (path.type === 'river') {
+                            options = { color: '#3b82f6', weight: 12, opacity: 0.2, lineCap: 'round' };
+                        } else if (path.type === 'road') {
+                            options = { color: '#4b5563', weight: 4, opacity: 0.7 };
+                        } else if (path.type === 'mountain_path') {
+                            options = { color: '#78350f', weight: 2, dashArray: '5, 5', opacity: 0.6 };
+                        }
+
+                        return (
+                            <Polyline
+                                key={path.id}
+                                positions={path.points}
+                                pathOptions={options}
+                            >
+                                <Popup>
+                                    <div className="p-2 min-w-[100px]">
+                                        <h4 className="font-bold text-white mb-1 uppercase text-xs tracking-wider">
+                                            {path.type.replace('_', ' ')}
+                                        </h4>
+                                        <p className="text-sm text-gray-300">{path.name}</p>
+                                        {adminMode && onPolygonClick && (
+                                            <Button
+                                                size="sm"
+                                                variant="destructive"
+                                                className="w-full mt-2 h-7 text-[10px]"
+                                                onClick={() => onPolygonClick(path.id, 'path')}
+                                            >
+                                                Delete Path
+                                            </Button>
+                                        )}
+                                    </div>
+                                </Popup>
+                                {(path.type === 'railway' || path.type === 'train_rail') && (
+                                    <Polyline
+                                        positions={path.points}
+                                        pathOptions={{ color: '#fff', weight: 2, dashArray: '5, 15', opacity: 0.5 }}
+                                    />
+                                )}
+                            </Polyline>
+                        );
+                    })}
+
                     {/* CLUSTER: CIVILIAN (Green) */}
                     <MarkerClusterGroup
                         iconCreateFunction={(cluster) => createClusterIcon(cluster, 'civilian-cluster', '#10b981')}
@@ -907,7 +953,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                         <>
                             {/* NPC FILTERS UI */}
                             {!disableUI && (
-                                <div className="fixed top-[70px] left-1/2 -translate-x-1/2 z-[4000] flex gap-2 overflow-x-auto max-w-[90%] p-2 no-scrollbar pointer-events-auto">
+                                <div className="fixed top-[100px] left-1/2 -translate-x-1/2 z-[4000] flex gap-2 overflow-x-auto max-w-[90%] p-2 no-scrollbar pointer-events-auto">
                                     {missionNpcs.map(npcName => (
                                         <button
                                             key={npcName}
@@ -1007,7 +1053,18 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                                                                 <div className="absolute -left-[5px] top-0 w-2.5 h-2.5 rounded-full bg-amber-500"></div>
                                                                 <h4 className="font-bold text-white text-sm">Step {step.step_order}: {step.title}</h4>
                                                                 {step.image_url && (
-                                                                    <img src={step.image_url} alt="Step" className="w-full h-32 object-cover rounded-md my-2 border border-white/10" />
+                                                                    <div className="relative w-full h-32 rounded-md my-2 overflow-hidden bg-black/40 border border-white/10 group">
+                                                                        <img
+                                                                            src={step.image_url}
+                                                                            alt=""
+                                                                            className="absolute inset-0 w-full h-full object-cover blur-md opacity-30 scale-110"
+                                                                        />
+                                                                        <img
+                                                                            src={step.image_url}
+                                                                            alt="Step"
+                                                                            className="relative w-full h-full object-contain transition-transform duration-500 group-hover:scale-105 z-10 p-1"
+                                                                        />
+                                                                    </div>
                                                                 )}
                                                                 <p className="text-xs text-gray-300">{step.description}</p>
                                                             </div>

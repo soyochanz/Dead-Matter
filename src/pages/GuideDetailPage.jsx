@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Helmet } from 'react-helmet';
+import { useTranslation } from 'react-i18next';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '@/lib/mySupabaseClient';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
@@ -24,6 +25,7 @@ const GuideDetailPage = () => {
   const { slug } = useParams();
   const { user } = useAuth();
   const { toast } = useToast();
+  const { i18n } = useTranslation();
   const turnstileRef = useRef();
 
   const [guide, setGuide] = useState(null);
@@ -167,6 +169,34 @@ const GuideDetailPage = () => {
     return colors[index];
   };
 
+  const getLocalizedContent = () => {
+    if (!guide) return {};
+    const lang = i18n.language;
+
+    if (lang.startsWith('es')) {
+      return {
+        title: guide.title_es || guide.title,
+        description: guide.description_es || guide.description,
+        content: guide.content_es || guide.content_html
+      };
+    } else if (lang.startsWith('pt')) {
+      return {
+        title: guide.title_pt || guide.title,
+        description: guide.description_pt || guide.description,
+        content: guide.content_pt || guide.content_html
+      };
+    }
+
+    // Default: English (main columns)
+    return {
+      title: guide.title,
+      description: guide.description,
+      content: guide.content_html
+    };
+  };
+
+  const localized = getLocalizedContent();
+
   if (loading)
     return (
       <div className="flex justify-center items-center h-screen">
@@ -199,8 +229,8 @@ const GuideDetailPage = () => {
   return (
     <>
       <Helmet>
-        <title>{guide.title} - Dead Matter Wiki</title>
-        <meta name="description" content={guide.description || 'Community guide for Dead Matter'} />
+        <title>{localized.title} - Dead Matter Wiki</title>
+        <meta name="description" content={localized.description || 'Community guide for Dead Matter'} />
       </Helmet>
 
       <div className="max-w-4xl mx-auto px-4">
@@ -242,9 +272,9 @@ const GuideDetailPage = () => {
             )}
 
             <div className="relative z-30 px-8 -mt-20">
-              <div className="bg-[#0a0a0c]/90 backdrop-blur-3xl border border-white/5 rounded-[2rem] p-8 shadow-2xl">
+              <div className="bg-[#0a0a0c]/90 backdrop-blur-3xl border border-white/5 rounded-[1.5rem] p-8 shadow-2xl">
                 <h1 className="text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight">
-                  {guide.title}
+                  {localized.title}
                 </h1>
 
                 <div className="flex flex-wrap items-center gap-6 text-gray-300 mb-4">
@@ -281,9 +311,9 @@ const GuideDetailPage = () => {
                   </div>
                 )}
 
-                {guide.description && (
+                {localized.description && (
                   <p className="text-gray-400 text-lg leading-relaxed border-t border-white/10 pt-4">
-                    {guide.description}
+                    {localized.description}
                   </p>
                 )}
               </div>
@@ -299,7 +329,7 @@ const GuideDetailPage = () => {
             <div className="prose prose-invert prose-lg max-w-none">
               <div
                 className="guide-content"
-                dangerouslySetInnerHTML={{ __html: guide.content_html }}
+                dangerouslySetInnerHTML={{ __html: localized.content }}
               />
             </div>
           </motion.div>
@@ -313,8 +343,8 @@ const GuideDetailPage = () => {
             <Button
               onClick={handleLike}
               className={`flex items-center gap-3 ${isLiked
-                  ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white'
-                  : 'bg-white/10 hover:bg-white/20 text-white border border-white/20'
+                ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white'
+                : 'bg-white/10 hover:bg-white/20 text-white border border-white/20'
                 }`}
             >
               <ThumbsUp size={20} />

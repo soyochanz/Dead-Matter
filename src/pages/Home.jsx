@@ -28,27 +28,33 @@ const SkeletonCard = ({ type = 'standard' }) => (
   </div>
 );
 
-const GuideCard = ({ guide, index }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-    whileHover={{ y: -5 }} transition={{ delay: index * 0.1 }}
-    className="relative bg-[#0a0a0c] border border-white/5 rounded-2xl overflow-hidden h-full flex flex-col group cursor-pointer hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.5)] transition-all duration-300"
-  >
-    <Link to={`/guides/${guide.slug || guide.id}`} className="block h-full">
-      <div className="aspect-video overflow-hidden relative">
-        <img src={guide.image_url || "https://images.unsplash.com/photo-1467746474745-41dd2c7524ce"} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" alt="" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-60" />
-      </div>
-      <div className="p-5 flex-1 flex flex-col gap-3">
-        <h4 className="font-bold text-white leading-tight group-hover:text-red-400 transition-colors line-clamp-2 min-h-[2.5rem] flex items-center">{guide.title}</h4>
-        <div className="mt-auto flex justify-between items-center pt-3 border-t border-white/5">
-          <span className="text-xs text-slate-400 truncate flex items-center gap-1.5"><UserCircle size={14} className="text-red-500" /> {guide.author?.username || 'Member'}</span>
-          <span className="text-xs text-slate-400 flex items-center gap-1"><ThumbsUp size={12} className="text-green-500" /> {guide.likes_count}</span>
+const GuideCard = ({ guide, index }) => {
+  const { i18n } = useTranslation();
+  const lang = i18n.language;
+  const localizedTitle = lang.startsWith('en') ? (guide.title_en || guide.title) : lang.startsWith('pt') ? (guide.title_pt || guide.title) : guide.title;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+      whileHover={{ y: -5 }} transition={{ delay: index * 0.1 }}
+      className="relative bg-[#0a0a0c] border border-white/5 rounded-2xl overflow-hidden h-full flex flex-col group cursor-pointer hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.5)] transition-all duration-300"
+    >
+      <Link to={`/guides/${guide.slug || guide.id}`} className="block h-full">
+        <div className="aspect-video overflow-hidden relative">
+          <img src={guide.image_url || "https://images.unsplash.com/photo-1467746474745-41dd2c7524ce"} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" alt="" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-60" />
         </div>
-      </div>
-    </Link>
-  </motion.div>
-);
+        <div className="p-5 flex-1 flex flex-col gap-3">
+          <h4 className="font-bold text-white leading-tight group-hover:text-red-400 transition-colors line-clamp-2 min-h-[2.5rem] flex items-center">{localizedTitle}</h4>
+          <div className="mt-auto flex justify-between items-center pt-3 border-t border-white/5">
+            <span className="text-xs text-slate-400 truncate flex items-center gap-1.5"><UserCircle size={14} className="text-red-500" /> {guide.author?.username || 'Member'}</span>
+            <span className="text-xs text-slate-400 flex items-center gap-1"><ThumbsUp size={12} className="text-green-500" /> {guide.likes_count}</span>
+          </div>
+        </div>
+      </Link>
+    </motion.div>
+  );
+};
 
 const MediaCard = ({ item, index }) => (
   <motion.div
@@ -142,7 +148,7 @@ const Home = () => {
   useEffect(() => {
     // 1. Fetch Guides
     supabase.from('guides')
-      .select('id, title, likes_count, image_url, slug, hashtags, author:profiles(username)')
+      .select('id, title, title_en, title_pt, likes_count, image_url, slug, hashtags, author:profiles(username)')
       .eq('status', 'approved').order('likes_count', { ascending: false }).limit(4)
       .then(res => {
         if (res.data) setTopGuides(res.data);
@@ -150,7 +156,7 @@ const Home = () => {
       });
 
     // 2. Fetch Latest Updates (2)
-    supabase.from('updates').select('*').order('date', { ascending: false }).limit(2)
+    supabase.from('updates').select('*, title_en, title_pt, content_en, content_pt').order('date', { ascending: false }).limit(2)
       .then(res => {
         if (res.data) setLatestUpdates(res.data);
         setLoading(prev => ({ ...prev, update: false }));
@@ -254,6 +260,17 @@ const Home = () => {
             </div>
             <div className="bg-[#0a0a0c] border border-white/5 rounded-2xl p-6 relative overflow-hidden">
               {loading.commits && <SkeletonPulse />}
+
+              <div className="p-3 bg-amber-500/10 rounded-xl border border-amber-500/30 mb-4">
+                <div className="flex items-center gap-2 mb-1">
+                  <Bell size={12} className="text-amber-500" />
+                  <span className="text-[10px] font-bold text-amber-500 uppercase tracking-wider">{t('home.notice_title')}</span>
+                </div>
+                <p className="text-[11px] text-amber-200/80 leading-relaxed">
+                  {t('home.micro_changes_notice')}
+                </p>
+              </div>
+
               <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
                 {latestCommits.map((c, i) => (
                   <div key={c.id} className="p-3 bg-white/[0.02] rounded-xl border border-white/5">
@@ -311,10 +328,17 @@ const Home = () => {
               className="bg-[#0f172a] border border-white/10 p-8 rounded-3xl max-w-2xl w-full max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}
             >
               <div className="flex justify-between items-center mb-6">
-                <h3 className="text-3xl font-bold text-white">{selectedUpdate.title}</h3>
+                <h3 className="text-3xl font-bold text-white">
+                  {i18n.language.startsWith('en') ? (selectedUpdate.title_en || selectedUpdate.title) : i18n.language.startsWith('pt') ? (selectedUpdate.title_pt || selectedUpdate.title) : selectedUpdate.title}
+                </h3>
                 <button onClick={() => setSelectedUpdate(null)}><X className="text-slate-400" /></button>
               </div>
-              <div className="prose prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: selectedUpdate.content }} />
+              <div
+                className="prose prose-invert max-w-none"
+                dangerouslySetInnerHTML={{
+                  __html: i18n.language.startsWith('en') ? (selectedUpdate.content_en || selectedUpdate.content) : i18n.language.startsWith('pt') ? (selectedUpdate.content_pt || selectedUpdate.content) : selectedUpdate.content
+                }}
+              />
             </motion.div>
           </div>
         </AnimatePresence>

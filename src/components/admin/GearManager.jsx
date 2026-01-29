@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Loader2, Plus, Edit, Trash2, Save, X } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { CustomStatManager } from '@/components/admin/CustomStatManager';
+import { AdminItemCard } from './AdminItemCard';
 
 const GearManager = ({ sharedMetadata }) => {
     const [gear, setGear] = useState([]);
@@ -148,20 +149,16 @@ const GearManager = ({ sharedMetadata }) => {
             {loading && <Loader2 className="animate-spin" />}
             {editingItem && renderForm()}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {gear.map(item => (
-                    <div key={item.id} className="bg-slate-800 rounded-lg p-4 flex flex-col justify-between">
-                        <div>
-                            {item.image_url && <img src={item.image_url} alt={item.name} className="w-full h-32 object-contain rounded-md bg-slate-700 mb-2" />}
-                            <h3 className="font-bold text-white">{item.name}</h3>
-                            <p className="text-sm text-gray-400">{item.subcategory?.name}</p>
-                            <p className="text-sm" style={{ color: item.rarity?.color }}>{item.rarity?.name}</p>
-                        </div>
-                        <div className="flex gap-2 mt-4">
-                            <Button size="icon" variant="outline" onClick={() => setEditingItem(item)}><Edit className="w-4 h-4" /></Button>
-                            <Button size="icon" variant="destructive" onClick={() => handleDelete(item.id)}><Trash2 className="w-4 h-4" /></Button>
-                        </div>
-                    </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+                {gear.map((item, idx) => (
+                    <AdminItemCard
+                        key={item.id}
+                        index={idx}
+                        item={item}
+                        type="gear"
+                        onEdit={setEditingItem}
+                        onDelete={(it) => handleDelete(it.id)}
+                    />
                 ))}
             </div>
         </div>

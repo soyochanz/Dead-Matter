@@ -134,6 +134,8 @@
         "latest_media": "Destaques de Mídia Recentes",
         "official_trailer": "Trailer Oficial",
         "loading_updates": "Carregando atualizações...",
+        "notice_title": "Aviso",
+        "micro_changes_notice": "Discord Git Commits inativos. Atualizações retornarão quando restaurado.",
         "shortcuts": {
             "weapons": "Armas",
             "vehicles": "Veículos",

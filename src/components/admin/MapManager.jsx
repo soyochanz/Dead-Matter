@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { supabase } from '@/lib/mySupabaseClient';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
-import { Loader2, Plus, MapPin, Trash2, Edit, Compass, Square, X } from 'lucide-react';
+import { Loader2, Plus, MapPin, Trash2, Edit, Compass, Square, X, Save } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
@@ -46,6 +46,7 @@ const MapManager = () => {
     const [markers, setMarkers] = useState([]);
     const [missions, setMissions] = useState([]);
     const [polygons, setPolygons] = useState([]);
+    const [paths, setPaths] = useState([]); // [NEW] path state
     const [lootTags, setLootTags] = useState([]);
 
     // Get viewMode from URL, default to 'markers'
@@ -54,6 +55,9 @@ const MapManager = () => {
 
     const [isAddingStep, setIsAddingStep] = useState(false); // If true, next map click adds a step
     const [activeZonePoints, setActiveZonePoints] = useState([]); // [lat, lng] array for current polygon
+    const [activePathPoints, setActivePathPoints] = useState([]); // [NEW] points for roads/railways
+    const [pathDialogOpen, setPathDialogOpen] = useState(false); // [NEW] dialog for path name/type
+    const [pathFormData, setPathFormData] = useState({ name: '', type: 'road' });
 
     // Initialize local state when data is fetched (ONLY if local is empty)
     useEffect(() => {
@@ -79,6 +83,13 @@ const MapManager = () => {
             setPolygons(prev => prev.length === 0 ? initialPolygons : prev);
         }
     }, [initialPolygons]);
+
+    const { paths: initialPaths } = useMapData(0);
+    useEffect(() => {
+        if (initialPaths) {
+            setPaths(prev => prev.length === 0 ? initialPaths : prev);
+        }
+    }, [initialPaths]);
 
     useEffect(() => {
         console.log('--- [MapManager] MOUNTED ---');
@@ -167,8 +178,33 @@ const MapManager = () => {
         }
     }, [toast]);
 
+    const handlePathSave = async () => {
+        if (activePathPoints.length < 2) return;
+        setLoading(true);
+        try {
+            const { data, error } = await supabase.from('map_paths').insert({
+                name: pathFormData.name,
+                type: pathFormData.type,
+                points: activePathPoints
+            }).select().single();
+
+            if (error) throw error;
+
+            setPaths(prev => [...prev, data]);
+            setActivePathPoints([]);
+            setPathDialogOpen(false);
+            setPathFormData({ name: '', type: 'road' });
+            toast({ title: 'Path Saved', description: `${data.name} created.` });
+        } catch (e) {
+            console.error(e);
+            toast({ title: 'Error', description: e.message, variant: 'destructive' });
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const handleMarkerClick = useCallback(async (marker) => {
-        if (viewMode === 'missions' || viewMode === 'zones') return; // Ignore standard marker clicks in these modes
+        if (viewMode === 'missions' || viewMode === 'zones' || viewMode === 'paths') return; // Ignore standard marker clicks in these modes
         setLoading(true);
         try {
             setEditingMarker(marker);
@@ -235,6 +271,11 @@ const MapManager = () => {
                 handleZoneSave(newPoints);
                 setActiveZonePoints([]);
             }
+            return;
+        }
+
+        if (viewMode === 'paths') {
+            setActivePathPoints(prev => [...prev, [latlng.lat, latlng.lng]]);
             return;
         }
 
@@ -488,12 +529,17 @@ const MapManager = () => {
     };
 
 
-    const handleZoneDelete = async (id) => {
-        if (!confirm('Delete this zone?')) return;
+    const handleZoneDelete = async (id, entityType = 'zone') => {
+        if (!confirm(`Delete this ${entityType}?`)) return;
         setLoading(true);
         try {
-            setPolygons(prev => prev.filter(p => p.id !== id));
-            await supabase.from('map_polygons').delete().eq('id', id);
+            if (entityType === 'path') {
+                setPaths(prev => prev.filter(p => p.id !== id));
+                await supabase.from('map_paths').delete().eq('id', id);
+            } else {
+                setPolygons(prev => prev.filter(p => p.id !== id));
+                await supabase.from('map_polygons').delete().eq('id', id);
+            }
         } catch (e) {
             console.error(e);
         } finally {
@@ -532,9 +578,15 @@ const MapManager = () => {
             keys: availableKeys,
             manualPolylines: manualPolylines,
             polygons: polygons,
+            paths: paths,
             activePolygonPoints: activeZonePoints,
+            missions: missions,
             currentMissionSteps: viewMode === 'missions' ? missionForm.steps : []
         };
+
+        if (viewMode === 'paths' && activePathPoints.length > 0) {
+            memoProps.manualPolylines = [...manualPolylines, activePathPoints];
+        }
 
         return (
             <div className="flex flex-col flex-grow min-h-0">
@@ -549,6 +601,26 @@ const MapManager = () => {
                                 <X className="w-3 h-3 mr-1" /> Clear Points
                             </Button>
                         )}
+                    </div>
+                )}
+                {viewMode === 'paths' && (
+                    <div className="bg-emerald-900/20 border border-emerald-500/30 p-3 rounded-lg mb-4 flex items-center justify-between shrink-0 transition-all">
+                        <div className="text-sm text-emerald-200">
+                            <strong className="text-emerald-400">Add Path (Road/Rail/River):</strong> Click multiple points to form a path.
+                            {activePathPoints.length > 0 && <span className="ml-2 text-white bg-emerald-600 px-2 py-0.5 rounded-full text-xs">{activePathPoints.length} points</span>}
+                        </div>
+                        <div className="flex gap-2">
+                            {activePathPoints.length >= 2 && (
+                                <Button size="sm" className="h-7 bg-emerald-600 hover:bg-emerald-700" onClick={() => setPathDialogOpen(true)}>
+                                    <Save className="w-3 h-3 mr-1" /> Save Path
+                                </Button>
+                            )}
+                            {activePathPoints.length > 0 && (
+                                <Button size="sm" variant="ghost" className="h-7 text-red-400 hover:text-red-300 hover:bg-red-900/20" onClick={() => setActivePathPoints([])}>
+                                    <X className="w-3 h-3 mr-1" /> Clear
+                                </Button>
+                            )}
+                        </div>
                     </div>
                 )}
                 <div className="flex-grow border border-white/10 rounded-xl overflow-hidden relative min-h-[500px]">
@@ -610,6 +682,14 @@ const MapManager = () => {
                 >
                     <Square className="w-4 h-4 mr-2" />
                     Zones ({polygons.length})
+                </Button>
+                <Button
+                    variant={viewMode === 'paths' ? "default" : "outline"}
+                    onClick={() => setViewMode('paths')}
+                    className={viewMode === 'paths' ? "bg-emerald-600 hover:bg-emerald-700" : "border-white/10 text-gray-400 hover:text-white"}
+                >
+                    <Compass className="w-4 h-4 mr-2" />
+                    Paths ({paths.length})
                 </Button>
             </div>
 
@@ -792,6 +872,51 @@ const MapManager = () => {
                 </DialogContent>
             </Dialog>
 
+            {/* PATH DIALOG */}
+            <Dialog open={pathDialogOpen} onOpenChange={setPathDialogOpen}>
+                <DialogContent className="bg-neutral-900 border-white/10 text-white max-w-sm">
+                    <DialogHeader>
+                        <DialogTitle>Save New Path</DialogTitle>
+                        <DialogDescription>
+                            Name this road, railway, or river.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                        <div className="grid gap-2">
+                            <Label htmlFor="path-name">Path Name</Label>
+                            <Input
+                                id="path-name"
+                                value={pathFormData.name}
+                                onChange={(e) => setPathFormData(prev => ({ ...prev, name: e.target.value }))}
+                                className="bg-neutral-800 border-neutral-700"
+                                placeholder="Main Street"
+                            />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="path-type">Type</Label>
+                            <select
+                                id="path-type"
+                                value={pathFormData.type}
+                                onChange={(e) => setPathFormData(prev => ({ ...prev, type: e.target.value }))}
+                                className="flex h-10 w-full rounded-md border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm text-white"
+                            >
+                                <option value="road">Road (Grey Solid)</option>
+                                <option value="train_rail">Train Rail (Black/White Dashed)</option>
+                                <option value="mountain_path">Mountain Path (Brown Dotted)</option>
+                                <option value="river">River (Blue Glow)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button variant="ghost" onClick={() => setPathDialogOpen(false)}>Cancel</Button>
+                        <Button onClick={handlePathSave} disabled={loading || !pathFormData.name} className="bg-emerald-600 hover:bg-emerald-700">
+                            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                            Save Path
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
             {/* MISSION DIALOG */}
             <Dialog open={missionDialogOpen} onOpenChange={setMissionDialogOpen}>
                 <DialogContent
@@ -830,18 +955,39 @@ const MapManager = () => {
                         <div className="border border-white/10 rounded-lg p-3 space-y-3 bg-white/5">
                             <h4 className="font-semibold text-sm text-amber-500 flex justify-between items-center">
                                 Mission Steps
-                                <Button
-                                    size="sm"
-                                    variant="outline"
-                                    className="h-7 text-xs border-amber-500/50 text-amber-500 hover:bg-amber-500/10"
-                                    onClick={() => {
-                                        setIsAddingStep(true);
-                                        setMissionDialogOpen(false); // Hide dialog to pick location
-                                        toast({ description: "Click on the map to set the step location.", duration: 3000 });
-                                    }}
-                                >
-                                    <Plus className="w-3 h-3 mr-1" /> Add Step
-                                </Button>
+                                <div className="flex gap-2">
+                                    <Button
+                                        size="sm"
+                                        variant="outline"
+                                        className="h-7 text-xs border-amber-500/50 text-amber-500 hover:bg-amber-500/10"
+                                        onClick={() => {
+                                            setMissionForm(prev => ({
+                                                ...prev,
+                                                steps: [...prev.steps, {
+                                                    title: `Step ${prev.steps.length + 1}`,
+                                                    description: '',
+                                                    lat: 0.01221, // Default to approximate map center
+                                                    lng: 0.01914,
+                                                    image_url: ''
+                                                }]
+                                            }));
+                                        }}
+                                    >
+                                        <Plus className="w-3 h-3 mr-1" /> Manual Add
+                                    </Button>
+                                    <Button
+                                        size="sm"
+                                        variant="outline"
+                                        className="h-7 text-xs border-amber-500/50 text-amber-500 hover:bg-amber-500/10"
+                                        onClick={() => {
+                                            setIsAddingStep(true);
+                                            setMissionDialogOpen(false); // Hide dialog to pick location
+                                            toast({ description: "Click on the map to set the step location.", duration: 3000 });
+                                        }}
+                                    >
+                                        <MapPin className="w-3 h-3 mr-1" /> Map Click
+                                    </Button>
+                                </div>
                             </h4>
 
                             {missionForm.steps.length === 0 && (
@@ -879,6 +1025,34 @@ const MapManager = () => {
                                             className="h-6 text-xs bg-white/5 border-white/10 mb-1"
                                             placeholder="Image URL (Optional)"
                                         />
+                                        <div className="grid grid-cols-2 gap-2 mb-1">
+                                            <div className="flex items-center gap-1">
+                                                <span className="text-[10px] text-gray-500 uppercase font-bold">Lat:</span>
+                                                <Input
+                                                    type="number"
+                                                    value={step.lat}
+                                                    onChange={e => {
+                                                        const newSteps = [...missionForm.steps];
+                                                        newSteps[idx].lat = parseFloat(e.target.value) || 0;
+                                                        setMissionForm({ ...missionForm, steps: newSteps });
+                                                    }}
+                                                    className="h-5 text-[10px] bg-white/5 border-white/10 p-1"
+                                                />
+                                            </div>
+                                            <div className="flex items-center gap-1">
+                                                <span className="text-[10px] text-gray-500 uppercase font-bold">Lng:</span>
+                                                <Input
+                                                    type="number"
+                                                    value={step.lng}
+                                                    onChange={e => {
+                                                        const newSteps = [...missionForm.steps];
+                                                        newSteps[idx].lng = parseFloat(e.target.value) || 0;
+                                                        setMissionForm({ ...missionForm, steps: newSteps });
+                                                    }}
+                                                    className="h-5 text-[10px] bg-white/5 border-white/10 p-1"
+                                                />
+                                            </div>
+                                        </div>
                                         <Textarea
                                             value={step.description}
                                             onChange={e => {
@@ -944,7 +1118,8 @@ const MapManager = () => {
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
-        </div >
+
+        </div>
     );
 };
 

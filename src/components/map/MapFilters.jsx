@@ -230,16 +230,17 @@ const MapFilters = ({ categories, activeFilters, onToggleFilter, isOpen, onClose
                                                             // 3.5 Gold (Keys) - ALREADY HIDDEN but fallback check
                                                             else if (name.includes('key')) { bgColor = '#eab308'; iconContent = mapIcons.key; }
 
-                                                            // 4. Blue
+                                                            // 4. Blue (Vehicles)
                                                             else if (name === 'vehicles') { bgColor = '#3b82f6'; iconContent = mapIcons.car; }
                                                             else if (name === 'trailers') { bgColor = '#3b82f6'; iconContent = mapIcons.trailer; }
+                                                            else if (name.includes('lootable vehicle')) { bgColor = '#a3a3a3'; iconContent = mapIcons.car; }
 
                                                             // 5. White/NPC
                                                             else if (name.includes('npc') || name.includes('vendors') || name === 'traders') { bgColor = '#ffffff'; iconContent = mapIcons.person; textColor = '#000000'; }
 
-                                                            // 6. Cyan (Water) & Amber (Butane/Gas)
+                                                            // 6. Cyan (Water) & Amber (Gas Source/Propane)
                                                             else if (name.includes('water') && !name.includes('tower')) { bgColor = '#06b6d4'; iconContent = personalIcons.water.svg; }
-                                                            else if (name.includes('butane') || name.includes('propane') || name.includes('fuel') || (name.includes('gas') && !name.includes('station'))) { bgColor = '#f97316'; iconContent = mapIcons.propane; }
+                                                            else if (name.includes('gas source') || name.includes('butane') || name.includes('propane') || name.includes('fuel')) { bgColor = '#f97316'; iconContent = mapIcons.propane; }
 
                                                             // 7. Red Group
                                                             else if (name.includes('shooting range')) { bgColor = '#ef4444'; iconContent = mapIcons.target; }

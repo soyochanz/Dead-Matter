@@ -10,68 +10,70 @@ import { useToast } from '@/components/ui/use-toast';
 import { Loader2, PlusCircle, ArrowRight, Upload, Hash, X, AlertCircle, Shield } from 'lucide-react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { translateContent } from '@/lib/gemini';
+import { Globe } from 'lucide-react';
 
 // Configuración de seguridad SIMPLIFICADA - Solo validaciones básicas
 const SECURITY_CONFIG = {
-  IMAGE: {
-    MAX_SIZE: 5 * 1024 * 1024, // 5MB
-    ALLOWED_TYPES: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'],
-    ALLOWED_EXTENSIONS: ['.jpg', '.jpeg', '.png', '.webp']
-  }
+    IMAGE: {
+        MAX_SIZE: 5 * 1024 * 1024, // 5MB
+        ALLOWED_TYPES: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'],
+        ALLOWED_EXTENSIONS: ['.jpg', '.jpeg', '.png', '.webp']
+    }
 };
 
 // Helper simplificado - Sin canvas para evitar problemas
 const FileSecurityUtils = {
-  // Validar tipo MIME y extensión
-  validateFileType(file) {
-    const fileExtension = '.' + file.name.toLowerCase().split('.').pop();
-    
-    // Verificar extensión peligrosa básica
-    const dangerousExtensions = ['.php', '.exe', '.js', '.html', '.htm'];
-    if (dangerousExtensions.includes(fileExtension)) {
-      return { valid: false, error: 'File type not allowed' };
-    }
-    
-    // Verificar tipo MIME permitido
-    if (!SECURITY_CONFIG.IMAGE.ALLOWED_TYPES.includes(file.type)) {
-      return { valid: false, error: 'Invalid image format. Allowed: JPEG, PNG, WebP' };
-    }
-    
-    return { valid: true };
-  },
+    // Validar tipo MIME y extensión
+    validateFileType(file) {
+        const fileExtension = '.' + file.name.toLowerCase().split('.').pop();
 
-  // Validar tamaño
-  validateFileSize(file) {
-    if (file.size > SECURITY_CONFIG.IMAGE.MAX_SIZE) {
-      return { 
-        valid: false, 
-        error: `File too large. Maximum size: ${SECURITY_CONFIG.IMAGE.MAX_SIZE / 1024 / 1024}MB`
-      };
-    }
-    return { valid: true };
-  },
+        // Verificar extensión peligrosa básica
+        const dangerousExtensions = ['.php', '.exe', '.js', '.html', '.htm'];
+        if (dangerousExtensions.includes(fileExtension)) {
+            return { valid: false, error: 'File type not allowed' };
+        }
 
-  // Sanitizar nombre de archivo básico
-  sanitizeFilename(filename) {
-    let sanitized = filename
-      .replace(/[<>:"/\\|?*]/g, '_') // Reemplazar caracteres peligrosos
-      .replace(/\s+/g, '_') // Reemplazar espacios
-      .replace(/_{2,}/g, '_'); // Remover underscores múltiples
-    
-    return sanitized.substring(0, 100); // Limitar longitud
-  },
+        // Verificar tipo MIME permitido
+        if (!SECURITY_CONFIG.IMAGE.ALLOWED_TYPES.includes(file.type)) {
+            return { valid: false, error: 'Invalid image format. Allowed: JPEG, PNG, WebP' };
+        }
 
-  // Detectar archivos disfrazados básico
-  detectDisguisedFile(filename) {
-    const lowerFilename = filename.toLowerCase();
-    
-    // Detectar doble extensión
-    if (/(\.jpg|\.jpeg|\.png|\.gif|\.webp)\.(php|exe|js|html|asp|aspx|jsp)$/i.test(lowerFilename)) {
-      return { malicious: true, type: 'double_extension' };
+        return { valid: true };
+    },
+
+    // Validar tamaño
+    validateFileSize(file) {
+        if (file.size > SECURITY_CONFIG.IMAGE.MAX_SIZE) {
+            return {
+                valid: false,
+                error: `File too large. Maximum size: ${SECURITY_CONFIG.IMAGE.MAX_SIZE / 1024 / 1024}MB`
+            };
+        }
+        return { valid: true };
+    },
+
+    // Sanitizar nombre de archivo básico
+    sanitizeFilename(filename) {
+        let sanitized = filename
+            .replace(/[<>:"/\\|?*]/g, '_') // Reemplazar caracteres peligrosos
+            .replace(/\s+/g, '_') // Reemplazar espacios
+            .replace(/_{2,}/g, '_'); // Remover underscores múltiples
+
+        return sanitized.substring(0, 100); // Limitar longitud
+    },
+
+    // Detectar archivos disfrazados básico
+    detectDisguisedFile(filename) {
+        const lowerFilename = filename.toLowerCase();
+
+        // Detectar doble extensión
+        if (/(\.jpg|\.jpeg|\.png|\.gif|\.webp)\.(php|exe|js|html|asp|aspx|jsp)$/i.test(lowerFilename)) {
+            return { malicious: true, type: 'double_extension' };
+        }
+
+        return { malicious: false };
     }
-    
-    return { malicious: false };
-  }
 };
 
 const CreateGuidePage = () => {
@@ -89,7 +91,16 @@ const CreateGuidePage = () => {
     const [imagePreview, setImagePreview] = useState(null);
     const [isEditorVisible, setIsEditorVisible] = useState(true);
     const [validationErrors, setValidationErrors] = useState([]);
-    
+    const [isTranslating, setIsTranslating] = useState(false);
+
+    // Translation State
+    const [titleEs, setTitleEs] = useState('');
+    const [titlePt, setTitlePt] = useState('');
+    const [descriptionEs, setDescriptionEs] = useState('');
+    const [descriptionPt, setDescriptionPt] = useState('');
+    const [contentEs, setContentEs] = useState('');
+    const [contentPt, setContentPt] = useState('');
+
     // New Hashtag State
     const [hashtags, setHashtags] = useState([]);
     const [currentTag, setCurrentTag] = useState('');
@@ -123,43 +134,90 @@ const CreateGuidePage = () => {
 
         window.addEventListener('beforeunload', handleBeforeUnload);
         return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-    }, [content, title, description]);
+    }, [content, title, description, titleEs, titlePt, descriptionEs, descriptionPt, contentEs, contentPt]);
+
+    const handleTranslateAll = async () => {
+        if (!title || !description || !content) {
+            toast({
+                variant: 'destructive',
+                title: 'Incomplete Content',
+                description: 'Please fill in the title, description, and content first.'
+            });
+            return;
+        }
+
+        setIsTranslating(true);
+        try {
+            // Translate to Spanish
+            const [tEs, dEs, cEs] = await Promise.all([
+                translateContent(title, 'Spanish'),
+                translateContent(description, 'Spanish'),
+                translateContent(content, 'Spanish')
+            ]);
+            setTitleEs(tEs);
+            setDescriptionEs(dEs);
+            setContentEs(cEs);
+
+            // Translate to Portuguese
+            const [tPt, dPt, cPt] = await Promise.all([
+                translateContent(title, 'Portuguese'),
+                translateContent(description, 'Portuguese'),
+                translateContent(content, 'Portuguese')
+            ]);
+            setTitlePt(tPt);
+            setDescriptionPt(dPt);
+            setContentPt(cPt);
+
+            toast({
+                title: 'Translations Complete',
+                description: 'Spanish and Portuguese versions have been generated.'
+            });
+        } catch (error) {
+            toast({
+                variant: 'destructive',
+                title: 'Translation Failed',
+                description: 'Could not connect to Gemini AI. Check your API key.'
+            });
+        } finally {
+            setIsTranslating(false);
+        }
+    };
 
     // Validación SIMPLIFICADA de archivos
     const validateImage = (file) => {
-      const errors = [];
-      
-      // 1. Detección de archivos disfrazados
-      const disguiseCheck = FileSecurityUtils.detectDisguisedFile(file.name);
-      if (disguiseCheck.malicious) {
-        errors.push(`Security alert: Suspicious file name`);
-        return { success: false, errors };
-      }
-      
-      // 2. Validar tipo de archivo
-      const typeCheck = FileSecurityUtils.validateFileType(file);
-      if (!typeCheck.valid) {
-        errors.push(typeCheck.error);
-      }
-      
-      // 3. Validar tamaño
-      const sizeCheck = FileSecurityUtils.validateFileSize(file);
-      if (!sizeCheck.valid) {
-        errors.push(sizeCheck.error);
-      }
-      
-      if (errors.length > 0) {
-        return { success: false, errors };
-      }
-      
-      // 4. Sanitizar nombre
-      const sanitizedName = FileSecurityUtils.sanitizeFilename(file.name);
-      
-      return { 
-        success: true, 
-        file: file, 
-        sanitizedName
-      };
+        const errors = [];
+
+        // 1. Detección de archivos disfrazados
+        const disguiseCheck = FileSecurityUtils.detectDisguisedFile(file.name);
+        if (disguiseCheck.malicious) {
+            errors.push(`Security alert: Suspicious file name`);
+            return { success: false, errors };
+        }
+
+        // 2. Validar tipo de archivo
+        const typeCheck = FileSecurityUtils.validateFileType(file);
+        if (!typeCheck.valid) {
+            errors.push(typeCheck.error);
+        }
+
+        // 3. Validar tamaño
+        const sizeCheck = FileSecurityUtils.validateFileSize(file);
+        if (!sizeCheck.valid) {
+            errors.push(sizeCheck.error);
+        }
+
+        if (errors.length > 0) {
+            return { success: false, errors };
+        }
+
+        // 4. Sanitizar nombre
+        const sanitizedName = FileSecurityUtils.sanitizeFilename(file.name);
+
+        return {
+            success: true,
+            file: file,
+            sanitizedName
+        };
     };
 
     // Tag Handlers
@@ -167,7 +225,7 @@ const CreateGuidePage = () => {
         if (e.key === 'Enter' || e.key === ',') {
             e.preventDefault();
             const tag = currentTag.trim().replace(/^#/, '');
-            
+
             if (tag && hashtags.length < 5 && !hashtags.includes(tag)) {
                 setHashtags([...hashtags, tag]);
                 setCurrentTag('');
@@ -202,9 +260,9 @@ const CreateGuidePage = () => {
                 // Validación básica
                 const validation = validateImage(file);
                 if (!validation.success) {
-                    toast({ 
-                        variant: 'destructive', 
-                        title: 'Image Validation Failed', 
+                    toast({
+                        variant: 'destructive',
+                        title: 'Image Validation Failed',
                         description: validation.errors.join(', ')
                     });
                     return;
@@ -231,7 +289,7 @@ const CreateGuidePage = () => {
 
                 quillEditor.insertEmbed(range.index, 'image', urlData.publicUrl);
                 quillEditor.setSelection(range.index + 1);
-                
+
                 toast({
                     title: 'Image Uploaded',
                     description: 'Image uploaded successfully'
@@ -239,10 +297,10 @@ const CreateGuidePage = () => {
 
             } catch (error) {
                 console.error('Upload error:', error);
-                toast({ 
-                    variant: 'destructive', 
-                    title: 'Image Upload Failed', 
-                    description: 'Please try again with a different image' 
+                toast({
+                    variant: 'destructive',
+                    title: 'Image Upload Failed',
+                    description: 'Please try again with a different image'
                 });
             }
         };
@@ -251,27 +309,27 @@ const CreateGuidePage = () => {
     // Handler seguro para cover image - SIMPLIFICADO
     const handleImageChange = (e) => {
         if (!e.target.files || !e.target.files[0]) return;
-        
+
         const file = e.target.files[0];
         setValidationErrors([]);
-        
+
         try {
             // Validación básica
             const validation = validateImage(file);
-            
+
             if (!validation.success) {
                 setValidationErrors(validation.errors);
-                toast({ 
-                    variant: 'destructive', 
-                    title: 'Invalid Image', 
+                toast({
+                    variant: 'destructive',
+                    title: 'Invalid Image',
                     description: validation.errors.join(', ')
                 });
                 return;
             }
-            
+
             // Actualizar estado con archivo
             setImageFile(file);
-            
+
             // Preview
             const reader = new FileReader();
             reader.onload = (e) => {
@@ -281,18 +339,18 @@ const CreateGuidePage = () => {
                 toast({ variant: 'destructive', title: 'Error', description: 'Failed to load image preview' });
             };
             reader.readAsDataURL(file);
-            
+
             toast({
                 title: 'Image Selected',
                 description: `${validation.sanitizedName} ready for upload`
             });
-            
+
         } catch (error) {
             console.error('Image processing error:', error);
-            toast({ 
-                variant: 'destructive', 
-                title: 'Processing Error', 
-                description: 'Failed to process image. Please try another file.' 
+            toast({
+                variant: 'destructive',
+                title: 'Processing Error',
+                description: 'Failed to process image. Please try another file.'
             });
         }
     };
@@ -409,7 +467,7 @@ const CreateGuidePage = () => {
                         upsert: false,
                         contentType: imageFile.type
                     });
-                    
+
                 if (uploadError) {
                     throw uploadError;
                 }
@@ -430,6 +488,12 @@ const CreateGuidePage = () => {
                 description,
                 content: content,
                 content_html: contentHtml,
+                title_es: titleEs,
+                title_pt: titlePt,
+                description_es: descriptionEs,
+                description_pt: descriptionPt,
+                content_es: contentEs,
+                content_pt: contentPt,
                 image_url: imageUrl,
                 image_path: imagePath,
                 author_id: profile.id,
@@ -577,6 +641,75 @@ const CreateGuidePage = () => {
                                 className="bg-gray-800/50 border-white/20 text-white placeholder-gray-400 h-12 text-lg focus:border-red-500 transition-colors"
                                 placeholder="Brief description that will appear in previews..."
                             />
+                        </div>
+
+                        <div className="flex justify-center">
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={handleTranslateAll}
+                                disabled={isTranslating || !title}
+                                className="gap-2 border-blue-500/50 text-blue-400 hover:bg-blue-500/10"
+                            >
+                                {isTranslating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Globe className="w-4 h-4" />}
+                                Translate with Gemini AI (ES/PT)
+                            </Button>
+                        </div>
+
+                        {/* Translation Fields (Optional/Preview) */}
+                        <div className="space-y-6 pt-4 border-t border-white/5">
+                            <h3 className="text-xl font-bold text-blue-400 flex items-center gap-2">
+                                <Globe className="w-5 h-5" />
+                                Translations
+                            </h3>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                {/* Spanish Version */}
+                                <div className="space-y-4 p-4 bg-white/[0.02] border border-white/5 rounded-xl">
+                                    <h4 className="font-bold text-gray-400 uppercase text-xs tracking-widest">Spanish Version</h4>
+                                    <div className="space-y-4">
+                                        <div>
+                                            <Label className="text-xs text-gray-500 mb-1 block">Title (ES)</Label>
+                                            <Input value={titleEs} onChange={(e) => setTitleEs(e.target.value)} className="bg-gray-800/50 border-white/10 text-sm h-10" />
+                                        </div>
+                                        <div>
+                                            <Label className="text-xs text-gray-500 mb-1 block">Description (ES)</Label>
+                                            <Input value={descriptionEs} onChange={(e) => setDescriptionEs(e.target.value)} className="bg-gray-800/50 border-white/10 text-sm h-10" />
+                                        </div>
+                                        <div>
+                                            <Label className="text-xs text-gray-500 mb-1 block">Content (ES) - Raw Text</Label>
+                                            <textarea
+                                                value={contentEs}
+                                                onChange={(e) => setContentEs(e.target.value)}
+                                                className="w-full h-32 bg-gray-800/50 border border-white/10 rounded-md p-2 text-sm text-gray-300 focus:outline-none focus:border-blue-500/50"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Portuguese Version */}
+                                <div className="space-y-4 p-4 bg-white/[0.02] border border-white/5 rounded-xl">
+                                    <h4 className="font-bold text-gray-400 uppercase text-xs tracking-widest">Portuguese Version</h4>
+                                    <div className="space-y-4">
+                                        <div>
+                                            <Label className="text-xs text-gray-500 mb-1 block">Title (PT)</Label>
+                                            <Input value={titlePt} onChange={(e) => setTitlePt(e.target.value)} className="bg-gray-800/50 border-white/10 text-sm h-10" />
+                                        </div>
+                                        <div>
+                                            <Label className="text-xs text-gray-500 mb-1 block">Description (PT)</Label>
+                                            <Input value={descriptionPt} onChange={(e) => setDescriptionPt(e.target.value)} className="bg-gray-800/50 border-white/10 text-sm h-10" />
+                                        </div>
+                                        <div>
+                                            <Label className="text-xs text-gray-500 mb-1 block">Content (PT) - Raw Text</Label>
+                                            <textarea
+                                                value={contentPt}
+                                                onChange={(e) => setContentPt(e.target.value)}
+                                                className="w-full h-32 bg-gray-800/50 border border-white/10 rounded-md p-2 text-sm text-gray-300 focus:outline-none focus:border-blue-500/50"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         {/* Hashtags Input */}

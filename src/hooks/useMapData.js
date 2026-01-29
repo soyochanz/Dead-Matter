@@ -11,6 +11,7 @@ export const useMapData = (refreshTrigger = 0, { enabled = true } = {}) => {
     const [keys, setKeys] = useState([]);
     const [missions, setMissions] = useState([]);
     const [polygons, setPolygons] = useState([]);
+    const [paths, setPaths] = useState([]); // [NEW] Added paths state
     const [loading, setLoading] = useState(enabled);
     const [error, setError] = useState(null);
 
@@ -87,6 +88,15 @@ export const useMapData = (refreshTrigger = 0, { enabled = true } = {}) => {
                     console.warn('Polygons fetch failed:', e);
                 }
 
+                let pathsData = [];
+                try {
+                    const { data, error } = await supabase.from('map_paths').select('*');
+                    if (error) console.warn('Paths warning:', error.message);
+                    else pathsData = data;
+                } catch (e) {
+                    console.warn('Paths fetch failed:', e);
+                }
+
 
 
                 let userMarkersData = [];
@@ -113,6 +123,7 @@ export const useMapData = (refreshTrigger = 0, { enabled = true } = {}) => {
                 setKeys(keysData || []);
                 setMissions(missionsData || []);
                 setPolygons(polygonsData || []);
+                setPaths(pathsData || []);
             } catch (err) {
                 console.error('Error fetching map data:', err);
                 setError(err.message);
@@ -133,9 +144,10 @@ export const useMapData = (refreshTrigger = 0, { enabled = true } = {}) => {
         keys,
         missions,
         polygons,
+        paths,
         loading,
         error
-    }), [categories, markers, lootTags, personalMarkers, groups, keys, missions, polygons, loading, error]);
+    }), [categories, markers, lootTags, personalMarkers, groups, keys, missions, polygons, paths, loading, error]);
 };
 // End of file
 

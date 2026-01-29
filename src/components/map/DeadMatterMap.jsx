@@ -97,7 +97,12 @@ const DeadMatterMap = ({ onMapClick, adminMode = false, setMapInstance, setCoord
         return (
             <Popup minWidth={300} maxWidth={400} className="custom-popup">
                 <div className="popup-box">
-                    {img && <img src={img} alt={title} className="popup-img" />}
+                    {img && (
+                        <div className="relative w-full h-44 bg-neutral-900 overflow-hidden border-b border-white/5 group">
+                            <img src={img} alt="" className="absolute inset-0 w-full h-full object-cover blur-lg opacity-20 scale-110" />
+                            <img src={img} alt={title} className="relative w-full h-full object-contain transition-transform duration-700 group-hover:scale-105 z-10 p-2" />
+                        </div>
+                    )}
                     <h3 className="popup-title">{title}</h3>
                     {desc && <p className="popup-desc">{desc}</p>}
 

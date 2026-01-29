@@ -4,6 +4,7 @@ import { Plus, Edit, Trash2, Loader2, Upload, Gem, DollarSign } from 'lucide-rea
 import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/lib/mySupabaseClient';
 import { Input } from '@/components/ui/input';
+import { AdminItemCard } from './AdminItemCard';
 
 const accessoryTypes = ['Sights', 'Muzzle', 'Grip', 'Magazine', 'Stock', 'Other'];
 
@@ -115,22 +116,18 @@ const AccessoryManager = ({ sharedMetadata }) => {
             <div className="flex justify-between items-center"><h2 className="text-2xl font-bold text-white">Manage Accessories</h2><Button onClick={() => { setEditingItem(null); setShowForm(true); }}><Plus className="mr-2 h-4 w-4" /> New Accessory</Button></div>
             {showForm && <AccessoryForm item={editingItem} onSave={handleSave} onCancel={() => setShowForm(false)} sharedMetadata={sharedMetadata} />}
             {loading ? <Loader2 className="h-8 w-8 animate-spin" /> : (
-                <div className="grid gap-4">{items.map(item => (
-                    <div key={item.id} className="bg-white/5 p-4 rounded-lg flex justify-between items-center">
-                        <div className="flex items-center gap-4">
-                            {item.image_url && <img src={item.image_url} alt={item.name} className="h-12 w-12 object-cover rounded-md" />}
-                            <div>
-                                <span className="font-bold text-xl text-white">{item.name}</span>
-                                <span className="text-xs ml-2 px-2 py-1 rounded bg-gray-600">{item.type}</span>
-                                {item.rarity && <span className="text-xs ml-2 px-2 py-1 rounded" style={{ backgroundColor: item.rarity.color }}>{item.rarity.name}</span>}
-                            </div>
-                        </div>
-                        <div className="flex gap-2">
-                            <Button onClick={() => { setEditingItem(item); setShowForm(true); }} variant="outline" size="icon"><Edit className="h-4 w-4" /></Button>
-                            <Button onClick={() => handleDelete(item)} variant="destructive" size="icon"><Trash2 className="h-4 w-4" /></Button>
-                        </div>
-                    </div>
-                ))}</div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+                    {items.map((item, idx) => (
+                        <AdminItemCard
+                            key={item.id}
+                            index={idx}
+                            item={item}
+                            type="accessory"
+                            onEdit={(it) => { setEditingItem(it); setShowForm(true); }}
+                            onDelete={handleDelete}
+                        />
+                    ))}
+                </div>
             )}
         </div>
     );

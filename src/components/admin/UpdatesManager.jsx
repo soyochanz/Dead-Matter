@@ -63,7 +63,7 @@ const UpdatesManager = () => {
     // Fetch full content on demand
     const { data, error } = await supabase
       .from('updates')
-      .select('content, content_html')
+      .select('content, title_en, title_pt, content_en, content_pt')
       .eq('id', item.id)
       .single();
 

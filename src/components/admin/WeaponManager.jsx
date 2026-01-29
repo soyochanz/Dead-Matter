@@ -6,6 +6,7 @@ import { Loader2, Plus, Edit, Trash2, Save, X, Upload, Link2 } from 'lucide-reac
 import { useToast } from '@/components/ui/use-toast';
 import { CustomStatManager } from '@/components/admin/CustomStatManager';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { AdminItemCard } from './AdminItemCard';
 
 const StatInput = ({ label, value, onChange, placeholder = '0' }) => (
     <div>
@@ -257,23 +258,17 @@ const WeaponManager = ({ sharedMetadata }) => {
 
             {editingWeapon && renderForm()}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {weapons.map(weapon => (
-                    <div key={weapon.id} className="bg-slate-800 rounded-lg p-4 flex flex-col justify-between">
-                        <div>
-                            {weapon.image_url && <img src={weapon.image_url} alt={weapon.name} className="w-full h-32 object-contain rounded-md bg-slate-700 mb-2" />}
-                            <h3 className="font-bold text-white">{weapon.name}</h3>
-                            <p className="text-sm text-gray-400">{weapon.subcategory?.name}</p>
-                            <p className="text-sm" style={{ color: weapon.rarity?.color }}>{weapon.rarity?.name}</p>
-                        </div>
-                        <div className="flex gap-2 mt-4">
-                            <Button size="icon" variant="outline" onClick={() => setEditingWeapon(weapon)}><Edit className="w-4 h-4" /></Button>
-                            <Button size="icon" variant="destructive" onClick={() => handleDelete(weapon)}><Trash2 className="w-4 h-4" /></Button>
-                            {!weapon.subcategory?.name?.toLowerCase().includes('melee') &&
-                                <Button size="icon" variant="outline" onClick={() => setManagingAttachmentsFor(weapon)}><Link2 className="w-4 h-4" /></Button>
-                            }
-                        </div>
-                    </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+                {weapons.map((weapon, idx) => (
+                    <AdminItemCard
+                        key={weapon.id}
+                        index={idx}
+                        item={weapon}
+                        type="weapon"
+                        onEdit={setEditingWeapon}
+                        onDelete={handleDelete}
+                        onLink={!weapon.subcategory?.name?.toLowerCase().includes('melee') ? setManagingAttachmentsFor : null}
+                    />
                 ))}
             </div>
             {managingAttachmentsFor &&

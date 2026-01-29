@@ -37,11 +37,11 @@ const MapPopup = ({ marker, tags, keys = [] }) => {
                         className="absolute inset-0 w-full h-full object-cover blur-lg opacity-20 scale-110"
                     />
 
-                    {/* Main Image Layer (Uniform Cover) */}
+                    {/* Main Image Layer (Uniform Contain for Full Visibility) */}
                     <img
                         src={marker.image_url}
                         alt={marker.title}
-                        className="relative w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 z-10"
+                        className="relative w-full h-full object-contain transition-transform duration-700 group-hover:scale-105 z-10 p-2"
                     />
 
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent z-20" />

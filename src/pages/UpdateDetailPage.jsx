@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet';
 import { motion } from 'framer-motion';
 import { supabase } from '@/lib/mySupabaseClient';
@@ -9,6 +10,7 @@ import { Button } from '@/components/ui/button';
 const UpdateDetailPage = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
+  const { i18n } = useTranslation();
   const [update, setUpdate] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -42,6 +44,31 @@ const UpdateDetailPage = () => {
     fetchUpdate();
   }, [slug]);
 
+  const getLocalizedContent = () => {
+    if (!update) return {};
+    const lang = i18n.language;
+
+    if (lang.startsWith('es')) {
+      return {
+        title: update.title_es || update.title,
+        content: update.content_es || update.content
+      };
+    } else if (lang.startsWith('pt')) {
+      return {
+        title: update.title_pt || update.title,
+        content: update.content_pt || update.content
+      };
+    }
+
+    // Default: English (main columns)
+    return {
+      title: update.title,
+      content: update.content
+    };
+  };
+
+  const localized = getLocalizedContent();
+
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh]">
@@ -71,8 +98,8 @@ const UpdateDetailPage = () => {
   return (
     <>
       <Helmet>
-        <title>{update.title} - Dead Matter Updates</title>
-        <meta name="description" content={`Read the full patch notes for ${update.title}`} />
+        <title>{localized.title} - Dead Matter Updates</title>
+        <meta name="description" content={`Read the full patch notes for ${localized.title}`} />
       </Helmet>
 
       <div className="max-w-4xl mx-auto">
@@ -124,7 +151,7 @@ const UpdateDetailPage = () => {
                 </div>
 
                 <h1 className="text-3xl md:text-5xl font-bold text-white leading-tight mb-4">
-                  {update.title}
+                  {localized.title}
                 </h1>
               </div>
             </div>
@@ -133,7 +160,7 @@ const UpdateDetailPage = () => {
             <div className="p-8 md:p-12 bg-black/40">
               <div
                 className="prose prose-invert prose-headings:text-white prose-p:text-gray-300 prose-a:text-red-400 prose-li:text-gray-300 prose-strong:text-white prose-img:rounded-xl prose-video:rounded-xl max-w-none prose-lg leading-relaxed"
-                dangerouslySetInnerHTML={{ __html: update.content }}
+                dangerouslySetInnerHTML={{ __html: localized.content }}
               />
             </div>
 
@@ -144,7 +171,6 @@ const UpdateDetailPage = () => {
                 className="gap-2 border-white/20 hover:bg-white/10"
                 onClick={() => {
                   navigator.clipboard.writeText(window.location.href);
-                  // Could add a toast here if imported
                 }}
               >
                 <Share2 className="h-4 w-4" />
