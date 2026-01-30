@@ -6,7 +6,7 @@ export const mapConfig = {
   minZoom: 17,
   maxZoom: 20,
   tiles: {
-    terrain: 'https://deadmatterdb.com/leaflet/{z}/{x}/{y}.webp',
+    terrain: '/leaflet/{z}/{x}/{y}.webp',
     roadmap: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
   }
 };

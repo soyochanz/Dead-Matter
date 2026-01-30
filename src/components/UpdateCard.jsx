@@ -7,8 +7,14 @@ import { Link } from 'react-router-dom';
 
 const UpdateCard = ({ update, index, versionTag }) => {
   const { t, i18n } = useTranslation();
-  const contentToParse = update.content_html || update.content || '';
-  const summary = contentToParse ? new DOMParser().parseFromString(contentToParse, 'text/html').body.textContent.substring(0, 150) + '...' : '';
+
+  // Get localized title
+  const lang = i18n.language;
+  const localizedTitle = lang.startsWith('es')
+    ? (update.title_es || update.title)
+    : lang.startsWith('pt')
+      ? (update.title_pt || update.title)
+      : (update.title_en || update.title);
 
   // Fallback logic in case DB migration hasn't propagated to client cache yet, though usually it's fast.
   // Ideally, all updates now have a slug.
@@ -25,7 +31,7 @@ const UpdateCard = ({ update, index, versionTag }) => {
       <div className="flex-grow">
         <div className="flex items-start justify-between mb-4">
           <Link to={targetLink} className="hover:text-red-400 transition-colors">
-            <h3 className="text-2xl font-bold text-white group-hover:text-red-400 transition-colors duration-300">{update.title}</h3>
+            <h3 className="text-2xl font-bold text-white group-hover:text-red-400 transition-colors duration-300">{localizedTitle}</h3>
           </Link>
           {versionTag}
         </div>

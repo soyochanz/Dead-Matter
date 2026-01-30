@@ -9,6 +9,7 @@ import MapPopup from './MapPopup';
 import MapFilters from './MapFilters';
 import MapSearch from './MapSearch';
 import GroupManager from './GroupManager';
+import { Button } from '@/components/ui/button';
 import { Loader2, Menu, X, Compass, ChevronLeft, ChevronRight } from 'lucide-react';
 import { personalIcons, personalColors, mapIcons } from '@/utils/mapIcons';
 
@@ -358,6 +359,11 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
         if (catName.includes('gas source') || catName.includes('butane') || catName.includes('propane') || catName.includes('fuel')) return createMinorResourceIcon(mapIcons.propane, '#ea580c', 14); // Darker Orange, size 14
         if (catName.includes('key')) return createCircleIcon(mapIcons.key, '#eab308');
 
+        // 1.5 HELICRASH - HIGH PRIORITY (Before loot detection)
+        if (catName.toLowerCase().includes('helicrash') || catName.toLowerCase().includes('heli')) {
+            return createPinIcon(mapIcons.helicopter, '#ef4444', isLocked, hasWater);
+        }
+
         // 2. LOOT DETECTION (Explicit)
         // We treat it as loot if 'loot' is in the name OR if it belongs to a primary loot group
         const isLootGroup = ['military', 'industrial', 'civilian', 'medical', 'calculated'].includes(groupName);
@@ -423,7 +429,6 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
 
         // 10. Military Pins
         if (catName.includes('shooting range')) return createPinIcon(mapIcons.target, '#ef4444', isLocked, hasWater);
-        if (catName.includes('helicrash')) return createPinIcon(mapIcons.helicopter, '#ef4444', isLocked, hasWater);
         if (catName.includes('military bunker')) return createPinIcon(mapIcons.bunker, '#ef4444', isLocked, hasWater);
         if (catName.includes('barracks')) return createPinIcon(mapIcons.barracks, '#ef4444', isLocked, hasWater);
         if (catName.includes('military base')) return createPinIcon(mapIcons.helmet, '#ef4444', isLocked, hasWater);
@@ -779,7 +784,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
             <div className={`w-full h-full absolute inset-0 z-0 ${activePolygonPoints && activePolygonPoints.length > 0 ? 'cursor-crosshair' : ''}`}>
                 <MapContainer center={[0.01221, 0.01914]} zoom={16} minZoom={17} maxZoom={20} style={{ height: '100%', width: '100%', background: '#1a1a1a' }} zoomControl={false}>
                     <ZoomControl position="bottomright" />
-                    <TileLayer url="https://deadmatterdb.com/leaflet/{z}/{x}/{y}.webp" minZoom={0} maxZoom={20} tms={false} />
+                    <TileLayer url="/leaflet/{z}/{x}/{y}.webp" minZoom={17} maxZoom={20} tms={false} />
 
                     <MouseCoordinatesDisplay />
                     <ZoomTracker />
@@ -803,7 +808,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                         } else if (path.type === 'river') {
                             options = { color: '#3b82f6', weight: 12, opacity: 0.2, lineCap: 'round' };
                         } else if (path.type === 'road') {
-                            options = { color: '#4b5563', weight: 4, opacity: 0.7 };
+                            options = { color: '#eab308', weight: 4, opacity: 0.7 };
                         } else if (path.type === 'mountain_path') {
                             options = { color: '#78350f', weight: 2, dashArray: '5, 5', opacity: 0.6 };
                         }
@@ -814,24 +819,26 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                                 positions={path.points}
                                 pathOptions={options}
                             >
-                                <Popup>
-                                    <div className="p-2 min-w-[100px]">
-                                        <h4 className="font-bold text-white mb-1 uppercase text-xs tracking-wider">
-                                            {path.type.replace('_', ' ')}
-                                        </h4>
-                                        <p className="text-sm text-gray-300">{path.name}</p>
-                                        {adminMode && onPolygonClick && (
-                                            <Button
-                                                size="sm"
-                                                variant="destructive"
-                                                className="w-full mt-2 h-7 text-[10px]"
-                                                onClick={() => onPolygonClick(path.id, 'path')}
-                                            >
-                                                Delete Path
-                                            </Button>
-                                        )}
-                                    </div>
-                                </Popup>
+                                {adminMode && (
+                                    <Popup>
+                                        <div className="p-2 min-w-[100px]">
+                                            <h4 className="font-bold text-white mb-1 uppercase text-xs tracking-wider">
+                                                {path.type.replace('_', ' ')}
+                                            </h4>
+                                            <p className="text-sm text-gray-300">{path.name}</p>
+                                            {onPolygonClick && (
+                                                <Button
+                                                    size="sm"
+                                                    variant="destructive"
+                                                    className="w-full mt-2 h-7 text-[10px]"
+                                                    onClick={() => onPolygonClick(path.id, 'path')}
+                                                >
+                                                    Delete Path
+                                                </Button>
+                                            )}
+                                        </div>
+                                    </Popup>
+                                )}
                                 {(path.type === 'railway' || path.type === 'train_rail') && (
                                     <Polyline
                                         positions={path.points}

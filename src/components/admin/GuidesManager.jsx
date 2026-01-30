@@ -171,8 +171,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Globe, Save, ArrowLeft } from 'lucide-react';
-import { translateContent } from '@/lib/gemini';
+import { Save, ArrowLeft } from 'lucide-react';
 
 const AdminGuideForm = ({ guide, onSave, onCancel }) => {
   const [title, setTitle] = useState(guide.title || '');
@@ -184,43 +183,8 @@ const AdminGuideForm = ({ guide, onSave, onCancel }) => {
   const [descriptionPt, setDescriptionPt] = useState(guide.description_pt || '');
   const [contentEs, setContentEs] = useState(guide.content_es || '');
   const [contentPt, setContentPt] = useState(guide.content_pt || '');
-  const [isTranslating, setIsTranslating] = useState(false);
   const [saving, setSaving] = useState(false);
   const { toast } = useToast();
-
-  const handleTranslateAll = async () => {
-    if (!title || !description || !content) {
-      toast({ title: "Incomplete", description: "Fill title, description, and content first.", variant: "destructive" });
-      return;
-    }
-
-    setIsTranslating(true);
-    try {
-      const [tEs, dEs, cEs] = await Promise.all([
-        translateContent(title, 'Spanish'),
-        translateContent(description, 'Spanish'),
-        translateContent(content, 'Spanish')
-      ]);
-      setTitleEs(tEs);
-      setDescriptionEs(dEs);
-      setContentEs(cEs);
-
-      const [tPt, dPt, cPt] = await Promise.all([
-        translateContent(title, 'Portuguese'),
-        translateContent(description, 'Portuguese'),
-        translateContent(content, 'Portuguese')
-      ]);
-      setTitlePt(tPt);
-      setDescriptionPt(dPt);
-      setContentPt(cPt);
-
-      toast({ title: "Success", description: "Translations generated." });
-    } catch (error) {
-      toast({ variant: 'destructive', title: 'Error', description: error.message });
-    } finally {
-      setIsTranslating(false);
-    }
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -277,18 +241,6 @@ const AdminGuideForm = ({ guide, onSave, onCancel }) => {
               <Input value={description} onChange={(e) => setDescription(e.target.value)} className="bg-gray-800 border-white/10" />
             </div>
           </div>
-          <div className="flex items-center justify-center">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={handleTranslateAll}
-              disabled={isTranslating}
-              className="gap-2 border-blue-500/30 text-blue-400"
-            >
-              {isTranslating ? <Loader2 className="animate-spin h-4 w-4" /> : <Globe className="h-4 w-4" />}
-              Translate Content (Gemini)
-            </Button>
-          </div>
         </div>
 
         <div>
@@ -301,26 +253,38 @@ const AdminGuideForm = ({ guide, onSave, onCancel }) => {
         {/* Translation Fields */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-6 border-t border-white/5">
           <div className="space-y-4 p-4 bg-white/5 rounded-xl border border-white/5">
-            <h4 className="text-xs font-bold text-blue-400 uppercase tracking-widest">Spanish Version</h4>
-            <Input value={titleEs} onChange={(e) => setTitleEs(e.target.value)} placeholder="Spanish Title" className="bg-gray-800 border-white/10" />
-            <Input value={descriptionEs} onChange={(e) => setDescriptionEs(e.target.value)} placeholder="Spanish Description" className="bg-gray-800 border-white/10" />
-            <textarea
-              value={contentEs}
-              onChange={(e) => setContentEs(e.target.value)}
-              placeholder="Spanish Content"
-              className="w-full h-40 bg-gray-800 border border-white/10 rounded-md p-3 text-sm text-gray-300 focus:outline-none"
-            />
+            <h4 className="text-xs font-bold text-blue-400 uppercase tracking-widest mb-3">🇪🇸 Spanish Version (Manual Translation)</h4>
+            <div>
+              <Label className="text-gray-400 mb-2 block text-xs">Title (ES)</Label>
+              <Input value={titleEs} onChange={(e) => setTitleEs(e.target.value)} placeholder="Spanish Title" className="bg-gray-800 border-white/10" />
+            </div>
+            <div>
+              <Label className="text-gray-400 mb-2 block text-xs">Description (ES)</Label>
+              <Input value={descriptionEs} onChange={(e) => setDescriptionEs(e.target.value)} placeholder="Spanish Description" className="bg-gray-800 border-white/10" />
+            </div>
+            <div>
+              <Label className="text-gray-400 mb-2 block text-xs">Content (ES) - Preserve HTML structure</Label>
+              <div className="bg-gray-800 rounded-lg border border-white/10 overflow-hidden">
+                <ReactQuill theme="snow" value={contentEs} onChange={setContentEs} modules={modules} placeholder="Translate the content manually, keeping the same structure and images..." />
+              </div>
+            </div>
           </div>
           <div className="space-y-4 p-4 bg-white/5 rounded-xl border border-white/5">
-            <h4 className="text-xs font-bold text-blue-400 uppercase tracking-widest">Portuguese Version</h4>
-            <Input value={titlePt} onChange={(e) => setTitlePt(e.target.value)} placeholder="Portuguese Title" className="bg-gray-800 border-white/10" />
-            <Input value={descriptionPt} onChange={(e) => setDescriptionPt(e.target.value)} placeholder="Portuguese Description" className="bg-gray-800 border-white/10" />
-            <textarea
-              value={contentPt}
-              onChange={(e) => setContentPt(e.target.value)}
-              placeholder="Portuguese Content"
-              className="w-full h-40 bg-gray-800 border border-white/10 rounded-md p-3 text-sm text-gray-300 focus:outline-none"
-            />
+            <h4 className="text-xs font-bold text-blue-400 uppercase tracking-widest mb-3">🇵🇹 Portuguese Version (Manual Translation)</h4>
+            <div>
+              <Label className="text-gray-400 mb-2 block text-xs">Title (PT)</Label>
+              <Input value={titlePt} onChange={(e) => setTitlePt(e.target.value)} placeholder="Portuguese Title" className="bg-gray-800 border-white/10" />
+            </div>
+            <div>
+              <Label className="text-gray-400 mb-2 block text-xs">Description (PT)</Label>
+              <Input value={descriptionPt} onChange={(e) => setDescriptionPt(e.target.value)} placeholder="Portuguese Description" className="bg-gray-800 border-white/10" />
+            </div>
+            <div>
+              <Label className="text-gray-400 mb-2 block text-xs">Content (PT) - Preserve HTML structure</Label>
+              <div className="bg-gray-800 rounded-lg border border-white/10 overflow-hidden">
+                <ReactQuill theme="snow" value={contentPt} onChange={setContentPt} modules={modules} placeholder="Translate the content manually, keeping the same structure and images..." />
+              </div>
+            </div>
           </div>
         </div>
 

@@ -31,7 +31,18 @@ const SkeletonCard = ({ type = 'standard' }) => (
 const GuideCard = ({ guide, index }) => {
   const { i18n } = useTranslation();
   const lang = i18n.language;
-  const localizedTitle = lang.startsWith('en') ? (guide.title_en || guide.title) : lang.startsWith('pt') ? (guide.title_pt || guide.title) : guide.title;
+
+  const localizedTitle = lang.startsWith('es')
+    ? (guide.title_es || guide.title)
+    : lang.startsWith('pt')
+      ? (guide.title_pt || guide.title)
+      : (guide.title_en || guide.title);
+
+  const localizedDescription = lang.startsWith('es')
+    ? (guide.description_es || guide.description)
+    : lang.startsWith('pt')
+      ? (guide.description_pt || guide.description)
+      : (guide.description_en || guide.description);
 
   return (
     <motion.div
@@ -148,7 +159,7 @@ const Home = () => {
   useEffect(() => {
     // 1. Fetch Guides
     supabase.from('guides')
-      .select('id, title, title_en, title_pt, likes_count, image_url, slug, hashtags, author:profiles(username)')
+      .select('id, title, title_en, title_es, title_pt, description, description_en, description_es, description_pt, likes_count, image_url, slug, hashtags, author:profiles(username)')
       .eq('status', 'approved').order('likes_count', { ascending: false }).limit(4)
       .then(res => {
         if (res.data) setTopGuides(res.data);
@@ -156,7 +167,7 @@ const Home = () => {
       });
 
     // 2. Fetch Latest Updates (2)
-    supabase.from('updates').select('*, title_en, title_pt, content_en, content_pt').order('date', { ascending: false }).limit(2)
+    supabase.from('updates').select('*, title_en, title_es, title_pt, content_en, content_es, content_pt').order('date', { ascending: false }).limit(2)
       .then(res => {
         if (res.data) setLatestUpdates(res.data);
         setLoading(prev => ({ ...prev, update: false }));
@@ -261,16 +272,6 @@ const Home = () => {
             <div className="bg-[#0a0a0c] border border-white/5 rounded-2xl p-6 relative overflow-hidden">
               {loading.commits && <SkeletonPulse />}
 
-              <div className="p-3 bg-amber-500/10 rounded-xl border border-amber-500/30 mb-4">
-                <div className="flex items-center gap-2 mb-1">
-                  <Bell size={12} className="text-amber-500" />
-                  <span className="text-[10px] font-bold text-amber-500 uppercase tracking-wider">{t('home.notice_title')}</span>
-                </div>
-                <p className="text-[11px] text-amber-200/80 leading-relaxed">
-                  {t('home.micro_changes_notice')}
-                </p>
-              </div>
-
               <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
                 {latestCommits.map((c, i) => (
                   <div key={c.id} className="p-3 bg-white/[0.02] rounded-xl border border-white/5">
@@ -329,14 +330,14 @@ const Home = () => {
             >
               <div className="flex justify-between items-center mb-6">
                 <h3 className="text-3xl font-bold text-white">
-                  {i18n.language.startsWith('en') ? (selectedUpdate.title_en || selectedUpdate.title) : i18n.language.startsWith('pt') ? (selectedUpdate.title_pt || selectedUpdate.title) : selectedUpdate.title}
+                  {i18n.language.startsWith('es') ? (selectedUpdate.title_es || selectedUpdate.title) : i18n.language.startsWith('pt') ? (selectedUpdate.title_pt || selectedUpdate.title) : (selectedUpdate.title_en || selectedUpdate.title)}
                 </h3>
                 <button onClick={() => setSelectedUpdate(null)}><X className="text-slate-400" /></button>
               </div>
               <div
                 className="prose prose-invert max-w-none"
                 dangerouslySetInnerHTML={{
-                  __html: i18n.language.startsWith('en') ? (selectedUpdate.content_en || selectedUpdate.content) : i18n.language.startsWith('pt') ? (selectedUpdate.content_pt || selectedUpdate.content) : selectedUpdate.content
+                  __html: i18n.language.startsWith('es') ? (selectedUpdate.content_es || selectedUpdate.content) : i18n.language.startsWith('pt') ? (selectedUpdate.content_pt || selectedUpdate.content) : (selectedUpdate.content_en || selectedUpdate.content)
                 }}
               />
             </motion.div>

@@ -630,7 +630,7 @@ const MapManager = () => {
                         onMapClick={handleMapClick}
                         onMarkerClick={handleMarkerClick}
                         {...memoProps}
-                        onPolygonClick={viewMode === 'zones' ? handleZoneDelete : undefined}
+                        onPolygonClick={viewMode === 'zones' || viewMode === 'paths' ? handleZoneDelete : undefined}
                         viewMode={viewMode}
                         onUpdateMissionStep={handleUpdateMissionStep}
                     />

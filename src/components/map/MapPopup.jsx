@@ -67,7 +67,7 @@ const MapPopup = ({ marker, tags, keys = [] }) => {
                         <div className="text-cyan-400">💧</div>
                         <div>
                             <span className="block text-xs font-bold text-cyan-400 uppercase tracking-wider">Water Source</span>
-                            <span className="text-sm text-cyan-200">Dispone de Water Source</span>
+                            <span className="text-sm text-cyan-200">Water source available</span>
                         </div>
                     </div>
                 )}
