@@ -95,6 +95,20 @@ const ClickHelper = ({ setClickedCoords, adminMode, onMapClick, onContextMenu })
     return null;
 };
 
+// Component to track zoom level
+const ZoomTracker = ({ onZoomChange }) => {
+    const map = useMap();
+    useEffect(() => {
+        const handleZoom = () => {
+            onZoomChange(map.getZoom());
+        };
+        map.on('zoomend', handleZoom);
+        handleZoom(); // Initial zoom
+        return () => map.off('zoomend', handleZoom);
+    }, [map, onZoomChange]);
+    return null;
+};
+
 // --- Personal Markers Config ---
 
 
@@ -140,6 +154,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
     // mouseCoords moved to isolated component to prevent re-renders
     const [selectedLocation, setSelectedLocation] = useState(null);
     const [clickedCoords, setClickedCoords] = useState(null);
+    const [currentZoom, setCurrentZoom] = useState(16); // Track current zoom level
 
     // Personal Marker State (Part 1 - Part 2 is below)
     const [isPersonalDialogOpen, setIsPersonalDialogOpen] = useState(false);
@@ -269,10 +284,6 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
             iconAnchor: [size / 2, size / 2]
         });
     };
-    const ZoomTracker = () => {
-        useMapEvents({ zoomend: (e) => setZoomLevel(e.target.getZoom()) });
-        return null;
-    };
 
     const visibleMarkers = useMemo(() => {
         return markers.filter(m => {
@@ -280,12 +291,12 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
             const cat = categories.find(c => c.id === m.category_id);
             const catName = cat?.name?.toLowerCase() || '';
 
-            if (catName === 'zones (minor)' && zoomLevel < 18) return false;
-            if (catName.includes('lootable vehicle') && zoomLevel < 17) return false;
+            if (catName === 'zones (minor)' && currentZoom < 18) return false;
+            if (catName.includes('lootable vehicle') && currentZoom < 19) return false;
 
             return true;
         });
-    }, [markers, activeFilters, categories, zoomLevel]);
+    }, [markers, activeFilters, categories, currentZoom]);
 
     const visiblePersonalMarkers = useMemo(() => {
         if (!activeFilters['personal']) return [];
@@ -319,8 +330,12 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
 
             const isLoot = (marker.title.toLowerCase().includes('loot') || category?.name.toLowerCase().includes('loot'));
             const groupName = category?.group_name;
+            const isLootableVehicle = catName.includes('lootable vehicle');
 
-            if (isLoot && groupName === 'civilian') {
+            // Lootable vehicles should NOT be clustered, always go to unclusteredMarkers
+            if (isLootableVehicle) {
+                grouped.unclusteredMarkers.push(marker);
+            } else if (isLoot && groupName === 'civilian') {
                 grouped.civilianLoot.push(marker);
             } else if (isLoot && groupName === 'medical') {
                 grouped.medicalLoot.push(marker);
@@ -787,7 +802,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                     <TileLayer url="/leaflet/{z}/{x}/{y}.webp" minZoom={17} maxZoom={20} tms={false} />
 
                     <MouseCoordinatesDisplay />
-                    <ZoomTracker />
+                    <ZoomTracker onZoomChange={setCurrentZoom} />
                     <MapFlyTo location={selectedLocation} />
 
                     {(activeFilters['safe-zones'] || isMissionMode) && (
