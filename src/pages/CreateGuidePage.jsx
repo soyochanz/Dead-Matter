@@ -10,8 +10,6 @@ import { useToast } from '@/components/ui/use-toast';
 import { Loader2, PlusCircle, ArrowRight, Upload, Hash, X, AlertCircle, Shield } from 'lucide-react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { translateContent } from '@/lib/gemini';
-import { Globe } from 'lucide-react';
 
 // Configuración de seguridad SIMPLIFICADA - Solo validaciones básicas
 const SECURITY_CONFIG = {
@@ -91,15 +89,6 @@ const CreateGuidePage = () => {
     const [imagePreview, setImagePreview] = useState(null);
     const [isEditorVisible, setIsEditorVisible] = useState(true);
     const [validationErrors, setValidationErrors] = useState([]);
-    const [isTranslating, setIsTranslating] = useState(false);
-
-    // Translation State
-    const [titleEs, setTitleEs] = useState('');
-    const [titlePt, setTitlePt] = useState('');
-    const [descriptionEs, setDescriptionEs] = useState('');
-    const [descriptionPt, setDescriptionPt] = useState('');
-    const [contentEs, setContentEs] = useState('');
-    const [contentPt, setContentPt] = useState('');
 
     // New Hashtag State
     const [hashtags, setHashtags] = useState([]);
@@ -134,54 +123,8 @@ const CreateGuidePage = () => {
 
         window.addEventListener('beforeunload', handleBeforeUnload);
         return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-    }, [content, title, description, titleEs, titlePt, descriptionEs, descriptionPt, contentEs, contentPt]);
+    }, [content, title, description]);
 
-    const handleTranslateAll = async () => {
-        if (!title || !description || !content) {
-            toast({
-                variant: 'destructive',
-                title: 'Incomplete Content',
-                description: 'Please fill in the title, description, and content first.'
-            });
-            return;
-        }
-
-        setIsTranslating(true);
-        try {
-            // Translate to Spanish
-            const [tEs, dEs, cEs] = await Promise.all([
-                translateContent(title, 'Spanish'),
-                translateContent(description, 'Spanish'),
-                translateContent(content, 'Spanish')
-            ]);
-            setTitleEs(tEs);
-            setDescriptionEs(dEs);
-            setContentEs(cEs);
-
-            // Translate to Portuguese
-            const [tPt, dPt, cPt] = await Promise.all([
-                translateContent(title, 'Portuguese'),
-                translateContent(description, 'Portuguese'),
-                translateContent(content, 'Portuguese')
-            ]);
-            setTitlePt(tPt);
-            setDescriptionPt(dPt);
-            setContentPt(cPt);
-
-            toast({
-                title: 'Translations Complete',
-                description: 'Spanish and Portuguese versions have been generated.'
-            });
-        } catch (error) {
-            toast({
-                variant: 'destructive',
-                title: 'Translation Failed',
-                description: 'Could not connect to Gemini AI. Check your API key.'
-            });
-        } finally {
-            setIsTranslating(false);
-        }
-    };
 
     // Validación SIMPLIFICADA de archivos
     const validateImage = (file) => {
@@ -488,12 +431,6 @@ const CreateGuidePage = () => {
                 description,
                 content: content,
                 content_html: contentHtml,
-                title_es: titleEs,
-                title_pt: titlePt,
-                description_es: descriptionEs,
-                description_pt: descriptionPt,
-                content_es: contentEs,
-                content_pt: contentPt,
                 image_url: imageUrl,
                 image_path: imagePath,
                 author_id: profile.id,
@@ -542,14 +479,15 @@ const CreateGuidePage = () => {
 
             <style>{`
         .ql-toolbar {
-          background-color: #1f2937 !important;
-          border-color: rgba(255, 255, 255, 0.1) !important;
+          background-color: #0d0d0f !important;
+          border-color: rgba(255, 255, 255, 0.05) !important;
           border-top-left-radius: 0.75rem !important;
           border-top-right-radius: 0.75rem !important;
+          padding: 12px !important;
         }
         .ql-container {
-          background-color: #111827 !important;
-          border-color: rgba(255, 255, 255, 0.1) !important;
+          background-color: #0a0a0c !important;
+          border-color: rgba(255, 255, 255, 0.05) !important;
           border-bottom-left-radius: 0.75rem !important;
           border-bottom-right-radius: 0.75rem !important;
           font-size: 1rem !important;
@@ -560,28 +498,45 @@ const CreateGuidePage = () => {
           max-height: 600px !important;
           overflow-y: auto !important;
           color: #e5e7eb !important;
+          padding: 20px !important;
         }
-        .ql-stroke { stroke: #9ca3af !important; }
-        .ql-fill { fill: #9ca3af !important; }
-        .ql-picker { color: #9ca3af !important; }
+        .ql-stroke { stroke: #666 !important; }
+        .ql-fill { fill: #666 !important; }
+        .ql-picker { color: #666 !important; }
+        .ql-editor.ql-blank::before {
+          color: #444 !important;
+          font-style: normal !important;
+        }
+        .ql-toolbar .ql-stroke:hover, .ql-toolbar .ql-fill:hover, .ql-toolbar .ql-picker:hover {
+          stroke: #ef4444 !important;
+          fill: #ef4444 !important;
+          color: #ef4444 !important;
+        }
         .ql-picker-options {
-          background-color: #1f2937 !important;
-          border-color: rgba(255, 255, 255, 0.1) !important;
+          background-color: #0d0d0f !important;
+          border-color: rgba(239, 68, 68, 0.2) !important;
+          box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5) !important;
         }
         .ql-tooltip {
-          background-color: #1f2937 !important;
-          border-color: rgba(255, 255, 255, 0.2) !important;
+          background-color: #0d0d0f !important;
+          border-color: rgba(239, 68, 68, 0.2) !important;
           color: #fff !important;
+          border-radius: 8px !important;
+          box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5) !important;
         }
         .ql-tooltip input[type=text] {
-          background-color: #374151 !important;
-          border-color: rgba(255, 255, 255, 0.2) !important;
+          background-color: #1a1a1e !important;
+          border-color: rgba(255, 255, 255, 0.1) !important;
           color: #fff !important;
+          border-radius: 4px !important;
         }
       `}</style>
 
-            <div className="max-w-4xl mx-auto px-4 pb-20">
-                <div className="bg-gray-900/90 backdrop-blur-sm border border-white/10 rounded-2xl p-8 shadow-2xl">
+            <div className="max-w-4xl mx-auto px-4 pb-20 mt-8">
+                <div className="bg-[#0a0a0c]/90 backdrop-blur-xl border border-white/5 rounded-2xl p-8 shadow-[0_0_50px_-12px_rgba(239,68,68,0.15)] relative overflow-hidden">
+                    {/* Technical background elements */}
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-red-600/5 blur-[100px] -z-10" />
+                    <div className="absolute bottom-0 left-0 w-64 h-64 bg-orange-600/5 blur-[100px] -z-10" />
                     {/* Security Banner */}
                     {validationErrors.length > 0 && (
                         <div className="mb-6 p-4 bg-red-900/30 border border-red-500/30 rounded-lg">
@@ -602,11 +557,11 @@ const CreateGuidePage = () => {
                             <div className="absolute inset-0 bg-gradient-to-r from-red-600 to-orange-600 rounded-2xl blur-sm opacity-75" />
                             <PlusCircle className="relative w-16 h-16 text-white z-10" />
                         </div>
-                        <h1 className="text-4xl font-bold text-white mb-4 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
-                            Create a New Guide
+                        <h1 className="text-4xl font-bold text-white mb-4 tracking-tight">
+                            Create a New <span className="text-red-500">Guide</span>
                         </h1>
-                        <p className="text-gray-400 text-lg">
-                            Share your knowledge with the community.
+                        <p className="text-gray-500 font-mono text-xs uppercase tracking-[0.2em]">
+                            Share technical knowledge with the survivors.
                         </p>
                         <div className="mt-4 inline-flex items-center gap-2 text-sm text-gray-500 bg-gray-800/50 px-3 py-1.5 rounded-full">
                             <Shield className="w-4 h-4 text-green-400" />
@@ -643,74 +598,6 @@ const CreateGuidePage = () => {
                             />
                         </div>
 
-                        <div className="flex justify-center">
-                            <Button
-                                type="button"
-                                variant="outline"
-                                onClick={handleTranslateAll}
-                                disabled={isTranslating || !title}
-                                className="gap-2 border-blue-500/50 text-blue-400 hover:bg-blue-500/10"
-                            >
-                                {isTranslating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Globe className="w-4 h-4" />}
-                                Translate with Gemini AI (ES/PT)
-                            </Button>
-                        </div>
-
-                        {/* Translation Fields (Optional/Preview) */}
-                        <div className="space-y-6 pt-4 border-t border-white/5">
-                            <h3 className="text-xl font-bold text-blue-400 flex items-center gap-2">
-                                <Globe className="w-5 h-5" />
-                                Translations
-                            </h3>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                {/* Spanish Version */}
-                                <div className="space-y-4 p-4 bg-white/[0.02] border border-white/5 rounded-xl">
-                                    <h4 className="font-bold text-gray-400 uppercase text-xs tracking-widest">Spanish Version</h4>
-                                    <div className="space-y-4">
-                                        <div>
-                                            <Label className="text-xs text-gray-500 mb-1 block">Title (ES)</Label>
-                                            <Input value={titleEs} onChange={(e) => setTitleEs(e.target.value)} className="bg-gray-800/50 border-white/10 text-sm h-10" />
-                                        </div>
-                                        <div>
-                                            <Label className="text-xs text-gray-500 mb-1 block">Description (ES)</Label>
-                                            <Input value={descriptionEs} onChange={(e) => setDescriptionEs(e.target.value)} className="bg-gray-800/50 border-white/10 text-sm h-10" />
-                                        </div>
-                                        <div>
-                                            <Label className="text-xs text-gray-500 mb-1 block">Content (ES) - Raw Text</Label>
-                                            <textarea
-                                                value={contentEs}
-                                                onChange={(e) => setContentEs(e.target.value)}
-                                                className="w-full h-32 bg-gray-800/50 border border-white/10 rounded-md p-2 text-sm text-gray-300 focus:outline-none focus:border-blue-500/50"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Portuguese Version */}
-                                <div className="space-y-4 p-4 bg-white/[0.02] border border-white/5 rounded-xl">
-                                    <h4 className="font-bold text-gray-400 uppercase text-xs tracking-widest">Portuguese Version</h4>
-                                    <div className="space-y-4">
-                                        <div>
-                                            <Label className="text-xs text-gray-500 mb-1 block">Title (PT)</Label>
-                                            <Input value={titlePt} onChange={(e) => setTitlePt(e.target.value)} className="bg-gray-800/50 border-white/10 text-sm h-10" />
-                                        </div>
-                                        <div>
-                                            <Label className="text-xs text-gray-500 mb-1 block">Description (PT)</Label>
-                                            <Input value={descriptionPt} onChange={(e) => setDescriptionPt(e.target.value)} className="bg-gray-800/50 border-white/10 text-sm h-10" />
-                                        </div>
-                                        <div>
-                                            <Label className="text-xs text-gray-500 mb-1 block">Content (PT) - Raw Text</Label>
-                                            <textarea
-                                                value={contentPt}
-                                                onChange={(e) => setContentPt(e.target.value)}
-                                                className="w-full h-32 bg-gray-800/50 border border-white/10 rounded-md p-2 text-sm text-gray-300 focus:outline-none focus:border-blue-500/50"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
                         {/* Hashtags Input */}
                         <div>
