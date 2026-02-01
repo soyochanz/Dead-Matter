@@ -12,6 +12,9 @@ const Wiki3DViewer = ({
     shadowIntensity = "0.2",
     shadowSoftness = "1",
     fieldOfView = "35deg",
+    albedoUrl = null,
+    normalUrl = null,
+    rmaUrl = null,
     ...props
 }) => {
     const modelViewerRef = useRef(null);
@@ -59,12 +62,8 @@ const Wiki3DViewer = ({
                     }
                 }
 
-                if (!materialData || !materialData.Textures) {
-                    console.log(`[Wiki3DViewer] No valid material configuration found for ${src}, using model defaults.`);
-                    return;
-                }
-
-                const textures = materialData.Textures;
+                // If direct props are provided, we'll use them. Otherwise we use the JSON data.
+                const textures = materialData?.Textures || {};
                 const material = modelViewer.model.materials[0];
                 if (!material) return;
 
@@ -100,36 +99,74 @@ const Wiki3DViewer = ({
                     }
                 };
 
+                const setTextureFromUrl = async (url, setter) => {
+                    if (!url) return false;
+                    try {
+                        const texture = await modelViewer.createTexture(url);
+                        if (texture) {
+                            setter(texture);
+                            return true;
+                        }
+                    } catch (e) {
+                        console.error(`[Wiki3DViewer] Error loading texture from URL: ${url}`, e);
+                    }
+                    return false;
+                };
+
                 // Mapping based on standard naming (Albedo/Diffuse, Normal, RMA/SpecularMasks)
 
                 // Albedo / Base Color
-                const albedoPath = textures.Albedo || textures.PM_Diffuse || textures.Diffuse;
-                if (albedoPath) {
-                    await loadAndSet(albedoPath, (t) => {
-                        if (material.pbrMetallicRoughness.baseColorTexture) {
-                            material.pbrMetallicRoughness.baseColorTexture.setTexture(t);
-                        }
-                    });
+                const albedoSuccess = await setTextureFromUrl(albedoUrl, (t) => {
+                    if (material.pbrMetallicRoughness.baseColorTexture) {
+                        material.pbrMetallicRoughness.baseColorTexture.setTexture(t);
+                    }
+                });
+
+                if (!albedoSuccess) {
+                    const albedoPath = textures.Albedo || textures.PM_Diffuse || textures.Diffuse;
+                    if (albedoPath) {
+                        await loadAndSet(albedoPath, (t) => {
+                            if (material.pbrMetallicRoughness.baseColorTexture) {
+                                material.pbrMetallicRoughness.baseColorTexture.setTexture(t);
+                            }
+                        });
+                    }
                 }
 
                 // Normal Map
-                const normalPath = textures.Normal || textures.PM_Normals;
-                if (normalPath) {
-                    await loadAndSet(normalPath, (t) => {
-                        if (material.normalTexture) {
-                            material.normalTexture.setTexture(t);
-                        }
-                    });
+                const normalSuccess = await setTextureFromUrl(normalUrl, (t) => {
+                    if (material.normalTexture) {
+                        material.normalTexture.setTexture(t);
+                    }
+                });
+
+                if (!normalSuccess) {
+                    const normalPath = textures.Normal || textures.PM_Normals;
+                    if (normalPath) {
+                        await loadAndSet(normalPath, (t) => {
+                            if (material.normalTexture) {
+                                material.normalTexture.setTexture(t);
+                            }
+                        });
+                    }
                 }
 
                 // RMA (Roughness, Metallic, AO)
-                const rmaPath = textures.RMA || textures.PM_SpecularMasks;
-                if (rmaPath) {
-                    await loadAndSet(rmaPath, (t) => {
-                        if (material.pbrMetallicRoughness.metallicRoughnessTexture) {
-                            material.pbrMetallicRoughness.metallicRoughnessTexture.setTexture(t);
-                        }
-                    });
+                const rmaSuccess = await setTextureFromUrl(rmaUrl, (t) => {
+                    if (material.pbrMetallicRoughness.metallicRoughnessTexture) {
+                        material.pbrMetallicRoughness.metallicRoughnessTexture.setTexture(t);
+                    }
+                });
+
+                if (!rmaSuccess) {
+                    const rmaPath = textures.RMA || textures.PM_SpecularMasks;
+                    if (rmaPath) {
+                        await loadAndSet(rmaPath, (t) => {
+                            if (material.pbrMetallicRoughness.metallicRoughnessTexture) {
+                                material.pbrMetallicRoughness.metallicRoughnessTexture.setTexture(t);
+                            }
+                        });
+                    }
                 }
 
             } catch (error) {

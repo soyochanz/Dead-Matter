@@ -75,7 +75,7 @@ const BasebuildingPage = () => {
                 renderExtra={() => (
                     <div className="flex items-center gap-4">
                         <div className="flex items-center gap-3">
-                            <span className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em]">Visualización</span>
+                            <span className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em]">Visualization</span>
                         </div>
                         <label className="relative inline-flex items-center cursor-pointer group">
                             <input
@@ -85,7 +85,7 @@ const BasebuildingPage = () => {
                                 className="sr-only peer"
                             />
                             <div className="w-11 h-6 bg-white/5 border border-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-gray-600 after:border-gray-500 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600 peer-checked:after:bg-white group-hover:border-white/20"></div>
-                            <span className="ml-3 text-xs font-bold text-gray-500 group-hover:text-gray-300 transition-colors uppercase tracking-widest">Desplegar todas (Tents)</span>
+                            <span className="ml-3 text-xs font-bold text-gray-500 group-hover:text-gray-300 transition-colors uppercase tracking-widest">Deploy all (Tents)</span>
                         </label>
                     </div>
                 )}

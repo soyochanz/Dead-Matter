@@ -7,6 +7,8 @@ import { useToast } from '@/components/ui/use-toast';
 import { CustomStatManager } from '@/components/admin/CustomStatManager';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { AdminItemCard } from './AdminItemCard';
+import { FormContainer, FormSection, FormInput, FormSelect, FormTextarea, FormFileUpload } from './AdminUIComponents';
+import { Info, Tag, Target, Swords, DollarSign, Image as ImageIcon } from 'lucide-react';
 
 const StatInput = ({ label, value, onChange, placeholder = '0' }) => (
     <div>
@@ -186,65 +188,147 @@ const WeaponManager = ({ sharedMetadata }) => {
     };
 
     const renderForm = () => (
-        <div className="bg-white/5 border border-white/10 p-6 rounded-lg space-y-6 my-4">
-            <h3 className="text-2xl font-bold text-white">{editingWeapon.id ? 'Edit Weapon' : 'Add New Weapon'}</h3>
+        <FormContainer
+            title={editingWeapon.id ? `Edit ${editingWeapon.name}` : 'Register New System'}
+            onSave={handleSave}
+            onCancel={() => setEditingWeapon(null)}
+            isSaving={loading}
+        >
+            <FormSection title="Core Designation" icon={Info}>
+                <FormInput
+                    label="Nomenclature"
+                    placeholder="e.g., M4A1 Carbine"
+                    value={editingWeapon.name}
+                    onChange={(e) => setEditingWeapon({ ...editingWeapon, name: e.target.value })}
+                />
+                <FormInput
+                    label="Form Factor"
+                    placeholder="Size (e.g., 3x9)"
+                    value={editingWeapon.size}
+                    onChange={(e) => setEditingWeapon({ ...editingWeapon, size: e.target.value })}
+                />
+                <FormInput
+                    label="Mass (kg)"
+                    type="number"
+                    value={editingWeapon.weight}
+                    onChange={(e) => setEditingWeapon({ ...editingWeapon, weight: parseFloat(e.target.value) || null })}
+                />
+                <FormSelect
+                    label="Rarity Grade"
+                    value={editingWeapon.rarity_id}
+                    onChange={(e) => setEditingWeapon({ ...editingWeapon, rarity_id: e.target.value })}
+                >
+                    <option value="">Select Rarity</option>
+                    {rarities.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
+                </FormSelect>
+                <FormSelect
+                    label="Class Assignment"
+                    value={editingWeapon.subcategory_id}
+                    onChange={(e) => setEditingWeapon({ ...editingWeapon, subcategory_id: e.target.value })}
+                >
+                    <option value="">Select Subcategory</option>
+                    {subcategories.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+                </FormSelect>
+                <FormFileUpload
+                    label="Neural Visual Asset"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    previewUrl={editingWeapon.image_url}
+                    fileName={editingWeapon.image_path?.split('/').pop()}
+                    icon={ImageIcon}
+                />
+            </FormSection>
 
-            <div className="border border-slate-700 p-4 rounded-lg space-y-4">
-                <h4 className="text-lg font-semibold text-white">General Information</h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Input placeholder="Name" value={editingWeapon.name || ''} onChange={(e) => setEditingWeapon({ ...editingWeapon, name: e.target.value })} />
-                    <Input placeholder="Size (e.g. 3x9)" value={editingWeapon.size || ''} onChange={(e) => setEditingWeapon({ ...editingWeapon, size: e.target.value })} />
-                    <StatInput label="Weight (kg)" value={editingWeapon.weight} onChange={(e) => setEditingWeapon({ ...editingWeapon, weight: parseFloat(e.target.value) || null })} />
-                </div>
-                <textarea placeholder="Description" value={editingWeapon.description || ''} onChange={(e) => setEditingWeapon({ ...editingWeapon, description: e.target.value })} className="w-full bg-white/5 backdrop-blur-sm border border-white/10 p-2 rounded" />
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <select value={editingWeapon.rarity_id || ''} onChange={(e) => setEditingWeapon({ ...editingWeapon, rarity_id: e.target.value })} className="bg-white/5 backdrop-blur-sm border border-white/10 p-2 rounded h-10">
-                        <option value="">Select Rarity</option>
-                        {rarities.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
-                    </select>
-                    <select value={editingWeapon.subcategory_id || ''} onChange={(e) => setEditingWeapon({ ...editingWeapon, subcategory_id: e.target.value })} className="bg-white/5 backdrop-blur-sm border border-white/10 p-2 rounded h-10">
-                        <option value="">Select Subcategory</option>
-                        {subcategories.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
-                    </select>
-                    <StatInput label="Buy Price" value={editingWeapon.price} onChange={(e) => setEditingWeapon({ ...editingWeapon, price: parseInt(e.target.value) || null })} />
-                    <StatInput label="Sell Price" value={editingWeapon.sell_price} onChange={(e) => setEditingWeapon({ ...editingWeapon, sell_price: parseInt(e.target.value) || null })} />
-                </div>
-                <div className="flex items-center gap-4">
-                    <Input type="file" accept="image/*" onChange={handleImageUpload} className="flex-grow" />
-                    {editingWeapon.image_url && <img src={editingWeapon.image_url} alt="preview" className="w-20 h-20 object-contain rounded bg-slate-700" />}
-                </div>
-            </div>
+            <FormSection title="Tactical Narrative" icon={Tag} columns={1}>
+                <FormTextarea
+                    label="Detailed Description"
+                    placeholder="Enter system deployment notes..."
+                    value={editingWeapon.description}
+                    onChange={(e) => setEditingWeapon({ ...editingWeapon, description: e.target.value })}
+                />
+            </FormSection>
 
-            <div className="border border-slate-700 p-4 rounded-lg space-y-4">
-                <h4 className="text-lg font-semibold text-white">Firearm Stats</h4>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <StatInput label="Damage" value={editingWeapon.damage} onChange={(e) => setEditingWeapon({ ...editingWeapon, damage: parseInt(e.target.value) || null })} />
-                    <Input placeholder="Ammo Type" value={editingWeapon.ammo || ''} onChange={(e) => setEditingWeapon({ ...editingWeapon, ammo: e.target.value })} className="self-end" />
-                    <StatInput label="Capacity" value={editingWeapon.capacity} onChange={(e) => setEditingWeapon({ ...editingWeapon, capacity: parseInt(e.target.value) || null })} />
-                    <StatInput label="Rate of Fire" value={editingWeapon.rate_of_fire} onChange={(e) => setEditingWeapon({ ...editingWeapon, rate_of_fire: parseInt(e.target.value) || null })} />
-                    <StatInput label="Accuracy" value={editingWeapon.accuracy} onChange={(e) => setEditingWeapon({ ...editingWeapon, accuracy: parseInt(e.target.value) || null })} />
-                    <StatInput label="Handling" value={editingWeapon.handling} onChange={(e) => setEditingWeapon({ ...editingWeapon, handling: parseInt(e.target.value) || null })} />
-                </div>
-            </div>
+            <FormSection title="Economic Value" icon={DollarSign} columns={2}>
+                <FormInput
+                    label="Acquisition Price"
+                    type="number"
+                    value={editingWeapon.price}
+                    onChange={(e) => setEditingWeapon({ ...editingWeapon, price: parseInt(e.target.value) || null })}
+                />
+                <FormInput
+                    label="Resale Recovery"
+                    type="number"
+                    value={editingWeapon.sell_price}
+                    onChange={(e) => setEditingWeapon({ ...editingWeapon, sell_price: parseInt(e.target.value) || null })}
+                />
+            </FormSection>
 
-            <div className="border border-slate-700 p-4 rounded-lg space-y-4">
-                <h4 className="text-lg font-semibold text-white">Melee Stats</h4>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    <StatInput label="Melee Range" value={editingWeapon.melee_range} onChange={(e) => setEditingWeapon({ ...editingWeapon, melee_range: parseInt(e.target.value) || null })} />
-                    <StatInput label="Attack Speed" value={editingWeapon.attack_speed} onChange={(e) => setEditingWeapon({ ...editingWeapon, attack_speed: parseInt(e.target.value) || null })} />
-                    <StatInput label="Stamina Efficiency" value={editingWeapon.stamina_efficiency} onChange={(e) => setEditingWeapon({ ...editingWeapon, stamina_efficiency: parseInt(e.target.value) || null })} />
-                </div>
-            </div>
+            <FormSection title="Ballistic Performance" icon={Target}>
+                <FormInput
+                    label="Lethality Index"
+                    type="number"
+                    value={editingWeapon.damage}
+                    onChange={(e) => setEditingWeapon({ ...editingWeapon, damage: parseInt(e.target.value) || null })}
+                />
+                <FormInput
+                    label="Ammunition Caliber"
+                    value={editingWeapon.ammo}
+                    onChange={(e) => setEditingWeapon({ ...editingWeapon, ammo: e.target.value })}
+                />
+                <FormInput
+                    label="Magazine Capacity"
+                    type="number"
+                    value={editingWeapon.capacity}
+                    onChange={(e) => setEditingWeapon({ ...editingWeapon, capacity: parseInt(e.target.value) || null })}
+                />
+                <FormInput
+                    label="Cyclic Rate (RPM)"
+                    type="number"
+                    value={editingWeapon.rate_of_fire}
+                    onChange={(e) => setEditingWeapon({ ...editingWeapon, rate_of_fire: parseInt(e.target.value) || null })}
+                />
+                <FormInput
+                    label="Precision Factor"
+                    type="number"
+                    value={editingWeapon.accuracy}
+                    onChange={(e) => setEditingWeapon({ ...editingWeapon, accuracy: parseInt(e.target.value) || null })}
+                />
+                <FormInput
+                    label="Stability/Handling"
+                    type="number"
+                    value={editingWeapon.handling}
+                    onChange={(e) => setEditingWeapon({ ...editingWeapon, handling: parseInt(e.target.value) || null })}
+                />
+            </FormSection>
 
-            <div className="border-t border-slate-700 pt-4 mt-4">
-                <CustomStatManager stats={editingWeapon.stats} setStats={stats => setEditingWeapon({ ...editingWeapon, stats })} />
-            </div>
+            <FormSection title="Melee Specifications" icon={Swords}>
+                <FormInput
+                    label="Effective Range"
+                    type="number"
+                    value={editingWeapon.melee_range}
+                    onChange={(e) => setEditingWeapon({ ...editingWeapon, melee_range: parseInt(e.target.value) || null })}
+                />
+                <FormInput
+                    label="Kinetic Velocity"
+                    type="number"
+                    value={editingWeapon.attack_speed}
+                    onChange={(e) => setEditingWeapon({ ...editingWeapon, attack_speed: parseInt(e.target.value) || null })}
+                />
+                <FormInput
+                    label="Stamina Efficiency"
+                    type="number"
+                    value={editingWeapon.stamina_efficiency}
+                    onChange={(e) => setEditingWeapon({ ...editingWeapon, stamina_efficiency: parseInt(e.target.value) || null })}
+                />
+            </FormSection>
 
-            <div className="flex gap-4">
-                <Button onClick={handleSave}><Save className="w-4 h-4 mr-2" />Save</Button>
-                <Button variant="outline" onClick={() => setEditingWeapon(null)}><X className="w-4 h-4 mr-2" />Cancel</Button>
+            <div className="pt-8 border-t border-white/5">
+                <CustomStatManager
+                    stats={editingWeapon.stats}
+                    setStats={stats => setEditingWeapon({ ...editingWeapon, stats })}
+                />
             </div>
-        </div>
+        </FormContainer>
     );
 
     return (

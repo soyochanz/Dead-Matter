@@ -148,6 +148,9 @@ const GearDetailModal = ({ gear, onClose, onNpcSelect }) => {
                                                 src={gear.model_url}
                                                 alt={gear.name}
                                                 exposure={gear.name === 'School Backpack' ? 3 : 1}
+                                                albedoUrl={gear.albedo_url}
+                                                normalUrl={gear.normal_url}
+                                                rmaUrl={gear.rma_url}
                                             />
                                         ) : (
                                             <motion.img

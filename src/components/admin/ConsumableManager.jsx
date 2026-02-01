@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Button } from '@/components/ui/button';
-import { Plus, Edit, Trash2, Loader2, Upload, Sparkles, Droplet, HeartPulse, ShieldAlert, FileKey, Gem, DollarSign } from 'lucide-react';
+import { Loader2, Plus, Sparkles, Droplet, HeartPulse, ShieldAlert, FileKey, DollarSign } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/lib/mySupabaseClient';
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from '@/components/ui/input';
 import { AdminItemCard } from './AdminItemCard';
+import { FormContainer, FormSection, FormInput, FormSelect, FormTextarea, FormFileUpload } from './AdminUIComponents';
+import { Info, Tag, FlaskConical, DollarSign, Image as ImageIcon, Sparkles, Droplet, HeartPulse, ShieldAlert, FileKey } from 'lucide-react';
 
 const ConsumableForm = ({ item, onSave, onCancel, filterType, sharedMetadata }) => {
     const defaultState = {
@@ -100,104 +102,160 @@ const ConsumableForm = ({ item, onSave, onCancel, filterType, sharedMetadata }) 
     const formLabelClass = "block text-sm font-medium text-gray-300 mb-1";
 
     return (
-        <form onSubmit={handleSubmit} className="bg-white/5 border border-white/10 rounded-lg p-6 grid grid-cols-1 md:grid-cols-4 gap-4">
-            {/* Basic Info */}
-            <div className="md:col-span-2">
-                <label className={formLabelClass}>Name</label>
-                <Input name="name" placeholder="Item Name" value={formData.name} onChange={handleChange} required />
-            </div>
-            {!filterType && (<div className="md:col-span-1">
-                <label className={formLabelClass}>Type</label>
-                <select name="type" value={formData.type} onChange={handleChange} className={formSelectClass}>
-                    <option value="food">Food</option>
-                    <option value="drink">Drink</option>
-                </select>
-            </div>)}
-            <div className={filterType ? "md:col-span-2" : "md:col-span-1"}>
-                <label className={formLabelClass}>Subcategory (Optional)</label>
-                <select name="subcategory_id" value={formData.subcategory_id || ''} onChange={handleChange} className={formSelectClass}>
+        <FormContainer
+            title={item?.id ? `Modify ${formData.name}` : `Catalog New ${formData.type === 'drink' ? 'Hydration' : 'Nutrient'} Source`}
+            onSave={handleSubmit}
+            onCancel={onCancel}
+            isSaving={uploading}
+        >
+            <FormSection title="Source Specifications" icon={Info}>
+                <FormInput
+                    label="Nomenclature"
+                    name="name"
+                    placeholder="Item Name"
+                    value={formData.name}
+                    onChange={handleChange}
+                />
+                {!filterType && (
+                    <FormSelect label="Source Type" name="type" value={formData.type} onChange={handleChange}>
+                        <option value="food">Food (Nutrient)</option>
+                        <option value="drink">Drink (Hydration)</option>
+                    </FormSelect>
+                )}
+                <FormSelect
+                    label="Class Assignment"
+                    name="subcategory_id"
+                    value={formData.subcategory_id}
+                    onChange={handleChange}
+                >
                     <option value="">Select Subcategory</option>
-                    {subcategories.filter(s => s && s.wiki_categories).map(s => <option key={s.id} value={s.id}>{s.wiki_categories.name} / {s.name}</option>)}
-                </select>
-            </div>
-            <div className="md:col-span-1">
-                <label className={formLabelClass}><DollarSign className="inline mr-2 h-4 w-4" />Buy Price</label>
-                <Input name="price" type="number" value={formData.price} onChange={handleChange} />
-            </div>
-            <div className="md:col-span-1">
-                <label className={formLabelClass}><DollarSign className="inline mr-2 h-4 w-4" />Sell Price</label>
-                <Input name="sell_price" type="number" value={formData.sell_price} onChange={handleChange} />
-            </div>
-            <div className="md:col-span-2">
-                <label className={formLabelClass}><Gem className="inline mr-2 h-4 w-4" />Rarity</label>
-                <select name="rarity_id" value={formData.rarity_id || ''} onChange={handleChange} className={formSelectClass}>
+                    {subcategories.filter(s => s && s.wiki_categories).map(s => (
+                        <option key={s.id} value={s.id}>{s.wiki_categories.name} / {s.name}</option>
+                    ))}
+                </FormSelect>
+                <FormSelect
+                    label="Rarity Grade"
+                    name="rarity_id"
+                    value={formData.rarity_id}
+                    onChange={handleChange}
+                >
                     <option value="">Select Rarity</option>
                     {rarities.filter(r => r).map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
-                </select>
-            </div>
+                </FormSelect>
+                <FormFileUpload
+                    label="Neural Visual Asset"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    previewUrl={formData.image_url}
+                    fileName={formData.image_path?.split('/').pop()}
+                    icon={ImageIcon}
+                />
+            </FormSection>
 
-            <div className="md:col-span-4">
-                <label className={formLabelClass}>Description</label>
-                <textarea name="description" placeholder="Item description..." value={formData.description || ''} onChange={handleChange} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-red-500 backdrop-blur-sm min-h-[80px]" />
-            </div>
+            <FormSection title="Narrative & Effects" icon={Tag} columns={1}>
+                <FormTextarea
+                    label="Detailed Description"
+                    name="description"
+                    placeholder="Enter item deployment notes..."
+                    value={formData.description}
+                    onChange={handleChange}
+                />
+                <FormTextarea
+                    label="Physiological Side Effects (JSON)"
+                    name="side_effects"
+                    placeholder='{ "Drowsiness": "Reduces stamina regeneration" }'
+                    value={typeof formData.side_effects === 'object' ? JSON.stringify(formData.side_effects, null, 2) : formData.side_effects}
+                    onChange={(e) => setFormData(p => ({ ...p, side_effects: e.target.value }))}
+                />
+            </FormSection>
 
-            {/* Stats */}
-            <div className="md:col-span-4 grid grid-cols-3 gap-4 border-t border-white/10 pt-4">
-                <div><label className={formLabelClass}><Droplet className="inline mr-2 h-4 w-4" />Hydration</label><Input name="hydration" type="number" value={formData.hydration} onChange={handleChange} /></div>
-                <div><label className={formLabelClass}><Sparkles className="inline mr-2 h-4 w-4" />Energy</label><Input name="energy" type="number" value={formData.energy} onChange={handleChange} /></div>
-                <div><label className={formLabelClass}><HeartPulse className="inline mr-2 h-4 w-4" />Health</label><Input name="health" type="number" value={formData.health} onChange={handleChange} /></div>
-            </div>
-            <div className="md:col-span-4">
-                <label className={formLabelClass}>Side Effects (JSON)</label>
-                <textarea name="side_effects" placeholder='{ "Drowsiness": "Reduces stamina regeneration" }' value={typeof formData.side_effects === 'object' ? JSON.stringify(formData.side_effects, null, 2) : formData.side_effects} onChange={(e) => setFormData(p => ({ ...p, side_effects: e.target.value }))} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-red-500 backdrop-blur-sm min-h-[80px]" />
-            </div>
+            <FormSection title="Economic Value" icon={DollarSign} columns={2}>
+                <FormInput
+                    label="Acquisition Price"
+                    name="price"
+                    type="number"
+                    value={formData.price}
+                    onChange={handleChange}
+                />
+                <FormInput
+                    label="Resale Recovery"
+                    name="sell_price"
+                    type="number"
+                    value={formData.sell_price}
+                    onChange={handleChange}
+                />
+            </FormSection>
 
-            {/* Type Specific Fields */}
-            {formData.type === 'drink' && (
-                <div className="md:col-span-4 flex items-center gap-2 pt-4 border-t border-white/10 text-white">
-                    <Checkbox id="is_refillable" name="is_refillable" checked={formData.is_refillable} onCheckedChange={(checked) => handleChange({ target: { name: 'is_refillable', type: 'checkbox', checked } })} />
-                    <label htmlFor="is_refillable">Is Refillable?</label>
-                </div>
-            )}
-            {formData.type === 'food' && (
-                <div className="md:col-span-4 grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-white/10 text-white">
-                    <div className="flex items-center gap-2">
-                        <Checkbox id="requires_can_opener" name="requires_can_opener" checked={formData.requires_can_opener} onCheckedChange={(checked) => handleChange({ target: { name: 'requires_can_opener', type: 'checkbox', checked } })} />
-                        <label htmlFor="requires_can_opener"><FileKey className="inline mr-2 h-4 w-4" />Requires Can Opener?</label>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <Checkbox id="is_safe_to_eat_raw" name="is_safe_to_eat_raw" checked={formData.is_safe_to_eat_raw} onCheckedChange={(checked) => handleChange({ target: { name: 'is_safe_to_eat_raw', type: 'checkbox', checked } })} />
-                        <label htmlFor="is_safe_to_eat_raw"><ShieldAlert className="inline mr-2 h-4 w-4" />Safe to Eat Raw?</label>
-                    </div>
-                    {!formData.is_safe_to_eat_raw && (
-                        <div className="md:col-span-2">
-                            <label className={formLabelClass}>Cooked Version</label>
-                            <select name="cooked_version_id" value={formData.cooked_version_id || ''} onChange={handleChange} className={formSelectClass}>
-                                <option value="">Select Cooked Item</option>
-                                {allConsumables.filter(c => c && c.id !== item?.id).map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                            </select>
+            <FormSection title="Physiological Impact" icon={FlaskConical}>
+                <FormInput
+                    label="Hydration Restore"
+                    name="hydration"
+                    type="number"
+                    value={formData.hydration}
+                    onChange={handleChange}
+                />
+                <FormInput
+                    label="Energy Replenishment"
+                    name="energy"
+                    type="number"
+                    value={formData.energy}
+                    onChange={handleChange}
+                />
+                <FormInput
+                    label="Vitality Recovery"
+                    name="health"
+                    type="number"
+                    value={formData.health}
+                    onChange={handleChange}
+                />
+            </FormSection>
+
+            {(formData.type === 'drink' || formData.type === 'food') && (
+                <FormSection title="Environmental Interaction" icon={ShieldAlert}>
+                    {formData.type === 'drink' && (
+                        <div className="flex items-center gap-3 p-4 bg-white/5 rounded-xl border border-white/5">
+                            <Checkbox
+                                id="is_refillable"
+                                checked={formData.is_refillable}
+                                onCheckedChange={(checked) => handleChange({ target: { name: 'is_refillable', type: 'checkbox', checked } })}
+                            />
+                            <label htmlFor="is_refillable" className="text-[10px] font-black uppercase text-white tracking-widest cursor-pointer">Re-fillable System</label>
                         </div>
                     )}
-                </div>
+                    {formData.type === 'food' && (
+                        <>
+                            <div className="flex items-center gap-3 p-4 bg-white/5 rounded-xl border border-white/5">
+                                <Checkbox
+                                    id="requires_can_opener"
+                                    checked={formData.requires_can_opener}
+                                    onCheckedChange={(checked) => handleChange({ target: { name: 'requires_can_opener', type: 'checkbox', checked } })}
+                                />
+                                <label htmlFor="requires_can_opener" className="text-[10px] font-black uppercase text-white tracking-widest cursor-pointer">Seal Integrity (Can Opener)</label>
+                            </div>
+                            <div className="flex items-center gap-3 p-4 bg-white/5 rounded-xl border border-white/5">
+                                <Checkbox
+                                    id="is_safe_to_eat_raw"
+                                    checked={formData.is_safe_to_eat_raw}
+                                    onCheckedChange={(checked) => handleChange({ target: { name: 'is_safe_to_eat_raw', type: 'checkbox', checked } })}
+                                />
+                                <label htmlFor="is_safe_to_eat_raw" className="text-[10px] font-black uppercase text-white tracking-widest cursor-pointer">Biological Safety (Safe Raw)</label>
+                            </div>
+                            {!formData.is_safe_to_eat_raw && (
+                                <FormSelect
+                                    label="Processed Counterpart"
+                                    name="cooked_version_id"
+                                    value={formData.cooked_version_id}
+                                    onChange={handleChange}
+                                >
+                                    <option value="">Select Cooked Item</option>
+                                    {allConsumables.filter(c => c && c.id !== item?.id).map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                                </FormSelect>
+                            )}
+                        </>
+                    )}
+                </FormSection>
             )}
-
-            {/* Image */}
-            <div className="md:col-span-4 pt-4 border-t border-white/10">
-                <label className={formLabelClass}>Image</label>
-                <div className="flex items-center gap-4">
-                    <Button type="button" onClick={() => fileInputRef.current.click()} disabled={uploading} className="gap-2">
-                        {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />} Upload
-                    </Button>
-                    <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept="image/*" />
-                    {formData.image_url && <img src={formData.image_url} alt="Preview" className="h-16 w-16 object-cover rounded-md bg-gray-700" />}
-                </div>
-            </div>
-
-            <div className="md:col-span-4 flex gap-2">
-                <Button type="submit" className="bg-red-600 hover:bg-red-700">Save</Button>
-                <Button type="button" onClick={onCancel} variant="outline">Cancel</Button>
-            </div>
-        </form>
+        </FormContainer>
     );
 };
 
@@ -267,15 +325,31 @@ const ConsumableManager = ({ onSaveCallback, sharedMetadata }) => {
 
     return (
         <div className="space-y-6">
-            <div className="flex justify-between items-center">
-                <h2 className="text-2xl font-bold text-white">Manage Consumables (Food & Drink)</h2>
-                <Button onClick={() => { setEditingItem(null); setShowForm(true); }} className="gap-2 bg-red-600 hover:bg-red-700">
-                    <Plus className="h-4 w-4" /> New Consumable
+            <div className="flex justify-between items-center text-white">
+                <h2 className="text-2xl font-bold uppercase tracking-tight">Manage Consumables (Food & Drink)</h2>
+                <Button
+                    onClick={() => { setEditingItem(null); setShowForm(true); }}
+                    className="bg-red-600 hover:bg-red-500 rounded-xl px-6 h-10 font-bold uppercase tracking-widest text-[10px]"
+                >
+                    <Plus className="w-4 h-4 mr-2" /> New Consumable
                 </Button>
             </div>
-            {showForm && <ConsumableForm item={editingItem} onSave={handleSave} onCancel={() => setShowForm(false)} sharedMetadata={sharedMetadata} />}
-            {loading ? <Loader2 className="h-8 w-8 animate-spin text-red-500" /> : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+            {showForm && (
+                <div className="mt-8">
+                    <ConsumableForm
+                        item={editingItem}
+                        onSave={handleSave}
+                        onCancel={() => setShowForm(false)}
+                        sharedMetadata={sharedMetadata}
+                    />
+                </div>
+            )}
+            {loading ? (
+                <div className="flex justify-center py-12">
+                    <Loader2 className="animate-spin text-red-500 h-8 w-8" />
+                </div>
+            ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 mt-8">
                     {items.filter(i => i).map((item, idx) => (
                         <AdminItemCard
                             key={item.id}

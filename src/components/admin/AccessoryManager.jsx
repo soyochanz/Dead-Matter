@@ -1,10 +1,8 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Button } from '@/components/ui/button';
-import { Plus, Edit, Trash2, Loader2, Upload, Gem, DollarSign } from 'lucide-react';
-import { useToast } from '@/components/ui/use-toast';
-import { supabase } from '@/lib/mySupabaseClient';
-import { Input } from '@/components/ui/input';
 import { AdminItemCard } from './AdminItemCard';
+import { FormContainer, FormSection, FormInput, FormSelect, FormTextarea, FormFileUpload } from './AdminUIComponents';
+import { Info, Tag, Sliders, DollarSign, Image as ImageIcon } from 'lucide-react';
 
 const accessoryTypes = ['Sights', 'Muzzle', 'Grip', 'Magazine', 'Stock', 'Other'];
 
@@ -52,30 +50,90 @@ const AccessoryForm = ({ item, onSave, onCancel, sharedMetadata }) => {
     const formLabelClass = "block text-sm font-medium text-gray-300 mb-1";
 
     return (
-        <form onSubmit={handleSubmit} className="bg-white/5 p-6 rounded-lg space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div><label className={formLabelClass}>Name</label><Input name="name" value={formData.name} onChange={handleChange} required /></div>
-                <div><label className={formLabelClass}>Type</label><select name="type" value={formData.type} onChange={handleChange} className={formSelectClass}>{accessoryTypes.map(type => <option key={type} value={type}>{type}</option>)}</select></div>
-                <div><label className={formLabelClass}><DollarSign className="inline-block mr-1 h-4 w-4" />Buy Price</label><Input name="price" type="number" value={formData.price || 0} onChange={handleChange} /></div>
-                <div><label className={formLabelClass}><DollarSign className="inline-block mr-1 h-4 w-4" />Sell Price</label><Input name="sell_price" type="number" value={formData.sell_price || 0} onChange={handleChange} /></div>
-                <div className="md:col-span-2"><label className={formLabelClass}><Gem className="inline-block mr-1 h-4 w-4" />Rarity</label><select name="rarity_id" value={formData.rarity_id || ''} onChange={handleChange} className={formSelectClass}><option value="">Select Rarity</option>{rarities.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}</select></div>
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-white/10">
-                <div><label className={formLabelClass}>Damage</label><Input name="damage_modifier" type="number" value={formData.damage_modifier || 0} onChange={handleChange} /></div>
-                <div><label className={formLabelClass}>Rate of Fire</label><Input name="rate_of_fire_modifier" type="number" value={formData.rate_of_fire_modifier || 0} onChange={handleChange} /></div>
-                <div><label className={formLabelClass}>Accuracy</label><Input name="accuracy_modifier" type="number" value={formData.accuracy_modifier || 0} onChange={handleChange} /></div>
-                <div><label className={formLabelClass}>Capacity</label><Input name="capacity_modifier" type="number" value={formData.capacity_modifier || 0} onChange={handleChange} /></div>
-            </div>
-            <div>
-                <label className={formLabelClass}>Image</label>
-                <div className="flex items-center gap-4">
-                    <Button type="button" onClick={() => fileInputRef.current.click()} disabled={uploading} className="gap-2"><Upload /> Upload</Button>
-                    <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept="image/*" />
-                    {formData.image_url && <img src={formData.image_url} alt="Preview" className="h-16 w-16 object-cover rounded-md" />}
-                </div>
-            </div>
-            <div className="flex gap-2"><Button type="submit">Save</Button><Button type="button" onClick={onCancel} variant="outline">Cancel</Button></div>
-        </form>
+        <FormContainer
+            title={item?.id ? `Calibrate ${formData.name}` : 'Register New Attachment System'}
+            onSave={handleSubmit}
+            onCancel={onCancel}
+            isSaving={uploading}
+        >
+            <FormSection title="System Designation" icon={Info}>
+                <FormInput
+                    label="Nomenclature"
+                    name="name"
+                    placeholder="Attachment Name"
+                    value={formData.name}
+                    onChange={handleChange}
+                />
+                <FormSelect label="System Type" name="type" value={formData.type} onChange={handleChange}>
+                    {accessoryTypes.map(type => <option key={type} value={type}>{type}</option>)}
+                </FormSelect>
+                <FormSelect
+                    label="Rarity Grade"
+                    name="rarity_id"
+                    value={formData.rarity_id}
+                    onChange={handleChange}
+                >
+                    <option value="">Select Rarity</option>
+                    {rarities.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
+                </FormSelect>
+                <FormFileUpload
+                    label="Neural Visual Asset"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    previewUrl={formData.image_url}
+                    fileName={formData.image_path?.split('/').pop()}
+                    icon={ImageIcon}
+                />
+            </FormSection>
+
+            <FormSection title="Economic Value" icon={DollarSign} columns={2}>
+                <FormInput
+                    label="Acquisition Price"
+                    name="price"
+                    type="number"
+                    value={formData.price}
+                    onChange={handleChange}
+                />
+                <FormInput
+                    label="Resale Recovery"
+                    name="sell_price"
+                    type="number"
+                    value={formData.sell_price}
+                    onChange={handleChange}
+                />
+            </FormSection>
+
+            <FormSection title="Performance Modification" icon={Sliders}>
+                <FormInput
+                    label="Damage Delta"
+                    name="damage_modifier"
+                    type="number"
+                    value={formData.damage_modifier}
+                    onChange={handleChange}
+                />
+                <FormInput
+                    label="Cycle Rate Delta"
+                    name="rate_of_fire_modifier"
+                    type="number"
+                    value={formData.rate_of_fire_modifier}
+                    onChange={handleChange}
+                />
+                <FormInput
+                    label="Precision Delta"
+                    name="accuracy_modifier"
+                    type="number"
+                    value={formData.accuracy_modifier}
+                    onChange={handleChange}
+                />
+                <FormInput
+                    label="Capacity Delta"
+                    name="capacity_modifier"
+                    type="number"
+                    value={formData.capacity_modifier}
+                    onChange={handleChange}
+                />
+            </FormSection>
+        </FormContainer>
     );
 };
 
@@ -113,10 +171,31 @@ const AccessoryManager = ({ sharedMetadata }) => {
 
     return (
         <div className="space-y-6">
-            <div className="flex justify-between items-center"><h2 className="text-2xl font-bold text-white">Manage Accessories</h2><Button onClick={() => { setEditingItem(null); setShowForm(true); }}><Plus className="mr-2 h-4 w-4" /> New Accessory</Button></div>
-            {showForm && <AccessoryForm item={editingItem} onSave={handleSave} onCancel={() => setShowForm(false)} sharedMetadata={sharedMetadata} />}
-            {loading ? <Loader2 className="h-8 w-8 animate-spin" /> : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+            <div className="flex justify-between items-center text-white">
+                <h2 className="text-2xl font-bold uppercase tracking-tight">Manage Accessories</h2>
+                <Button
+                    onClick={() => { setEditingItem(null); setShowForm(true); }}
+                    className="bg-red-600 hover:bg-red-500 rounded-xl px-6 h-10 font-bold uppercase tracking-widest text-[10px]"
+                >
+                    <Plus className="w-4 h-4 mr-2" /> New Accessory
+                </Button>
+            </div>
+            {showForm && (
+                <div className="mt-8">
+                    <AccessoryForm
+                        item={editingItem}
+                        onSave={handleSave}
+                        onCancel={() => setShowForm(false)}
+                        sharedMetadata={sharedMetadata}
+                    />
+                </div>
+            )}
+            {loading ? (
+                <div className="flex justify-center py-12">
+                    <Loader2 className="animate-spin text-red-500 h-8 w-8" />
+                </div>
+            ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 mt-8">
                     {items.map((item, idx) => (
                         <AdminItemCard
                             key={item.id}
