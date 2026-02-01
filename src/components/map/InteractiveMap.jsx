@@ -120,7 +120,8 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
         console.log('--- [InteractiveMap] MOUNTED ---');
         return () => console.log('--- [InteractiveMap] UNMOUNTED ---');
     }, []);
-    const [showTips, setShowTips] = useState(true);
+    const [showTips, setShowTips] = useState(() => localStorage.getItem('hideMapTips') !== 'true');
+    const [dontShowAgain, setDontShowAgain] = useState(false);
     const [currentTipIndex, setCurrentTipIndex] = useState(0);
     const [isMissionMode, setIsMissionMode] = useState(false); // Mission Mode State
     const [selectedNpcFilter, setSelectedNpcFilter] = useState('All'); // Mission Filter State
@@ -1297,6 +1298,27 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                                                 </button>
                                             </div>
                                             <p className="text-xs text-gray-300 leading-relaxed" dangerouslySetInnerHTML={{ __html: tip.text }} />
+                                            
+                                            <div className="flex items-center gap-2 mt-2">
+                                                <input 
+                                                    type="checkbox" 
+                                                    id="dontShowAgain" 
+                                                    checked={dontShowAgain} 
+                                                    onChange={(e) => {
+                                                        const checked = e.target.checked;
+                                                        setDontShowAgain(checked);
+                                                        if (checked) {
+                                                            localStorage.setItem('hideMapTips', 'true');
+                                                        } else {
+                                                            localStorage.removeItem('hideMapTips');
+                                                        }
+                                                    }}
+                                                    className="w-3 h-3 rounded border-white/20 bg-white/5 accent-red-500 cursor-pointer"
+                                                />
+                                                <label htmlFor="dontShowAgain" className="text-[10px] text-gray-400 cursor-pointer hover:text-white transition-colors">
+                                                    Don't show again
+                                                </label>
+                                            </div>
                                         </div>
                                     </div>
 
