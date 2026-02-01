@@ -12,6 +12,10 @@ export const AuthProvider = ({ children }) => {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [authLoaded, setAuthLoaded] = useState(false);
+  const [useCustomCursor, setUseCustomCursor] = useState(() => {
+    const saved = localStorage.getItem('dm_use_custom_cursor');
+    return saved === null ? true : saved === 'true';
+  });
 
   // Use refs to track session and profile status independently of the render cycle
   // to avoid circular dependency loops in authentication logic
@@ -201,15 +205,15 @@ export const AuthProvider = ({ children }) => {
     };
   }, [handleSession, toast, safeSetState]);
 
-  // Apply custom cursor based on profile preference
+  // Apply custom cursor preference
   useEffect(() => {
-    const useCustomCursor = profile?.use_custom_cursor !== false; // Default to true
     if (useCustomCursor) {
       document.body.classList.add('custom-cursor');
     } else {
       document.body.classList.remove('custom-cursor');
     }
-  }, [profile?.use_custom_cursor]);
+    localStorage.setItem('dm_use_custom_cursor', String(useCustomCursor));
+  }, [useCustomCursor]);
 
   const signUp = useCallback(async (email, password, options) => {
     try {
@@ -282,12 +286,14 @@ export const AuthProvider = ({ children }) => {
     profile,
     loading,
     authLoaded,
+    useCustomCursor,
+    setUseCustomCursor,
     signUp,
     signIn,
     signOut,
     fetchProfile,
     isAdmin: profile?.role === 'admin' || profile?.role === 'superadmin',
-  }), [user, session, profile, loading, authLoaded, signUp, signIn, signOut, fetchProfile]);
+  }), [user, session, profile, loading, authLoaded, useCustomCursor, signUp, signIn, signOut, fetchProfile]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

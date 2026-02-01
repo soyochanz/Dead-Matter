@@ -319,13 +319,12 @@ const AvatarSecurityUtils = {
 };
 
 const EditProfilePage = () => {
-  const { user, profile, loading: authLoading, fetchProfile } = useAuth();
+  const { user, profile, loading: authLoading, fetchProfile, useCustomCursor, setUseCustomCursor } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
 
   const [username, setUsername] = useState('');
   const [language, setLanguage] = useState('en');
-  const [useCustomCursor, setUseCustomCursor] = useState(true);
   const [avatarFile, setAvatarFile] = useState(null);
   const [avatarPreview, setAvatarPreview] = useState('');
   const [loading, setLoading] = useState(false);
@@ -338,7 +337,6 @@ const EditProfilePage = () => {
     if (profile) {
       setUsername(profile.username || '');
       setLanguage(profile.language || 'en');
-      setUseCustomCursor(profile.use_custom_cursor !== false);
       setAvatarPreview(profile.avatar_url || '');
     }
   }, [profile]);
@@ -513,8 +511,6 @@ const EditProfilePage = () => {
         .from('profiles')
         .update({
           username,
-          language,
-          use_custom_cursor: useCustomCursor,
           avatar_url,
           updated_at: new Date().toISOString(),
         })
