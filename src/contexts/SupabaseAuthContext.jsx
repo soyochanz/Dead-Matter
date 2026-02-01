@@ -13,10 +13,17 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [authLoaded, setAuthLoaded] = useState(false);
 
-  // Use a ref to track mount status to avoid state updates on unmounted component
+  // Use refs to track session and profile status independently of the render cycle
+  // to avoid circular dependency loops in authentication logic
   const isMounted = useRef(true);
+  const sessionRef = useRef(null);
+  const profileRef = useRef(null);
 
-  // Helper to safely set state
+  // Sync refs with state immediately when state changes
+  useEffect(() => { sessionRef.current = session; }, [session]);
+  useEffect(() => { profileRef.current = profile; }, [profile]);
+
+  // Helper to safely set state in async callbacks
   const safeSetState = useCallback((setter, value) => {
     if (isMounted.current) {
       setter(value);
@@ -43,17 +50,21 @@ export const AuthProvider = ({ children }) => {
           i18n.changeLanguage(data.language);
         }
 
-        // Deep compare to prevent unnecessary re-renders
-        if (JSON.stringify(data) !== JSON.stringify(profile)) {
-          setProfile(data);
-        }
+        // Use functional setProfile to check changes without relying on external 'profile' state
+        setProfile(prev => {
+          if (JSON.stringify(data) !== JSON.stringify(prev)) {
+            return data;
+          }
+          return prev;
+        });
+        profileRef.current = data;
       }
       return data;
     } catch (err) {
       console.error('Unexpected error fetching profile:', err);
       return null;
     }
-  }, [profile]); // Add profile to dependency since we use it for comparison
+  }, []); // Explicitly empty deps to maintain stability
 
   const handleSession = useCallback(async (currentSession) => {
     if (!isMounted.current) return;
@@ -73,41 +84,41 @@ export const AuthProvider = ({ children }) => {
           currentSession = refreshedSession;
         }
 
-        // Optimization: If session is identical, skip updates
-        if (session?.access_token === currentSession?.access_token) {
-          // still fetch profile if needed in case it changed independently?
-          // better to rely on realtime subs for profile changes, for now just prevent heavy re-render
-          // Actually, we skip setting session/user, but we might want to ensure profile is fetched if missing
-          if (!profile) {
-            fetchProfile(currentSession.user.id).catch(err => console.warn('Background profile fetch failed:', err));
-          }
-          // Stop here to prevent context churn
-          return;
+        // Optimization: If session is identical, skip most updates
+        const isSameSession = sessionRef.current?.access_token === currentSession?.access_token;
+
+        if (!isSameSession) {
+          safeSetState(setSession, currentSession);
+          sessionRef.current = currentSession;
+          safeSetState(setUser, currentSession?.user ?? null);
         }
 
-        safeSetState(setSession, currentSession);
-        safeSetState(setUser, currentSession?.user ?? null);
-
-        if (currentSession?.user) {
-          fetchProfile(currentSession.user.id).catch(err => console.warn('Background profile fetch failed:', err));
+        // Always ensure profile is synchronized if a user is present
+        // This is key to preventing "home redirect" on refresh
+        if (!profileRef.current || !isSameSession) {
+          await fetchProfile(currentSession.user.id);
         }
       } else {
-        // Handle logout / no session
-        // Always clear state if there is no session, regardless of previous state
+        // Handle logout / no session cleanup
         safeSetState(setSession, null);
+        sessionRef.current = null;
         safeSetState(setUser, null);
         safeSetState(setProfile, null);
+        profileRef.current = null;
       }
     } catch (error) {
       console.error('Error handling session:', error);
       safeSetState(setSession, null);
+      sessionRef.current = null;
       safeSetState(setUser, null);
       safeSetState(setProfile, null);
+      profileRef.current = null;
     } finally {
+      // Signify that the initial auth check is complete
       safeSetState(setAuthLoaded, true);
       safeSetState(setLoading, false);
     }
-  }, [fetchProfile, safeSetState, session, profile]); // Add session/profile deps
+  }, [fetchProfile, safeSetState]); // Stable dependencies
 
 
   useEffect(() => {

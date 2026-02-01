@@ -13,11 +13,11 @@ export const CustomStatManager = ({ stats, setStats }) => {
 
     const handleStatChange = (oldKey, newKey, newValue) => {
         const newStats = { ...currentStats };
-        
+
         if (oldKey !== newKey) {
             delete newStats[oldKey];
         }
-        
+
         newStats[newKey] = newValue;
         setStats(newStats);
     };
@@ -36,25 +36,25 @@ export const CustomStatManager = ({ stats, setStats }) => {
                     <Plus className="w-4 h-4 mr-2" /> Add Stat
                 </Button>
             </div>
-            
+
             <div className="grid gap-4">
                 {Object.entries(currentStats).map(([key, value], index) => (
                     <div key={index} className="flex items-center gap-2">
-                        <Input 
-                            placeholder="Stat Name (e.g., Caliber)" 
-                            value={key} 
+                        <Input
+                            placeholder="Stat Name (e.g., Caliber)"
+                            value={key}
                             onChange={(e) => handleStatChange(key, e.target.value, value)}
                             className="flex-1"
                         />
-                        <Input 
-                            placeholder="Value (e.g., 9mm)" 
-                            value={value} 
+                        <Input
+                            placeholder="Value (e.g., 9mm)"
+                            value={value}
                             onChange={(e) => handleStatChange(key, key, e.target.value)}
                             className="flex-1"
                         />
-                        <Button 
-                            size="icon" 
-                            variant="destructive" 
+                        <Button
+                            size="icon"
+                            variant="destructive"
                             onClick={() => handleDeleteStat(key)}
                         >
                             <Trash2 className="w-4 h-4" />
@@ -70,3 +70,5 @@ export const CustomStatManager = ({ stats, setStats }) => {
         </div>
     );
 };
+
+export default CustomStatManager;

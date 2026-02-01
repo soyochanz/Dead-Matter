@@ -45,7 +45,7 @@ export const FormContainer = ({ children, title, onSave, onCancel, isSaving }) =
         </div>
 
         {/* Content */}
-        <div className="p-8 md:p-10 space-y-12 relative z-10 max-h-[70vh] overflow-y-auto custom-scrollbar">
+        <div className="p-8 md:p-10 space-y-12 relative z-10">
             {children}
         </div>
 

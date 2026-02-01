@@ -316,8 +316,8 @@ const AdminDashboard = () => {
           </header>
 
           {/* Content Area */}
-          <div className="flex-1 overflow-y-auto bg-black p-4 lg:p-8 relative">
-            <div className="max-w-7xl mx-auto">
+          <div className="flex-1 overflow-y-auto bg-black p-4 lg:p-8 relative custom-scrollbar">
+            <div className="max-w-[1600px] mx-auto">
               <Suspense fallback={
                 <div className="flex justify-center items-center h-64">
                   <Loader2 className="h-8 w-8 text-red-600 animate-spin" />
@@ -480,7 +480,7 @@ const AdminDashboard = () => {
           {mobileView === 'active-tool' && (
             <div className="min-h-full">
               <Suspense fallback={
-                <div className="h-64 flex items-center justify-center">
+                <div className="h-screen flex items-center justify-center bg-black">
                   <Loader2 className="w-8 h-8 text-red-600 animate-spin" />
                 </div>
               }>

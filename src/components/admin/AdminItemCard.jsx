@@ -66,33 +66,36 @@ export const AdminItemCard = ({ item, type, onEdit, onDelete, onLink, index = 0 
                 </div>
 
                 {/* Action Buttons Overlay */}
-                <div className="absolute top-3 right-3 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-[-10px] group-hover:translate-y-0">
+                    {onLink && (
+                        <Button
+                            size="icon"
+                            variant="ghost"
+                            className="h-8 w-8 bg-red-600/10 hover:bg-red-600 text-red-500 hover:text-white backdrop-blur-md border border-red-500/20 rounded-lg transition-all shadow-[0_0_15px_rgba(220,38,38,0)] hover:shadow-[0_0_15px_rgba(220,38,38,0.4)]"
+                            onClick={() => onLink(item)}
+                            title="Hardware Sync"
+                        >
+                            <Link2 className="w-4 h-4" />
+                        </Button>
+                    )}
                     <Button
                         size="icon"
                         variant="ghost"
-                        className="h-8 w-8 bg-black/40 hover:bg-white/10 backdrop-blur-md text-white border border-white/5"
+                        className="h-8 w-8 bg-white/5 hover:bg-white/10 backdrop-blur-md text-gray-400 hover:text-white border border-white/5 rounded-lg transition-all"
                         onClick={() => onEdit(item)}
+                        title="Calibrate"
                     >
                         <Edit className="w-4 h-4" />
                     </Button>
                     <Button
                         size="icon"
                         variant="ghost"
-                        className="h-8 w-8 bg-black/40 hover:bg-red-500/20 hover:text-red-400 backdrop-blur-md text-white border border-white/5"
+                        className="h-8 w-8 bg-white/5 hover:bg-red-500/20 backdrop-blur-md text-gray-400 hover:text-red-500 border border-white/5 rounded-lg transition-all"
                         onClick={() => onDelete(item)}
+                        title="Purge"
                     >
                         <Trash2 className="w-4 h-4" />
                     </Button>
-                    {onLink && (
-                        <Button
-                            size="icon"
-                            variant="ghost"
-                            className="h-8 w-8 bg-black/40 hover:bg-blue-500/20 hover:text-blue-400 backdrop-blur-md text-white border border-white/5"
-                            onClick={() => onLink(item)}
-                        >
-                            <Link2 className="w-4 h-4" />
-                        </Button>
-                    )}
                 </div>
             </div>
 
@@ -147,6 +150,23 @@ export const AdminItemCard = ({ item, type, onEdit, onDelete, onLink, index = 0 
                             <StatBadge icon={HeartPulse} label="Health" value={item.health} color="text-red-500" />
                             <StatBadge icon={Fuel} label="Fuel" value={item.fuel_capacity + ' L'} color="text-orange-400" />
                             <StatBadge icon={Users} label="Seats" value={item.occupants} color="text-blue-400" />
+                        </>
+                    )}
+                    {type === 'toolbelt' && (
+                        <>
+                            <StatBadge icon={Package} label="Capacity" value={item.storage_capacity} color="text-blue-500" />
+                            <StatBadge icon={Weight} label="Weight" value={item.weight + ' kg'} />
+                            <StatBadge icon={Package} label="Size" value={item.size} />
+                            <StatBadge icon={Zap} label="Function" value={item.use_function} color="text-yellow-500" />
+                        </>
+                    )}
+                    {type === 'crafting_material' && (
+                        <>
+                            <div className="col-span-2">
+                                <p className="text-[10px] text-gray-500 line-clamp-2 leading-relaxed italic border-l-2 border-red-500/30 pl-3">
+                                    {item.description || 'Raw material asset without calibration notes.'}
+                                </p>
+                            </div>
                         </>
                     )}
                 </div>

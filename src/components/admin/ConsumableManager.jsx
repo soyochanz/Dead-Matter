@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Button } from '@/components/ui/button';
-import { Loader2, Plus, Sparkles, Droplet, HeartPulse, ShieldAlert, FileKey, DollarSign } from 'lucide-react';
+import { Info, Tag, FlaskConical, DollarSign, Image as ImageIcon, Sparkles, Droplet, HeartPulse, ShieldAlert, FileKey, Plus, Loader2 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/lib/mySupabaseClient';
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from '@/components/ui/input';
 import { AdminItemCard } from './AdminItemCard';
 import { FormContainer, FormSection, FormInput, FormSelect, FormTextarea, FormFileUpload } from './AdminUIComponents';
-import { Info, Tag, FlaskConical, DollarSign, Image as ImageIcon, Sparkles, Droplet, HeartPulse, ShieldAlert, FileKey } from 'lucide-react';
 
 const ConsumableForm = ({ item, onSave, onCancel, filterType, sharedMetadata }) => {
     const defaultState = {
@@ -325,13 +324,19 @@ const ConsumableManager = ({ onSaveCallback, sharedMetadata }) => {
 
     return (
         <div className="space-y-6">
-            <div className="flex justify-between items-center text-white">
-                <h2 className="text-2xl font-bold uppercase tracking-tight">Manage Consumables (Food & Drink)</h2>
+            <div className="flex justify-between items-center text-white mb-8">
+                <div className="space-y-1">
+                    <h2 className="text-2xl font-bold uppercase tracking-tight flex items-center gap-3">
+                        <Droplet className="text-red-600" />
+                        Ration & Fluid Logistics
+                    </h2>
+                    <p className="text-[10px] text-gray-500 uppercase tracking-widest font-medium">Manage metabolic sustainment assets and consumables</p>
+                </div>
                 <Button
                     onClick={() => { setEditingItem(null); setShowForm(true); }}
                     className="bg-red-600 hover:bg-red-500 rounded-xl px-6 h-10 font-bold uppercase tracking-widest text-[10px]"
                 >
-                    <Plus className="w-4 h-4 mr-2" /> New Consumable
+                    <Plus className="w-4 h-4 mr-2" /> Register Resource
                 </Button>
             </div>
             {showForm && (

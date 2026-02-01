@@ -26,15 +26,13 @@ const ManageAttachmentsDialog = ({ weapon, onOpenChange, open }) => {
 
     const fetchAttachments = useCallback(async () => {
         setLoading(true);
-
         const { data: allAccData, error: allAccError } = await supabase.from('accessories').select('id, name, type');
-        if (allAccError) toast({ title: "Error", description: "Could not load accessories.", variant: "destructive" });
+        if (allAccError) toast({ title: "Fetch Failed", description: "Could not synchronize accessory database.", variant: "destructive" });
         else setAllAccessories(allAccData || []);
 
         const { data: linkedAccData, error: linkedAccError } = await supabase.from('weapon_attachments').select('accessory_id, slot_type').eq('weapon_id', weapon.id);
-        if (linkedAccError) toast({ title: "Error", description: "Could not load linked accessories.", variant: "destructive" });
+        if (linkedAccError) toast({ title: "Link Error", description: "Could not retrieve current hardware configuration.", variant: "destructive" });
         else setLinkedAccessories(linkedAccData || []);
-
         setLoading(false);
     }, [weapon.id, toast]);
 
@@ -44,18 +42,18 @@ const ManageAttachmentsDialog = ({ weapon, onOpenChange, open }) => {
 
     const handleLink = async (accessory_id, slot_type) => {
         const { error } = await supabase.from('weapon_attachments').insert({ weapon_id: weapon.id, accessory_id, slot_type });
-        if (error) toast({ title: "Error", description: error.message, variant: "destructive" });
+        if (error) toast({ title: "Integration Failed", description: error.message, variant: "destructive" });
         else {
-            toast({ title: "Success", description: "Accessory linked." });
+            toast({ title: "Hardware Linked", description: "Weapon protocol updated." });
             setLinkedAccessories(prev => [...prev, { accessory_id, slot_type }]);
         }
     };
 
     const handleUnlink = async (accessory_id, slot_type) => {
         const { error } = await supabase.from('weapon_attachments').delete().match({ weapon_id: weapon.id, accessory_id, slot_type });
-        if (error) toast({ title: "Error", description: error.message, variant: "destructive" });
+        if (error) toast({ title: "Removal Failed", description: error.message, variant: "destructive" });
         else {
-            toast({ title: "Success", description: "Accessory unlinked." });
+            toast({ title: "Hardware Purged", description: "Accessory removed from system." });
             setLinkedAccessories(prev => prev.filter(att => !(att.accessory_id === accessory_id && att.slot_type === slot_type)));
         }
     };
@@ -64,35 +62,63 @@ const ManageAttachmentsDialog = ({ weapon, onOpenChange, open }) => {
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="max-w-4xl bg-slate-900 border-slate-700">
-                <DialogHeader>
-                    <DialogTitle className="text-white">Manage Attachments for {weapon.name}</DialogTitle>
-                </DialogHeader>
-                {loading ? <Loader2 className="animate-spin text-red-500 mx-auto" /> : (
-                    <div className="max-h-[60vh] overflow-y-auto mt-4 pr-2">
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {accessoryTypes.map(slotType => (
-                                <div key={slotType}>
-                                    <h4 className="font-bold text-lg text-red-400 mb-2">{slotType}</h4>
-                                    <div className="space-y-2">
-                                        {allAccessories.filter(acc => acc.type === slotType).map(acc => (
-                                            <div key={acc.id} className="flex justify-between items-center bg-slate-800 p-2 rounded-md">
-                                                <span className="text-white">{acc.name}</span>
-                                                <Button
-                                                    size="sm"
-                                                    variant={isLinked(acc.id, slotType) ? "destructive" : "default"}
-                                                    onClick={() => isLinked(acc.id, slotType) ? handleUnlink(acc.id, slotType) : handleLink(acc.id, slotType)}
-                                                >
-                                                    {isLinked(acc.id, slotType) ? 'Unlink' : 'Link'}
-                                                </Button>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
+            <DialogContent className="max-w-5xl bg-[#0a0a0c] border-white/10 text-white rounded-[2rem] overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,1)] p-0">
+                <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
+
+                <DialogHeader className="p-8 border-b border-white/5 bg-white/[0.02]">
+                    <div className="flex items-center gap-3 mb-1">
+                        <Link2 className="w-4 h-4 text-red-500" />
+                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 font-mono">Hardware Integration Protocol</span>
                     </div>
-                )}
+                    <DialogTitle className="text-2xl font-black uppercase tracking-tight">Sync: {weapon.name}</DialogTitle>
+                    <p className="text-[10px] text-gray-600 font-bold uppercase tracking-widest mt-1">Calibrate compatible tactical attachments and optic systems</p>
+                </DialogHeader>
+
+                <div className="p-8">
+                    {loading ? (
+                        <div className="flex justify-center p-20">
+                            <Loader2 className="animate-spin text-red-500 w-12 h-12" />
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-h-[60vh] overflow-y-auto pr-4 custom-scrollbar">
+                            {accessoryTypes.map(slotType => {
+                                const accessories = allAccessories.filter(acc => acc.type === slotType);
+                                if (accessories.length === 0) return null;
+
+                                return (
+                                    <div key={slotType} className="space-y-4">
+                                        <div className="flex items-center gap-2 border-b border-white/5 pb-2">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-red-600 shadow-[0_0_8px_rgba(220,38,38,0.5)]" />
+                                            <h4 className="font-black text-[10px] text-gray-400 uppercase tracking-[0.2em]">{slotType}</h4>
+                                        </div>
+                                        <div className="space-y-2">
+                                            {accessories.map(acc => {
+                                                const linked = isLinked(acc.id, slotType);
+                                                return (
+                                                    <div key={acc.id} className={`group flex items-center justify-between p-4 rounded-xl border transition-all duration-300 ${linked ? 'bg-emerald-500/5 border-emerald-500/20' : 'bg-white/[0.02] border-white/5 hover:border-white/10'
+                                                        }`}>
+                                                        <span className={`text-[10px] font-bold uppercase tracking-wider transition-colors ${linked ? 'text-emerald-400' : 'text-gray-400 group-hover:text-white'}`}>{acc.name}</span>
+                                                        <Button
+                                                            size="sm"
+                                                            variant="ghost"
+                                                            onClick={() => linked ? handleUnlink(acc.id, slotType) : handleLink(acc.id, slotType)}
+                                                            className={`h-8 px-4 rounded-lg font-black uppercase tracking-widest text-[8px] transition-all ${linked
+                                                                    ? 'bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/20'
+                                                                    : 'bg-white/5 text-gray-500 hover:text-white hover:bg-white/10'
+                                                                }`}
+                                                        >
+                                                            {linked ? 'Linked' : 'Link'}
+                                                        </Button>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
+                </div>
             </DialogContent>
         </Dialog>
     );

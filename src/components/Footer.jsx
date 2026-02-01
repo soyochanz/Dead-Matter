@@ -56,7 +56,7 @@ const Footer = () => {
     return (
         <footer className="relative mt-24 border-t border-white/5 py-12 overflow-hidden">
             {/* Technical Background */}
-            <div className="absolute inset-0 pointer-events-none opacity-[0.02]"
+            <div className="absolute inset-0 pointer-events-none opacity-[0.005]"
                 style={{
                     backgroundImage: `linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)`,
                     backgroundSize: '40px 40px'

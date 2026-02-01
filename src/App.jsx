@@ -106,11 +106,9 @@ const AdminRoute = () => {
   console.log('Granting admin access to:', user.email);
 
   return (
-    <Layout>
-      <Suspense fallback={<PageLoader />}>
-        <AdminPanel />
-      </Suspense>
-    </Layout>
+    <Suspense fallback={<PageLoader />}>
+      <AdminPanel />
+    </Suspense>
   );
 };
 

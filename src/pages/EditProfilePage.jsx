@@ -516,7 +516,6 @@ const EditProfilePage = () => {
           language,
           use_custom_cursor: useCustomCursor,
           avatar_url,
-          avatar_path: newAvatarPath || profile.avatar_path,
           updated_at: new Date().toISOString(),
         })
         .eq('id', user.id);

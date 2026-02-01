@@ -1,51 +1,146 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/mySupabaseClient';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Loader2, Plus, Edit, Trash2, Save, X } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
+import { Loader2, Plus, Users, MapPin, Image as ImageIcon, Briefcase, ShoppingBag, Save, X, Trash2, Edit } from 'lucide-react';
+import { FormContainer, FormSection, FormInput, FormFileUpload } from './AdminUIComponents';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
-const NpcManager = ({ sharedMetadata }) => {
-    const [npcs, setNpcs] = useState([]);
-    const [editingNpc, setEditingNpc] = useState(null);
-    const [missions, setMissions] = useState([]);
-    const [inventory, setInventory] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [allItems, setAllItems] = useState({ weapons: [], gear: [], consumables: [], keys: [], toolbelts: [], medicines: [] });
+const ManageMissionsDialog = ({ npc, open, onOpenChange, onRefresh }) => {
     const { toast } = useToast();
+    const [missions, setMissions] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [newMission, setNewMission] = useState({ title: '', difficulty: 'Medium', content_html: '' });
 
-    useEffect(() => {
-        fetchNpcs();
-    }, []);
+    const fetchMissions = useCallback(async () => {
+        if (!npc?.id) return;
+        const { data, error } = await supabase.from('missions').select('*').eq('npc_id', npc.id);
+        if (error) console.error(error);
+        else setMissions(data || []);
+    }, [npc]);
 
-    // Only fetch item lists when starting to edit or manage inventory
-    useEffect(() => {
-        if (editingNpc && allItems.weapons.length === 0) {
-            fetchAllItems();
-        }
-    }, [editingNpc]);
+    useEffect(() => { if (open) fetchMissions(); }, [open, fetchMissions]);
 
-    const fetchNpcs = async () => {
+    const handleAddMission = async () => {
+        if (!newMission.title) return;
         setLoading(true);
-        const { data, error } = await supabase.from('npcs').select('*').order('name');
-        if (error) {
-            toast({ title: "Error", description: error.message, variant: "destructive" });
-        } else {
-            setNpcs(data);
+        const { error } = await supabase.from('missions').insert([{ npc_id: npc.id, ...newMission }]);
+        if (error) toast({ title: "Error", description: error.message, variant: "destructive" });
+        else {
+            toast({ title: "Success", description: "Mission added." });
+            setNewMission({ title: '', difficulty: 'Medium', content_html: '' });
+            fetchMissions();
+            onRefresh();
         }
         setLoading(false);
     };
 
-    const fetchAllItems = async () => {
-        const [weapons, gear, consumables, keys, toolbelts, medicines] = await Promise.all([
-            supabase.from('weapons').select('id, name, subcategory:wiki_subcategories(name), image_url'),
-            supabase.from('gear').select('id, name, subcategory:wiki_subcategories(name), image_url'),
-            supabase.from('consumables').select('id, name, type, image_url'),
+    const handleDeleteMission = async (id) => {
+        const { error } = await supabase.from('missions').delete().eq('id', id);
+        if (error) toast({ title: "Error", description: error.message, variant: "destructive" });
+        else { fetchMissions(); onRefresh(); }
+    };
+
+    return (
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent className="bg-[#0a0a0c] border-white/10 text-white max-w-2xl overflow-hidden flex flex-col max-h-[90vh]">
+                <DialogHeader>
+                    <DialogTitle className="text-xl font-bold uppercase tracking-wider flex items-center gap-2">
+                        <Briefcase className="w-5 h-5 text-red-500" />
+                        Mission Directives: {npc?.name}
+                    </DialogTitle>
+                </DialogHeader>
+
+                <div className="flex-grow overflow-y-auto space-y-6 pr-2">
+                    <div className="bg-white/5 border border-white/10 rounded-xl p-4 space-y-4">
+                        <h4 className="text-xs font-bold text-red-500 uppercase tracking-widest">New Directive</h4>
+                        <div className="grid grid-cols-2 gap-4">
+                            <FormInput
+                                label="Operation Title"
+                                value={newMission.title}
+                                onChange={(e) => setNewMission({ ...newMission, title: e.target.value })}
+                                placeholder="Assignment name..."
+                            />
+                            <div>
+                                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Threat Level</label>
+                                <select
+                                    value={newMission.difficulty}
+                                    onChange={(e) => setNewMission({ ...newMission, difficulty: e.target.value })}
+                                    className="w-full h-10 bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-red-500"
+                                >
+                                    <option value="Easy">Easy</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="Hard">Hard</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div className="space-y-1.5">
+                            <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Directive Details (HTML Support)</label>
+                            <textarea
+                                value={newMission.content_html}
+                                onChange={(e) => setNewMission({ ...newMission, content_html: e.target.value })}
+                                className="w-full h-24 bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-red-500 resize-none"
+                                placeholder="Detail the operation requirements..."
+                            />
+                        </div>
+                        <Button
+                            onClick={handleAddMission}
+                            disabled={loading || !newMission.title}
+                            className="w-full bg-red-600 hover:bg-red-500 rounded-lg font-bold uppercase tracking-widest text-[10px]"
+                        >
+                            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4 mr-2" />}
+                            Deploy Directive
+                        </Button>
+                    </div>
+
+                    <div className="space-y-3">
+                        <h4 className="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-1">Active Protocols ({missions.length})</h4>
+                        {missions.map(m => (
+                            <div key={m.id} className="bg-white/[0.02] border border-white/5 rounded-xl p-4 flex items-center justify-between group hover:bg-white/[0.04] transition-all">
+                                <div>
+                                    <div className="font-bold text-sm text-white flex items-center gap-2">
+                                        {m.title}
+                                        <span className={`text-[8px] px-1.5 py-0.5 rounded border ${m.difficulty === 'Hard' ? 'border-red-500/50 text-red-400 bg-red-500/10' : m.difficulty === 'Medium' ? 'border-amber-500/50 text-amber-400 bg-amber-500/10' : 'border-emerald-500/50 text-emerald-400 bg-emerald-500/10'}`}>
+                                            {m.difficulty}
+                                        </span>
+                                    </div>
+                                    <div className="text-[10px] text-gray-500 mt-1 line-clamp-1">{m.content_html?.replace(/<[^>]*>/g, '')}</div>
+                                </div>
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={() => handleDeleteMission(m.id)}
+                                    className="text-gray-500 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all"
+                                >
+                                    <Trash2 className="w-4 h-4" />
+                                </Button>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </DialogContent>
+        </Dialog>
+    );
+};
+
+const ManageInventoryDialog = ({ npc, open, onOpenChange, onRefresh }) => {
+    const { toast } = useToast();
+    const [inventory, setInventory] = useState([]);
+    const [allItems, setAllItems] = useState({ weapons: [], gear: [], consumables: [], keys: [], toolbelts: [], medicines: [] });
+    const [loading, setLoading] = useState(false);
+
+    const fetchAllData = useCallback(async () => {
+        if (!npc?.id) return;
+        setLoading(true);
+        const [weapons, gear, consumables, keys, toolbelts, medicines, inv] = await Promise.all([
+            supabase.from('weapons').select('id, name, image_url'),
+            supabase.from('gear').select('id, name, image_url'),
+            supabase.from('consumables').select('id, name, image_url'),
             supabase.from('keys').select('id, name, image_url'),
             supabase.from('toolbelts').select('id, name, image_url'),
-            supabase.from('medicines').select('id, name, image_url')
+            supabase.from('medicines').select('id, name, image_url'),
+            supabase.from('npc_inventory').select('*').eq('npc_id', npc.id)
         ]);
-
         setAllItems({
             weapons: weapons.data || [],
             gear: gear.data || [],
@@ -54,218 +149,290 @@ const NpcManager = ({ sharedMetadata }) => {
             toolbelts: toolbelts.data || [],
             medicines: medicines.data || [],
         });
-    };
+        setInventory(inv.data || []);
+        setLoading(false);
+    }, [npc]);
 
-    const handleEdit = async (npc) => {
-        setEditingNpc(npc);
+    useEffect(() => { if (open) fetchAllData(); }, [open, fetchAllData]);
 
-        const [missionsRes, inventoryRes] = await Promise.all([
-            supabase.from('missions').select('*').eq('npc_id', npc.id),
-            supabase.from('npc_inventory').select('*').eq('npc_id', npc.id)
-        ]);
-
-        setMissions(missionsRes.data || []);
-        setInventory(inventoryRes.data || []);
-    };
-
-    const handleSaveNpc = async () => {
-        let error;
-        if (editingNpc.id) {
-            ({ error } = await supabase.from('npcs').update({
-                name: editingNpc.name,
-                location: editingNpc.location,
-                image_url: editingNpc.image_url,
-                image_path: editingNpc.image_path
-            }).eq('id', editingNpc.id));
-        } else {
-            const { data: insertedData, error: insertError } = await supabase.from('npcs').insert([{
-                name: editingNpc.name,
-                location: editingNpc.location,
-                image_url: editingNpc.image_url,
-                image_path: editingNpc.image_path
-            }]).select().single();
-            error = insertError;
-            if (!error) setEditingNpc(insertedData);
-        }
-
+    const handleAddItem = async (itemType, itemId) => {
+        if (inventory.some(i => i.item_type === itemType && i.item_id === itemId)) return;
+        const { error } = await supabase.from('npc_inventory').insert([{ npc_id: npc.id, item_type: itemType, item_id: itemId }]);
         if (error) toast({ title: "Error", description: error.message, variant: "destructive" });
-        else { toast({ title: "Success", description: "NPC saved successfully" }); fetchNpcs(); }
+        else fetchAllData();
     };
 
-    const handleAddMission = async () => {
-        if (!editingNpc?.id) return;
-
-        const { error } = await supabase.from('missions').insert([{
-            npc_id: editingNpc.id,
-            title: 'New Mission',
-            difficulty: 'Medium',
-            content: 'Mission description',
-            content_html: '<p>Mission description</p>'
-        }]);
-
+    const handleRemoveItem = async (type, id) => {
+        const { error } = await supabase.from('npc_inventory').delete().match({ npc_id: npc.id, item_type: type, item_id: id });
         if (error) toast({ title: "Error", description: error.message, variant: "destructive" });
-        else {
-            const { data } = await supabase.from('missions').select('*').eq('npc_id', editingNpc.id);
-            setMissions(data || []);
-            toast({ title: "Success", description: "Mission added" });
-        }
+        else fetchAllData();
     };
 
-    const handleUpdateMission = async (mission) => {
-        const { error } = await supabase.from('missions').update(mission).eq('id', mission.id);
-        if (error) toast({ title: "Error", description: error.message, variant: "destructive" });
-        else toast({ title: "Success", description: "Mission updated" });
+    const getItemDetails = (type, id) => {
+        return (allItems[type] || []).find(i => i.id === id);
     };
-
-    const handleDeleteMission = async (missionId) => {
-        const { error } = await supabase.from('missions').delete().eq('id', missionId);
-        if (error) toast({ title: "Error", description: error.message, variant: "destructive" });
-        else {
-            setMissions(missions.filter(m => m.id !== missionId));
-            toast({ title: "Success", description: "Mission deleted" });
-        }
-    };
-
-    const handleAddInventoryItem = async (itemType, itemId) => {
-        if (!editingNpc?.id || inventory.some(i => i.item_type === itemType && i.item_id === itemId)) return;
-
-        const { error } = await supabase.from('npc_inventory').insert([{ npc_id: editingNpc.id, item_type: itemType, item_id: itemId }]);
-        if (error) toast({ title: "Error", description: error.message, variant: "destructive" });
-        else {
-            const { data } = await supabase.from('npc_inventory').select('*').eq('npc_id', editingNpc.id);
-            setInventory(data || []);
-            toast({ title: "Success", description: "Item added to inventory" });
-        }
-    };
-
-    const handleRemoveInventoryItem = async (itemType, itemId) => {
-        const { error } = await supabase.from('npc_inventory').delete().match({ npc_id: editingNpc.id, item_type: itemType, item_id: itemId });
-        if (error) toast({ title: "Error", description: error.message, variant: "destructive" });
-        else {
-            setInventory(inventory.filter(i => !(i.item_type === itemType && i.item_id === itemId)));
-            toast({ title: "Success", description: "Item removed" });
-        }
-    };
-
-    const handleDelete = async (id) => {
-        await supabase.from('missions').delete().eq('npc_id', id);
-        await supabase.from('npc_inventory').delete().eq('npc_id', id);
-        const { error } = await supabase.from('npcs').delete().eq('id', id);
-        if (error) toast({ title: "Error", description: error.message, variant: "destructive" });
-        else { toast({ title: "Success", description: "NPC deleted" }); fetchNpcs(); }
-    };
-
-    const handleImageUpload = async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-
-        const fileExt = file.name.split('.').pop();
-        const fileName = `${Date.now()}.${fileExt}`;
-        const filePath = `npcs/${fileName}`;
-
-        const { error: uploadError } = await supabase.storage.from('Items').upload(filePath, file);
-        if (uploadError) { toast({ title: "Error", description: uploadError.message, variant: "destructive" }); return; }
-
-        const { data } = supabase.storage.from('Items').getPublicUrl(filePath);
-        setEditingNpc({ ...editingNpc, image_url: data.publicUrl, image_path: filePath });
-    };
-
-    const getInventoryItemDetails = (itemType, itemId) => {
-        const source = allItems[itemType] || [];
-        return source.find(i => i.id === itemId);
-    };
-
-    const selectClass = "w-full bg-white/5 backdrop-blur-sm border border-white/10 p-2 rounded h-10 text-white";
-
-    if (loading) return <div className="flex justify-center items-center h-64"><Loader2 className="w-12 h-12 text-red-500 animate-spin" /></div>;
 
     return (
-        <div className="space-y-6">
-            <div className="flex justify-between items-center">
-                <h2 className="text-3xl font-bold text-white">NPCs Management</h2>
-                <Button onClick={() => setEditingNpc({ name: '', location: '', image_url: '', image_path: '' })}><Plus className="w-4 h-4 mr-2" />Add NPC</Button>
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent className="bg-[#0a0a0c] border-white/10 text-white max-w-4xl overflow-hidden flex flex-col max-h-[90vh]">
+                <DialogHeader>
+                    <DialogTitle className="text-xl font-bold uppercase tracking-wider flex items-center gap-2">
+                        <ShoppingBag className="w-5 h-5 text-red-500" />
+                        Logistics & Trade: {npc?.name}
+                    </DialogTitle>
+                </DialogHeader>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 overflow-hidden mt-4">
+                    <div className="space-y-4 overflow-y-auto pr-2">
+                        <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Asset Catalogs</h4>
+                        {Object.entries(allItems).map(([type, items]) => (
+                            <div key={type} className="space-y-2">
+                                <label className="text-[9px] font-bold text-gray-500 uppercase tracking-tighter ml-1">{type}</label>
+                                <select
+                                    onChange={(e) => { if (e.target.value) handleAddItem(type, e.target.value); e.target.value = ''; }}
+                                    className="w-full h-8 bg-white/5 border border-white/10 rounded-lg px-3 py-1 text-xs text-white focus:outline-none focus:ring-1 focus:ring-red-500"
+                                >
+                                    <option value="">Select {type.slice(0, -1)}...</option>
+                                    {items.map(item => (
+                                        <option key={item.id} value={item.id}>{item.name}</option>
+                                    ))}
+                                </select>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="space-y-4 overflow-y-auto pr-2 border-l border-white/10 pl-4">
+                        <h4 className="text-[10px] font-bold text-red-500 uppercase tracking-widest ml-1">Approved Trade Assets ({inventory.length})</h4>
+                        <div className="grid grid-cols-2 gap-3">
+                            {inventory.map((inv, idx) => {
+                                const details = getItemDetails(inv.item_type, inv.item_id);
+                                return (
+                                    <div key={idx} className="bg-white/5 border border-white/10 rounded-xl p-2 relative group flex items-center gap-3">
+                                        <div className="w-10 h-10 bg-black/40 rounded-lg border border-white/5 flex items-center justify-center shrink-0">
+                                            {details?.image_url ? (
+                                                <img src={details.image_url} alt="" className="w-8 h-8 object-contain" />
+                                            ) : (
+                                                <ImageIcon className="w-4 h-4 text-gray-600" />
+                                            )}
+                                        </div>
+                                        <div className="min-w-0">
+                                            <div className="text-[10px] font-bold text-white truncate">{details?.name || 'Unknown Asset'}</div>
+                                            <div className="text-[8px] text-gray-500 uppercase">{inv.item_type.slice(0, -1)}</div>
+                                        </div>
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            onClick={() => handleRemoveItem(inv.item_type, inv.item_id)}
+                                            className="absolute top-1 right-1 h-5 w-5 text-gray-600 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all p-0"
+                                        >
+                                            <X className="w-3 h-3" />
+                                        </Button>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </div>
+            </DialogContent>
+        </Dialog>
+    );
+};
+
+const NpcForm = ({ item, onSave, onCancel }) => {
+    const [formData, setFormData] = useState({ name: '', location: '', image_url: '', image_path: '' });
+    const [uploading, setUploading] = useState(false);
+    const { toast } = useToast();
+
+    useEffect(() => {
+        if (item) setFormData(item);
+    }, [item]);
+
+    const handleFileChange = async (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+        setUploading(true);
+        const fileName = `${Date.now()}_${file.name}`;
+        const filePath = `npcs/${fileName}`;
+        const { error } = await supabase.storage.from('Items').upload(filePath, file);
+        if (error) { toast({ title: "Upload Error", description: error.message, variant: "destructive" }); }
+        else {
+            const { data: { publicUrl } } = supabase.storage.from('Items').getPublicUrl(filePath);
+            setFormData(prev => ({ ...prev, image_url: publicUrl, image_path: filePath }));
+        }
+        setUploading(false);
+    };
+
+    return (
+        <FormContainer
+            title={item?.id ? `Modifying Profile: ${item.name}` : 'Enlisting New Operative'}
+            onSave={() => onSave(formData)}
+            onCancel={onCancel}
+            isSaving={uploading}
+        >
+            <FormSection title="Operative Identification" icon={Users}>
+                <FormInput
+                    label="Codename"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    placeholder="Subject Designation"
+                />
+                <FormInput
+                    label="Current Deployment Zone"
+                    value={formData.location}
+                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                    placeholder="Coordinate sector..."
+                />
+                <FormFileUpload
+                    label="Visual Profile Data"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    previewUrl={formData.image_url}
+                    fileName={formData.image_path?.split('/').pop()}
+                    icon={ImageIcon}
+                />
+            </FormSection>
+        </FormContainer>
+    );
+};
+
+const NpcManager = () => {
+    const [npcs, setNpcs] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [showForm, setShowForm] = useState(false);
+    const [editingNpc, setEditingNpc] = useState(null);
+    const [missionNpc, setMissionNpc] = useState(null);
+    const [inventoryNpc, setInventoryNpc] = useState(null);
+    const { toast } = useToast();
+
+    const fetchNpcs = useCallback(async () => {
+        setLoading(true);
+        const { data, error } = await supabase.from('npcs').select('*').order('name');
+        if (error) toast({ title: "Error", description: error.message, variant: "destructive" });
+        else setNpcs(data || []);
+        setLoading(false);
+    }, [toast]);
+
+    useEffect(() => { fetchNpcs(); }, [fetchNpcs]);
+
+    const handleSave = async (formData) => {
+        const { id, ...data } = formData;
+        const { error } = id ? await supabase.from('npcs').update(data).eq('id', id) : await supabase.from('npcs').insert([data]);
+        if (error) toast({ title: "Error", description: error.message, variant: "destructive" });
+        else {
+            toast({ title: "Success", description: "Operative profile updated." });
+            setShowForm(false);
+            setEditingNpc(null);
+            fetchNpcs();
+        }
+    };
+
+    const handleDelete = async (npc) => {
+        if (!confirm(`Confirm decommissioning of ${npc.name}? All mission data will be lost.`)) return;
+        if (npc.image_path) await supabase.storage.from('Items').remove([npc.image_path]);
+        await supabase.from('missions').delete().eq('npc_id', npc.id);
+        await supabase.from('npc_inventory').delete().eq('npc_id', npc.id);
+        const { error } = await supabase.from('npcs').delete().eq('id', npc.id);
+        if (error) toast({ title: "Error", description: error.message, variant: "destructive" });
+        else { toast({ title: "Deleted", description: "Subject removed from network." }); fetchNpcs(); }
+    };
+
+    return (
+        <div className="space-y-8">
+            <div className="flex justify-between items-center text-white">
+                <div className="space-y-1">
+                    <h2 className="text-2xl font-bold uppercase tracking-tight flex items-center gap-3">
+                        <Users className="text-red-600" />
+                        Network Operatives
+                    </h2>
+                    <p className="text-[10px] text-gray-500 uppercase tracking-widest font-medium">Manage field contacts and personnel</p>
+                </div>
+                <Button
+                    onClick={() => { setEditingNpc(null); setShowForm(true); }}
+                    className="bg-red-600 hover:bg-red-500 rounded-xl px-6 h-10 font-bold uppercase tracking-widest text-[10px]"
+                >
+                    <Plus className="w-4 h-4 mr-2" /> Enlist New Subject
+                </Button>
             </div>
 
-            {editingNpc && (
-                <div className="bg-white/5 border border-white/10 p-6 rounded-lg space-y-6">
-                    <h3 className="text-2xl font-bold text-white">{editingNpc.id ? 'Edit NPC' : 'New NPC'}</h3>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <Input placeholder="NPC Name" value={editingNpc.name} onChange={(e) => setEditingNpc({ ...editingNpc, name: e.target.value })} />
-                        <Input placeholder="Location" value={editingNpc.location} onChange={(e) => setEditingNpc({ ...editingNpc, location: e.target.value })} />
-                    </div>
-
-                    <div>
-                        <label className="block text-white mb-2">Image</label>
-                        <Input type="file" accept="image/*" onChange={handleImageUpload} />
-                        {editingNpc.image_url && <img src={editingNpc.image_url} alt="Preview" className="mt-2 w-32 h-32 object-cover rounded" />}
-                    </div>
-
-                    <div className="flex gap-2"><Button onClick={handleSaveNpc}><Save className="w-4 h-4 mr-2" />Save NPC</Button><Button variant="outline" onClick={() => setEditingNpc(null)}><X className="w-4 h-4 mr-2" />Cancel</Button></div>
-
-                    {editingNpc.id && (
-                        <>
-                            {/* Missions Section */}
-                            <div className="border-t border-white/10 pt-6">
-                                <div className="flex justify-between items-center mb-4"><h4 className="text-xl font-bold text-white">Missions</h4><Button size="sm" onClick={handleAddMission}><Plus className="w-4 h-4 mr-2" />Add Mission</Button></div>
-                                <div className="space-y-4">{missions.map(mission => (
-                                    <div key={mission.id} className="bg-black/20 p-4 rounded-lg space-y-3">
-                                        <Input placeholder="Mission Title" value={mission.title} onChange={(e) => setMissions(missions.map(m => m.id === mission.id ? { ...m, title: e.target.value } : m))} />
-                                        <select className={selectClass} value={mission.difficulty} onChange={(e) => setMissions(missions.map(m => m.id === mission.id ? { ...m, difficulty: e.target.value } : m))}>
-                                            <option value="Easy">Easy</option><option value="Medium">Medium</option><option value="Hard">Hard</option>
-                                        </select>
-                                        <textarea className="w-full bg-white/5 backdrop-blur-sm border border-white/10 p-2 rounded" rows={4} placeholder="Mission Content (HTML supported)" value={mission.content_html || mission.content || ''} onChange={(e) => setMissions(missions.map(m => m.id === mission.id ? { ...m, content_html: e.target.value, content: e.target.value } : m))} />
-                                        <div className="flex gap-2"><Button size="sm" onClick={() => handleUpdateMission(mission)}><Save className="w-4 h-4 mr-2" />Save</Button><Button size="sm" variant="destructive" onClick={() => handleDeleteMission(mission.id)}><Trash2 className="w-4 h-4 mr-2" />Delete</Button></div>
-                                    </div>
-                                ))}</div>
-                            </div>
-
-                            {/* Inventory Section */}
-                            <div className="border-t border-white/10 pt-6">
-                                <h4 className="text-xl font-bold text-white mb-4">Inventory (Items for Sale)</h4>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                                    {Object.entries(allItems).map(([type, items]) => (
-                                        <div key={type}>
-                                            <label className="text-white mb-2 block capitalize">{type}</label>
-                                            <select className={selectClass} onChange={(e) => { if (e.target.value) { handleAddInventoryItem(type, e.target.value); e.target.value = ''; } }}>
-                                                <option value="">Add {type.slice(0, -1)}...</option>
-                                                {items.map(item => (<option key={item.id} value={item.id}>{item.name} {item.subcategory ? `(${item.subcategory.name})` : item.type ? `(${item.type})` : ''}</option>))}
-                                            </select>
-                                        </div>
-                                    ))}
-                                </div>
-                                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                                    {inventory.map((invItem, idx) => {
-                                        const itemDetails = getInventoryItemDetails(invItem.item_type, invItem.item_id);
-                                        return (
-                                            <div key={idx} className="bg-black/20 p-2 rounded flex flex-col items-center text-center">
-                                                {itemDetails?.image_url && <img src={itemDetails.image_url} alt={itemDetails.name} className="w-16 h-16 object-contain mb-2" />}
-                                                <span className="text-white text-sm truncate w-full">{itemDetails?.name || invItem.item_id}</span>
-                                                <span className="text-gray-400 text-xs capitalize">{invItem.item_type.slice(0, -1)}</span>
-                                                <Button size="sm" variant="destructive" className="mt-2 w-full" onClick={() => handleRemoveInventoryItem(invItem.item_type, invItem.item_id)}><Trash2 className="w-4 h-4" /></Button>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            </div>
-                        </>
-                    )}
+            {showForm && (
+                <div className="animate-in fade-in slide-in-from-top-4 duration-500">
+                    <NpcForm
+                        item={editingNpc}
+                        onSave={handleSave}
+                        onCancel={() => { setShowForm(false); setEditingNpc(null); }}
+                    />
                 </div>
             )}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {npcs.map(npc => (
-                    <div key={npc.id} className="bg-white/5 p-4 rounded-lg">
-                        {npc.image_url && <img src={npc.image_url} alt={npc.name} className="w-full h-32 object-cover rounded mb-2" />}
-                        <h3 className="font-bold text-white">{npc.name}</h3>
-                        <p className="text-sm text-gray-400">{npc.location}</p>
-                        <div className="flex gap-2 mt-2">
-                            <Button size="icon" variant="outline" onClick={() => handleEdit(npc)}><Edit className="w-4 h-4" /></Button>
-                            <Button size="icon" variant="destructive" onClick={() => handleDelete(npc.id)}><Trash2 className="w-4 h-4" /></Button>
+            {loading ? (
+                <div className="flex justify-center py-20">
+                    <Loader2 className="animate-spin text-red-500 h-12 w-12" />
+                </div>
+            ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    {npcs.map((npc) => (
+                        <div key={npc.id} className="group relative bg-[#0a0a0c] border border-white/5 rounded-2xl overflow-hidden hover:border-red-500/30 transition-all duration-300">
+                            <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0c] via-transparent to-transparent z-10 opacity-80" />
+                            <div className="h-48 relative overflow-hidden bg-black/40">
+                                {npc.image_url ? (
+                                    <img src={npc.image_url} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                                ) : (
+                                    <div className="w-full h-full flex items-center justify-center opacity-10">
+                                        <Users className="w-16 h-16" />
+                                    </div>
+                                )}
+                            </div>
+                            <div className="p-5 relative z-20 -mt-10">
+                                <div className="space-y-1">
+                                    <h3 className="text-lg font-bold text-white tracking-wide group-hover:text-red-500 transition-colors">{npc.name}</h3>
+                                    <div className="flex items-center gap-2 text-[10px] text-gray-500 font-mono uppercase">
+                                        <MapPin className="w-3 h-3" /> {npc.location || 'Unknown Coordinates'}
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-2 mt-6">
+                                    <button
+                                        onClick={() => setMissionNpc(npc)}
+                                        className="flex flex-col items-center justify-center p-3 rounded-xl bg-white/5 border border-white/5 hover:border-red-500/30 hover:bg-white/10 transition-all gap-1"
+                                    >
+                                        <Briefcase className="w-4 h-4 text-gray-400 group-hover:text-red-400" />
+                                        <span className="text-[8px] font-bold text-gray-500 uppercase">Directives</span>
+                                    </button>
+                                    <button
+                                        onClick={() => setInventoryNpc(npc)}
+                                        className="flex flex-col items-center justify-center p-3 rounded-xl bg-white/5 border border-white/5 hover:border-red-500/30 hover:bg-white/10 transition-all gap-1"
+                                    >
+                                        <ShoppingBag className="w-4 h-4 text-gray-400 group-hover:text-red-400" />
+                                        <span className="text-[8px] font-bold text-gray-500 uppercase">Logistics</span>
+                                    </button>
+                                </div>
+
+                                <div className="flex items-center justify-end gap-2 mt-4 pt-4 border-t border-white/5">
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        onClick={() => { setEditingNpc(npc); setShowForm(true); }}
+                                        className="h-8 w-8 text-gray-500 hover:text-white"
+                                    >
+                                        <Edit className="w-4 h-4" />
+                                    </Button>
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        onClick={() => handleDelete(npc)}
+                                        className="h-8 w-8 text-gray-500 hover:text-red-500"
+                                    >
+                                        <Trash2 className="w-4 h-4" />
+                                    </Button>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                ))}
-            </div>
+                    ))}
+                </div>
+            )}
+
+            <ManageMissionsDialog npc={missionNpc} open={!!missionNpc} onOpenChange={(open) => !open && setMissionNpc(null)} onRefresh={fetchNpcs} />
+            <ManageInventoryDialog npc={inventoryNpc} open={!!inventoryNpc} onOpenChange={(open) => !open && setInventoryNpc(null)} onRefresh={fetchNpcs} />
         </div>
     );
 };

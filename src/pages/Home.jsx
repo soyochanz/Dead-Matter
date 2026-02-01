@@ -10,7 +10,7 @@ import UpdateCard from '@/components/UpdateCard';
 
 // Skeleton Components
 const SkeletonPulse = () => (
-  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.03] to-transparent animate-shimmer" style={{ backgroundSize: '200% 100%' }} />
+  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.015] to-transparent animate-shimmer" style={{ backgroundSize: '150% 100%' }} />
 );
 
 const SkeletonCard = ({ type = 'standard' }) => (

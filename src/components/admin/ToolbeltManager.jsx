@@ -1,142 +1,241 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/mySupabaseClient';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Loader2, Plus, Edit, Trash2, Save, X } from 'lucide-react';
+import { Loader2, Plus, Edit, Trash2, Package, Info, Tag, Layers, Sliders, Image as ImageIcon, Weight } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
-import { CustomStatManager } from '@/components/admin/CustomStatManager';
+import { FormContainer, FormSection, FormInput, FormSelect, FormTextarea, FormFileUpload } from './AdminUIComponents';
+import { AdminItemCard } from './AdminItemCard';
+import CustomStatManager from './CustomStatManager';
+
+const ToolbeltForm = ({ item, onSave, onCancel, rarities }) => {
+    const [formData, setFormData] = useState({
+        name: '', description: '', price: 0, sell_price: 0,
+        weight: 0, size: '', storage_capacity: 0, use_function: '',
+        rarity_id: null, image_url: '', image_path: '', stats: {}
+    });
+    const [uploading, setUploading] = useState(false);
+    const { toast } = useToast();
+
+    useEffect(() => {
+        if (item) setFormData({ ...formData, ...item, stats: item.stats || {} });
+    }, [item]);
+
+    const handleChange = (e) => {
+        const { name, value, type } = e.target;
+        setFormData(prev => ({ ...prev, [name]: type === 'number' ? parseFloat(value) || 0 : value }));
+    };
+
+    const handleFileChange = async (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+        setUploading(true);
+        const fileName = `${Date.now()}_${file.name}`;
+        const filePath = `toolbelts/${fileName}`;
+        const { error } = await supabase.storage.from('Items').upload(filePath, file);
+        if (error) {
+            toast({ title: "Upload Error", description: error.message, variant: "destructive" });
+        } else {
+            const { data: { publicUrl } } = supabase.storage.from('Items').getPublicUrl(filePath);
+            setFormData(prev => ({ ...prev, image_url: publicUrl, image_path: filePath }));
+        }
+        setUploading(false);
+    };
+
+    return (
+        <FormContainer
+            title={item?.id ? `Calibrating Loadout: ${formData.name}` : 'Initializing Toolbelt Prototype'}
+            onSave={() => onSave(formData)}
+            onCancel={onCancel}
+            isSaving={uploading}
+        >
+            <FormSection title="Rig Logistics" icon={Info}>
+                <FormInput
+                    label="Module Designation"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder="Toolbelt name..."
+                />
+                <FormSelect
+                    label="Integrity Grade"
+                    name="rarity_id"
+                    value={formData.rarity_id || ''}
+                    onChange={handleChange}
+                >
+                    <option value="">Select Rarity</option>
+                    {rarities.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
+                </FormSelect>
+                <FormFileUpload
+                    label="Neural Visual Asset"
+                    onChange={handleFileChange}
+                    previewUrl={formData.image_url}
+                    fileName={formData.image_path?.split('/').pop()}
+                    icon={ImageIcon}
+                />
+            </FormSection>
+
+            <FormSection title="Technical Specs" icon={Sliders} columns={2}>
+                <FormInput
+                    label="Mass (KG)"
+                    name="weight"
+                    type="number"
+                    value={formData.weight}
+                    onChange={handleChange}
+                />
+                <FormInput
+                    label="Storage Capacity (Units)"
+                    name="storage_capacity"
+                    type="number"
+                    value={formData.storage_capacity}
+                    onChange={handleChange}
+                />
+                <FormInput
+                    label="Form Factor (Size)"
+                    name="size"
+                    value={formData.size}
+                    onChange={handleChange}
+                    placeholder="e.g. 2x2"
+                />
+                <FormInput
+                    label="Operational Utility"
+                    name="use_function"
+                    value={formData.use_function}
+                    onChange={handleChange}
+                    placeholder="Primary function..."
+                />
+            </FormSection>
+
+            <FormSection title="Economic Valuation" icon={Layers} columns={2}>
+                <FormInput
+                    label="Acquisition Value"
+                    name="price"
+                    type="number"
+                    value={formData.price}
+                    onChange={handleChange}
+                />
+                <FormInput
+                    label="Recycle Recovery"
+                    name="sell_price"
+                    type="number"
+                    value={formData.sell_price}
+                    onChange={handleChange}
+                />
+            </FormSection>
+
+            <FormSection title="Field Profile" icon={Tag} columns={1}>
+                <FormTextarea
+                    label="Deployment Narrative"
+                    name="description"
+                    value={formData.description}
+                    onChange={handleChange}
+                    placeholder="Technical description and field notes..."
+                />
+            </FormSection>
+
+            <div className="pt-8 border-t border-white/5">
+                <CustomStatManager
+                    stats={formData.stats}
+                    setStats={stats => setFormData(prev => ({ ...prev, stats }))}
+                />
+            </div>
+        </FormContainer>
+    );
+};
 
 const ToolbeltManager = ({ sharedMetadata }) => {
     const [toolbelts, setToolbelts] = useState([]);
     const [editingItem, setEditingItem] = useState(null);
+    const [showForm, setShowForm] = useState(false);
     const [loading, setLoading] = useState(true);
     const [rarities, setRarities] = useState([]);
     const { toast } = useToast();
 
-    useEffect(() => {
-        fetchData();
-        if (sharedMetadata?.rarities) setRarities(sharedMetadata.rarities);
-    }, [sharedMetadata]);
-
-    const fetchData = async () => {
+    const fetchToolbelts = useCallback(async () => {
         setLoading(true);
         const { data, error } = await supabase.from('toolbelts').select('*, rarity:rarities(name, color)').order('name');
         if (error) toast({ title: "Error", description: error.message, variant: "destructive" });
-        else setToolbelts(data);
+        else setToolbelts(data || []);
+
+        if (sharedMetadata?.rarities) setRarities(sharedMetadata.rarities);
+        else {
+            const { data: raritiesData } = await supabase.from('rarities').select('*');
+            setRarities(raritiesData || []);
+        }
         setLoading(false);
-    };
+    }, [toast, sharedMetadata]);
 
+    useEffect(() => { fetchToolbelts(); }, [fetchToolbelts]);
 
+    const handleSave = async (formData) => {
+        const { id, rarity, ...data } = formData;
+        const { error } = id
+            ? await supabase.from('toolbelts').update(data).eq('id', id)
+            : await supabase.from('toolbelts').insert([data]);
 
-    const handleSave = async () => {
-        const itemData = { ...editingItem };
-        delete itemData.rarity;
-
-        let error;
-        if (itemData.id) {
-            ({ error } = await supabase.from('toolbelts').update(itemData).eq('id', itemData.id));
-        } else {
-            ({ error } = await supabase.from('toolbelts').insert([itemData]));
-        }
-
-        if (error) {
-            toast({ title: "Error saving toolbelt", description: error.message, variant: "destructive" });
-        } else {
-            toast({ title: "Toolbelt saved successfully" });
+        if (error) toast({ title: "Submission Error", description: error.message, variant: "destructive" });
+        else {
+            toast({ title: "Synchronized", description: `Loadout ${id ? 'recalibrated' : 'registered'}.` });
+            setShowForm(false);
             setEditingItem(null);
-            fetchData();
+            fetchToolbelts();
         }
     };
 
-    const handleDelete = async (id) => {
-        const { error } = await supabase.from('toolbelts').delete().eq('id', id);
-        if (error) {
-            toast({ title: "Error deleting toolbelt", description: error.message, variant: "destructive" });
-        } else {
-            toast({ title: "Toolbelt deleted" });
-            fetchData();
-        }
+    const handleDelete = async (item) => {
+        if (!confirm(`Purge toolbelt module: ${item.name}?`)) return;
+        if (item.image_path) await supabase.storage.from('Items').remove([item.image_path]);
+        const { error } = await supabase.from('toolbelts').delete().eq('id', item.id);
+        if (error) toast({ title: "Purge Failed", description: error.message, variant: "destructive" });
+        else { toast({ title: "Success", description: "Module removed from inventory." }); fetchToolbelts(); }
     };
-
-    const handleImageUpload = async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-
-        const fileExt = file.name.split('.').pop();
-        const fileName = `${Math.random()}.${fileExt}`;
-        const filePath = `toolbelts/${fileName}`;
-
-        const { error: uploadError } = await supabase.storage.from('Items').upload(filePath, file);
-
-        if (uploadError) {
-            toast({ title: "Error uploading image", description: uploadError.message, variant: "destructive" });
-            return;
-        }
-
-        const { data } = supabase.storage.from('Items').getPublicUrl(filePath);
-        setEditingItem({ ...editingItem, image_url: data.publicUrl, image_path: filePath });
-    };
-
-    const renderForm = () => (
-        <div className="bg-slate-900 p-6 rounded-lg space-y-6 my-4">
-            <h3 className="text-2xl font-bold text-white">{editingItem.id ? 'Edit Toolbelt' : 'Add New Toolbelt'}</h3>
-            <Input placeholder="Name" value={editingItem.name || ''} onChange={(e) => setEditingItem({ ...editingItem, name: e.target.value })} />
-            <textarea placeholder="Description" value={editingItem.description || ''} onChange={(e) => setEditingItem({ ...editingItem, description: e.target.value })} className="w-full bg-slate-800 p-2 rounded" />
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <Input type="number" placeholder="Buy Price" value={editingItem.price || ''} onChange={(e) => setEditingItem({ ...editingItem, price: parseInt(e.target.value) || null })} />
-                <Input type="number" placeholder="Sell Price" value={editingItem.sell_price || ''} onChange={(e) => setEditingItem({ ...editingItem, sell_price: parseInt(e.target.value) || null })} />
-                <Input type="number" placeholder="Weight (kg)" value={editingItem.weight || ''} onChange={(e) => setEditingItem({ ...editingItem, weight: parseFloat(e.target.value) || null })} />
-                <Input placeholder="Size" value={editingItem.size || ''} onChange={(e) => setEditingItem({ ...editingItem, size: e.target.value })} />
-                <Input type="number" placeholder="Storage Capacity" value={editingItem.storage_capacity || ''} onChange={(e) => setEditingItem({ ...editingItem, storage_capacity: parseInt(e.target.value) || null })} />
-                <Input placeholder="Use Function" value={editingItem.use_function || ''} onChange={(e) => setEditingItem({ ...editingItem, use_function: e.target.value })} />
-                <select value={editingItem.rarity_id || ''} onChange={(e) => setEditingItem({ ...editingItem, rarity_id: e.target.value })} className="bg-slate-800 p-2 rounded">
-                    <option value="">Select Rarity</option>
-                    {rarities.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
-                </select>
-            </div>
-
-            <div className="flex items-center gap-4">
-                <Input type="file" accept="image/*" onChange={handleImageUpload} className="bg-slate-800 flex-grow" />
-                {editingItem.image_url && <img src={editingItem.image_url} alt="preview" className="w-20 h-20 object-contain rounded bg-slate-700" />}
-            </div>
-
-            <div className="border-t border-slate-700 pt-4 mt-4">
-                <CustomStatManager stats={editingItem.stats} setStats={stats => setEditingItem({ ...editingItem, stats })} />
-            </div>
-
-            <div className="flex gap-4">
-                <Button onClick={handleSave}><Save className="w-4 h-4 mr-2" />Save</Button>
-                <Button variant="outline" onClick={() => setEditingItem(null)}><X className="w-4 h-4 mr-2" />Cancel</Button>
-            </div>
-        </div>
-    );
 
     return (
-        <div>
-            <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold text-white">Manage Toolbelts</h2>
-                <Button onClick={() => setEditingItem({})}><Plus className="w-4 h-4 mr-2" />Add Toolbelt</Button>
+        <div className="space-y-8 animate-in fade-in duration-500">
+            <div className="flex justify-between items-center text-white">
+                <div className="space-y-1">
+                    <h2 className="text-2xl font-bold uppercase tracking-tight flex items-center gap-3">
+                        <Layers className="text-red-600" />
+                        Auxiliary Tactical Rigs
+                    </h2>
+                    <p className="text-[10px] text-gray-500 uppercase tracking-widest font-medium">Manage utility belts and modular carry systems</p>
+                </div>
+                <Button
+                    onClick={() => { setEditingItem(null); setShowForm(true); }}
+                    className="bg-red-600 hover:bg-red-500 rounded-xl px-6 h-10 font-bold uppercase tracking-widest text-[10px]"
+                >
+                    <Plus className="w-4 h-4 mr-2" /> Register Carry System
+                </Button>
             </div>
 
-            {loading && <Loader2 className="animate-spin" />}
-            {editingItem && renderForm()}
+            {showForm && (
+                <div className="animate-in fade-in slide-in-from-top-4 duration-500">
+                    <ToolbeltForm
+                        item={editingItem}
+                        onSave={handleSave}
+                        onCancel={() => { setShowForm(false); setEditingItem(null); }}
+                        rarities={rarities}
+                    />
+                </div>
+            )}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {toolbelts.map(item => (
-                    <div key={item.id} className="bg-slate-800 rounded-lg p-4 flex flex-col justify-between">
-                        <div>
-                            {item.image_url && <img src={item.image_url} alt={item.name} className="w-full h-32 object-contain rounded-md bg-slate-700 mb-2" />}
-                            <h3 className="font-bold text-white">{item.name}</h3>
-                            <p className="text-sm" style={{ color: item.rarity?.color }}>{item.rarity?.name}</p>
-                        </div>
-                        <div className="flex gap-2 mt-4">
-                            <Button size="icon" variant="outline" onClick={() => setEditingItem(item)}><Edit className="w-4 h-4" /></Button>
-                            <Button size="icon" variant="destructive" onClick={() => handleDelete(item.id)}><Trash2 className="w-4 h-4" /></Button>
-                        </div>
-                    </div>
-                ))}
-            </div>
+            {loading ? (
+                <div className="flex justify-center py-20">
+                    <Loader2 className="animate-spin text-red-500 h-12 w-12" />
+                </div>
+            ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+                    {toolbelts.map((item, idx) => (
+                        <AdminItemCard
+                            key={item.id}
+                            item={item}
+                            type="toolbelt"
+                            index={idx}
+                            onEdit={(it) => { setEditingItem(it); setShowForm(true); }}
+                            onDelete={handleDelete}
+                        />
+                    ))}
+                </div>
+            )}
         </div>
     );
 };

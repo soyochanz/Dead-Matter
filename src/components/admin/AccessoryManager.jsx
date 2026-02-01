@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { supabase } from '@/lib/mySupabaseClient';
 import { Button } from '@/components/ui/button';
+import { useToast } from '@/components/ui/use-toast';
 import { AdminItemCard } from './AdminItemCard';
 import { FormContainer, FormSection, FormInput, FormSelect, FormTextarea, FormFileUpload } from './AdminUIComponents';
-import { Info, Tag, Sliders, DollarSign, Image as ImageIcon } from 'lucide-react';
+import { Info, Tag, Sliders, DollarSign, Image as ImageIcon, Plus, Loader2 } from 'lucide-react';
 
 const accessoryTypes = ['Sights', 'Muzzle', 'Grip', 'Magazine', 'Stock', 'Other'];
 
