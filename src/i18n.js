@@ -16,13 +16,14 @@ i18n
             es: { translation: es },
             pt: { translation: pt }
         },
+        lng: 'en', // Force English as initial language
         fallbackLng: 'en',
         debug: false,
         interpolation: {
             escapeValue: false // not needed for react as it escapes by default
         },
         detection: {
-            order: ['localStorage', 'navigator'],
+            order: ['localStorage'], // Only look at localStorage for persistence
             caches: ['localStorage']
         }
     });

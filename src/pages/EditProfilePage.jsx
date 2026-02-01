@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/components/ui/use-toast';
-import { Loader2, UserCog, Camera, Mail, User, Shield, ArrowLeft, Check, AlertCircle, ShieldCheck, X } from 'lucide-react';
+import { Loader2, UserCog, Camera, Mail, User, Shield, ArrowLeft, Check, AlertCircle, ShieldCheck, X, Languages } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useNavigate } from 'react-router-dom';
 
@@ -324,6 +324,7 @@ const EditProfilePage = () => {
   const navigate = useNavigate();
 
   const [username, setUsername] = useState('');
+  const [language, setLanguage] = useState('en');
   const [avatarFile, setAvatarFile] = useState(null);
   const [avatarPreview, setAvatarPreview] = useState('');
   const [loading, setLoading] = useState(false);
@@ -335,6 +336,7 @@ const EditProfilePage = () => {
   useEffect(() => {
     if (profile) {
       setUsername(profile.username || '');
+      setLanguage(profile.language || 'en');
       setAvatarPreview(profile.avatar_url || '');
     }
   }, [profile]);
@@ -509,6 +511,7 @@ const EditProfilePage = () => {
         .from('profiles')
         .update({
           username,
+          language,
           avatar_url,
           avatar_path: newAvatarPath || profile.avatar_path,
           updated_at: new Date().toISOString(),
@@ -699,6 +702,27 @@ const EditProfilePage = () => {
                     />
                   </div>
                   <p className="text-[10px] text-gray-600">Visible to other operatives in the network.</p>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="language" className="text-xs font-bold text-gray-400 uppercase tracking-wider">Interface Language</Label>
+                  <div className="relative">
+                    <Languages className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-600" />
+                    <select
+                      id="language"
+                      value={language}
+                      onChange={(e) => setLanguage(e.target.value)}
+                      className="w-full pl-10 pr-4 bg-white/[0.02] border border-white/10 text-white rounded-md focus:bg-white/5 focus:ring-1 focus:ring-red-500/50 transition-all h-11 appearance-none cursor-pointer"
+                    >
+                      <option value="en" className="bg-[#1a1a1e] text-white">English (Default)</option>
+                      <option value="es" className="bg-[#1a1a1e] text-white">Español</option>
+                      <option value="pt" className="bg-[#1a1a1e] text-white">Português</option>
+                    </select>
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-600">
+                      <ArrowLeft className="h-4 w-4 rotate-[-90deg]" />
+                    </div>
+                  </div>
+                  <p className="text-[10px] text-gray-600">Choose your preferred language for the network interface.</p>
                 </div>
 
                 <div className="space-y-2">

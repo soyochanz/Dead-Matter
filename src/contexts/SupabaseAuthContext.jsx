@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import { supabase } from '@/lib/mySupabaseClient';
 import { useToast } from '@/components/ui/use-toast';
+import i18n from '@/i18n';
 
 const AuthContext = createContext(undefined);
 
@@ -37,6 +38,11 @@ export const AuthProvider = ({ children }) => {
       }
 
       if (isMounted.current) {
+        // Apply language preference if available
+        if (data?.language) {
+          i18n.changeLanguage(data.language);
+        }
+
         // Deep compare to prevent unnecessary re-renders
         if (JSON.stringify(data) !== JSON.stringify(profile)) {
           setProfile(data);
