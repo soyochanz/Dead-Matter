@@ -13,8 +13,8 @@ const BasebuildingCard = ({ item, index, onClick, showDeployed }) => {
     const Icon = item.subcategory?.name?.toLowerCase().includes('storage') ? Box : Tent;
 
     // Deployed image logic
-    const hasPackedVariant = !!item.packed_image_url;
-    const currentImage = (showDeployed && hasPackedVariant) ? item.image_url : (item.packed_image_url || item.image_url);
+    const hasPackedVariant = !!item.image_unpacked_url;
+    const currentImage = (showDeployed && hasPackedVariant) ? item.image_unpacked_url : (item.image_url || item.image_unpacked_url);
 
     return (
         <motion.div

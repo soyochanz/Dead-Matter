@@ -85,7 +85,7 @@ export const FormSection = ({ title, icon: Icon, children, columns = 2 }) => (
 /**
  * Styled input field with label.
  */
-export const FormInput = ({ label, type = 'text', placeholder, value, onChange, className = "" }) => (
+export const FormInput = ({ label, type = 'text', placeholder, value, name, onChange, className = "" }) => (
     <div className={`space-y-2 ${className}`}>
         {label && <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-1">{label}</label>}
         <div className="relative group">
@@ -93,6 +93,7 @@ export const FormInput = ({ label, type = 'text', placeholder, value, onChange, 
                 type={type}
                 placeholder={placeholder}
                 value={value || ''}
+                name={name}
                 onChange={onChange}
                 className="bg-white/5 border-white/5 focus:border-red-500/50 focus:ring-red-500/20 rounded-xl h-12 font-medium text-white placeholder:text-gray-600 transition-all group-hover:bg-white/10"
             />
@@ -104,11 +105,12 @@ export const FormInput = ({ label, type = 'text', placeholder, value, onChange, 
 /**
  * Styled select field.
  */
-export const FormSelect = ({ label, value, onChange, children, className = "" }) => (
+export const FormSelect = ({ label, value, name, onChange, children, className = "" }) => (
     <div className={`space-y-2 ${className}`}>
         {label && <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-1">{label}</label>}
         <select
             value={value || ''}
+            name={name}
             onChange={onChange}
             className="w-full bg-white/5 border border-white/5 focus:border-red-500/50 focus:ring-1 focus:ring-red-500/20 rounded-xl h-12 px-4 font-medium text-white transition-all hover:bg-white/10 cursor-pointer appearance-none"
         >
@@ -120,12 +122,13 @@ export const FormSelect = ({ label, value, onChange, children, className = "" })
 /**
  * Styled textarea field.
  */
-export const FormTextarea = ({ label, placeholder, value, onChange, className = "" }) => (
+export const FormTextarea = ({ label, placeholder, value, name, onChange, className = "" }) => (
     <div className={`space-y-2 ${className}`}>
         {label && <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-1">{label}</label>}
         <textarea
             placeholder={placeholder}
             value={value || ''}
+            name={name}
             onChange={onChange}
             className="w-full bg-white/5 border border-white/5 focus:border-red-500/50 focus:ring-1 focus:ring-red-500/20 rounded-xl min-h-[120px] p-4 font-medium text-white placeholder:text-gray-600 transition-all hover:bg-white/10 custom-scrollbar"
         />
@@ -135,26 +138,39 @@ export const FormTextarea = ({ label, placeholder, value, onChange, className = 
 /**
  * Component for image/file uploads with preview.
  */
-export const FormFileUpload = ({ label, accept, onChange, previewUrl, fileName, icon: Icon = Upload }) => (
+export const FormFileUpload = ({ label, accept, onChange, onClear, previewUrl, fileName, icon: Icon = Upload }) => (
     <div className="space-y-2">
         {label && <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-1">{label}</label>}
         <div className="flex items-center gap-4">
             <label className="flex-grow group cursor-pointer">
                 <div className="h-12 border border-dashed border-white/10 rounded-xl flex items-center justify-center gap-3 bg-white/5 group-hover:bg-white/10 group-hover:border-red-500/30 transition-all">
                     <Icon className="w-4 h-4 text-gray-500 group-hover:text-red-500 transition-colors" />
-                    <span className="text-[10px] font-black uppercase tracking-widest text-gray-400 group-hover:text-white transition-colors">
-                        {fileName ? fileName : 'Choose File'}
+                    <span className="text-[10px] font-black uppercase tracking-widest text-gray-400 group-hover:text-white transition-colors truncate px-4">
+                        {previewUrl ? 'Image Selected' : (fileName ? fileName : 'Choose File')}
                     </span>
                     <input type="file" accept={accept} onChange={onChange} className="hidden" />
                 </div>
             </label>
 
             {previewUrl && (
-                <div className="w-12 h-12 rounded-xl bg-black/40 border border-white/10 flex items-center justify-center p-1 overflow-hidden group/preview relative">
-                    <img src={previewUrl} alt="preview" className="max-w-full max-h-full object-contain" />
-                    <div className="absolute inset-0 bg-black/80 opacity-0 group-hover/preview:opacity-100 transition-opacity flex items-center justify-center">
-                        <ImageIcon className="w-4 h-4 text-white" />
+                <div className="flex items-center gap-2">
+                    <div className="w-12 h-12 rounded-xl bg-black/40 border border-white/10 flex items-center justify-center p-1 overflow-hidden group/preview relative">
+                        <img src={previewUrl} alt="preview" className="max-w-full max-h-full object-contain" />
+                        <div className="absolute inset-0 bg-black/80 opacity-0 group-hover/preview:opacity-100 transition-opacity flex items-center justify-center">
+                            <ImageIcon className="w-4 h-4 text-white" />
+                        </div>
                     </div>
+                    {onClear && (
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            onClick={onClear}
+                            className="h-12 w-12 rounded-xl bg-red-500/5 border border-white/5 text-red-500 hover:bg-red-500/20 hover:text-red-400 transition-all"
+                        >
+                            <X size={16} />
+                        </Button>
+                    )}
                 </div>
             )}
         </div>

@@ -73,7 +73,20 @@ const RequirementsManager = ({ requirements, setRequirements }) => {
 };
 
 const BasebuildingForm = ({ item, onSave, onCancel, rarities }) => {
-    const [formData, setFormData] = useState({ category: CATEGORIES[0], name: '', description: '', price: 0, sell_price: 0, weight: 0, health: 100 });
+    const [formData, setFormData] = useState({
+        name: '',
+        category: CATEGORIES[0],
+        description: '',
+        price: 0,
+        sell_price: 0,
+        weight: 0,
+        health: 100,
+        use: '',
+        slots: 0,
+        rarity_id: '',
+        image_url: '',
+        image_unpacked_url: ''
+    });
     const [requirements, setRequirements] = useState([]);
     const [uploading, setUploading] = useState(false);
     const { toast } = useToast();
@@ -88,7 +101,7 @@ const BasebuildingForm = ({ item, onSave, onCancel, rarities }) => {
     const isCraftable = !["Items", "Tents"].includes(formData.category);
     const isStorage = formData.category === "Storage";
     const isItems = formData.category === "Items";
-    const isTent = formData.category === "Tents";
+    const isTent = formData.category === "Tents" || item?.subcategory?.name?.toLowerCase().includes('tent');
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -160,6 +173,7 @@ const BasebuildingForm = ({ item, onSave, onCancel, rarities }) => {
                     <FormFileUpload
                         label="Structural Blueprint (Packed)"
                         onChange={(e) => handleFileChange(e, 'image_url', 'image_path')}
+                        onClear={() => setFormData(prev => ({ ...prev, image_url: '', image_path: '' }))}
                         previewUrl={formData.image_url}
                         fileName={formData.image_path?.split('/').pop()}
                         icon={ImageIcon}
@@ -168,6 +182,7 @@ const BasebuildingForm = ({ item, onSave, onCancel, rarities }) => {
                         <FormFileUpload
                             label="Blueprint (Deployed)"
                             onChange={(e) => handleFileChange(e, 'image_unpacked_url', 'image_unpacked_path')}
+                            onClear={() => setFormData(prev => ({ ...prev, image_unpacked_url: '', image_unpacked_path: '' }))}
                             previewUrl={formData.image_unpacked_url}
                             fileName={formData.image_unpacked_path?.split('/').pop()}
                             icon={ImageIcon}

@@ -99,12 +99,16 @@ const ManageAttachmentsDialog = ({ weapon, onOpenChange, open }) => {
                                                         }`}>
                                                         <span className={`text-[10px] font-bold uppercase tracking-wider transition-colors ${linked ? 'text-emerald-400' : 'text-gray-400 group-hover:text-white'}`}>{acc.name}</span>
                                                         <Button
+                                                            type="button"
                                                             size="sm"
                                                             variant="ghost"
-                                                            onClick={() => linked ? handleUnlink(acc.id, slotType) : handleLink(acc.id, slotType)}
+                                                            onClick={(e) => {
+                                                                e.preventDefault();
+                                                                linked ? handleUnlink(acc.id, slotType) : handleLink(acc.id, slotType);
+                                                            }}
                                                             className={`h-8 px-4 rounded-lg font-black uppercase tracking-widest text-[8px] transition-all ${linked
-                                                                    ? 'bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/20'
-                                                                    : 'bg-white/5 text-gray-500 hover:text-white hover:bg-white/10'
+                                                                ? 'bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/20'
+                                                                : 'bg-white/5 text-gray-500 hover:text-white hover:bg-white/10'
                                                                 }`}
                                                         >
                                                             {linked ? 'Linked' : 'Link'}

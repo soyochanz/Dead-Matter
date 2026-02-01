@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Hammer, Tent, TrendingUp, Box, Info, Lock, Store, Activity, DollarSign } from 'lucide-react';
+import { X, Hammer, Tent, TrendingUp, Box, Info, Lock, Store, Activity, DollarSign, Package } from 'lucide-react';
 import { supabase } from '@/lib/mySupabaseClient';
 import NpcSellersModal from '@/components/wiki/NpcSellersModal';
 // Tooltip imports removed
@@ -109,10 +109,10 @@ const BasebuildingDetailModal = ({ item, onClose, onNpcSelect }) => {
     const rarityColor = item.rarity?.color || '#9ca3af';
 
     // Image logic for tents
-    // item.image_url = DEPLOYED
-    // item.packed_image_url = FOLDED/PACKED
-    const displayImage = isPacked && item.packed_image_url ? item.packed_image_url : item.image_url;
-    const hasPackedVariant = !!item.packed_image_url;
+    // item.image_url = FOLDED/PACKED
+    // item.image_unpacked_url = DEPLOYED
+    const displayImage = isPacked && item.image_url ? item.image_url : (item.image_unpacked_url || item.image_url);
+    const hasPackedVariant = !!item.image_unpacked_url;
 
     return (
         <AnimatePresence>
@@ -180,34 +180,50 @@ const BasebuildingDetailModal = ({ item, onClose, onNpcSelect }) => {
                             <div className="space-y-6">
                                 <div className="relative aspect-square rounded-xl bg-black/40 border border-white/10 flex items-center justify-center p-8 overflow-hidden group">
                                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.03),transparent)]" />
-                                    {displayImage ?
-                                        <motion.img
-                                            key={displayImage}
-                                            initial={{ scale: 0.9, opacity: 0 }}
-                                            animate={{ scale: 1, opacity: 1 }}
-                                            src={displayImage}
-                                            alt={item.name}
-                                            className="max-h-full max-w-full object-contain drop-shadow-2xl relative z-10"
-                                        /> :
-                                        <div className="relative z-10 p-8 rounded-full bg-white/5">
-                                            <Box className="w-16 h-16 text-gray-600" />
-                                        </div>
-                                    }
+                                    <AnimatePresence mode="wait">
+                                        {displayImage ?
+                                            <motion.img
+                                                key={displayImage}
+                                                initial={{ scale: 0.8, opacity: 0, rotate: -5 }}
+                                                animate={{ scale: 1, opacity: 1, rotate: 0 }}
+                                                exit={{ scale: 1.1, opacity: 0, rotate: 5 }}
+                                                transition={{ duration: 0.3, ease: "easeOut" }}
+                                                src={displayImage}
+                                                alt={item.name}
+                                                className="max-h-full max-w-full object-contain drop-shadow-2xl relative z-10"
+                                            /> :
+                                            <motion.div
+                                                key="placeholder"
+                                                initial={{ opacity: 0 }}
+                                                animate={{ opacity: 1 }}
+                                                exit={{ opacity: 0 }}
+                                                className="relative z-10 p-8 rounded-full bg-white/5"
+                                            >
+                                                <Box className="w-16 h-16 text-gray-600" />
+                                            </motion.div>
+                                        }
+                                    </AnimatePresence>
                                     {/* Tents Toggle */}
                                     {hasPackedVariant && (
                                         <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-20">
-                                            <button
+                                            <motion.button
+                                                whileHover={{ scale: 1.05 }}
+                                                whileTap={{ scale: 0.95 }}
                                                 onClick={() => setIsPacked(false)}
-                                                className={`px-3 py-1 text-xs font-bold rounded-full transition-all border ${!isPacked ? 'bg-red-600 text-white border-red-600 shadow-[0_0_15px_rgba(220,38,38,0.3)]' : 'bg-black/50 text-gray-400 border-white/10 hover:bg-black/70'}`}
+                                                className={`flex items-center gap-2 px-4 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-full transition-all border ${!isPacked ? 'bg-red-600 text-white border-red-600 shadow-[0_0_20px_rgba(220,38,38,0.4)]' : 'bg-black/60 text-gray-400 border-white/10 hover:bg-black/80 hover:text-white'}`}
                                             >
-                                                DESPLEGADA
-                                            </button>
-                                            <button
+                                                <Tent size={12} className={!isPacked ? 'animate-pulse' : ''} />
+                                                Deployed
+                                            </motion.button>
+                                            <motion.button
+                                                whileHover={{ scale: 1.05 }}
+                                                whileTap={{ scale: 0.95 }}
                                                 onClick={() => setIsPacked(true)}
-                                                className={`px-3 py-1 text-xs font-bold rounded-full transition-all border ${isPacked ? 'bg-white text-black border-white shadow-[0_0_15px_rgba(255,255,255,0.1)]' : 'bg-black/50 text-gray-400 border-white/10 hover:bg-black/70'}`}
+                                                className={`flex items-center gap-2 px-4 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-full transition-all border ${isPacked ? 'bg-white text-black border-white shadow-[0_0_20px_rgba(255,255,255,0.15)]' : 'bg-black/60 text-gray-400 border-white/10 hover:bg-black/80 hover:text-white'}`}
                                             >
-                                                PLEGADA
-                                            </button>
+                                                <Package size={12} className={isPacked ? 'animate-pulse' : ''} />
+                                                Packed
+                                            </motion.button>
                                         </div>
                                     )}
                                 </div>
