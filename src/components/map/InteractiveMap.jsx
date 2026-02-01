@@ -195,10 +195,10 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
 
     // --- ICON HELPER FUNCTIONS (Moved to component scope for access in Mission Loop) ---
     // Helper 4: Minor Resource Style (Small Circle with Icon)
-    const createMinorResourceIcon = (content, color, size = 18) => {
+    const createMinorResourceIcon = (content, color, size = 10) => {
         return L.divIcon({
-            html: `<div style="background-color: ${color}; width: ${size}px; height: ${size}px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.5);">
-                <div style="width: 10px; height: 10px; color: white;">${content}</div>
+            html: `<div style="background-color: ${color}; width: ${size}px; height: ${size}px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.2px solid white; box-shadow: 0 1px 2px rgba(0,0,0,0.5);">
+                <div style="width: 7px; height: 7px; color: white;">${content}</div>
             </div>`,
             className: 'minor-resource-marker',
             iconSize: [size, size],
@@ -207,10 +207,10 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
     };
 
     // Helper 3: Small Circular Icon (Water, Keys)
-    const createCircleIcon = (content, color, size = 24) => {
+    const createCircleIcon = (content, color, size = 15) => {
         return L.divIcon({
-            html: `<div style="background-color: ${color}; width: ${size}px; height: ${size}px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">
-                <div style="width: 14px; height: 14px; color: white;">${content}</div>
+            html: `<div style="background-color: ${color}; width: ${size}px; height: ${size}px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.3);">
+                <div style="width: 9px; height: 9px; color: white;">${content}</div>
             </div>`,
             className: 'circle-marker',
             iconSize: [size, size],
@@ -222,36 +222,36 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
     const createPinIcon = (content, color, locked = false, hasWater = false) => {
         const badges = [];
         if (locked) {
-            badges.push(`<div style="position: absolute; top: -5px; right: -5px; width: 15px; height: 15px; background: #fbbf24; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid #1a1a1a; box-shadow: 0 2px 4px rgba(0,0,0,0.5); z-index: 10; color: #1a1a1a;">
-                <svg viewBox="0 0 24 24" fill="currentColor" style="width: 10px; height: 10px;"><path d="M21 10h-8.35C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H13v2h2v-2h2v2h2v-2h2v-4zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
+            badges.push(`<div style="position: absolute; top: -3px; right: -3px; width: 10px; height: 10px; background: #fbbf24; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid #1a1a1a; box-shadow: 0 1px 3px rgba(0,0,0,0.5); z-index: 10; color: #1a1a1a;">
+                <svg viewBox="0 0 24 24" fill="currentColor" style="width: 6px; height: 6px;"><path d="M21 10h-8.35C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H13v2h2v-2h2v2h2v-2h2v-4zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
             </div>`);
         }
         if (hasWater) {
-            badges.push(`<div style="position: absolute; top: -5px; left: -5px; width: 15px; height: 15px; background: #0369a1; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid #1a1a1a; box-shadow: 0 2px 4px rgba(0,0,0,0.5); z-index: 10; color: white;">
-                <svg viewBox="0 0 24 24" fill="currentColor" style="width: 10px; height: 10px;"><path d="M12 2c-5.33 4.55-8 8.48-8 11.8 0 4.98 3.8 8.2 8 8.2s8-3.22 8-8.2c0-3.32-2.67-7.25-8-11.8z"/></svg>
+            badges.push(`<div style="position: absolute; top: -3px; left: -3px; width: 10px; height: 10px; background: #0369a1; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid #1a1a1a; box-shadow: 0 1px 3px rgba(0,0,0,0.5); z-index: 10; color: white;">
+                <svg viewBox="0 0 24 24" fill="currentColor" style="width: 6px; height: 6px;"><path d="M12 2c-5.33 4.55-8 8.48-8 11.8 0 4.98 3.8 8.2 8 8.2s8-3.22 8-8.2c0-3.32-2.67-7.25-8-11.8z"/></svg>
             </div>`);
         }
 
         return L.divIcon({
             html: `<div style="position: relative;">
-                <div style="background-color: #0f172aa6; width: 32px; height: 32px; border-radius: 50% 50% 50% 0; display: flex; align-items: center; justify-content: center; border: 2px solid ${color}; color: ${color}; box-shadow: 0 0 12px ${color}80; backdrop-filter: blur(2px); transform: rotate(-45deg);">
-                    <div style="width: 18px; height: 18px; transform: rotate(45deg); display: flex; align-items: center; justify-content: center;">${content}</div>
+                <div style="background-color: #0f172aa6; width: 20px; height: 20px; border-radius: 50% 50% 50% 0; display: flex; align-items: center; justify-content: center; border: 1.5px solid ${color}; color: ${color}; box-shadow: 0 1px 4px rgba(0,0,0,0.5); backdrop-filter: blur(2px); transform: rotate(-45deg);">
+                    <div style="width: 12px; height: 12px; transform: rotate(45deg); display: flex; align-items: center; justify-content: center;">${content}</div>
                 </div>
                 ${badges.join('')}
             </div>`,
             className: 'pin-marker',
-            iconSize: [32, 32],
-            iconAnchor: [16, 42]
+            iconSize: [20, 20],
+            iconAnchor: [10, 28]
         });
     };
 
-    const createNoBorderIcon = (content, color, size = 30, hasWater = false) => {
-        const badge = hasWater ? `<div style="position: absolute; top: -5px; left: -5px; width: 12px; height: 12px; background: #0369a1; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid #1a1a1a; box-shadow: 0 2px 4px rgba(0,0,0,0.5); z-index: 10; color: white;">
-            <svg viewBox="0 0 24 24" fill="currentColor" style="width: 8px; height: 8px;"><path d="M12 2c-5.33 4.55-8 8.48-8 11.8 0 4.98 3.8 8.2 8 8.2s8-3.22 8-8.2c0-3.32-2.67-7.25-8-11.8z"/></svg>
+    const createNoBorderIcon = (content, color, size = 18, hasWater = false) => {
+        const badge = hasWater ? `<div style="position: absolute; top: -3px; left: -3px; width: 9px; height: 9px; background: #0369a1; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid #1a1a1a; box-shadow: 0 1px 2px rgba(0,0,0,0.5); z-index: 10; color: white;">
+            <svg viewBox="0 0 24 24" fill="currentColor" style="width: 5px; height: 5px;"><path d="M12 2c-5.33 4.55-8 8.48-8 11.8 0 4.98 3.8 8.2 8 8.2s8-3.22 8-8.2c0-3.32-2.67-7.25-8-11.8z"/></svg>
         </div>` : '';
 
         return L.divIcon({
-            html: `<div style="position: relative; width: ${size}px; height: ${size}px; display: flex; align-items: center; justify-content: center; color: ${color}; filter: drop-shadow(0 0 1px rgba(0,0,0,0.8)) drop-shadow(0 1px 2px rgba(0,0,0,0.5));">
+            html: `<div style="position: relative; width: ${size}px; height: ${size}px; display: flex; align-items: center; justify-content: center; color: ${color}; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.6));">
                 <div style="width: ${size}px; height: ${size}px;">${content}</div>
                 ${badge}
             </div>`,
@@ -262,22 +262,22 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
     };
 
     // Helper 3: Dot Style (Loot)
-    const createDotIcon = (color, size = 12, locked = false, hasWater = false) => {
+    const createDotIcon = (color, size = 8, locked = false, hasWater = false) => {
         const badges = [];
         if (locked) {
-            badges.push(`<div style="position: absolute; top: -6px; right: -6px; width: 12px; height: 12px; background: #fbbf24; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid #1a1a1a; box-shadow: 0 1px 2px rgba(0,0,0,0.5); z-index: 10; color: #1a1a1a;">
-                <svg viewBox="0 0 24 24" fill="currentColor" style="width: 8px; height: 8px;"><path d="M21 10h-8.35C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H13v2h2v-2h2v2h2v-2h2v-4zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
+            badges.push(`<div style="position: absolute; top: -4px; right: -4px; width: 9px; height: 9px; background: #fbbf24; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid #1a1a1a; box-shadow: 0 1px 2px rgba(0,0,0,0.5); z-index: 10; color: #1a1a1a;">
+                <svg viewBox="0 0 24 24" fill="currentColor" style="width: 5px; height: 5px;"><path d="M21 10h-8.35C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H13v2h2v-2h2v2h2v-2h2v-4zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
             </div>`);
         }
         if (hasWater) {
-            badges.push(`<div style="position: absolute; top: -6px; left: -6px; width: 12px; height: 12px; background: #0369a1; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid #1a1a1a; box-shadow: 0 1px 2px rgba(0,0,0,0.5); z-index: 10; color: white;">
-                <svg viewBox="0 0 24 24" fill="currentColor" style="width: 8px; height: 8px;"><path d="M12 2c-5.33 4.55-8 8.48-8 11.8 0 4.98 3.8 8.2 8 8.2s8-3.22 8-8.2c0-3.32-2.67-7.25-8-11.8z"/></svg>
+            badges.push(`<div style="position: absolute; top: -4px; left: -4px; width: 9px; height: 9px; background: #0369a1; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid #1a1a1a; box-shadow: 0 1px 2px rgba(0,0,0,0.5); z-index: 10; color: white;">
+                <svg viewBox="0 0 24 24" fill="currentColor" style="width: 5px; height: 5px;"><path d="M12 2c-5.33 4.55-8 8.48-8 11.8 0 4.98 3.8 8.2 8 8.2s8-3.22 8-8.2c0-3.32-2.67-7.25-8-11.8z"/></svg>
             </div>`);
         }
 
         return L.divIcon({
             html: `<div style="position: relative;">
-                <div style="width: ${size}px; height: ${size}px; background-color: ${color}; border-radius: 50%; box-shadow: 0 0 0 1px rgba(0,0,0,0.5), 0 2px 4px rgba(0,0,0,0.3);"></div>
+                <div style="width: ${size}px; height: ${size}px; background-color: ${color}; border-radius: 50%; box-shadow: 0 0 0 1px rgba(0,0,0,0.6), 0 1px 2px rgba(0,0,0,0.5);"></div>
                 ${badges.join('')}
             </div>`,
             className: 'loot-dot',
@@ -367,7 +367,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
         // These must be small and subtle, checked before generic loot
         if (catName.includes('lootable vehicle')) {
             const carSvg = `<svg viewBox="0 0 24 24" fill="#d4d4d4"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z" stroke="black" stroke-width="0.8"/></svg>`;
-            return createNoBorderIcon(carSvg, '#d4d4d4', 18, hasWater);
+            return createNoBorderIcon(carSvg, '#d4d4d4', 12, hasWater);
         }
 
         // 1. RESOURCES (Water, Gas, Keys) - HIGH PRIORITY
@@ -429,13 +429,13 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
         // 7. Vehicles
         if (catName === 'vehicles') {
             const carSvg = `<svg viewBox="0 0 24 24" fill="#3b82f6"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z" stroke="black" stroke-width="0.8"/></svg>`;
-            return createNoBorderIcon(carSvg, '#3b82f6', 22, hasWater);
+            return createNoBorderIcon(carSvg, '#3b82f6', 15, hasWater);
         }
 
         // 8. Trailers
         if (catName === 'trailers') {
             const simpleTrailer = `<svg viewBox="0 0 24 24" fill="#3b82f6"><path d="M1 5h14v10H1V5zm14 4h6v6h-6V9zm2 6a2 2 0 110 4 2 2 0 010-4zm-12 0a2 2 0 110 4 2 2 0 010-4z" stroke="black" stroke-width="0.8"/></svg>`;
-            return createNoBorderIcon(simpleTrailer, '#3b82f6', 22, hasWater);
+            return createNoBorderIcon(simpleTrailer, '#3b82f6', 15, hasWater);
         }
 
         // 9. NPCs
@@ -473,14 +473,14 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                 }
 
                 return L.divIcon({
-                    html: `<div style="position: relative; width: 37px; height: 37px;">
-                        <img src="${iconUrl}" style="width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));" />
+                    html: `<div style="position: relative; width: 24px; height: 24px;">
+                        <img src="${iconUrl}" style="width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 1px 3px rgba(0,0,0,0.6));" />
                         ${badges.join('')}
                     </div>`,
                     className: 'precise-icon',
-                    iconSize: [37, 37],
-                    iconAnchor: [18.5, 37],
-                    popupAnchor: [0, -18.5]
+                    iconSize: [24, 24],
+                    iconAnchor: [12, 24],
+                    popupAnchor: [0, -12]
                 });
             }
         }
@@ -529,21 +529,21 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
         return L.divIcon({
             html: `<div style="
                 background-color: rgba(15, 23, 42, 0.6);
-                width: 36px;
-                height: 36px;
-                border-radius: 6px;
+                width: 24px;
+                height: 24px;
+                border-radius: 5px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                border: 2px solid ${marker.color};
+                border: 1.5px solid ${marker.color};
                 color: ${marker.color};
-                box-shadow: 0 0 15px ${marker.color}80, inset 0 0 10px ${marker.color}20;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.5);
                 backdrop-filter: blur(4px);
                 transform: rotate(45deg);
             ">
                 <div style="
-                    width: 22px;
-                    height: 22px;
+                    width: 16px;
+                    height: 16px;
                     transform: rotate(-45deg);
                     display: flex;
                     align-items: center;
@@ -552,8 +552,8 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                 ">${iconDef.svg}</div>
             </div>`,
             className: 'personal-marker-icon', // Ensure CSS doesn't override transformation
-            iconSize: [36, 36],
-            iconAnchor: [18, 18]
+            iconSize: [24, 24],
+            iconAnchor: [12, 12]
         });
     };
 
@@ -1298,12 +1298,12 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                                                 </button>
                                             </div>
                                             <p className="text-xs text-gray-300 leading-relaxed" dangerouslySetInnerHTML={{ __html: tip.text }} />
-                                            
+
                                             <div className="flex items-center gap-2 mt-2">
-                                                <input 
-                                                    type="checkbox" 
-                                                    id="dontShowAgain" 
-                                                    checked={dontShowAgain} 
+                                                <input
+                                                    type="checkbox"
+                                                    id="dontShowAgain"
+                                                    checked={dontShowAgain}
                                                     onChange={(e) => {
                                                         const checked = e.target.checked;
                                                         setDontShowAgain(checked);
