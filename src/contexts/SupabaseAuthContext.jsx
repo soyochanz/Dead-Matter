@@ -190,6 +190,16 @@ export const AuthProvider = ({ children }) => {
     };
   }, [handleSession, toast, safeSetState]);
 
+  // Apply custom cursor based on profile preference
+  useEffect(() => {
+    const useCustomCursor = profile?.use_custom_cursor !== false; // Default to true
+    if (useCustomCursor) {
+      document.body.classList.add('custom-cursor');
+    } else {
+      document.body.classList.remove('custom-cursor');
+    }
+  }, [profile?.use_custom_cursor]);
+
   const signUp = useCallback(async (email, password, options) => {
     try {
       safeSetState(setLoading, true);

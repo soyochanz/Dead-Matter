@@ -109,6 +109,8 @@ const BasebuildingDetailModal = ({ item, onClose, onNpcSelect }) => {
     const rarityColor = item.rarity?.color || '#9ca3af';
 
     // Image logic for tents
+    // item.image_url = DEPLOYED
+    // item.packed_image_url = FOLDED/PACKED
     const displayImage = isPacked && item.packed_image_url ? item.packed_image_url : item.image_url;
     const hasPackedVariant = !!item.packed_image_url;
 
@@ -196,15 +198,15 @@ const BasebuildingDetailModal = ({ item, onClose, onNpcSelect }) => {
                                         <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-20">
                                             <button
                                                 onClick={() => setIsPacked(false)}
-                                                className={`px-3 py-1 text-xs font-bold rounded-full transition-all border ${!isPacked ? 'bg-white text-black border-white' : 'bg-black/50 text-gray-400 border-white/10 hover:bg-black/70'}`}
+                                                className={`px-3 py-1 text-xs font-bold rounded-full transition-all border ${!isPacked ? 'bg-red-600 text-white border-red-600 shadow-[0_0_15px_rgba(220,38,38,0.3)]' : 'bg-black/50 text-gray-400 border-white/10 hover:bg-black/70'}`}
                                             >
-                                                DEPLOYED
+                                                DESPLEGADA
                                             </button>
                                             <button
                                                 onClick={() => setIsPacked(true)}
-                                                className={`px-3 py-1 text-xs font-bold rounded-full transition-all border ${isPacked ? 'bg-white text-black border-white' : 'bg-black/50 text-gray-400 border-white/10 hover:bg-black/70'}`}
+                                                className={`px-3 py-1 text-xs font-bold rounded-full transition-all border ${isPacked ? 'bg-white text-black border-white shadow-[0_0_15px_rgba(255,255,255,0.1)]' : 'bg-black/50 text-gray-400 border-white/10 hover:bg-black/70'}`}
                                             >
-                                                PACKED
+                                                PLEGADA
                                             </button>
                                         </div>
                                     )}

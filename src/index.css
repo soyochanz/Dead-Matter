@@ -2,17 +2,13 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
-body {
-  background-color: #050505;
-  color: white;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+body.custom-cursor {
   cursor: url('/cursor.png'), auto;
 }
 
-a,
-button,
-[role="button"] {
+body.custom-cursor a,
+body.custom-cursor button,
+body.custom-cursor [role="button"] {
   cursor: url('/cursor.png'), pointer;
 }
 

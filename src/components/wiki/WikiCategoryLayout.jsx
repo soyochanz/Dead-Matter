@@ -14,6 +14,7 @@ const WikiCategoryLayout = ({
   setActiveFilter,
   searchTerm,
   setSearchTerm,
+  renderExtra,
 }) => {
   const { t } = useTranslation();
   return (
@@ -175,6 +176,12 @@ const WikiCategoryLayout = ({
                   {t('wiki_layout.clear_filters')} [X]
                 </button>
               </motion.div>
+            )}
+
+            {renderExtra && (
+              <div className="mt-8 pt-6 border-t border-white/5">
+                {renderExtra()}
+              </div>
             )}
           </motion.div>
         ) : null}

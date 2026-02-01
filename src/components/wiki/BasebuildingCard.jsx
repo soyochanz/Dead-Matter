@@ -2,14 +2,19 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Hammer, Tent, TrendingUp, Box, Info, ArrowRight } from 'lucide-react';
 
-const BasebuildingCard = ({ item, index, onClick }) => {
+const BasebuildingCard = ({ item, index, onClick, showDeployed }) => {
 
     // Safely access properties
     const rarityColor = item.rarity?.color || '#9ca3af'; // Default gray
     const isCraftable = item.is_craftable;
 
     // Use generic tent icon if no image
+    const isTent = item.category === 'Tents' || item.subcategory?.name?.toLowerCase().includes('tent');
     const Icon = item.subcategory?.name?.toLowerCase().includes('storage') ? Box : Tent;
+
+    // Deployed image logic
+    const hasPackedVariant = !!item.packed_image_url;
+    const currentImage = (showDeployed && hasPackedVariant) ? item.image_url : (item.packed_image_url || item.image_url);
 
     return (
         <motion.div
@@ -38,9 +43,9 @@ const BasebuildingCard = ({ item, index, onClick }) => {
                 {/* Technical Grid Background */}
                 <div className="absolute inset-0 opacity-[0.03] bg-[linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:20px_20px]" />
 
-                {item.image_url ? (
+                {currentImage ? (
                     <img
-                        src={item.image_url}
+                        src={currentImage}
                         alt={item.name}
                         className="relative z-10 max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-500 drop-shadow-2xl"
                     />

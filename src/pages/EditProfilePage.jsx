@@ -325,6 +325,7 @@ const EditProfilePage = () => {
 
   const [username, setUsername] = useState('');
   const [language, setLanguage] = useState('en');
+  const [useCustomCursor, setUseCustomCursor] = useState(true);
   const [avatarFile, setAvatarFile] = useState(null);
   const [avatarPreview, setAvatarPreview] = useState('');
   const [loading, setLoading] = useState(false);
@@ -337,6 +338,7 @@ const EditProfilePage = () => {
     if (profile) {
       setUsername(profile.username || '');
       setLanguage(profile.language || 'en');
+      setUseCustomCursor(profile.use_custom_cursor !== false);
       setAvatarPreview(profile.avatar_url || '');
     }
   }, [profile]);
@@ -512,6 +514,7 @@ const EditProfilePage = () => {
         .update({
           username,
           language,
+          use_custom_cursor: useCustomCursor,
           avatar_url,
           avatar_path: newAvatarPath || profile.avatar_path,
           updated_at: new Date().toISOString(),
@@ -704,25 +707,47 @@ const EditProfilePage = () => {
                   <p className="text-[10px] text-gray-600">Visible to other operatives in the network.</p>
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="language" className="text-xs font-bold text-gray-400 uppercase tracking-wider">Interface Language</Label>
-                  <div className="relative">
-                    <Languages className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-600" />
-                    <select
-                      id="language"
-                      value={language}
-                      onChange={(e) => setLanguage(e.target.value)}
-                      className="w-full pl-10 pr-4 bg-white/[0.02] border border-white/10 text-white rounded-md focus:bg-white/5 focus:ring-1 focus:ring-red-500/50 transition-all h-11 appearance-none cursor-pointer"
-                    >
-                      <option value="en" className="bg-[#1a1a1e] text-white">English (Default)</option>
-                      <option value="es" className="bg-[#1a1a1e] text-white">Español</option>
-                      <option value="pt" className="bg-[#1a1a1e] text-white">Português</option>
-                    </select>
-                    <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-600">
-                      <ArrowLeft className="h-4 w-4 rotate-[-90deg]" />
+                <div className="space-y-4">
+                  <Label className="text-xs font-bold text-gray-400 uppercase tracking-wider">Interface Settings</Label>
+
+                  <div className="space-y-4 p-4 bg-white/[0.02] border border-white/5 rounded-xl">
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-1">
+                        <Label htmlFor="custom-cursor" className="text-sm font-medium text-white cursor-pointer select-none">Custom Game Cursor</Label>
+                        <p className="text-[10px] text-gray-500">Enable the technical styled cursor across the whole network.</p>
+                      </div>
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input
+                          id="custom-cursor"
+                          type="checkbox"
+                          checked={useCustomCursor}
+                          onChange={(e) => setUseCustomCursor(e.target.checked)}
+                          className="sr-only peer"
+                        />
+                        <div className="w-11 h-6 bg-gray-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-gray-400 after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600 peer-checked:after:bg-white"></div>
+                      </label>
+                    </div>
+
+                    <div className="pt-4 border-t border-white/5 space-y-2">
+                      <Label htmlFor="language" className="text-[10px] font-bold text-gray-500 uppercase tracking-tight">Language</Label>
+                      <div className="relative">
+                        <Languages className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-600" />
+                        <select
+                          id="language"
+                          value={language}
+                          onChange={(e) => setLanguage(e.target.value)}
+                          className="w-full pl-10 pr-4 bg-black/20 border border-white/10 text-white rounded-md focus:bg-white/5 focus:ring-1 focus:ring-red-500/50 transition-all h-10 appearance-none cursor-pointer text-sm"
+                        >
+                          <option value="en" className="bg-[#1a1a1e] text-white">English (Default)</option>
+                          <option value="es" className="bg-[#1a1a1e] text-white">Español</option>
+                          <option value="pt" className="bg-[#1a1a1e] text-white">Português</option>
+                        </select>
+                        <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-600">
+                          <ArrowLeft className="h-4 w-4 rotate-[-90deg]" />
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <p className="text-[10px] text-gray-600">Choose your preferred language for the network interface.</p>
                 </div>
 
                 <div className="space-y-2">
@@ -737,7 +762,6 @@ const EditProfilePage = () => {
                       className="pl-10 bg-black/40 border-white/5 text-gray-500 cursor-not-allowed h-11"
                     />
                   </div>
-                  <p className="text-[10px] text-gray-600">Managed by Supabase Auth. Contact admin to change.</p>
                 </div>
 
                 <div className="pt-6 border-t border-white/5 flex items-center justify-end gap-4">
