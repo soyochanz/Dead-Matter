@@ -54,3 +54,20 @@ body.custom-cursor [role="button"] {
   border-top-right-radius: 0.375rem;
   /* rounded-md */
 }
+
+/* Optimized Map Icon Rendering */
+.precise-icon {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+.npc-marker,
+.pin-marker,
+.loot-dot,
+.circle-marker,
+.minor-resource-marker {
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
