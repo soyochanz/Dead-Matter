@@ -284,9 +284,13 @@ const MapFilters = ({ categories, activeFilters, onToggleFilter, isOpen, onClose
                                                             }
 
                                                             if (iconContent) {
+                                                                const isUrl = typeof iconContent === 'string' && iconContent.startsWith('http');
                                                                 return (
                                                                     <div className="w-8 h-8 rounded-md flex items-center justify-center shrink-0 border border-white/5 shadow-sm" style={{ backgroundColor: bgColor, color: textColor }}>
-                                                                        <div style={{ width: '20px', height: '20px' }} dangerouslySetInnerHTML={{ __html: iconContent }} />
+                                                                        {isUrl
+                                                                            ? <img src={iconContent} style={{ width: '20px', height: '20px', objectFit: 'contain', filter: 'brightness(0) invert(1)' }} alt="" />
+                                                                            : <div style={{ width: '20px', height: '20px' }} dangerouslySetInnerHTML={{ __html: iconContent }} />
+                                                                        }
                                                                     </div>
                                                                 );
                                                             }

@@ -69,10 +69,10 @@ export const mapIcons = {
     helmet: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c-4.42 0-8 3.58-8 8v4h2v-1h2v1h8v-1h2v1h2v-4c0-4.42-3.58-8-8-8zm0 2c3.31 0 6 2.69 6 6h-2c0-2.21-1.79-4-4-4s-4 1.79-4 4H6c0-3.31 2.69-6 6-6z"/></svg>',
     gun: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm12 0h-2v2h2V9zm6-4h-2v2h2V5zm-6 12h-2v2h2v-2zm-6-4h2v2H9v-2zm-6 4h2v2H3v-2zm12-4h-2v2h2v-2zm2-7.5V5h-2.5V3h-2v2H5v14h14v-9.5h2v-2h-3z"/></svg>',
     // Landmarks
-    watchtower: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 22h20"/><path d="M10 22v-4a2 2 0 0 1 4 0v4"/><path d="M4 18h16"/><path d="M6 18v-4a2 2 0 0 1 4 0"/><path d="M14 14a2 2 0 0 1 4 0v4"/><path d="M8 10h8"/><path d="M9 10V6a3 3 0 0 1 6 0v4"/><path d="M12 2v1"/></svg>',
-    watertower: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12c-3.3 0-6-2.7-6-6s2.7-6 6-6 6 2.7 6 6-2.7 6-6 6Z"/><path d="M9 12v10"/><path d="M15 12v10"/><path d="M6 22h12"/><path d="M12 12v10"/></svg>',
-    towercrane: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 22h18"/><path d="M5 22V2"/><path d="m13 6-8 3"/><path d="m20 9-13 4"/><path d="m17 12-4 3"/><path d="m5 2 16 7"/></svg>',
-    radiotower: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 22h20"/><path d="M5 22 12 2l7 20"/><path d="M9 12h6"/><path d="M12 12v5"/><path d="M12 7v2"/><circle cx="12" cy="2" r="1"/></svg>',
-    huntingtower: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16"/><path d="M6 22V10h12v12"/><path d="M12 10V2"/><path d="M8 6h8"/><path d="m5 10 7-7 7 7"/></svg>',
-    cave: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18v-7a9 9 0 0 0-18 0v7Z"/><path d="M21 14a2 2 0 0 0-2-2h-3a2 2 0 0 0-2 2v7"/><path d="M11 21v-3a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3"/></svg>',
+    watchtower: 'https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Map/watchtower.png',
+    watertower: 'https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Map/watertower.png',
+    towercrane: 'https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Map/towercrane.png',
+    radiotower: 'https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Map/radio.png',
+    huntingtower: 'https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Map/hutning.png',
+    cave: 'https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Map/cave.png',
 };

@@ -488,7 +488,11 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
 
                 return L.divIcon({
                     html: `<div style="position: relative; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">
-                        ${explicitIcon ? `<div style="width: 100%; height: 100%; color: black; filter: drop-shadow(0 1px 3px rgba(0,0,0,0.6));">${explicitIcon}</div>` : `<img src="${iconUrl}" style="width: 24px; height: 24px; object-fit: contain; filter: drop-shadow(0 1px 3px rgba(0,0,0,0.6));" />`}
+                        ${explicitIcon ? (
+                            explicitIcon.startsWith('http')
+                                ? `<img src="${explicitIcon}" style="width: 100%; height: 100%; object-fit: contain; filter: brightness(0) drop-shadow(0 1px 3px rgba(0,0,0,0.6));" />`
+                                : `<div style="width: 100%; height: 100%; color: black; filter: drop-shadow(0 1px 3px rgba(0,0,0,0.6));">${explicitIcon}</div>`
+                        ) : `<img src="${iconUrl}" style="width: 24px; height: 24px; object-fit: contain; filter: drop-shadow(0 1px 3px rgba(0,0,0,0.6));" />`}
                         ${badges.join('')}
                     </div>`,
                     className: 'precise-icon',
