@@ -250,6 +250,14 @@ const MapFilters = ({ categories, activeFilters, onToggleFilter, isOpen, onClose
                                                             else if (name.includes('military base')) { bgColor = '#ef4444'; iconContent = mapIcons.helmet; }
                                                             else if (name.includes('camping tent')) { bgColor = '#ef4444'; iconContent = mapIcons.tent; }
 
+                                                            // 10. Landmarks (Explicit)
+                                                            else if (name.includes('watch tower') || name.includes('watchtower')) { iconContent = mapIcons.watchtower; }
+                                                            else if (name.includes('water tower') || name.includes('watertower')) { iconContent = mapIcons.watertower; }
+                                                            else if (name.includes('tower crane') || name.includes('towercrane')) { iconContent = mapIcons.towercrane; }
+                                                            else if (name.includes('radio tower') || name.includes('radiotower')) { iconContent = mapIcons.radiotower; }
+                                                            else if (name.includes('hunting tower') || name.includes('huntingtower') || name.includes('hunting stand')) { iconContent = mapIcons.huntingtower; }
+                                                            else if (name.includes('cave')) { iconContent = mapIcons.cave; }
+
                                                             // 8. Loot
                                                             else if (name.includes('loot') && name.includes('civilian')) { bgColor = '#22c55e'; iconContent = null; }
                                                             else if (name.includes('loot') && name.includes('medical')) { bgColor = '#ec4899'; iconContent = mapIcons.medical; }

@@ -457,30 +457,44 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
         }
 
         // 11. Landmarks
-        if (groupName === 'landmarks') {
+        const normalizedCatName = catName.replace(/\s+/g, '');
+        const isTargetLandmark = ['watchtower', 'watertower', 'towercrane', 'radiotower', 'huntingtower', 'huntingstand', 'cave'].some(id => normalizedCatName.includes(id));
+
+        if (groupName === 'landmarks' || isTargetLandmark) {
+            let explicitIcon = null;
+            if (normalizedCatName.includes('watchtower')) explicitIcon = mapIcons.watchtower;
+            else if (normalizedCatName.includes('watertower')) explicitIcon = mapIcons.watertower;
+            else if (normalizedCatName.includes('towercrane')) explicitIcon = mapIcons.towercrane;
+            else if (normalizedCatName.includes('radiotower')) explicitIcon = mapIcons.radiotower;
+            else if (normalizedCatName.includes('huntingtower') || normalizedCatName.includes('huntingstand')) explicitIcon = mapIcons.huntingtower;
+            else if (normalizedCatName.includes('cave')) explicitIcon = mapIcons.cave;
+
             const iconUrl = category?.icon_url;
-            if (iconUrl) {
+            if (explicitIcon || iconUrl) {
                 const badges = [];
-                if (isLocked) {
-                    badges.push(`<div style="position: absolute; top: -5px; right: -5px; width: 15px; height: 15px; background: #fbbf24; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid #1a1a1a; box-shadow: 0 2px 4px rgba(0,0,0,0.5); z-index: 10; color: #1a1a1a;">
-                        <svg viewBox="0 0 24 24" fill="currentColor" style="width: 10px; height: 10px;"><path d="M21 10h-8.35C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H13v2h2v-2h2v2h2v-2h2v-4zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
-                    </div>`);
-                }
-                if (hasWater) {
-                    badges.push(`<div style="position: absolute; top: -5px; left: -5px; width: 15px; height: 15px; background: #0369a1; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid #1a1a1a; box-shadow: 0 2px 4px rgba(0,0,0,0.5); z-index: 10; color: white;">
-                        <svg viewBox="0 0 24 24" fill="currentColor" style="width: 10px; height: 10px;"><path d="M12 2c-5.33 4.55-8 8.48-8 11.8 0 4.98 3.8 8.2 8 8.2s8-3.22 8-8.2c0-3.32-2.67-7.25-8-11.8z"/></svg>
-                    </div>`);
+                // ONLY add badges if it's NOT one of the specific landmarks requested to be "Solo el icono sin nada mas"
+                if (!explicitIcon) {
+                    if (isLocked) {
+                        badges.push(`<div style="position: absolute; top: -5px; right: -5px; width: 15px; height: 15px; background: #fbbf24; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid #1a1a1a; box-shadow: 0 2px 4px rgba(0,0,0,0.5); z-index: 10; color: #1a1a1a;">
+                            <svg viewBox="0 0 24 24" fill="currentColor" style="width: 10px; height: 10px;"><path d="M21 10h-8.35C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H13v2h2v-2h2v2h2v-2h2v-4zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
+                        </div>`);
+                    }
+                    if (hasWater) {
+                        badges.push(`<div style="position: absolute; top: -5px; left: -5px; width: 15px; height: 15px; background: #0369a1; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid #1a1a1a; box-shadow: 0 2px 4px rgba(0,0,0,0.5); z-index: 10; color: white;">
+                            <svg viewBox="0 0 24 24" fill="currentColor" style="width: 10px; height: 10px;"><path d="M12 2c-5.33 4.55-8 8.48-8 11.8 0 4.98 3.8 8.2 8 8.2s8-3.22 8-8.2c0-3.32-2.67-7.25-8-11.8z"/></svg>
+                        </div>`);
+                    }
                 }
 
                 return L.divIcon({
-                    html: `<div style="position: relative; width: 24px; height: 24px;">
-                        <img src="${iconUrl}" style="width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 1px 3px rgba(0,0,0,0.6));" />
+                    html: `<div style="position: relative; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">
+                        ${explicitIcon ? `<div style="width: 100%; height: 100%; color: black; filter: drop-shadow(0 1px 3px rgba(0,0,0,0.6));">${explicitIcon}</div>` : `<img src="${iconUrl}" style="width: 24px; height: 24px; object-fit: contain; filter: drop-shadow(0 1px 3px rgba(0,0,0,0.6));" />`}
                         ${badges.join('')}
                     </div>`,
                     className: 'precise-icon',
-                    iconSize: [24, 24],
-                    iconAnchor: [12, 24],
-                    popupAnchor: [0, -12]
+                    iconSize: [30, 30],
+                    iconAnchor: [15, 30],
+                    popupAnchor: [0, -15]
                 });
             }
         }
@@ -1094,7 +1108,6 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                                                         ))}
                                                         {npcMarker && (
                                                             <div className="relative pl-4 border-l-2 border-amber-500/30 pt-2">
-                                                                <div className="absolute -left-[5px] top-2 w-2.5 h-2.5 rounded-full bg-green-500"></div>
                                                                 <h4 className="font-bold text-green-400 text-sm">Final: Report to {npcMarker.title}</h4>
                                                             </div>
                                                         )}
