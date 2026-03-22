@@ -20,6 +20,20 @@ import KeyDetailModal from '@/components/wiki/KeyDetailModal';
 import NpcDetailModal from '@/pages/NpcsPage';
 import WikiCategoryLayout from '@/components/wiki/WikiCategoryLayout';
 
+// Utility to generate SEO-friendly slugs from names
+const slugify = (text) => {
+    if (!text) return '';
+    return text
+        .toString()
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .trim()
+        .replace(/\s+/g, '-')
+        .replace(/[^\w-]+/g, '')
+        .replace(/--+/g, '-');
+};
+
 const WikiCategoryPage = ({ category, customTitle, customSubtitle, customDescription, extraHeadElements }) => {
     const { t } = useTranslation();
     const { categoryName: paramCategoryName, itemSlug } = useParams();
@@ -122,7 +136,9 @@ const WikiCategoryPage = ({ category, customTitle, customSubtitle, customDescrip
 
             // AUTO SELECT ITEM FROM SLUG FOR SEO
             if (itemSlug && fetchedItems.length > 0) {
-                const itemBySlug = fetchedItems.find(i => (i.slug || i.id.toString()) === itemSlug);
+                const itemBySlug = fetchedItems.find(i => 
+                    (i.slug || slugify(i.name) || i.id.toString()) === itemSlug
+                );
                 if (itemBySlug) setSelectedItem(itemBySlug);
             }
             setLoading(false);
@@ -229,7 +245,8 @@ const WikiCategoryPage = ({ category, customTitle, customSubtitle, customDescrip
                                     index={index} 
                                     onClick={() => {
                                         setSelectedItem(item);
-                                        navigate(`/wiki/${activeCategory.toLowerCase()}/${item.slug || item.id}`);
+                                        const itemSlugUrl = item.slug || slugify(item.name) || item.id;
+                                        navigate(`/wiki/${activeCategory.toLowerCase()}/${itemSlugUrl}`);
                                     }} 
                                 />
                             ))}
