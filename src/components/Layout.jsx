@@ -23,6 +23,7 @@ const Layout = ({ children }) => {
         <meta name="description" content={t('meta.description')} />
         <meta property="og:description" content={t('meta.description')} />
         <meta property="og:locale" content={i18n.language} />
+        <link rel="canonical" href={`https://deadmatterwiki.com${location.pathname}`} />
       </Helmet>
 
       <div className="fixed inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(20,20,30,0.5),transparent)] pointer-events-none" />

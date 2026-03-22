@@ -52,7 +52,7 @@ const GuideCard = ({ guide, index }) => {
     >
       <Link to={`/guides/${guide.slug || guide.id}`} className="block h-full">
         <div className="aspect-video overflow-hidden relative">
-          <img src={guide.image_url || "https://images.unsplash.com/photo-1467746474745-41dd2c7524ce"} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" alt="" />
+          <img src={guide.image_url || "https://images.unsplash.com/photo-1467746474745-41dd2c7524ce"} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" alt={`${localizedTitle} - Dead Matter Guide`} />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-60" />
         </div>
         <div className="p-5 flex-1 flex flex-col gap-3">
@@ -74,7 +74,7 @@ const MediaCard = ({ item, index }) => (
     className="group relative aspect-video rounded-xl overflow-hidden bg-[#0a0a0c] border border-white/5"
   >
     <Link to="/media" className="block h-full w-full">
-      <img src={item.thumbnail} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" alt="" />
+      <img src={item.thumbnail} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" alt={`${item.title} - Dead Matter Media`} />
       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
       <div className="absolute bottom-3 left-3 right-3">
         <p className="text-sm font-bold text-white line-clamp-1 mb-1">{item.title}</p>
@@ -197,7 +197,8 @@ const Home = () => {
   return (
     <>
       <Helmet>
-        <title>Dead Matter Wiki | Interactive Map & Guides</title>
+        <title>Dead Matter - Interactive Map, Wiki & Survival Guides</title>
+        <meta name="description" content="The most complete community resource for Dead Matter. Features an interactive map, comprehensive wiki, weapons database, crafting guides, and latest game updates." />
       </Helmet>
 
 
@@ -300,23 +301,36 @@ const Home = () => {
         </section>
 
         {/* Official Trailer Section */}
-        <section className="space-y-8">
-          <div className="flex items-center gap-3">
-            <Video size={24} className="text-red-500" />
-            <h2 className="text-3xl font-bold text-white">{t('home.official_trailer')}</h2>
-          </div>
-          <div className="aspect-video w-full rounded-2xl overflow-hidden border border-white/5 shadow-2xl">
-            <iframe
-              width="100%"
-              height="100%"
-              src="https://www.youtube-nocookie.com/embed/8R0fkYHOpzA"
-              title="Dead Matter Official Trailer"
-              frameBorder="0"
-              allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              loading="lazy"
-              className="w-full h-full"
-            ></iframe>
+        <section className="space-y-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="space-y-6">
+              <h2 className="text-3xl font-bold text-white uppercase tracking-tight">Dead Matter Survival Experience</h2>
+              <div className="space-y-4 text-slate-400 leading-relaxed font-medium">
+                <p>
+                  <span className="text-red-500 font-bold">Dead Matter</span> is a true sandbox survival horror game that aims to provide a complex and rewarding experience. 
+                  Set in the beautiful yet dangerous wilderness of <span className="text-white">Alberta, Canada</span>, players must scavenge for resources, 
+                  craft essential gear, and defend themselves against both the infected and other survivors.
+                </p>
+                <p>
+                  As the most complete <span className="text-white">Dead Matter Wiki</span>, our mission is to provide you with every technical detail 
+                  necessary to survive. From interactive maps of Calgary to detailed performance statistics for every weapon, we are the ultimate 
+                  resource for the survival horror enthusiast.
+                </p>
+              </div>
+            </div>
+            <div className="aspect-video w-full rounded-2xl overflow-hidden border border-white/5 shadow-2xl">
+              <iframe
+                width="100%"
+                height="100%"
+                src="https://www.youtube-nocookie.com/embed/8R0fkYHOpzA"
+                title="Dead Matter Official Trailer"
+                frameBorder="0"
+                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                loading="lazy"
+                className="w-full h-full"
+              ></iframe>
+            </div>
           </div>
         </section>
       </div>

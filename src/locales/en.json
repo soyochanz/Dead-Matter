@@ -1,17 +1,17 @@
 {
     "nav": {
         "home": "Home",
-        "home_desc": "Main dashboard",
+        "home_desc": "Dead Matter Home",
         "wiki": "Wiki",
-        "wiki_desc": "Game knowledge base",
+        "wiki_desc": "Dead Matter Wiki",
         "guides": "Guides",
-        "guides_desc": "Tips and strategies",
+        "guides_desc": "Survival Guides",
         "updates": "Updates",
-        "updates_desc": "Latest patches & news",
+        "updates_desc": "Latest Updates",
         "map": "Map",
-        "map_desc": "Interactive world map",
+        "map_desc": "Interactive Map",
         "media": "Media",
-        "media_desc": "Screenshots & videos"
+        "media_desc": "Screenshots & Clips"
     },
     "user": {
         "login": "Login",
@@ -120,7 +120,7 @@
     },
     "home": {
         "hero_title": "DEAD MATTER",
-        "hero_subtitle": "The definitive technical guide for the survival in the Canadian Rockies. Databases for weapons, vehicles, survival mechanics and community guides.",
+        "hero_subtitle": "The definitive technical guide for survival in the horror game Dead Matter. Explore our interactive map and technical databases for Alberta survivors.",
         "interactive_map": "Interactive Map",
         "wiki_button": "Wiki",
         "top_guides": "Top Community Guides",
