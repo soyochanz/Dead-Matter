@@ -170,8 +170,9 @@ function App() {
           <Route path="wiki/npcs" element={<NpcsPage />} />
           <Route path="wiki/basebuilding" element={<BasebuildingPage />} />
 
-          {/* Fallback for any other dynamic categories */}
+          {/* Wiki Category & Item Pages */}
           <Route path="wiki/:categoryName" element={<WikiCategoryPage />} />
+          <Route path="wiki/:categoryName/:itemSlug" element={<WikiCategoryPage />} />
 
           <Route path="updates" element={<Updates />} />
           <Route path="updates/:slug" element={<UpdateDetailPage />} />

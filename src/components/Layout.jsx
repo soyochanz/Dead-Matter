@@ -17,7 +17,7 @@ const Layout = ({ children }) => {
   const isMapPage = location.pathname === '/map';
 
   return (
-    <div className="min-h-screen bg-[#050505] flex flex-col selection:bg-red-500/30">
+    <div className="min-h-screen bg-[#0d0e12] flex flex-col selection:bg-red-500/30 text-slate-200">
       <Helmet>
         <html lang={i18n.language} />
         <meta name="description" content={t('meta.description')} />
@@ -26,7 +26,7 @@ const Layout = ({ children }) => {
         <link rel="canonical" href={`https://deadmatterwiki.com${location.pathname}`} />
       </Helmet>
 
-      <div className="fixed inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(20,20,30,0.5),transparent)] pointer-events-none" />
+      <div className="fixed inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(30,30,45,0.4),transparent)] pointer-events-none" />
 
       {/* Top Right Controls */}
       {authLoaded && (

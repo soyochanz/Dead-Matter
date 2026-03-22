@@ -34,7 +34,7 @@ const WikiCategoryCard = ({ category, itemCount, index }) => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05 }}
       whileHover={!isDisabled ? { y: -5, scale: 1.02 } : {}}
-      className={`relative group flex flex-col h-full p-8 rounded-[2.5rem] bg-[#0a0a0c] border border-white/5 transition-all duration-500 ${isDisabled ? 'opacity-40 cursor-not-allowed' : 'hover:bg-white/5 hover:border-white/10 hover:shadow-[0_20px_50px_-15px_rgba(0,0,0,0.5)]'
+      className={`relative group flex flex-col h-full p-8 rounded-[2.5rem] bg-[#0a0a0c] border border-white/10 transition-all duration-500 ${isDisabled ? 'opacity-40 cursor-not-allowed' : 'hover:bg-white/5 hover:border-white/20 hover:shadow-[0_20px_50px_-15px_rgba(0,0,0,0.7)]'
         }`}
     >
       <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />

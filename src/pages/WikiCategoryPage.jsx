@@ -22,7 +22,7 @@ import WikiCategoryLayout from '@/components/wiki/WikiCategoryLayout';
 
 const WikiCategoryPage = ({ category, customTitle, customSubtitle, customDescription, extraHeadElements }) => {
     const { t } = useTranslation();
-    const { categoryName: paramCategoryName } = useParams();
+    const { categoryName: paramCategoryName, itemSlug } = useParams();
     const navigate = useNavigate();
 
     // Prefer prop 'category', fallback to url param
@@ -119,6 +119,12 @@ const WikiCategoryPage = ({ category, customTitle, customSubtitle, customDescrip
 
             if (queryError) console.error(queryError);
             setItems(fetchedItems);
+
+            // AUTO SELECT ITEM FROM SLUG FOR SEO
+            if (itemSlug && fetchedItems.length > 0) {
+                const itemBySlug = fetchedItems.find(i => (i.slug || i.id.toString()) === itemSlug);
+                if (itemBySlug) setSelectedItem(itemBySlug);
+            }
             setLoading(false);
         };
 
@@ -174,16 +180,26 @@ const WikiCategoryPage = ({ category, customTitle, customSubtitle, customDescrip
         toolbelts: 'item'
     }[activeCategory.toLowerCase()] || 'item';
 
-    // Use custom description or fallback to default logic
-    const metaDescription = customDescription || (activeCategory.toLowerCase() === 'weapons'
-        ? t('wiki_category_page.meta_weapons_desc', { defaultValue: 'Browse and discover all the Dead Matter Weapons' })
-        : t('wiki_category_page.meta_generic_desc', { title: pageTitle, defaultValue: `Browse ${pageTitle} in the Dead Matter Wiki.` }));
+    // ─── SEO LOGIC ───────────────────────────────────────────────────────────
+    const currentItemTitle = selectedItem?.name || pageTitle;
+    const finalHelmetTitle = selectedItem 
+        ? `${currentItemTitle} - Dead Matter ${pageTitle} Wiki & Stats`
+        : `Dead Matter ${pageTitle} Wiki - Full Item List & Stats`;
+
+    const metaDescription = selectedItem 
+        ? `Detailed stats, info and locations for ${currentItemTitle} in Dead Matter. ${selectedItem.description?.substring(0, 100)}...`
+        : customDescription || (activeCategory.toLowerCase() === 'weapons'
+            ? t('wiki_category_page.meta_weapons_desc', { defaultValue: 'Explore all Dead Matter weapons including rifles, pistols, and melee stats.' })
+            : t('wiki_category_page.meta_generic_desc', { title: pageTitle, defaultValue: `All ${pageTitle} available in Dead Matter. Stats, locations and wiki guide.` }));
 
     return (
         <>
             <Helmet>
-                <title>{pageTitle} - Dead Matter Wiki</title>
+                <title>{finalHelmetTitle}</title>
                 <meta name="description" content={metaDescription} />
+                <meta property="og:title" content={finalHelmetTitle} />
+                <meta property="og:description" content={metaDescription} />
+                {selectedItem?.image_url && <meta property="og:image" content={selectedItem.image_url} />}
                 {/* Render extraHeadElements directly as children, not inside a fragment if possible, though React 18 usually handles arrays fine. */}
                 {extraHeadElements}
             </Helmet>
@@ -207,7 +223,15 @@ const WikiCategoryPage = ({ category, customTitle, customSubtitle, customDescrip
                     <>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
                             {Card && filteredItems.map((item, index) => (
-                                <Card key={item.id} {...{ [cardItemProp]: item }} index={index} onClick={() => setSelectedItem(item)} />
+                                <Card 
+                                    key={item.id} 
+                                    {...{ [cardItemProp]: item }} 
+                                    index={index} 
+                                    onClick={() => {
+                                        setSelectedItem(item);
+                                        navigate(`/wiki/${activeCategory.toLowerCase()}/${item.slug || item.id}`);
+                                    }} 
+                                />
                             ))}
                         </div>
                         {!loading && filteredItems.length === 0 && (
@@ -220,7 +244,10 @@ const WikiCategoryPage = ({ category, customTitle, customSubtitle, customDescrip
             {selectedItem && Modal && (
                 <Modal
                     {...{ [cardItemProp]: selectedItem }}
-                    onClose={() => setSelectedItem(null)}
+                    onClose={() => {
+                        setSelectedItem(null);
+                        navigate(`/wiki/${activeCategory.toLowerCase()}`);
+                    }}
                     onNpcSelect={handleNpcSelect}
                 />
             )}

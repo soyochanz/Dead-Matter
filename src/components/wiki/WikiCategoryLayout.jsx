@@ -34,7 +34,11 @@ const WikiCategoryLayout = ({
             <div className="flex-1">
               <div className="flex items-center gap-3 mb-2">
                 <div className="h-[2px] w-8 bg-red-600 shadow-[0_0_8px_rgba(220,38,38,0.5)]" />
-                <span className="text-[10px] font-black text-white/40 uppercase tracking-[0.4em]">Wiki</span>
+                <nav className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em]">
+                  <Link to="/wiki" className="text-white/40 hover:text-white transition-colors">Wiki</Link>
+                  <span className="text-white/20">/</span>
+                  <span className="text-red-500">{title}</span>
+                </nav>
               </div>
               <motion.h1
                 initial={{ opacity: 0, x: -20 }}
@@ -45,6 +49,7 @@ const WikiCategoryLayout = ({
                 {title.split(' ').map((word, i) => (
                   <span key={i} className={i === 0 ? 'text-white' : 'text-white/20'}>{word} </span>
                 ))}
+                <span className="sr-only">Dead Matter {title} Wiki</span>
               </motion.h1>
             </div>
 
@@ -78,7 +83,7 @@ const WikiCategoryLayout = ({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="bg-[#0a0a0c]/80 backdrop-blur-2xl border border-white/5 rounded-3xl p-8 mb-12 shadow-2xl"
+            className="bg-[#0a0a0c]/80 backdrop-blur-2xl border border-white/10 rounded-3xl p-8 mb-12 shadow-2xl"
           >
             <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8">
               {/* Filters */}
@@ -136,7 +141,7 @@ const WikiCategoryLayout = ({
                       placeholder={t('wiki_layout.search_placeholder', { title: title.toLowerCase() })}
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="w-full h-12 bg-white/5 border-white/5 pl-6 pr-4 py-2 text-white font-bold placeholder:text-gray-600 
+                      className="w-full h-12 bg-white/5 border-white/10 pl-6 pr-4 py-2 text-white font-bold placeholder:text-gray-600 
                                 rounded-xl focus:bg-white/10 focus:border-red-500/50 focus:ring-0
                                 transition-all duration-500"
                     />
@@ -151,7 +156,7 @@ const WikiCategoryLayout = ({
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
-                className="flex items-center gap-4 mt-8 pt-6 border-t border-white/5"
+                className="flex items-center gap-4 mt-8 pt-6 border-t border-white/10"
               >
                 <span className="text-[10px] font-black text-white/20 uppercase tracking-[0.2em]">{t('wiki_layout.active_filters')}</span>
                 <div className="flex flex-wrap gap-2">
