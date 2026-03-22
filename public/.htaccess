@@ -3,6 +3,7 @@
   RewriteBase /
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_URI} !\.(js|css|gif|png|jpg|jpeg|svg|webp|ico|json|map|woff|woff2|ttf|eot|otf)$ [NC]
   RewriteRule ^ index.html [L]
 </IfModule>
 
