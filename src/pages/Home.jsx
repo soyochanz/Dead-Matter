@@ -65,7 +65,7 @@ const GuideCard = ({ guide, index }) => {
       onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(239,68,68,0.35)'; e.currentTarget.style.boxShadow = '0 8px 40px rgba(239,68,68,0.12)'; }}
       onMouseLeave={e => { e.currentTarget.style.borderColor = BORDER; e.currentTarget.style.boxShadow = '0 2px 20px rgba(0,0,0,0.4)'; }}
     >
-      <Link to={`/guides/${guide.slug || guide.id}`} className="block h-full flex flex-col">
+      <Link to={`/guides/${guide.slug || guide.id}`} className="h-full flex flex-col">
         {/* Thumbnail */}
         <div className="aspect-video overflow-hidden relative shrink-0">
           <img
@@ -267,22 +267,30 @@ const WikiShortcuts = () => {
 };
 
 // ─── Commit Item ──────────────────────────────────────────────────────────────
-const CommitItem = ({ c, i18nLang }) => (
-  <div
-    className="p-3 rounded-xl transition-colors duration-200 hover:bg-white/[0.03]"
-    style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}
-  >
-    <p className="text-sm text-slate-300 line-clamp-2 leading-relaxed">{c.message}</p>
-    <div className="flex justify-between items-center mt-2">
-      <span className="text-[10px] uppercase font-bold text-slate-600">
+const CommitItem = ({ c, i18nLang }) => {
+  const hash = c.commit_hash || c.id.substring(0, 7);
+  return (
+    <div
+      className="p-3 rounded-xl transition-colors duration-200 hover:bg-white/[0.03]"
+      style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}
+    >
+      <div className="flex justify-between items-start mb-1">
+        {c.category && (
+          <span className="text-[9px] font-black uppercase tracking-widest text-red-500/80">
+            {c.category}
+          </span>
+        )}
+        <span className="text-[9px] font-mono ml-auto" style={{ color: '#60a5fa' }}>
+          #{hash}
+        </span>
+      </div>
+      <p className="text-sm text-slate-300 line-clamp-2 leading-relaxed">{c.message}</p>
+      <div className="mt-2 text-[10px] uppercase font-bold text-slate-600">
         {new Date(c.created_at).toLocaleDateString(i18nLang)}
-      </span>
-      <span className="text-[10px] font-mono" style={{ color: '#60a5fa' }}>
-        #{c.id.substring(0, 6)}
-      </span>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 // ─── Home ─────────────────────────────────────────────────────────────────────
 const Home = () => {

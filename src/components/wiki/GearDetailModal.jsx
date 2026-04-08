@@ -130,7 +130,7 @@ const GearDetailModal = ({ gear, onClose, onNpcSelect }) => {
                             whileHover={{ scale: 1.1, rotate: 90 }}
                             whileTap={{ scale: 0.9 }}
                             onClick={onClose}
-                            className="absolute top-8 right-8 text-gray-500 hover:text-white transition-all bg-white/5 p-3 rounded-2xl hover:bg-red-600/20 hover:text-red-500 border border-white/5 z-20"
+                            className="absolute top-8 right-8 text-gray-500 transition-all bg-white/5 p-3 rounded-2xl hover:bg-red-600/20 hover:text-red-500 border border-white/5 z-20"
                         >
                             <X size={24} />
                         </motion.button>
