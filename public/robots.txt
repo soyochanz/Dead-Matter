@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /profile
+Disallow: /tutucucu
 
 Sitemap: https://deadmatterwiki.com/sitemap.xml

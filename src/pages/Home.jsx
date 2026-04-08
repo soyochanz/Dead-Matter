@@ -332,8 +332,8 @@ const Home = () => {
   return (
     <>
       <Helmet>
-        <title>Dead Matter - Interactive Map, Wiki & Survival Guides</title>
-        <meta name="description" content="The most complete community resource for Dead Matter. Features an interactive map, comprehensive wiki, weapons database, crafting guides, and latest game updates." />
+        <title>Dead Matter Wiki | #1 Community Map, Wiki & Survival Guides</title>
+        <meta name="description" content="The ultimate community resource for Dead Matter. Explore our interactive map, comprehensive wiki, weapon stats, crafting guides, and latest game updates." />
       </Helmet>
 
       <div className="max-w-7xl mx-auto px-4 py-12 md:py-20 space-y-20">

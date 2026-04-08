@@ -214,6 +214,10 @@ function App() {
           {/* Ruta 404 */}
           <Route path="*" element={
             <div className="text-center py-20 px-4">
+              <Helmet>
+                <title>404 - Page Not Found | Dead Matter Wiki</title>
+                <meta name="robots" content="noindex" />
+              </Helmet>
               <h1 className="text-6xl font-bold text-gray-800 dark:text-white mb-4">404</h1>
               <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">Página no encontrada</p>
               <a
