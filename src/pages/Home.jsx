@@ -197,64 +197,42 @@ const SectionHeader = ({ icon: Icon, iconColor, iconGlow, title, subtitle, actio
 const WikiShortcuts = () => {
   const { t } = useTranslation();
   const categories = [
-    { name: t('home.shortcuts.weapons'), icon: Sword, grad: ['#ef4444', '#b91c1c'], path: '/wiki/weapons' },
-    { name: t('home.shortcuts.vehicles'), icon: Car, grad: ['#3b82f6', '#1d4ed8'], path: '/wiki/vehicles' },
-    { name: t('home.shortcuts.gear'), icon: Backpack, grad: ['#10b981', '#047857'], path: '/wiki/gear' },
-    { name: t('home.shortcuts.basebuilding'), icon: Hammer, grad: ['#f97316', '#c2410c'], path: '/wiki/basebuilding' },
-    { name: t('home.shortcuts.consumables'), icon: Soup, grad: ['#eab308', '#a16207'], path: '/wiki/consumables' },
-    { name: t('home.shortcuts.medical'), icon: Stethoscope, grad: ['#ec4899', '#be185d'], path: '/wiki/meds' },
-    { name: t('home.shortcuts.npcs'), icon: Users, grad: ['#a78bfa', '#7c3aed'], path: '/wiki/npcs' },
-    { name: t('home.shortcuts.keys'), icon: Package, grad: ['#94a3b8', '#475569'], path: '/wiki/keys' },
+    { name: t('home.shortcuts.weapons'), icon: Sword, color: '#ef4444', path: '/wiki/weapons' },
+    { name: t('home.shortcuts.vehicles'), icon: Car, color: '#3b82f6', path: '/wiki/vehicles' },
+    { name: t('home.shortcuts.gear'), icon: Backpack, color: '#10b981', path: '/wiki/gear' },
+    { name: t('home.shortcuts.basebuilding'), icon: Hammer, color: '#f97316', path: '/wiki/basebuilding' },
+    { name: t('home.shortcuts.consumables'), icon: Soup, color: '#eab308', path: '/wiki/consumables' },
+    { name: t('home.shortcuts.medical'), icon: Stethoscope, color: '#ec4899', path: '/wiki/meds' },
+    { name: t('home.shortcuts.npcs'), icon: Users, color: '#a78bfa', path: '/wiki/npcs' },
+    { name: t('home.shortcuts.keys'), icon: Package, color: '#94a3b8', path: '/wiki/keys' },
   ];
 
   return (
     <section>
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4">
         {categories.map((cat, i) => (
           <motion.div
             key={cat.name}
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.04 }}
-            whileHover={{ y: -4, transition: { duration: 0.18 } }}
           >
-            <Link to={cat.path} className="block">
-              <div
-                className="group relative flex flex-col items-center gap-3 p-5 rounded-2xl overflow-hidden cursor-pointer transition-all duration-300"
-                style={{
-                  background: `linear-gradient(145deg, ${cat.grad[0]}18 0%, ${cat.grad[1]}08 100%)`,
-                  border: `1px solid ${cat.grad[0]}30`,
-                  boxShadow: `0 2px 16px ${cat.grad[0]}10`,
-                }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.background = `linear-gradient(145deg, ${cat.grad[0]}30 0%, ${cat.grad[1]}18 100%)`;
-                  e.currentTarget.style.borderColor = cat.grad[0] + '60';
-                  e.currentTarget.style.boxShadow = `0 8px 32px ${cat.grad[0]}28`;
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.background = `linear-gradient(145deg, ${cat.grad[0]}18 0%, ${cat.grad[1]}08 100%)`;
-                  e.currentTarget.style.borderColor = cat.grad[0] + '30';
-                  e.currentTarget.style.boxShadow = `0 2px 16px ${cat.grad[0]}10`;
-                }}
+            <Link to={cat.path} className="group block">
+              <div 
+                className="flex flex-col items-center gap-3 p-6 rounded-[2rem] border transition-all duration-500 bg-white/[0.02] border-white/5 hover:border-white/10 hover:bg-white/[0.05]"
               >
-                {/* Glow spot behind icon */}
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full blur-xl opacity-40 pointer-events-none"
-                  style={{ background: cat.grad[0] }} />
-
-                {/* Icon pill */}
-                <div
-                  className="relative z-10 p-3 rounded-xl transition-transform duration-300 group-hover:scale-110"
-                  style={{
-                    background: `linear-gradient(135deg, ${cat.grad[0]}40, ${cat.grad[1]}28)`,
-                    border: `1px solid ${cat.grad[0]}50`,
-                    boxShadow: `0 4px 16px ${cat.grad[0]}30`,
+                <div 
+                  className="p-3.5 rounded-2xl transition-all duration-500 group-hover:scale-110 group-hover:-translate-y-1"
+                  style={{ 
+                    color: cat.color,
+                    background: `${cat.color}10`,
+                    boxShadow: `0 0 20px ${cat.color}15`
                   }}
                 >
-                  <cat.icon size={22} style={{ color: cat.grad[0], filter: `drop-shadow(0 0 6px ${cat.grad[0]}80)` }} />
+                  <cat.icon size={24} />
                 </div>
 
-                <span className="relative z-10 text-[11px] font-bold text-center leading-tight transition-colors duration-200"
-                  style={{ color: cat.grad[0] + 'cc' }}>
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 group-hover:text-white transition-colors">
                   {cat.name}
                 </span>
               </div>

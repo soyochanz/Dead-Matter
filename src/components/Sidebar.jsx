@@ -2,40 +2,39 @@ import React, { useState, useEffect } from 'react';
 import { NavLink, Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as Icons from 'lucide-react';
-import { ChevronRight, ChevronLeft, Sparkles, Radio, ExternalLink } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Radio, ExternalLink, Gamepad2 } from 'lucide-react';
 import { supabase } from '@/lib/mySupabaseClient';
 import { useTranslation } from 'react-i18next';
-const Sidebar = ({
-  isOpen,
-  toggleSidebar
-}) => {
+
+const Sidebar = ({ isOpen, toggleSidebar }) => {
   const location = useLocation();
   const { t } = useTranslation();
   const [discordUrl, setDiscordUrl] = useState('');
-  const [activeHover, setActiveHover] = useState(null);
   const [isDevLive, setIsDevLive] = useState(false);
   const [streamData, setStreamData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Configuration - only need the username
   const DEV_TWITCH_USERNAME = 'johnsonguitardev';
   const TWITCH_CHANNEL_URL = `https://www.twitch.tv/${DEV_TWITCH_USERNAME}`;
   const DEV_AVATAR_URL = 'https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/avatars/3f234dbf-0f5e-4b74-8422-75d087be56ce-profile_image-300x300.png';
+
   useEffect(() => {
     const fetchSettings = async () => {
-      const {
-        data,
-        error
-      } = await supabase.from('map_settings').select('discord_url').limit(1).single();
+      const { data, error } = await supabase
+        .from('map_settings')
+        .select('discord_url')
+        .limit(1)
+        .single();
       if (!error && data && data.discord_url) {
         setDiscordUrl(data.discord_url);
       }
     };
     fetchSettings();
     checkDevStreamStatus();
-    const interval = setInterval(checkDevStreamStatus, 600000); // Check every 10 minutes for performance
+    const interval = setInterval(checkDevStreamStatus, 600000);
     return () => clearInterval(interval);
   }, []);
+
   const checkDevStreamStatus = async () => {
     try {
       setIsLoading(true);
@@ -58,10 +57,11 @@ const Sidebar = ({
       setIsLoading(false);
     }
   };
+
   const checkTwitchStreamSimple = async username => {
-    // Direct fetch to Twitch fails due to CORS. Disabling to prevent console errors.
     return false;
   };
+
   const StreamStatus = () => {
     if (isLoading) {
       return (
@@ -74,19 +74,15 @@ const Sidebar = ({
 
     if (isDevLive) {
       return (
-        <motion.a
+        <a
           href={TWITCH_CHANNEL_URL}
           target="_blank"
           rel="noopener noreferrer"
-          whileHover={{ scale: 1.02, y: -2 }}
-          whileTap={{ scale: 0.98 }}
           className="relative block p-4 rounded-2xl overflow-hidden group cursor-pointer border border-purple-500/50"
         >
-          {/* Animated Gradient Background */}
           <div className="absolute inset-0 bg-gradient-to-br from-purple-600/20 via-pink-600/20 to-orange-600/20 group-hover:opacity-100 transition-opacity duration-500" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(168,85,247,0.3),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
 
-          {/* Pulsing "LIVE" indicator */}
           <div className="flex items-center justify-between mb-3 relative z-10">
             <div className="flex items-center gap-2 px-2 py-0.5 rounded-full bg-red-500/20 border border-red-500/30">
               <div className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.8)]" />
@@ -95,7 +91,6 @@ const Sidebar = ({
             <ExternalLink className="h-3 w-3 text-white/50 group-hover:text-white transition-colors" />
           </div>
 
-          {/* Streamer details */}
           <div className="flex gap-3 relative z-10">
             <div className="relative flex-shrink-0">
               <div className="absolute -inset-1 bg-gradient-to-tr from-purple-500 to-pink-500 rounded-full opacity-70 blur-[2px] group-hover:blur-[4px] transition-all" />
@@ -110,20 +105,18 @@ const Sidebar = ({
             </div>
           </div>
 
-          {/* Hover Clue */}
           <div className="mt-3 flex items-center justify-center py-1.5 rounded-lg bg-white/5 border border-white/5 group-hover:bg-purple-500/20 group-hover:border-purple-500/30 transition-all relative z-10">
             <span className="text-[10px] font-bold text-white/40 group-hover:text-white uppercase tracking-widest">{t('sidebar.watch_development')} →</span>
           </div>
-        </motion.a>
+        </a>
       );
     }
 
     return (
-      <motion.a
+      <a
         href={TWITCH_CHANNEL_URL}
         target="_blank"
         rel="noopener noreferrer"
-        whileHover={{ x: 4 }}
         className="block p-4 rounded-2xl bg-white/5 border border-white/5 hover:border-white/10 transition-all duration-300 group"
       >
         <div className="flex items-center justify-between gap-3">
@@ -139,51 +132,71 @@ const Sidebar = ({
           </div>
           <ExternalLink className="h-3.5 w-3.5 text-gray-600 group-hover:text-gray-400 transition-colors" />
         </div>
-      </motion.a>
+      </a>
     );
   };
 
-  const navItems = [{
-    path: '/',
-    label: t('nav.home'),
-    icon: 'Home',
-    gradient: 'from-orange-500 to-red-600',
-    description: t('nav.home_desc')
-  }, {
-    path: '/wiki',
-    label: t('nav.wiki'),
-    icon: 'Database',
-    gradient: 'from-blue-500 to-indigo-600',
-    description: t('nav.wiki_desc')
-  }, {
-    path: '/guides',
-    label: t('nav.guides'),
-    icon: 'ShieldCheck',
-    gradient: 'from-emerald-500 to-teal-600',
-    description: t('nav.guides_desc')
-  }, {
-    path: '/updates',
-    label: t('nav.updates'),
-    icon: 'Terminal',
-    gradient: 'from-violet-500 to-fuchsia-600',
-    description: t('nav.updates_desc')
-  }, {
-    path: '/map',
-    label: t('nav.map'),
-    icon: 'Compass',
-    gradient: 'from-amber-400 to-orange-500',
-    description: t('nav.map_desc')
-  }, {
-    path: '/media',
-    label: t('nav.media'),
-    icon: 'Camera',
-    gradient: 'from-rose-500 to-pink-600',
-    description: t('nav.media_desc')
-  }];
+  const navItems = [
+    { path: '/', label: t('nav.home'), icon: 'Home', gradient: 'from-orange-500 to-red-600', description: t('nav.home_desc') },
+    { path: '/wiki', label: t('nav.wiki'), icon: 'Database', gradient: 'from-blue-500 to-indigo-600', description: t('nav.wiki_desc') },
+    { path: '/guides', label: t('nav.guides'), icon: 'ShieldCheck', gradient: 'from-emerald-500 to-teal-600', description: t('nav.guides_desc') },
+    { path: '/updates', label: t('nav.updates'), icon: 'Terminal', gradient: 'from-violet-500 to-fuchsia-600', description: t('nav.updates_desc') },
+    { path: '/map', label: t('nav.map'), icon: 'Compass', gradient: 'from-amber-400 to-orange-500', description: t('nav.map_desc') },
+    { path: '/media', label: t('nav.media'), icon: 'Camera', gradient: 'from-rose-500 to-pink-600', description: t('nav.media_desc') },
+  ];
 
   if (location.pathname.startsWith('/tutucucu')) {
     return null;
   }
+
+  const socialLinks = [
+    {
+      href: discordUrl || '#',
+      title: 'Discord',
+      label: 'Discord',
+      hoverClass: 'hover:bg-[#5865F2]/20 hover:border-[#5865F2]/40',
+      icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.03.056a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z" fill="#5865F2" />
+        </svg>
+      ),
+    },
+    {
+      href: 'https://x.com/deadmattergame',
+      title: 'X / Twitter',
+      label: 'Twitter',
+      hoverClass: 'hover:bg-white/10 hover:border-white/25',
+      icon: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z" />
+        </svg>
+      ),
+    },
+    {
+      href: 'https://qisoftware.ca/',
+      title: 'Quantum Integrity',
+      label: 'Dev',
+      hoverClass: 'hover:bg-white/10 hover:border-white/25',
+      icon: (
+        <img
+          src="https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/website/qilogo.png"
+          alt="QI"
+          className="w-5 h-5 object-contain brightness-0 invert"
+        />
+      ),
+    },
+    {
+      href: 'https://www.youtube.com/@deadmattergame',
+      title: 'YouTube',
+      label: 'YouTube',
+      hoverClass: 'hover:bg-red-600/20 hover:border-red-600/35',
+      icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="#FF0000" />
+        </svg>
+      ),
+    },
+  ];
 
   return (
     <>
@@ -244,23 +257,18 @@ const Sidebar = ({
                   ${isActive ? 'bg-white/5 text-white' : 'text-gray-500 hover:text-gray-200'}
                 `}
               >
-                {/* Active Indicator Bar */}
                 {isActive && (
                   <motion.div
                     layoutId="activeNav"
                     className="absolute left-0 top-2 bottom-2 w-1 bg-red-600 rounded-r-full shadow-[0_0_15px_rgba(220,38,38,0.8)]"
                   />
                 )}
-
-                {/* Icon Container */}
                 <div className={`
                   relative z-10 p-2.5 rounded-xl transition-all duration-500
                   ${isActive ? `bg-gradient-to-br ${item.gradient} text-white shadow-lg` : 'bg-white/[0.03] group-hover:bg-white/[0.08] group-hover:scale-110'}
                 `}>
                   <IconComponent className="h-5 w-5" strokeWidth={1.5} />
                 </div>
-
-                {/* Label & Description */}
                 <div className="relative z-10 flex-1 min-w-0">
                   <span className={`font-bold text-sm tracking-tight block ${isActive ? 'text-white' : 'text-gray-300'}`}>
                     {item.label}
@@ -274,49 +282,66 @@ const Sidebar = ({
           })}
         </nav>
 
-        {/* Footer Actions */}
-        <div className="p-6 bg-black/40 border-t border-white/5 space-y-4">
+        {/* Footer */}
+        <div className="p-6 bg-black/40 border-t border-white/5 space-y-5">
+
+          {/* Twitch Stream */}
           <div className="space-y-3">
-            <h3 className="text-[10px] font-black text-gray-600 uppercase tracking-[0.2em] px-1">{t('sidebar.status_transmission')}</h3>
+            <h3 className="text-[10px] font-black text-gray-600 uppercase tracking-[0.2em] px-1">
+              Twitch Dev Streaming
+            </h3>
             <StreamStatus />
-            {/* Discord Button */}
-            {discordUrl && (
-              <motion.a
-                href={discordUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.02, y: -2 }}
-                whileTap={{ scale: 0.98 }}
-                className="relative flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 group overflow-hidden bg-[#5865F2]/10 border border-[#5865F2]/20 hover:bg-[#5865F2]/20 shadow-[0_10px_30px_-10px_rgba(88,101,242,0.3)]"
-              >
-                <div className="relative z-10 w-10 h-10 flex items-center justify-center bg-[#5865F2] rounded-xl shadow-[0_0_15px_rgba(88,101,242,0.5)]">
-                  <img
-                    src="https://pngimg.com/d/discord_PNG3.png"
-                    alt="Discord"
-                    className="w-6 h-6 object-contain brightness-0 invert"
-                  />
-                </div>
-                <div className="relative z-10 flex flex-col leading-none">
-                  <span className="text-[10px] font-black text-[#5865F2] uppercase tracking-[0.22em] mb-1">{t('sidebar.official_link')}</span>
-                  <span className="text-sm font-black text-white tracking-tight">{t('sidebar.join_discord')}</span>
-                </div>
-
-                {/* Animated Shine */}
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-shine" />
-              </motion.a>
-            )}
           </div>
 
-          {/* Version Info */}
-          <div className="flex items-center justify-between pt-2">
-            <div className="flex items-center gap-2">
-              <div className="h-[4px] w-[4px] bg-red-600 rounded-full animate-ping" />
-              <span className="text-[10px] font-black text-white/20 uppercase tracking-[0.2em]">{t('sidebar.alpha_database')}</span>
-            </div>
-            <div className="px-2 py-0.5 rounded-md bg-white/5 border border-white/5">
-              <span className="text-[10px] font-mono font-bold text-red-600">v0.12.2</span>
+          {/* Social Links */}
+          <div className="space-y-2">
+            <h3 className="text-[10px] font-black text-gray-600 uppercase tracking-[0.2em] px-1">
+              Community
+            </h3>
+            <div className="grid grid-cols-4 gap-2">
+              {socialLinks.map(({ href, title, label, hoverClass, icon }) => (
+                <a
+                  key={title}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title={title}
+                  className={`flex flex-col items-center justify-center gap-1.5 px-1 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] transition-all duration-200 ${hoverClass}`}
+                >
+                  {icon}
+                  <span className="text-[9px] font-bold text-gray-600 uppercase tracking-wider leading-none">
+                    {label}
+                  </span>
+                </a>
+              ))}
             </div>
           </div>
+
+          {/* Version Info — mejorado */}
+          <div className="relative rounded-xl bg-white/[0.03] border border-white/[0.06] px-3.5 py-2.5 flex items-center justify-between gap-3 overflow-hidden group">
+            {/* subtle accent line */}
+            <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-gradient-to-b from-red-600/80 via-red-500/40 to-transparent rounded-l-xl" />
+
+            <div className="flex items-center gap-2 pl-1.5">
+              <Gamepad2 className="h-3.5 w-3.5 text-gray-600 group-hover:text-gray-400 transition-colors flex-shrink-0" />
+              <div>
+                <p className="text-[9px] font-black text-gray-600 uppercase tracking-[0.2em] leading-none mb-0.5">
+                  Game Version
+                </p>
+                <p className="text-[10px] font-medium text-gray-500 leading-none">
+                  Early Access
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-1.5">
+              <div className="w-1.5 h-1.5 rounded-full bg-red-600/80 shadow-[0_0_6px_rgba(220,38,38,0.6)]" />
+              <span className="text-sm font-black text-red-500 font-mono tracking-tight">
+                v0.12.2
+              </span>
+            </div>
+          </div>
+
         </div>
       </motion.aside>
     </>
