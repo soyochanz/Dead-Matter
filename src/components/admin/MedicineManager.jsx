@@ -158,12 +158,19 @@ const MedicineForm = ({ item, onSave, onCancel, sharedMetadata }) => {
     );
 };
 
-const MedicineManager = ({ onSaveCallback, sharedMetadata }) => {
+const MedicineManager = ({ onSaveCallback, sharedMetadata, initialItem }) => {
     const [items, setItems] = useState([]);
-    const [editingItem, setEditingItem] = useState(null);
-    const [showForm, setShowForm] = useState(false);
+    const [editingItem, setEditingItem] = useState(initialItem || null);
+    const [showForm, setShowForm] = useState(!!initialItem);
     const [loading, setLoading] = useState(true);
     const { toast } = useToast();
+
+    useEffect(() => {
+        if (initialItem) {
+            setEditingItem(initialItem);
+            setShowForm(true);
+        }
+    }, [initialItem]);
 
     const loadItems = useCallback(async () => {
         setLoading(true);

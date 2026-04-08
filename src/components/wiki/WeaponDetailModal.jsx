@@ -219,7 +219,7 @@ const AmmoWeaponsModal = ({ ammo: ammoName, onClose }) => {
                                 {ammoName} <span className="text-blue-500 text-2xl ml-4 block md:inline font-mono opacity-50">CALIBRE MODULE</span>
                             </h3>
                         </div>
-                        <button onClick={onClose} className="p-4 text-gray-500 hover:text-white transition-all bg-white/5 rounded-2xl border border-white/5 hover:bg-red-500/10 hover:text-red-500">
+                        <button onClick={onClose} className="p-4 text-gray-500 transition-all bg-white/5 rounded-2xl border border-white/5 hover:bg-red-500/10 hover:text-red-500">
                             <X size={24} />
                         </button>
                     </div>
@@ -571,187 +571,185 @@ const WeaponDetailModal = ({ weapon, onClose, onNpcSelect }) => {
     );
 
     return (
-        <AnimatePresence>
-            <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+        <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 bg-black/95 backdrop-blur-3xl z-50 flex items-center justify-center p-4"
+                onClick={onClose}
+            >
+                {/* Background Noise/Scanline Effect */}
+                <div className="absolute inset-0 pointer-events-none opacity-5 mix-blend-overlay bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+
                 <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="fixed inset-0 bg-black/95 backdrop-blur-3xl z-50 flex items-center justify-center p-4"
-                    onClick={onClose}
+                    initial={{ scale: 0.9, y: 50, opacity: 0 }}
+                    animate={{ scale: 1, y: 0, opacity: 1 }}
+                    exit={{ scale: 0.9, y: 50, opacity: 0 }}
+                    transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                    className="bg-[#050505] border border-white/5 rounded-[3rem] w-full max-w-6xl max-h-[90vh] overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,1)] relative flex flex-col"
+                    onClick={(e) => e.stopPropagation()}
                 >
-                    {/* Background Noise/Scanline Effect */}
-                    <div className="absolute inset-0 pointer-events-none opacity-5 mix-blend-overlay bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+                    {/* Technical Grid Overlay */}
+                    <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
 
-                    <motion.div
-                        initial={{ scale: 0.9, y: 50, opacity: 0 }}
-                        animate={{ scale: 1, y: 0, opacity: 1 }}
-                        exit={{ scale: 0.9, y: 50, opacity: 0 }}
-                        transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                        className="bg-[#050505] border border-white/5 rounded-[3rem] w-full max-w-6xl max-h-[90vh] overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,1)] relative flex flex-col"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        {/* Technical Grid Overlay */}
-                        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
+                    <div className="p-8 md:p-12 overflow-y-auto relative z-10">
+                        <motion.button
+                            whileHover={{ scale: 1.1, rotate: 90 }}
+                            whileTap={{ scale: 0.9 }}
+                            onClick={onClose}
+                            className="absolute top-8 right-8 text-gray-500 transition-all bg-white/5 p-3 rounded-2xl hover:bg-red-600/20 hover:text-red-500 border border-white/5 z-20"
+                        >
+                            <X size={24} />
+                        </motion.button>
 
-                        <div className="p-8 md:p-12 overflow-y-auto relative z-10">
-                            <motion.button
-                                whileHover={{ scale: 1.1, rotate: 90 }}
-                                whileTap={{ scale: 0.9 }}
-                                onClick={onClose}
-                                className="absolute top-8 right-8 text-gray-500 hover:text-white transition-all bg-white/5 p-3 rounded-2xl hover:bg-red-600/20 hover:text-red-500 border border-white/5 z-20"
-                            >
-                                <X size={24} />
-                            </motion.button>
-
-                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-                                <div className="space-y-8">
-                                    <div className="relative group/image">
-                                        <div className="w-full aspect-[4/3] bg-black/40 rounded-[2.5rem] border border-white/5 flex items-center justify-center p-12 relative overflow-hidden shadow-inner">
-                                            {/* Rarity Glow */}
-                                            <div className="absolute inset-0 opacity-10 blur-[80px] pointer-events-none" style={{ backgroundColor: rarityColor }} />
-                                            <div className="absolute top-0 left-0 p-8 opacity-20 group-hover/image:opacity-40 transition-opacity">
-                                                <Target size={120} className="text-white/5" />
-                                            </div>
-
-                                            {viewMode === '3d' && hasModel ? (
-                                                <Wiki3DViewer
-                                                    src={weapon.model_url}
-                                                    alt={weapon.name}
-                                                />
-                                            ) : (
-                                                <motion.img
-                                                    initial={{ y: 20, opacity: 0 }}
-                                                    animate={{ y: 0, opacity: 1 }}
-                                                    transition={{ delay: 0.2, duration: 0.8 }}
-                                                    className="max-h-full max-w-full object-contain relative z-10 drop-shadow-[0_25px_25px_rgba(0,0,0,0.8)]"
-                                                    alt={weapon.name}
-                                                    src={weapon.image_url}
-                                                />
-                                            )}
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+                            <div className="space-y-8">
+                                <div className="relative group/image">
+                                    <div className="w-full aspect-[4/3] bg-black/40 rounded-[2.5rem] border border-white/5 flex items-center justify-center p-12 relative overflow-hidden shadow-inner">
+                                        {/* Rarity Glow */}
+                                        <div className="absolute inset-0 opacity-10 blur-[80px] pointer-events-none" style={{ backgroundColor: rarityColor }} />
+                                        <div className="absolute top-0 left-0 p-8 opacity-20 group-hover/image:opacity-40 transition-opacity">
+                                            <Target size={120} className="text-white/5" />
                                         </div>
 
-                                        {/* View Toggles & Technical Labels */}
-                                        <div className="absolute bottom-6 right-8 left-8 flex items-center justify-between z-20">
-                                            <div className="flex items-center gap-4">
-                                                {/* 2D/3D Toggle if model exists */}
-                                                {hasModel && (
-                                                    <div className="flex bg-black/40 backdrop-blur-md rounded-xl p-1 border border-white/5">
-                                                        <button
-                                                            onClick={() => setViewMode('static')}
-                                                            className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${viewMode === 'static' ? 'bg-red-600 text-white' : 'text-gray-500 hover:text-white'}`}
-                                                        >
-                                                            2D
-                                                        </button>
-                                                        <button
-                                                            onClick={() => setViewMode('3d')}
-                                                            className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${viewMode === '3d' ? 'bg-red-600 text-white shadow-[0_0_15px_rgba(220,38,38,0.5)]' : 'text-gray-500 hover:text-white'}`}
-                                                        >
-                                                            3D
-                                                        </button>
-                                                    </div>
-                                                )}
+                                        {viewMode === '3d' && hasModel ? (
+                                            <Wiki3DViewer
+                                                src={weapon.model_url}
+                                                alt={weapon.name}
+                                            />
+                                        ) : (
+                                            <motion.img
+                                                initial={{ y: 20, opacity: 0 }}
+                                                animate={{ y: 0, opacity: 1 }}
+                                                transition={{ delay: 0.2, duration: 0.8 }}
+                                                className="max-h-full max-w-full object-contain relative z-10 drop-shadow-[0_25px_25px_rgba(0,0,0,0.8)]"
+                                                alt={weapon.name}
+                                                src={weapon.image_url}
+                                            />
+                                        )}
+                                    </div>
 
-                                                <div className="flex items-center gap-2">
-                                                    <div className="w-2 h-2 rounded-full bg-red-600 animate-pulse shadow-[0_0_10px_#ef4444]" />
-                                                    <span className="text-[10px] font-black font-mono text-gray-500 uppercase tracking-widest">
-                                                        {viewMode === '3d' ? "3D Visual" : t('wiki.weapon.visual_confirm')}
-                                                    </span>
+                                    {/* View Toggles & Technical Labels */}
+                                    <div className="absolute bottom-6 right-8 left-8 flex items-center justify-between z-20">
+                                        <div className="flex items-center gap-4">
+                                            {/* 2D/3D Toggle if model exists */}
+                                            {hasModel && (
+                                                <div className="flex bg-black/40 backdrop-blur-md rounded-xl p-1 border border-white/5">
+                                                    <button
+                                                        onClick={() => setViewMode('static')}
+                                                        className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${viewMode === 'static' ? 'bg-red-600 text-white' : 'text-gray-500 hover:text-white'}`}
+                                                    >
+                                                        2D
+                                                    </button>
+                                                    <button
+                                                        onClick={() => setViewMode('3d')}
+                                                        className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${viewMode === '3d' ? 'bg-red-600 text-white shadow-[0_0_15px_rgba(220,38,38,0.5)]' : 'text-gray-500 hover:text-white'}`}
+                                                    >
+                                                        3D
+                                                    </button>
                                                 </div>
-                                            </div>
-
-                                            {hasAudio && (
-                                                <motion.button
-                                                    whileHover={{ scale: 1.1 }}
-                                                    whileTap={{ scale: 0.9 }}
-                                                    onClick={playAudio}
-                                                    className={`p-3 rounded-2xl border transition-all duration-300 flex items-center gap-3 ${isPlaying ? 'bg-red-600 border-red-500 shadow-[0_0_20px_rgba(239,68,68,0.4)] text-white' : 'bg-white/5 border-white/10 text-gray-400 hover:text-white hover:bg-white/10'}`}
-                                                >
-                                                    <Volume2 size={18} className={isPlaying ? 'animate-pulse' : ''} />
-                                                    <span className="text-[10px] font-black uppercase tracking-widest">
-                                                        {isPlaying ? t('wiki.weapon.playing_sfx') : t('wiki.weapon.play_sfx')}
-                                                    </span>
-                                                </motion.button>
                                             )}
-                                        </div>
-                                    </div>
 
-                                    {!isMelee && (
-                                        <div className="space-y-4">
-                                            <div className="flex items-center justify-between">
-                                                <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">{t('wiki.weapon.inventory_attachments')}</h4>
-                                                {loading && <Loader2 className="w-4 h-4 animate-spin text-red-500" />}
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-2 h-2 rounded-full bg-red-600 animate-pulse shadow-[0_0_10px_#ef4444]" />
+                                                <span className="text-[10px] font-black font-mono text-gray-500 uppercase tracking-widest">
+                                                    {viewMode === '3d' ? "3D Visual" : t('wiki.weapon.visual_confirm')}
+                                                </span>
                                             </div>
-                                            <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 p-4 bg-black/40 border border-white/5 rounded-[2rem] min-h-[140px] shadow-inner relative">
-                                                {!loading && availableAttachments.length === 0 && (
-                                                    <div className="absolute inset-0 flex items-center justify-center text-gray-700 pointer-events-none">
-                                                        <span className="text-[8px] font-black uppercase tracking-widest">{t('wiki.weapon.no_mods_available')}</span>
-                                                    </div>
-                                                )}
-                                                {availableAttachments.filter(att => att.accessories && !Object.values(equipped).some(eq => eq && eq.id === att.accessories.id)).map(att => <DraggableAccessory key={att.accessories.id} accessory={att.accessories} />)}
-                                            </div>
-                                            <p className="text-[8px] font-black uppercase tracking-widest text-center text-gray-600">{t('wiki.weapon.drag_instruction')}</p>
                                         </div>
-                                    )}
+
+                                        {hasAudio && (
+                                            <motion.button
+                                                whileHover={{ scale: 1.1 }}
+                                                whileTap={{ scale: 0.9 }}
+                                                onClick={playAudio}
+                                                className={`p-3 rounded-2xl border transition-all duration-300 flex items-center gap-3 ${isPlaying ? 'bg-red-600 border-red-500 shadow-[0_0_20px_rgba(239,68,68,0.4)] text-white' : 'bg-white/5 border-white/10 text-gray-400 hover:text-white hover:bg-white/10'}`}
+                                            >
+                                                <Volume2 size={18} className={isPlaying ? 'animate-pulse' : ''} />
+                                                <span className="text-[10px] font-black uppercase tracking-widest">
+                                                    {isPlaying ? t('wiki.weapon.playing_sfx') : t('wiki.weapon.play_sfx')}
+                                                </span>
+                                            </motion.button>
+                                        )}
+                                    </div>
                                 </div>
 
-                                <div className="space-y-8">
-                                    <div>
-                                        <motion.div
-                                            initial={{ x: -20, opacity: 0 }}
-                                            animate={{ x: 0, opacity: 1 }}
-                                            className="flex items-center gap-2 mb-4"
-                                        >
-                                            <span className="text-[10px] font-black px-4 py-1.5 rounded-full tracking-widest uppercase shadow-lg border border-red-500/20" style={{ backgroundColor: `${weapon.rarity.color}20`, color: weapon.rarity.color }}>
-                                                {weapon.rarity.name} {t('wiki.common.grade')}
-                                            </span>
-                                        </motion.div>
-
-                                        <h2 className="text-6xl md:text-7xl font-black text-white uppercase tracking-tighter mb-4 leading-none">
-                                            {weapon.name.split(' ').map((word, i) => (
-                                                <span key={i} className={i === 0 ? "block" : "text-red-600 block"}>{word}</span>
-                                            ))}
-                                        </h2>
-
-                                        <p className="text-gray-400 text-lg leading-relaxed font-medium mb-8 border-l-2 border-red-600/20 pl-6 py-2">
-                                            {weapon.description}
-                                        </p>
-
-                                        <div className="grid grid-cols-2 gap-4 mb-12">
-                                            <SimpleStat icon={DollarSign} label={t('wiki.common.market_value')} value={weapon.price || 0} unit="$" valueClassName="text-red-500" className="cursor-pointer border-red-500/10 hover:border-red-500/40 shadow-lg" onClick={() => setShowNpcSellers(true)} />
-                                            <SimpleStat icon={TrendingUp} label={t('wiki.common.resale_factor')} value={weapon.sell_price || 'N/A'} unit="$" valueClassName="text-green-500" />
+                                {!isMelee && (
+                                    <div className="space-y-4">
+                                        <div className="flex items-center justify-between">
+                                            <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">{t('wiki.weapon.inventory_attachments')}</h4>
+                                            {loading && <Loader2 className="w-4 h-4 animate-spin text-red-500" />}
                                         </div>
-
-                                        {mainContent}
+                                        <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 p-4 bg-black/40 border border-white/5 rounded-[2rem] min-h-[140px] shadow-inner relative">
+                                            {!loading && availableAttachments.length === 0 && (
+                                                <div className="absolute inset-0 flex items-center justify-center text-gray-700 pointer-events-none">
+                                                    <span className="text-[8px] font-black uppercase tracking-widest">{t('wiki.weapon.no_mods_available')}</span>
+                                                </div>
+                                            )}
+                                            {availableAttachments.filter(att => att.accessories && !Object.values(equipped).some(eq => eq && eq.id === att.accessories.id)).map(att => <DraggableAccessory key={att.accessories.id} accessory={att.accessories} />)}
+                                        </div>
+                                        <p className="text-[8px] font-black uppercase tracking-widest text-center text-gray-600">{t('wiki.weapon.drag_instruction')}</p>
                                     </div>
+                                )}
+                            </div>
+
+                            <div className="space-y-8">
+                                <div>
+                                    <motion.div
+                                        initial={{ x: -20, opacity: 0 }}
+                                        animate={{ x: 0, opacity: 1 }}
+                                        className="flex items-center gap-2 mb-4"
+                                    >
+                                        <span className="text-[10px] font-black px-4 py-1.5 rounded-full tracking-widest uppercase shadow-lg border border-red-500/20" style={{ backgroundColor: `${weapon.rarity.color}20`, color: weapon.rarity.color }}>
+                                            {weapon.rarity.name} {t('wiki.common.grade')}
+                                        </span>
+                                    </motion.div>
+
+                                    <h2 className="text-6xl md:text-7xl font-black text-white uppercase tracking-tighter mb-4 leading-none">
+                                        {weapon.name.split(' ').map((word, i) => (
+                                            <span key={i} className={i === 0 ? "block" : "text-red-600 block"}>{word}</span>
+                                        ))}
+                                    </h2>
+
+                                    <p className="text-gray-400 text-lg leading-relaxed font-medium mb-8 border-l-2 border-red-600/20 pl-6 py-2">
+                                        {weapon.description}
+                                    </p>
+
+                                    <div className="grid grid-cols-2 gap-4 mb-12">
+                                        <SimpleStat icon={DollarSign} label={t('wiki.common.market_value')} value={weapon.price || 0} unit="$" valueClassName="text-red-500" className="cursor-pointer border-red-500/10 hover:border-red-500/40 shadow-lg" onClick={() => setShowNpcSellers(true)} />
+                                        <SimpleStat icon={TrendingUp} label={t('wiki.common.resale_factor')} value={weapon.sell_price || 'N/A'} unit="$" valueClassName="text-green-500" />
+                                    </div>
+
+                                    {mainContent}
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        {/* Bottom Decoration */}
-                        <div className="h-2 bg-[#0a0a0c] border-t border-white/5 flex">
-                            <div className="w-1/3 h-full bg-red-600" />
-                            <div className="w-2/3 h-full flex justify-between px-4">
-                                {[...Array(20)].map((_, i) => (
-                                    <div key={i} className="w-px h-full bg-white/5" />
-                                ))}
-                            </div>
+                    {/* Bottom Decoration */}
+                    <div className="h-2 bg-[#0a0a0c] border-t border-white/5 flex">
+                        <div className="w-1/3 h-full bg-red-600" />
+                        <div className="w-2/3 h-full flex justify-between px-4">
+                            {[...Array(20)].map((_, i) => (
+                                <div key={i} className="w-px h-full bg-white/5" />
+                            ))}
                         </div>
-                    </motion.div>
+                    </div>
                 </motion.div>
-                {!isMelee &&
-                    <DragOverlay>
-                        {activeId && activeAccessory ?
-                            <div style={{ borderColor: activeAccessory.rarity?.color || '#FF0000' }} className="w-24 h-24 p-1 rounded-lg bg-gray-800/80 backdrop-blur-sm border-2 flex flex-col items-center justify-center cursor-grabbing shadow-2xl shadow-red-500/50 text-center">
-                                <img className="flex-grow w-auto h-auto max-w-full max-h-[70%] object-contain" src={activeAccessory.image_url} />
-                                <span className="text-white text-xs mt-1 truncate w-full px-1">{activeAccessory.name}</span>
-                            </div>
-                            : null}
-                    </DragOverlay>}
-                {showAmmoModal && <AmmoWeaponsModal ammo={weapon.ammo} onClose={() => setShowAmmoModal(false)} />}
-                {showNpcSellers && <NpcSellersModal itemType="weapons" itemId={weapon.id} onClose={() => setShowNpcSellers(false)} onNpcSelect={onNpcSelect} />}
-            </DndContext>
-        </AnimatePresence>
+            </motion.div>
+            {!isMelee &&
+                <DragOverlay>
+                    {activeId && activeAccessory ?
+                        <div style={{ borderColor: activeAccessory.rarity?.color || '#FF0000' }} className="w-24 h-24 p-1 rounded-lg bg-gray-800/80 backdrop-blur-sm border-2 flex flex-col items-center justify-center cursor-grabbing shadow-2xl shadow-red-500/50 text-center">
+                            <img className="flex-grow w-auto h-auto max-w-full max-h-[70%] object-contain" src={activeAccessory.image_url} />
+                            <span className="text-white text-xs mt-1 truncate w-full px-1">{activeAccessory.name}</span>
+                        </div>
+                        : null}
+                </DragOverlay>}
+            {showAmmoModal && <AmmoWeaponsModal ammo={weapon.ammo} onClose={() => setShowAmmoModal(false)} />}
+            {showNpcSellers && <NpcSellersModal itemType="weapons" itemId={weapon.id} onClose={() => setShowAmmoModal(false)} onNpcSelect={onNpcSelect} />}
+        </DndContext>
     );
 };
 

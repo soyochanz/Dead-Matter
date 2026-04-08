@@ -169,6 +169,7 @@ const DiseaseManager = ({ sharedMetadata }) => {
     const [medicines, setMedicines] = useState([]);
     const [relations, setRelations] = useState([]);
     const [editingItem, setEditingItem] = useState(null);
+    const [editingMed, setEditingMed] = useState(null);
     const [showDiseaseForm, setShowDiseaseForm] = useState(false);
     const [showMedicineManager, setShowMedicineManager] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -221,7 +222,7 @@ const DiseaseManager = ({ sharedMetadata }) => {
                 >
                     <Activity className="w-4 h-4 mr-2" /> Back to Biothreat Dashboard
                 </Button>
-                <MedicineManager onSaveCallback={loadData} sharedMetadata={sharedMetadata} />
+                <MedicineManager onSaveCallback={loadData} sharedMetadata={sharedMetadata} initialItem={editingMed} />
             </div>
         )
     }
@@ -356,6 +357,14 @@ const DiseaseManager = ({ sharedMetadata }) => {
                                                         </div>
                                                     </div>
                                                     <div className="flex gap-2">
+                                                        <Button 
+                                                            onClick={() => { setEditingMed(item); setShowMedicineManager(true); }} 
+                                                            variant="ghost" 
+                                                            size="icon" 
+                                                            className="h-9 w-9 text-gray-500 hover:text-emerald-500"
+                                                        >
+                                                            <Edit size={16} />
+                                                        </Button>
                                                         <DialogTrigger asChild>
                                                             <Button variant="ghost" size="icon" className="h-9 w-9 text-gray-500 hover:text-blue-400 hover:bg-blue-500/10"><LinkIcon size={16} /></Button>
                                                         </DialogTrigger>

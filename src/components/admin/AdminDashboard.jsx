@@ -7,7 +7,8 @@ import {
   Sword, Crosshair, Shirt, Package,
   Soup, Key, Sprout, Car, Wrench,
   Stethoscope, UserCircle, Layers, Star,
-  Menu, X, Loader2, Shield, Globe, Lock
+  Menu, X, Loader2, Shield, Globe, Lock,
+  Activity
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -35,6 +36,7 @@ const CraftingMaterialsManager = lazy(() => import('@/components/admin/CraftingM
 const VehicleManager = lazy(() => import('@/components/admin/VehicleManager'));
 const VehicleComponentManager = lazy(() => import('@/components/admin/VehicleComponentManager'));
 const DiseaseManager = lazy(() => import('@/components/admin/DiseaseManager'));
+const MedicineManager = lazy(() => import('@/components/admin/MedicineManager'));
 const NpcManager = lazy(() => import('@/components/admin/NpcManager'));
 const PerksOccupationsManager = lazy(() => import('@/components/admin/PerksOccupationsManager'));
 const WikiCategoryManager = lazy(() => import('@/components/admin/WikiCategoryManager'));
@@ -69,6 +71,7 @@ const CATEGORIES = [
       { id: 'accessories', label: 'Accessories', icon: Crosshair, component: AccessoryManager },
       { id: 'gear', label: 'Gear', icon: Shirt, component: GearManager },
       { id: 'toolbelts', label: 'Toolbelts', icon: Package, component: ToolbeltManager },
+      { id: 'medicines', label: 'Medical Items', icon: Stethoscope, component: MedicineManager },
       { id: 'consumables', label: 'Consumables', icon: Soup, component: ConsumableManager },
       { id: 'keys', label: 'Keys', icon: Key, component: KeyManager },
       { id: 'crafting_materials', label: 'Crafting', icon: Sprout, component: CraftingMaterialsManager },
@@ -86,7 +89,7 @@ const CATEGORIES = [
     id: 'character',
     label: 'Character',
     items: [
-      { id: 'diseases', label: 'Meds & Health', icon: Stethoscope, component: DiseaseManager },
+      { id: 'diseases', label: 'Diseases & Status', icon: Activity, component: DiseaseManager },
       { id: 'perks', label: 'Perks & Chars', icon: UserCircle, component: PerksOccupationsManager },
     ]
   },
@@ -190,11 +193,11 @@ const AdminDashboard = () => {
          ============================================================================== */}
       <div className="hidden lg:flex h-screen bg-black text-white overflow-hidden font-sans">
         <aside className={cn(
-          "w-72 bg-[#0a0a0c] border-r border-white/5 transition-all duration-300 flex-col relative shrink-0",
+          "w-72 bg-[#0a0a0c] border-r border-white/5 transition-all duration-300 flex flex-col relative shrink-0 h-full",
           !isSidebarOpen && "lg:hidden"
         )}>
           {/* Sidebar Header */}
-          <div className="p-6 border-b border-white/5 flex items-center justify-between bg-white/[0.01]">
+          <div className="p-6 border-b border-white/5 flex items-center justify-between bg-white/[0.01] shrink-0">
             <div className="flex items-center gap-3">
               <div className="h-8 w-8 bg-red-600 rounded flex items-center justify-center">
                 <Shield className="h-5 w-5 text-white" />
@@ -207,7 +210,7 @@ const AdminDashboard = () => {
           </div>
 
           {/* Sidebar Search */}
-          <div className="px-6 py-4">
+          <div className="px-6 py-4 shrink-0">
             <div className="relative group">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-600 group-focus-within:text-red-500 transition-colors" />
               <Input
@@ -220,7 +223,7 @@ const AdminDashboard = () => {
           </div>
 
           {/* Navigation Items (Desktop) */}
-          <nav className="flex-1 overflow-y-auto px-4 py-2 space-y-6 scrollbar-hide">
+          <nav className="flex-1 overflow-y-auto px-4 py-2 space-y-6 custom-scrollbar">
             {filteredCategories.map(category => (
               <div key={category.id} className="space-y-1">
                 <h3 className="px-2 text-[10px] font-bold text-gray-600 uppercase tracking-widest mb-2 flex items-center gap-2">

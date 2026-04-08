@@ -156,24 +156,23 @@ function App() {
 
 
           {/* Individual Category Pages */}
-          <Route path="wiki/weapons" element={<WeaponsPage />} />
-          <Route path="wiki/consumables" element={<ConsumablesPage />} />
-          <Route path="wiki/gear" element={<GearPage />} />
-          <Route path="wiki/toolbelts" element={<ToolbeltsPage />} />
-          <Route path="wiki/keys" element={<KeysPage />} />
-          <Route path="wiki/vehicles" element={<VehiclesPage />} />
-          <Route path="wiki/accessories" element={<AccessoriesPage />} />
+          <Route path="wiki/weapons/:itemSlug?" element={<WeaponsPage />} />
+          <Route path="wiki/consumables/:itemSlug?" element={<ConsumablesPage />} />
+          <Route path="wiki/gear/:itemSlug?" element={<GearPage />} />
+          <Route path="wiki/toolbelts/:itemSlug?" element={<ToolbeltsPage />} />
+          <Route path="wiki/keys/:itemSlug?" element={<KeysPage />} />
+          <Route path="wiki/vehicles/:itemSlug?" element={<VehiclesPage />} />
+          <Route path="wiki/accessories/:itemSlug?" element={<AccessoriesPage />} />
 
 
           {/* Specialized Pages */}
-          <Route path="wiki/meds" element={<MedsPage />} />
-          <Route path="wiki/perks" element={<PerksPage />} />
-          <Route path="wiki/npcs" element={<NpcsPage />} />
-          <Route path="wiki/basebuilding" element={<BasebuildingPage />} />
+          <Route path="wiki/meds/:itemSlug?" element={<MedsPage />} />
+          <Route path="wiki/perks/:itemSlug?" element={<PerksPage />} />
+          <Route path="wiki/npcs/:itemSlug?" element={<NpcsPage />} />
+          <Route path="wiki/basebuilding/:itemSlug?" element={<BasebuildingPage />} />
 
           {/* Wiki Category & Item Pages */}
-          <Route path="wiki/:categoryName" element={<WikiCategoryPage />} />
-          <Route path="wiki/:categoryName/:itemSlug" element={<WikiCategoryPage />} />
+          <Route path="wiki/:categoryName/:itemSlug?" element={<WikiCategoryPage />} />
 
           <Route path="updates" element={<Updates />} />
           <Route path="updates/:slug" element={<UpdateDetailPage />} />

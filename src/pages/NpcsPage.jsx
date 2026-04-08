@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '@/lib/mySupabaseClient';
 import { Loader2, User, MapPin, ArrowRight } from 'lucide-react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import WikiCategoryLayout from '@/components/wiki/WikiCategoryLayout';
 import NpcDetailModal from '@/components/wiki/NpcDetailModal';
 
@@ -15,6 +15,7 @@ const NpcsPage = () => {
     const [activeFilter, setActiveFilter] = useState('all');
     const [searchTerm, setSearchTerm] = useState('');
     const location = useLocation();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchNpcs = async () => {
@@ -53,7 +54,7 @@ const NpcsPage = () => {
 
     const handleCloseModal = () => {
         setSelectedNpc(null);
-        window.history.replaceState({}, document.title)
+        navigate('/wiki/npcs', { replace: true });
     };
 
     return (
@@ -156,7 +157,9 @@ const NpcsPage = () => {
                 )}
             </WikiCategoryLayout>
 
-            {selectedNpc && <NpcDetailModal npc={selectedNpc} onClose={handleCloseModal} />}
+            <AnimatePresence>
+                {selectedNpc && <NpcDetailModal npc={selectedNpc} onClose={handleCloseModal} />}
+            </AnimatePresence>
         </>
     );
 };

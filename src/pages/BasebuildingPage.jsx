@@ -7,6 +7,8 @@ import BasebuildingDetailModal from '@/components/wiki/BasebuildingDetailModal';
 import NpcDetailModal from '@/components/wiki/NpcDetailModal';
 import { AnimatePresence } from 'framer-motion';
 import WikiCategoryLayout from '@/components/wiki/WikiCategoryLayout';
+import { useNavigate, useParams } from 'react-router-dom';
+import { slugify } from '@/utils/slugify';
 
 const CATEGORIES = [
     { id: "Items", name: "Items" },
@@ -19,6 +21,8 @@ const CATEGORIES = [
 ];
 
 const BasebuildingPage = () => {
+    const { itemSlug: urlSlug } = useParams();
+    const navigate = useNavigate();
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedItem, setSelectedItem] = useState(null);
@@ -45,6 +49,16 @@ const BasebuildingPage = () => {
     useEffect(() => {
         fetchItems();
     }, [fetchItems]);
+
+    // Handle initial selection from URL
+    useEffect(() => {
+        if (urlSlug && items.length > 0) {
+            const item = items.find(i => (i.slug || slugify(i.name) || String(i.id)) === urlSlug);
+            if (item) setSelectedItem(item);
+        } else if (!urlSlug) {
+            setSelectedItem(null);
+        }
+    }, [urlSlug, items]);
 
     const filteredItems = useMemo(() => {
         return items.filter(item => {
@@ -103,7 +117,11 @@ const BasebuildingPage = () => {
                                     item={item}
                                     index={index}
                                     showDeployed={showAllDeployed}
-                                    onClick={() => setSelectedItem(item)}
+                                    onClick={() => {
+                                        setSelectedItem(item);
+                                        const slug = item.slug || slugify(item.name) || item.id;
+                                        navigate(`/wiki/basebuilding/${slug}`);
+                                    }}
                                 />
                             ))}
                         </div>
@@ -117,13 +135,18 @@ const BasebuildingPage = () => {
                 )}
             </WikiCategoryLayout>
 
-            {selectedItem && (
-                <BasebuildingDetailModal
-                    item={selectedItem}
-                    onClose={() => setSelectedItem(null)}
-                    onNpcSelect={handleNpcSelect}
-                />
-            )}
+            <AnimatePresence>
+                {selectedItem && (
+                    <BasebuildingDetailModal
+                        item={selectedItem}
+                        onClose={() => {
+                            setSelectedItem(null);
+                            navigate('/wiki/basebuilding');
+                        }}
+                        onNpcSelect={handleNpcSelect}
+                    />
+                )}
+            </AnimatePresence>
             <AnimatePresence>
                 {selectedNpc && <NpcDetailModal npc={selectedNpc} onClose={() => setSelectedNpc(null)} />}
             </AnimatePresence>

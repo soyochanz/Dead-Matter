@@ -58,7 +58,7 @@ const NpcDetailModal = ({ npc, onClose }) => {
     if (!npc) return null;
 
     return (
-        <AnimatePresence>
+        <>
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -193,8 +193,8 @@ const NpcDetailModal = ({ npc, onClose }) => {
                                                             <h4 className="text-white font-medium group-hover:text-red-400 transition-colors mb-1">{mission.title}</h4>
                                                             <div className="flex items-center gap-2">
                                                                 <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase border ${mission.difficulty === 'Easy' ? 'text-green-400 border-green-500/30 bg-green-500/10' :
-                                                                        mission.difficulty === 'Medium' ? 'text-amber-400 border-amber-500/30 bg-amber-500/10' :
-                                                                            'text-red-400 border-red-500/30 bg-red-500/10'
+                                                                    mission.difficulty === 'Medium' ? 'text-amber-400 border-amber-500/30 bg-amber-500/10' :
+                                                                        'text-red-400 border-red-500/30 bg-red-500/10'
                                                                     }`}>
                                                                     {mission.difficulty}
                                                                 </span>
@@ -254,13 +254,15 @@ const NpcDetailModal = ({ npc, onClose }) => {
                 </motion.div>
             </motion.div>
 
-            {selectedMission && (
-                <MissionDetailModal
-                    mission={selectedMission}
-                    onClose={() => setSelectedMission(null)}
-                />
-            )}
-        </AnimatePresence>
+            <AnimatePresence>
+                {selectedMission && (
+                    <MissionDetailModal
+                        mission={selectedMission}
+                        onClose={() => setSelectedMission(null)}
+                    />
+                )}
+            </AnimatePresence>
+        </>
     );
 };
 

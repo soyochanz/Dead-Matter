@@ -115,7 +115,6 @@ const BasebuildingDetailModal = ({ item, onClose, onNpcSelect }) => {
     const hasPackedVariant = !!item.image_unpacked_url;
 
     return (
-        <AnimatePresence>
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -305,7 +304,6 @@ const BasebuildingDetailModal = ({ item, onClose, onNpcSelect }) => {
                     onNpcSelect={onNpcSelect}
                 />
             )}
-        </AnimatePresence>
     )
 };
 

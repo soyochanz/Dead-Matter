@@ -145,7 +145,7 @@ const WikiCategoryPage = ({ category, customTitle, customSubtitle, customDescrip
         };
 
         fetchData();
-    }, [activeCategory, navigate, customTitle, category]);
+    }, [activeCategory, navigate, customTitle, category, itemSlug, t]);
 
     const handleNpcSelect = (npc) => {
         setSelectedItem(null);
@@ -258,16 +258,18 @@ const WikiCategoryPage = ({ category, customTitle, customSubtitle, customDescrip
                 )}
             </WikiCategoryLayout>
 
-            {selectedItem && Modal && (
-                <Modal
-                    {...{ [cardItemProp]: selectedItem }}
-                    onClose={() => {
-                        setSelectedItem(null);
-                        navigate(`/wiki/${activeCategory.toLowerCase()}`);
-                    }}
-                    onNpcSelect={handleNpcSelect}
-                />
-            )}
+            <AnimatePresence>
+                {selectedItem && Modal && (
+                    <Modal
+                        {...{ [cardItemProp]: selectedItem }}
+                        onClose={() => {
+                            setSelectedItem(null);
+                            navigate(`/wiki/${activeCategory.toLowerCase()}`);
+                        }}
+                        onNpcSelect={handleNpcSelect}
+                    />
+                )}
+            </AnimatePresence>
 
             <AnimatePresence>
                 {selectedNpc && <NpcDetailModal npc={selectedNpc} onClose={() => setSelectedNpc(null)} />}
