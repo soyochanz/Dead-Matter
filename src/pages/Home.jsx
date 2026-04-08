@@ -411,7 +411,16 @@ const Home = () => {
 
           {/* Right: Micro-commits */}
           <div className="lg:col-span-4">
-            <SectionHeader icon={GitCommit} iconGlow="#3b82f6" title={t('home.micro_changes')} />
+            <SectionHeader 
+              icon={GitCommit} 
+              iconGlow="#3b82f6" 
+              title={t('home.micro_changes')} 
+              action={
+                <Link to="/micro-changes" className="text-blue-400 text-sm font-bold flex items-center gap-1 hover:translate-x-1 transition-transform">
+                  {t('home.view_all')} <ArrowRight size={14} />
+                </Link>
+              }
+            />
             <div
               className="relative overflow-hidden rounded-2xl p-5"
               style={{ background: CARD_BG, border: `1px solid ${BORDER}`, boxShadow: '0 4px 24px rgba(0,0,0,0.4)' }}

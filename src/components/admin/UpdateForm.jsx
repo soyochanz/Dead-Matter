@@ -5,8 +5,9 @@ import { supabase } from '@/lib/mySupabaseClient';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
-import { X } from 'lucide-react';
+import { X, Search, Check, Zap } from 'lucide-react';
 import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
 
 const UpdateForm = ({ update: existingUpdate, onSave, onCancel }) => {
   const [title, setTitle] = useState('');
@@ -21,6 +22,12 @@ const UpdateForm = ({ update: existingUpdate, onSave, onCancel }) => {
   const [titlePt, setTitlePt] = useState('');
   const [contentEs, setContentEs] = useState('');
   const [contentPt, setContentPt] = useState('');
+  
+  // Micro Changes Linking State
+  const [allMicroChanges, setAllMicroChanges] = useState([]);
+  const [selectedChangeIds, setSelectedChangeIds] = useState([]);
+  const [mcSearch, setMcSearch] = useState('');
+  const [isLoadingMC, setIsLoadingMC] = useState(false);
 
   const { toast } = useToast();
 
@@ -36,6 +43,7 @@ const UpdateForm = ({ update: existingUpdate, onSave, onCancel }) => {
       setTitlePt(existingUpdate.title_pt || '');
       setContentEs(existingUpdate.content_es || '');
       setContentPt(existingUpdate.content_pt || '');
+      fetchExistingAssociations(existingUpdate.id);
     } else {
       setTitle('');
       setDate(new Date().toISOString().slice(0, 10));
@@ -47,8 +55,32 @@ const UpdateForm = ({ update: existingUpdate, onSave, onCancel }) => {
       setTitlePt('');
       setContentEs('');
       setContentPt('');
+      setSelectedChangeIds([]);
     }
+    fetchAllMicroChanges();
   }, [existingUpdate]);
+
+  const fetchAllMicroChanges = async () => {
+    setIsLoadingMC(true);
+    const { data, error } = await supabase
+      .from('micro_changes')
+      .select('id, message, commit_hash, category')
+      .order('created_at', { ascending: false });
+    
+    if (!error && data) setAllMicroChanges(data);
+    setIsLoadingMC(false);
+  };
+
+  const fetchExistingAssociations = async (updateId) => {
+    const { data, error } = await supabase
+      .from('update_micro_changes')
+      .select('micro_change_id')
+      .eq('update_id', updateId);
+    
+    if (!error && data) {
+      setSelectedChangeIds(data.map(d => d.micro_change_id));
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -74,10 +106,32 @@ const UpdateForm = ({ update: existingUpdate, onSave, onCancel }) => {
     };
 
     let error;
+    let savedUpdateId = id;
+
     if (id) {
       ({ error } = await supabase.from('updates').update(updateData).eq('id', id));
     } else {
-      ({ error } = await supabase.from('updates').insert([updateData]));
+      const { data, error: insertError } = await supabase.from('updates').insert([updateData]).select();
+      error = insertError;
+      if (data?.[0]) savedUpdateId = data[0].id;
+    }
+
+    if (!error && savedUpdateId) {
+      // Sync micro changes
+      // 1. Delete old
+      await supabase.from('update_micro_changes').delete().eq('update_id', savedUpdateId);
+      
+      // 2. Insert new
+      if (selectedChangeIds.length > 0) {
+        const associations = selectedChangeIds.map(mcId => ({
+          update_id: savedUpdateId,
+          micro_change_id: mcId
+        }));
+        const { error: assocError } = await supabase.from('update_micro_changes').insert(associations);
+        if (assocError) {
+          console.error('Error saving associations:', assocError);
+        }
+      }
     }
 
     if (error) {
@@ -202,6 +256,58 @@ const UpdateForm = ({ update: existingUpdate, onSave, onCancel }) => {
                 />
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Micro Changes Selector */}
+        <div className="space-y-3 p-4 bg-white/5 rounded-xl border border-white/5">
+          <div className="flex justify-between items-center mb-1">
+            <Label className="text-gray-300 font-bold uppercase tracking-widest text-xs flex items-center gap-2">
+              <Zap size={14} className="text-yellow-500" />
+              Link Micro Changes (Commits)
+            </Label>
+            <span className="text-[10px] text-gray-500 font-bold">{selectedChangeIds.length} Selected</span>
+          </div>
+          
+          <div className="relative mb-3">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+            <Input 
+              placeholder="Search commits..."
+              value={mcSearch}
+              onChange={(e) => setMcSearch(e.target.value)}
+              className="pl-9 h-9 bg-slate-900 border-white/10 text-xs"
+            />
+          </div>
+
+          <div className="h-48 rounded-md border border-white/10 bg-black/20 p-2 overflow-y-auto custom-scrollbar">
+            {allMicroChanges
+              .filter(mc => 
+                mc.message.toLowerCase().includes(mcSearch.toLowerCase()) || 
+                mc.commit_hash?.toLowerCase().includes(mcSearch.toLowerCase())
+              )
+              .map(mc => (
+                <div 
+                  key={mc.id} 
+                  className={`flex items-start gap-3 p-2 rounded-lg mb-1 transition-colors cursor-pointer hover:bg-white/5 ${selectedChangeIds.includes(mc.id) ? 'bg-white/5' : ''}`}
+                  onClick={() => {
+                    setSelectedChangeIds(prev => 
+                      prev.includes(mc.id) ? prev.filter(i => i !== mc.id) : [...prev, mc.id]
+                    );
+                  }}
+                >
+                  <div className={`mt-0.5 w-4 h-4 rounded border flex items-center justify-center transition-colors ${selectedChangeIds.includes(mc.id) ? 'bg-red-600 border-red-600' : 'border-white/20'}`}>
+                    {selectedChangeIds.includes(mc.id) && <Check size={10} className="text-white" />}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs text-gray-300 line-clamp-1 leading-tight mb-1">{mc.message}</p>
+                    <div className="flex items-center gap-2 text-[9px] font-mono">
+                      <span className="text-blue-400">#{mc.commit_hash || mc.id.substring(0,6)}</span>
+                      {mc.category && <span className="text-gray-600 uppercase font-black">{mc.category}</span>}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            {allMicroChanges.length === 0 && !isLoadingMC && <div className="text-center py-4 text-xs text-gray-600">No commits found.</div>}
           </div>
         </div>
 

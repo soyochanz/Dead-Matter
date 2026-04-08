@@ -36,6 +36,7 @@ const CreateGuidePage = lazyImport(() => import('@/pages/CreateGuidePage'));
 const RegisterPage = lazyImport(() => import('@/pages/RegisterPage'));
 const LoginPage = lazyImport(() => import('@/pages/LoginPage'));
 const EditProfilePage = lazyImport(() => import('@/pages/EditProfilePage'));
+const MicroChanges = lazyImport(() => import('@/pages/MicroChanges'));
 
 // Componente de carga
 const PageLoader = () => (
@@ -181,6 +182,7 @@ function App() {
           <Route path="map" element={<Map />} />
 
           <Route path="media" element={<Media />} />
+          <Route path="micro-changes" element={<MicroChanges />} />
           <Route path="guides" element={<GuidesPage />} />
 
           <Route path="guides/create" element={
@@ -209,6 +211,7 @@ function App() {
               <EditProfilePage />
             </PrivateRoute>
           } />
+
 
 
           {/* Ruta 404 */}
