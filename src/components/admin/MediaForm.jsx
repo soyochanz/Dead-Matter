@@ -94,16 +94,43 @@ const MediaForm = ({ item, onSave, onCancel }) => {
   const handleUrlChange = async (url) => {
     let thumbnail = '';
 
-    // Si es YouTube URL, generar thumbnail automáticamente
+    // Si es YouTube URL, generar thumbnail y metadatos automáticamente
     if (formData.type === 'video' && (url.includes('youtube.com') || url.includes('youtu.be'))) {
       thumbnail = getYouTubeThumbnail(url);
+      
+      // Actualizar URL y thumbnail inmediatamente
       setFormData(prev => ({
         ...prev,
         url: url,
         thumbnail: thumbnail || prev.thumbnail
       }));
-    } else if (formData.type === 'video' && (url.toLowerCase().includes('.mp4') || url.toLowerCase().includes('.webm') || url.toLowerCase().includes('.mov') || url.includes('discordapp.net') || url.includes('cdn.discordapp.com'))) {
 
+      // Intentar obtener metadatos adicionales (Título y Autor)
+      try {
+        const videoId = extractYouTubeId(url);
+        if (videoId) {
+          const response = await fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`);
+          if (response.ok) {
+            const data = await response.json();
+            setFormData(prev => ({
+              ...prev,
+              title: prev.title || data.title || '',
+              author: prev.author || data.author_name || '',
+              thumbnail: data.thumbnail_url || thumbnail || prev.thumbnail
+            }));
+            
+            toast({
+              title: "YouTube Data Detected",
+              description: `Title and Author populated automatically.`,
+            });
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch YouTube metadata:", err);
+      }
+
+    } else if (formData.type === 'video' && (url.toLowerCase().includes('.mp4') || url.toLowerCase().includes('.webm') || url.toLowerCase().includes('.mov') || url.includes('discordapp.net') || url.includes('cdn.discordapp.com'))) {
+      
       // Es un video directo, intentar generar thumbnail
       setFormData(prev => ({ ...prev, url }));
       setUploading(true);
@@ -146,8 +173,6 @@ const MediaForm = ({ item, onSave, onCancel }) => {
         setUploading(false);
       }
     } else {
-
-
       setFormData(prev => ({
         ...prev,
         url: url
