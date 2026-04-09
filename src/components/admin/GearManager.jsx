@@ -185,36 +185,6 @@ const GearManager = ({ sharedMetadata }) => {
                 />
             </FormSection>
 
-            <FormSection title="3D Visualization Data" icon={Box}>
-                <FormFileUpload
-                    label="3D Model (.glb)"
-                    accept=".glb"
-                    onChange={(e) => handleFileUpload(e, 'model_url')}
-                    fileName={editingItem.model_url?.split('/').pop()}
-                />
-                <FormFileUpload
-                    label="Albedo Map"
-                    accept="image/*"
-                    onChange={(e) => handleFileUpload(e, 'albedo_url')}
-                    previewUrl={editingItem.albedo_url}
-                    fileName={editingItem.albedo_url?.split('/').pop()}
-                />
-                <FormFileUpload
-                    label="Normal Map"
-                    accept="image/*"
-                    onChange={(e) => handleFileUpload(e, 'normal_url')}
-                    previewUrl={editingItem.normal_url}
-                    fileName={editingItem.normal_url?.split('/').pop()}
-                />
-                <FormFileUpload
-                    label="RMA Map (Rough/Metal/AO)"
-                    accept="image/*"
-                    onChange={(e) => handleFileUpload(e, 'rma_url')}
-                    previewUrl={editingItem.rma_url}
-                    fileName={editingItem.rma_url?.split('/').pop()}
-                />
-            </FormSection>
-
             <FormSection title="Performance Parameters" icon={Sliders}>
                 <FormInput
                     label="Armor Rating"

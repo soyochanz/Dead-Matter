@@ -124,41 +124,42 @@ const Wiki = () => {
 
       const countPromises = finalCategoriesData.map(async (cat) => {
         if (cat.name === 'Meds') {
-          const { count: medicinesCount } = await supabase.from('medicines').select('id', { count: 'exact', head: true });
-          const { count: diseasesCount } = await supabase.from('diseases').select('id', { count: 'exact', head: true });
+          const [{ count: medicinesCount }, { count: diseasesCount }] = await Promise.all([
+            supabase.from('medicines').select('id', { count: 'exact', head: true }),
+            supabase.from('diseases').select('id', { count: 'exact', head: true })
+          ]);
           return { ...cat, itemCount: (medicinesCount || 0) + (diseasesCount || 0) };
         }
 
+        const tablesToCount = categoryTableMap[cat.name] || [];
+        
         if (['Perks', 'NPCs', 'Basebuilding'].includes(cat.name)) {
-          const tablesToCount = categoryTableMap[cat.name];
-          if (tablesToCount && tablesToCount.length > 0) {
-            let totalCount = 0;
-            for (const table of tablesToCount) {
-              const { count } = await supabase.from(table).select('id', { count: 'exact', head: true });
-              totalCount += count || 0;
-            }
+          if (tablesToCount.length > 0) {
+            const counts = await Promise.all(
+              tablesToCount.map(table => supabase.from(table).select('id', { count: 'exact', head: true }))
+            );
+            const totalCount = counts.reduce((acc, { count }) => acc + (count || 0), 0);
             return { ...cat, itemCount: totalCount };
           }
           const { count } = await supabase.from(cat.name.toLowerCase().replace(' ', '_')).select('id', { count: 'exact', head: true });
           return { ...cat, itemCount: count || 0 };
         }
 
-        const tablesToCount = categoryTableMap[cat.name] || [];
-        let totalCount = 0;
-
-        for (const table of tablesToCount) {
-          let query = supabase.from(table).select('id', { count: 'exact', head: true });
-
-          if (cat.name === 'Consumables') {
-            query = query.in('type', ['food', 'drink']);
-          }
-
-          const { count, error } = await query;
-          if (!error && count) {
-            totalCount += count;
-          }
+        if (tablesToCount.length > 0) {
+          const counts = await Promise.all(
+            tablesToCount.map(table => {
+              let query = supabase.from(table).select('id', { count: 'exact', head: true });
+              if (cat.name === 'Consumables') {
+                query = query.in('type', ['food', 'drink']);
+              }
+              return query;
+            })
+          );
+          const totalCount = counts.reduce((acc, { count }) => acc + (count || 0), 0);
+          return { ...cat, itemCount: totalCount };
         }
-        return { ...cat, itemCount: totalCount };
+
+        return { ...cat, itemCount: 0 };
       });
 
       const categoriesWithCounts = await Promise.all(countPromises);

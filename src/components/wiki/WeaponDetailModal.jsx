@@ -6,7 +6,6 @@ import { DndContext, useDraggable, useDroppable, DragOverlay } from '@dnd-kit/co
 import { supabase } from '@/lib/mySupabaseClient';
 import * as LucideIcons from 'lucide-react';
 import NpcSellersModal from '@/components/wiki/NpcSellersModal';
-import Wiki3DViewer from './Wiki3DViewer';
 
 const StatBar = ({ icon, label, value, max = 100, unit = '', higherIsBetter = true, baseValue, showModifier = false, color }) => {
     const clampedValue = Math.min(value, max);
@@ -231,48 +230,8 @@ const AmmoWeaponsModal = ({ ammo: ammoName, onClose }) => {
                         </div>
                     ) : (
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-                            {/* Left - Visual / 3D */}
+                            {/* Left - Visual / 2D */}
                             <div className="lg:col-span-1 space-y-6">
-                                <div className="relative group/ammo aspect-square bg-[#0a0a0c] border border-white/5 rounded-[2.5rem] overflow-hidden shadow-inner flex items-center justify-center p-8">
-                                    <div className="absolute inset-0 bg-blue-500/5 blur-[100px] pointer-events-none" />
-
-                                    <div className="absolute top-6 left-6 z-20 flex gap-2">
-                                        <div className="flex bg-black/60 backdrop-blur-md rounded-xl p-1 border border-white/5">
-                                            <button
-                                                onClick={() => setViewType('box')}
-                                                className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${viewType === 'box' ? 'bg-blue-600 text-white shadow-[0_0_15px_rgba(37,99,235,0.4)]' : 'text-gray-500 hover:text-white'}`}
-                                            >
-                                                BOX
-                                            </button>
-                                            <button
-                                                onClick={() => setViewType('bullet')}
-                                                className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${viewType === 'bullet' ? 'bg-blue-600 text-white shadow-[0_0_15px_rgba(37,99,235,0.4)]' : 'text-gray-500 hover:text-white'}`}
-                                            >
-                                                BULLET
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    {(viewType === 'box' ? ammoData?.box_model_url : ammoData?.bullet_model_url) ? (
-                                        <Wiki3DViewer
-                                            src={viewType === 'box' ? ammoData.box_model_url : ammoData.bullet_model_url}
-                                            alt={ammoName}
-                                        />
-                                    ) : (
-                                        <div className="flex flex-col items-center justify-center text-gray-700 opacity-20 text-center">
-                                            <Box size={80} className="mb-4" />
-                                            <span className="text-[10px] font-black tracking-[0.3em] uppercase">3D MODEL UNAVAILABLE</span>
-                                        </div>
-                                    )}
-
-                                    <div className="absolute bottom-6 right-6 z-20">
-                                        <div className="flex items-center gap-2 bg-black/40 backdrop-blur-md px-4 py-2 rounded-xl border border-white/5">
-                                            <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse shadow-[0_0_10px_#3b82f6]" />
-                                            <span className="text-[10px] font-black font-mono text-gray-500 uppercase tracking-widest">3D VISUAL</span>
-                                        </div>
-                                    </div>
-                                </div>
-
                                 <div className="bg-white/5 border border-white/5 p-8 rounded-[2rem] space-y-4">
                                     <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-500/50 mb-6">{t('wiki.weapon.ballistic_notes')}</h4>
                                     <p className="text-gray-400 text-sm leading-relaxed font-medium pl-4 border-l-2 border-blue-500/20">
@@ -401,7 +360,6 @@ const WeaponDetailModal = ({ weapon, onClose, onNpcSelect }) => {
     const [showAmmoModal, setShowAmmoModal] = useState(false);
     const [showNpcSellers, setShowNpcSellers] = useState(false);
 
-    const [viewMode, setViewMode] = useState('static'); // 'static' or '3d'
     const [audio] = useState(weapon.audio_url ? new Audio(weapon.audio_url) : null);
     const [isPlaying, setIsPlaying] = useState(false);
 
@@ -613,51 +571,24 @@ const WeaponDetailModal = ({ weapon, onClose, onNpcSelect }) => {
                                             <Target size={120} className="text-white/5" />
                                         </div>
 
-                                        {viewMode === '3d' && hasModel ? (
-                                            <Wiki3DViewer
-                                                src={weapon.model_url}
-                                                alt={weapon.name}
-                                            />
-                                        ) : (
-                                            <motion.img
-                                                initial={{ y: 20, opacity: 0 }}
-                                                animate={{ y: 0, opacity: 1 }}
-                                                transition={{ delay: 0.2, duration: 0.8 }}
-                                                className="max-h-full max-w-full object-contain relative z-10 drop-shadow-[0_25px_25px_rgba(0,0,0,0.8)]"
-                                                alt={weapon.name}
-                                                src={weapon.image_url}
-                                            />
-                                        )}
+                                        <motion.img
+                                            initial={{ y: 20, opacity: 0 }}
+                                            animate={{ y: 0, opacity: 1 }}
+                                            transition={{ delay: 0.2, duration: 0.8 }}
+                                            className="max-h-full max-w-full object-contain relative z-10 drop-shadow-[0_25px_25px_rgba(0,0,0,0.8)]"
+                                            alt={weapon.name}
+                                            src={weapon.image_url}
+                                        />
                                     </div>
 
                                     {/* View Toggles & Technical Labels */}
                                     <div className="absolute bottom-6 right-8 left-8 flex items-center justify-between z-20">
-                                        <div className="flex items-center gap-4">
-                                            {/* 2D/3D Toggle if model exists */}
-                                            {hasModel && (
-                                                <div className="flex bg-black/40 backdrop-blur-md rounded-xl p-1 border border-white/5">
-                                                    <button
-                                                        onClick={() => setViewMode('static')}
-                                                        className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${viewMode === 'static' ? 'bg-red-600 text-white' : 'text-gray-500 hover:text-white'}`}
-                                                    >
-                                                        2D
-                                                    </button>
-                                                    <button
-                                                        onClick={() => setViewMode('3d')}
-                                                        className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${viewMode === '3d' ? 'bg-red-600 text-white shadow-[0_0_15px_rgba(220,38,38,0.5)]' : 'text-gray-500 hover:text-white'}`}
-                                                    >
-                                                        3D
-                                                    </button>
-                                                </div>
-                                            )}
-
                                             <div className="flex items-center gap-2">
                                                 <div className="w-2 h-2 rounded-full bg-red-600 animate-pulse shadow-[0_0_10px_#ef4444]" />
                                                 <span className="text-[10px] font-black font-mono text-gray-500 uppercase tracking-widest">
-                                                    {viewMode === '3d' ? "3D Visual" : t('wiki.weapon.visual_confirm')}
+                                                    {t('wiki.weapon.visual_confirm')}
                                                 </span>
                                             </div>
-                                        </div>
 
                                         {hasAudio && (
                                             <motion.button

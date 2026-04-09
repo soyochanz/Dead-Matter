@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, Shield, Weight, Backpack, Swords, Zap, Flame, Droplets, Tally1, Ruler, DollarSign, TrendingUp, ArrowRight } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
 import NpcSellersModal from '@/components/wiki/NpcSellersModal';
-import Wiki3DViewer from './Wiki3DViewer';
 
 const Stat = ({ icon: Icon, label, value, colorClass = 'text-white', onClick, className = '' }) => (
     <div
@@ -62,10 +61,9 @@ const CustomStatBar = ({ label, value, max, icon, color }) => {
 const GearDetailModal = ({ gear, onClose, onNpcSelect }) => {
     const { t } = useTranslation();
     const [showNpcSellers, setShowNpcSellers] = useState(false);
-    const [viewMode, setViewMode] = useState('static'); // 'static' or '3d'
     const [audio] = useState(gear?.audio_url ? new Audio(gear.audio_url) : null);
     const [isPlaying, setIsPlaying] = useState(false);
-    const modelViewerRef = React.useRef(null);
+
 
     React.useEffect(() => {
         if (audio) {
@@ -143,16 +141,6 @@ const GearDetailModal = ({ gear, onClose, onNpcSelect }) => {
                                         {/* Rarity Glow */}
                                         <div className="absolute inset-0 opacity-10 blur-[80px] pointer-events-none" style={{ backgroundColor: rarityColor }} />
 
-                                        {viewMode === '3d' && hasModel ? (
-                                            <Wiki3DViewer
-                                                src={gear.model_url}
-                                                alt={gear.name}
-                                                exposure={gear.name === 'School Backpack' ? 3 : 1}
-                                                albedoUrl={gear.albedo_url}
-                                                normalUrl={gear.normal_url}
-                                                rmaUrl={gear.rma_url}
-                                            />
-                                        ) : (
                                             <motion.img
                                                 initial={{ y: 20, opacity: 0 }}
                                                 animate={{ y: 0, opacity: 1 }}
@@ -161,34 +149,15 @@ const GearDetailModal = ({ gear, onClose, onNpcSelect }) => {
                                                 alt={gear.name}
                                                 className="max-h-full max-w-full object-contain relative z-10 drop-shadow-[0_25px_25px_rgba(0,0,0,0.8)]"
                                             />
-                                        )}
                                     </div>
 
                                     {/* View Toggles & Technical Labels */}
                                     <div className="absolute bottom-6 right-8 left-8 flex items-center justify-between z-20">
                                         <div className="flex items-center gap-4">
-                                            {/* 2D/3D Toggle if model exists */}
-                                            {hasModel && (
-                                                <div className="flex bg-black/40 backdrop-blur-md rounded-xl p-1 border border-white/5">
-                                                    <button
-                                                        onClick={() => setViewMode('static')}
-                                                        className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${viewMode === 'static' ? 'bg-red-600 text-white' : 'text-gray-500 hover:text-white'}`}
-                                                    >
-                                                        2D
-                                                    </button>
-                                                    <button
-                                                        onClick={() => setViewMode('3d')}
-                                                        className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${viewMode === '3d' ? 'bg-red-600 text-white shadow-[0_0_15px_rgba(220,38,38,0.5)]' : 'text-gray-500 hover:text-white'}`}
-                                                    >
-                                                        3D
-                                                    </button>
-                                                </div>
-                                            )}
-
                                             <div className="flex items-center gap-2">
                                                 <div className="w-2 h-2 rounded-full bg-red-600 animate-pulse shadow-[0_0_10px_#ef4444]" />
                                                 <span className="text-[10px] font-black font-mono text-gray-500 uppercase tracking-widest">
-                                                    {viewMode === '3d' ? "3D Visual" : t('wiki.weapon.visual_confirm')}
+                                                    {t('wiki.weapon.visual_confirm')}
                                                 </span>
                                             </div>
                                         </div>

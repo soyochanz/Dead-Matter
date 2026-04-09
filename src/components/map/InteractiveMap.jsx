@@ -109,8 +109,272 @@ const ZoomTracker = ({ onZoomChange }) => {
     return null;
 };
 
-// --- Personal Markers Config ---
+// --- ICON HELPER FUNCTIONS (Moved outside for performance) ---
+const createMinorResourceIcon = (content, color, size = 18) => {
+    const iconSize = Math.floor(size * 0.7);
+    return L.divIcon({
+        html: `<div style="background-color: ${color}; width: ${size}px; height: ${size}px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.2px solid white; box-shadow: 0 1px 2px rgba(0,0,0,0.5); overflow: hidden;">
+            <div style="width: ${iconSize}px; height: ${iconSize}px; color: white; display: flex; align-items: center; justify-content: center; line-height: 0;">${content}</div>
+        </div>`,
+        className: 'minor-resource-marker',
+        iconSize: [size, size],
+        iconAnchor: [size / 2, size / 2]
+    });
+};
 
+const createCircleIcon = (content, color, size = 18) => {
+    return L.divIcon({
+        html: `<div style="background-color: ${color}; width: ${size}px; height: ${size}px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.3);">
+            <div style="width: 11px; height: 11px; color: white;">${content}</div>
+        </div>`,
+        className: 'circle-marker',
+        iconSize: [size, size],
+        iconAnchor: [size / 2, size / 2]
+    });
+};
+
+const createPinIcon = (content, color, locked = false, hasWater = false) => {
+    const badges = [];
+    if (locked) {
+        badges.push(`<div style="position: absolute; top: -4px; right: -4px; width: 13px; height: 13px; background: #fbbf24; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid #1a1a1a; box-shadow: 0 1px 3px rgba(0,0,0,0.5); z-index: 10; color: #000000;">
+            <svg viewBox="0 0 24 24" fill="currentColor" style="width: 9px; height: 9px;"><path d="M21 10h-8.35C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H13v2h2v-2h2v2h2v-2h2v-4zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
+        </div>`);
+    }
+    if (hasWater) {
+        badges.push(`<div style="position: absolute; top: -2px; left: -2px; width: 9px; height: 9px; background: #0369a1; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid #1a1a1a; box-shadow: 0 1px 3px rgba(0,0,0,0.5); z-index: 10; color: white;">
+            <svg viewBox="0 0 24 24" fill="currentColor" style="width: 6px; height: 6px;"><path d="M12 2c-5.33 4.55-8 8.48-8 11.8 0 4.98 3.8 8.2 8 8.2s8-3.22 8-8.2c0-3.32-2.67-7.25-8-11.8z"/></svg>
+        </div>`);
+    }
+
+    return L.divIcon({
+        html: `<div style="position: relative;">
+            <div style="background-color: #0f172aa6; width: 24px; height: 24px; border-radius: 50% 50% 50% 0; display: flex; align-items: center; justify-content: center; border: 1.5px solid ${color}; color: ${color}; box-shadow: 0 1px 4px rgba(0,0,0,0.5); backdrop-filter: blur(2px); transform: rotate(-45deg);">
+                <div style="width: 14px; height: 14px; transform: rotate(45deg); display: flex; align-items: center; justify-content: center;">${content}</div>
+            </div>
+            ${badges.join('')}
+        </div>`,
+        className: 'pin-marker',
+        iconSize: [24, 24],
+        iconAnchor: [12, 34]
+    });
+};
+
+const createNoBorderIcon = (content, color, size = 18, hasWater = false) => {
+    const badge = hasWater ? `<div style="position: absolute; top: -3px; left: -3px; width: 9px; height: 9px; background: #0369a1; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid #1a1a1a; box-shadow: 0 1px 2px rgba(0,0,0,0.5); z-index: 10; color: white;">
+        <svg viewBox="0 0 24 24" fill="currentColor" style="width: 5px; height: 5px;"><path d="M12 2c-5.33 4.55-8 8.48-8 11.8 0 4.98 3.8 8.2 8 8.2s8-3.22 8-8.2c0-3.32-2.67-7.25-8-11.8z"/></svg>
+    </div>` : '';
+
+    return L.divIcon({
+        html: `<div style="position: relative; width: ${size}px; height: ${size}px; display: flex; align-items: center; justify-content: center; color: ${color}; filter: drop-shadow(0 1px 1.5px rgba(0,0,0,0.7));">
+            <div style="width: ${size}px; height: ${size}px; image-rendering: -webkit-optimize-contrast;">${content}</div>
+            ${badge}
+        </div>`,
+        className: 'npc-marker precise-icon',
+        iconSize: [size, size],
+        iconAnchor: [size / 2, size]
+    });
+};
+
+const createDotIcon = (color, size = 10, locked = false, hasWater = false) => {
+    const badges = [];
+    if (locked) {
+        badges.push(`<div style="position: absolute; top: -6px; right: -6px; width: 13px; height: 13px; background: #fbbf24; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid #1a1a1a; box-shadow: 0 1px 2px rgba(0,0,0,0.5); z-index: 10; color: #000000;">
+            <svg viewBox="0 0 24 24" fill="currentColor" style="width: 8px; height: 8px;"><path d="M21 10h-8.35C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H13v2h2v-2h2v2h2v-2h2v-4zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
+        </div>`);
+    }
+    if (hasWater) {
+        badges.push(`<div style="position: absolute; top: -4px; left: -4px; width: 8px; height: 8px; background: #0369a1; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid #1a1a1a; box-shadow: 0 1px 2px rgba(0,0,0,0.5); z-index: 10; color: white;">
+            <svg viewBox="0 0 24 24" fill="currentColor" style="width: 5px; height: 5px;"><path d="M12 2c-5.33 4.55-8 8.48-8 11.8 0 4.98 3.8 8.2 8 8.2s8-3.22 8-8.2c0-3.32-2.67-7.25-8-11.8z"/></svg>
+        </div>`);
+    }
+
+    return L.divIcon({
+        html: `<div style="position: relative;">
+            <div style="width: ${size}px; height: ${size}px; background-color: ${color}; border-radius: 50%; box-shadow: 0 0 0 1px rgba(0,0,0,0.6), 0 1px 2px rgba(0,0,0,0.5);"></div>
+            ${badges.join('')}
+        </div>`,
+        className: 'loot-dot',
+        iconSize: [size, size],
+        iconAnchor: [size / 2, size / 2]
+    });
+};
+
+const createDivIcon = (colorClassName) => {
+    let color = '#fff';
+    if (colorClassName.includes('red')) color = '#e24a4a';
+    if (colorClassName.includes('orange')) color = '#f5a623';
+    if (colorClassName.includes('green')) color = '#7ee24a';
+    if (colorClassName.includes('purple')) color = '#b860f0';
+    if (colorClassName.includes('pink')) color = '#ec4899';
+
+    return L.divIcon({
+        html: `<div style="background-color: ${color}; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.4);"></div>`,
+        iconSize: [12, 12],
+        iconAnchor: [6, 6],
+        className: 'precise-icon'
+    });
+};
+
+const createClusterIcon = (cluster, className, color) => {
+    return L.divIcon({
+        html: `<div style="background-color: ${color}; width: 15px; height: 15px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 10px ${color}80;"></div>`,
+        className: className,
+        iconSize: [15, 15]
+    });
+};
+
+const getPersonalIcon = (marker) => {
+    const iconDef = personalIcons[marker.icon_name] || personalIcons.star;
+    return L.divIcon({
+        html: `<div style="background-color: rgba(15, 23, 42, 0.6); width: 28px; height: 28px; border-radius: 5px; display: flex; align-items: center; justify-content: center; border: 1.5px solid ${marker.color}; color: ${marker.color}; box-shadow: 0 4px 12px rgba(0,0,0,0.5); backdrop-filter: blur(4px); transform: rotate(45deg);">
+            <div style="width: 18px; height: 18px; transform: rotate(-45deg); display: flex; align-items: center; justify-content: center; filter: drop-shadow(0 0 2px rgba(255,255,255,0.5));">${iconDef.svg}</div>
+        </div>`,
+        className: 'personal-marker-icon',
+        iconSize: [28, 28],
+        iconAnchor: [14, 14]
+    });
+};
+
+const getIconForMarker = (marker, categories, activeFilters) => {
+    const category = categories.find(c => c.id === marker.category_id);
+    const catName = category?.name?.toLowerCase() || '';
+    const groupName = category?.group_name?.toLowerCase() || '';
+    const title = marker.title?.toLowerCase() || '';
+
+    const isLocked = marker.requires_key || ['federal stockpile bunker'].some(k => title.includes(k));
+    const waterCat = categories.find(c => c.name?.toLowerCase() === 'water source');
+    const showWaterBadgeFilter = waterCat ? !!activeFilters[waterCat.id] : true;
+    const hasWater = (marker.has_water_source && showWaterBadgeFilter);
+
+    if (catName.includes('lootable vehicle')) {
+        const carSvg = `<svg viewBox="0 0 24 24" fill="#d4d4d4"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z" stroke="black" stroke-width="0.8"/></svg>`;
+        return createNoBorderIcon(carSvg, '#d4d4d4', 8, hasWater);
+    }
+
+    if (catName.includes('water') && !catName.includes('tower')) return createMinorResourceIcon(personalIcons.water.svg, '#0369a1', 14);
+    if (catName.includes('gas source') || catName.includes('butane') || catName.includes('propane') || catName.includes('fuel')) return createMinorResourceIcon(mapIcons.propane, '#ea580c', 14);
+    if (catName.includes('key')) return createCircleIcon(mapIcons.key, '#eab308');
+
+    if (catName.toLowerCase().includes('helicrash') || catName.toLowerCase().includes('heli')) {
+        return createPinIcon(mapIcons.helicopter, '#ef4444', isLocked, hasWater);
+    }
+
+    const isLootGroup = ['military', 'industrial', 'civilian', 'medical', 'calculated'].includes(groupName);
+    const isLootName = catName.includes('loot') || title.includes('loot');
+    const isSpecificPOI = catName.includes('bunker') || catName.includes('tent') || catName.includes('station') || catName.includes('hospital') || catName.includes('factory') || catName.includes('hangar') || catName.includes('golf') || catName.includes('school') || catName.includes('university') || catName.includes('college') || catName.includes('academy') || catName.includes('deer stand') || catName.includes('firestation');
+
+    if ((isLootName || isLootGroup) && !isSpecificPOI) {
+        let dotColor = '#94a3b8';
+        if (groupName === 'military') dotColor = '#ef4444';
+        if (groupName === 'industrial') dotColor = '#f97316';
+        if (groupName === 'civilian') dotColor = '#22c55e';
+        if (groupName === 'medical') dotColor = '#ec4899';
+        if (groupName === 'calculated') dotColor = '#3b82f6';
+        return createDotIcon(dotColor, 8, isLocked, hasWater);
+    }
+
+    if (catName.includes('zones')) {
+        const isMinor = catName.includes('minor');
+        return L.divIcon({
+            className: `zone-label ${isMinor ? 'zone-minor' : 'zone-major'}`,
+            html: `<span>${marker.title}</span>`,
+            iconSize: [200, 20],
+            iconAnchor: [100, 10]
+        });
+    }
+
+    if (catName.includes('factory')) return createPinIcon(mapIcons.factory, '#f97316', isLocked, hasWater);
+    if (catName.includes('hangar')) return createPinIcon(mapIcons.hangar, '#f97316', isLocked, hasWater);
+
+    if (catName.includes('bunker') && catName.includes('civilian')) return createPinIcon(mapIcons.bunker, '#22c55e', isLocked, hasWater);
+    if (catName.includes('deer stand')) return createPinIcon(mapIcons.tree, '#22c55e', isLocked, hasWater);
+    if (catName.includes('firestation')) return createPinIcon(mapIcons.fire, '#22c55e', isLocked, hasWater);
+    if (catName.includes('gas station')) return createPinIcon(personalIcons.gas.svg, '#22c55e', isLocked, hasWater);
+    if (catName.includes('golf')) return createPinIcon(mapIcons.golf, '#22c55e', isLocked, hasWater);
+    if (catName.includes('school') || catName.includes('university') || catName.includes('college') || catName.includes('academy')) return createPinIcon(mapIcons.school, '#22c55e', isLocked, hasWater);
+
+    if (catName.includes('hospital')) return createPinIcon(mapIcons.hospital, '#ec4899', isLocked, hasWater);
+    if (catName.includes('nera tent')) return createPinIcon(mapIcons.tent, '#ec4899', isLocked, hasWater);
+
+    if (catName === 'vehicles') {
+        const carSvg = `<svg viewBox="0 0 24 24" fill="#3b82f6"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z" stroke="black" stroke-width="0.8"/></svg>`;
+        return createNoBorderIcon(carSvg, '#3b82f6', 18, hasWater);
+    }
+
+    if (catName === 'trailers') {
+        const simpleTrailer = `<svg viewBox="0 0 24 24" fill="#3b82f6"><path d="M1 5h14v10H1V5zm14 4h6v6h-6V9zm2 6a2 2 0 110 4 2 2 0 010-4zm-12 0a2 2 0 110 4 2 2 0 010-4z" stroke="black" stroke-width="0.8"/></svg>`;
+        return createNoBorderIcon(simpleTrailer, '#3b82f6', 18, hasWater);
+    }
+
+    if (catName.includes('npc') || catName.includes('vendors') || catName === 'traders') {
+        return createNoBorderIcon(mapIcons.person, '#ffffff', 30, hasWater);
+    }
+
+    if (catName.includes('shooting range')) return createPinIcon(mapIcons.target, '#ef4444', isLocked, hasWater);
+    if (catName.includes('military bunker')) return createPinIcon(mapIcons.bunker, '#ef4444', isLocked, hasWater);
+    if (catName.includes('barracks')) return createPinIcon(mapIcons.barracks, '#ef4444', isLocked, hasWater);
+    if (catName.includes('military base')) return createPinIcon(mapIcons.helmet, '#ef4444', isLocked, hasWater);
+    if (catName.includes('camping tent')) return createPinIcon(mapIcons.tent, '#ef4444', isLocked, hasWater);
+
+    if (groupName === 'military') {
+        const iconUrl = category?.icon_url;
+        const content = iconUrl ? `<img src="${iconUrl}" style="width: 18px; height: 18px; filter: invert(1);" />` : personalIcons.skull.svg;
+        return createPinIcon(content, '#ef4444', isLocked, hasWater);
+    }
+
+    const normalizedCatName = catName.replace(/\s+/g, '');
+    const isTargetLandmark = ['watchtower', 'watertower', 'towercrane', 'radiotower', 'huntingtower', 'huntingstand', 'cave'].some(id => normalizedCatName.includes(id));
+
+    if (groupName === 'landmarks' || isTargetLandmark) {
+        let explicitIcon = null;
+        if (normalizedCatName.includes('watchtower')) explicitIcon = mapIcons.watchtower;
+        else if (normalizedCatName.includes('watertower')) explicitIcon = mapIcons.watertower;
+        else if (normalizedCatName.includes('towercrane')) explicitIcon = mapIcons.towercrane;
+        else if (normalizedCatName.includes('radiotower')) explicitIcon = mapIcons.radiotower;
+        else if (normalizedCatName.includes('huntingtower') || normalizedCatName.includes('huntingstand')) explicitIcon = mapIcons.huntingtower;
+        else if (normalizedCatName.includes('cave')) explicitIcon = mapIcons.cave;
+
+        const iconUrl = category?.icon_url;
+        if (explicitIcon || iconUrl) {
+            const badges = [];
+            if (!explicitIcon) {
+                if (isLocked) {
+                    badges.push(`<div style="position: absolute; top: -8px; right: -8px; width: 20px; height: 20px; background: #fbbf24; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid #1a1a1a; box-shadow: 0 2px 4px rgba(0,0,0,0.5); z-index: 10; color: #1a1a1a;">
+                        <svg viewBox="0 0 24 24" fill="currentColor" style="width: 13px; height: 13px;"><path d="M21 10h-8.35C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H13v2h2v-2h2v2h2v-2h2v-4zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
+                    </div>`);
+                }
+                if (hasWater) {
+                    badges.push(`<div style="position: absolute; top: -4px; left: -4px; width: 12px; height: 12px; background: #0369a1; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid #1a1a1a; box-shadow: 0 2px 4px rgba(0,0,0,0.5); z-index: 10; color: white;">
+                        <svg viewBox="0 0 24 24" fill="currentColor" style="width: 8px; height: 8px;"><path d="M12 2c-5.33 4.55-8 8.48-8 11.8 0 4.98 3.8 8.2 8 8.2s8-3.22 8-8.2c0-3.32-2.67-7.25-8-11.8z"/></svg>
+                    </div>`);
+                }
+            }
+
+            return L.divIcon({
+                html: `<div style="position: relative; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; transform: translateZ(0); backface-visibility: hidden;">
+                    ${explicitIcon ? (
+                        explicitIcon.startsWith('http')
+                            ? `<img src="${explicitIcon}" style="width: 100%; height: 100%; object-fit: contain; filter: brightness(0) drop-shadow(0 1px 1px rgba(0,0,0,0.8)); image-rendering: -webkit-optimize-contrast;" />`
+                            : `<div style="width: 100%; height: 100%; color: black; filter: drop-shadow(0 1px 1.5px rgba(0,0,0,0.7));">${explicitIcon}</div>`
+                    ) : `<img src="${iconUrl}" style="width: 30px; height: 30px; object-fit: contain; filter: drop-shadow(0 1px 1.5px rgba(0,0,0,0.7)); image-rendering: -webkit-optimize-contrast;" />`}
+                    ${badges.join('')}
+                </div>`,
+                className: 'precise-icon',
+                iconSize: [36, 36],
+                iconAnchor: [18, 36],
+                popupAnchor: [0, -18]
+            });
+        }
+    }
+
+    const iconUrl = category?.icon_url;
+    if (iconUrl) {
+        const content = `<img src="${iconUrl}" style="width: 18px; height: 18px; filter: invert(1);" />`;
+        return createPinIcon(content, '#94a3b8', isLocked, hasWater);
+    }
+
+    return createPinIcon(mapIcons.factory, category?.color || '#3b82f6', isLocked, hasWater);
+};
 
 const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMarkerClick, refreshTrigger = 0, markers: propMarkers, lootTags: propLootTags, categories: propCategories, keys: propKeys, missions: propMissions, paths: propPaths, manualPolylines = [], polygons = [], activePolygonPoints = [], onPolygonClick, viewMode, currentMissionSteps = [], onUpdateMissionStep }) => {
     // Note: refreshTrigger increments after save, triggering re-fetch in hook
@@ -193,100 +457,6 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
 
     const [zoomLevel, setZoomLevel] = useState(16);
 
-    // --- ICON HELPER FUNCTIONS (Moved to component scope for access in Mission Loop) ---
-    // Helper 4: Minor Resource Style (Small Circle with Icon)
-    const createMinorResourceIcon = (content, color, size = 18) => {
-        const iconSize = Math.floor(size * 0.7);
-        return L.divIcon({
-            html: `<div style="background-color: ${color}; width: ${size}px; height: ${size}px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.2px solid white; box-shadow: 0 1px 2px rgba(0,0,0,0.5); overflow: hidden;">
-                <div style="width: ${iconSize}px; height: ${iconSize}px; color: white; display: flex; align-items: center; justify-content: center; line-height: 0;">${content}</div>
-            </div>`,
-            className: 'minor-resource-marker',
-            iconSize: [size, size],
-            iconAnchor: [size / 2, size / 2]
-        });
-    };
-
-    // Helper 3: Small Circular Icon (Water, Keys)
-    const createCircleIcon = (content, color, size = 18) => {
-        return L.divIcon({
-            html: `<div style="background-color: ${color}; width: ${size}px; height: ${size}px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.3);">
-                <div style="width: 11px; height: 11px; color: white;">${content}</div>
-            </div>`,
-            className: 'circle-marker',
-            iconSize: [size, size],
-            iconAnchor: [size / 2, size / 2]
-        });
-    };
-
-    // Helper 1: Pin Style (Glass Teardrop)
-    const createPinIcon = (content, color, locked = false, hasWater = false) => {
-        const badges = [];
-        if (locked) {
-            badges.push(`<div style="position: absolute; top: -4px; right: -4px; width: 13px; height: 13px; background: #fbbf24; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid #1a1a1a; box-shadow: 0 1px 3px rgba(0,0,0,0.5); z-index: 10; color: #000000;">
-                <svg viewBox="0 0 24 24" fill="currentColor" style="width: 9px; height: 9px;"><path d="M21 10h-8.35C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H13v2h2v-2h2v2h2v-2h2v-4zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
-            </div>`);
-        }
-        if (hasWater) {
-            badges.push(`<div style="position: absolute; top: -2px; left: -2px; width: 9px; height: 9px; background: #0369a1; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid #1a1a1a; box-shadow: 0 1px 3px rgba(0,0,0,0.5); z-index: 10; color: white;">
-                <svg viewBox="0 0 24 24" fill="currentColor" style="width: 6px; height: 6px;"><path d="M12 2c-5.33 4.55-8 8.48-8 11.8 0 4.98 3.8 8.2 8 8.2s8-3.22 8-8.2c0-3.32-2.67-7.25-8-11.8z"/></svg>
-            </div>`);
-        }
-
-        return L.divIcon({
-            html: `<div style="position: relative;">
-                <div style="background-color: #0f172aa6; width: 24px; height: 24px; border-radius: 50% 50% 50% 0; display: flex; align-items: center; justify-content: center; border: 1.5px solid ${color}; color: ${color}; box-shadow: 0 1px 4px rgba(0,0,0,0.5); backdrop-filter: blur(2px); transform: rotate(-45deg);">
-                    <div style="width: 14px; height: 14px; transform: rotate(45deg); display: flex; align-items: center; justify-content: center;">${content}</div>
-                </div>
-                ${badges.join('')}
-            </div>`,
-            className: 'pin-marker',
-            iconSize: [24, 24],
-            iconAnchor: [12, 34]
-        });
-    };
-
-    const createNoBorderIcon = (content, color, size = 18, hasWater = false) => {
-        const badge = hasWater ? `<div style="position: absolute; top: -3px; left: -3px; width: 9px; height: 9px; background: #0369a1; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid #1a1a1a; box-shadow: 0 1px 2px rgba(0,0,0,0.5); z-index: 10; color: white;">
-            <svg viewBox="0 0 24 24" fill="currentColor" style="width: 5px; height: 5px;"><path d="M12 2c-5.33 4.55-8 8.48-8 11.8 0 4.98 3.8 8.2 8 8.2s8-3.22 8-8.2c0-3.32-2.67-7.25-8-11.8z"/></svg>
-        </div>` : '';
-
-        return L.divIcon({
-            html: `<div style="position: relative; width: ${size}px; height: ${size}px; display: flex; align-items: center; justify-content: center; color: ${color}; filter: drop-shadow(0 1px 1.5px rgba(0,0,0,0.7));">
-                <div style="width: ${size}px; height: ${size}px; image-rendering: -webkit-optimize-contrast;">${content}</div>
-                ${badge}
-            </div>`,
-            className: 'npc-marker precise-icon',
-            iconSize: [size, size],
-            iconAnchor: [size / 2, size]
-        });
-    };
-
-    // Helper 3: Dot Style (Loot)
-    const createDotIcon = (color, size = 10, locked = false, hasWater = false) => {
-        const badges = [];
-        if (locked) {
-            badges.push(`<div style="position: absolute; top: -6px; right: -6px; width: 13px; height: 13px; background: #fbbf24; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid #1a1a1a; box-shadow: 0 1px 2px rgba(0,0,0,0.5); z-index: 10; color: #000000;">
-                <svg viewBox="0 0 24 24" fill="currentColor" style="width: 8px; height: 8px;"><path d="M21 10h-8.35C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H13v2h2v-2h2v2h2v-2h2v-4zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
-            </div>`);
-        }
-        if (hasWater) {
-            badges.push(`<div style="position: absolute; top: -4px; left: -4px; width: 8px; height: 8px; background: #0369a1; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid #1a1a1a; box-shadow: 0 1px 2px rgba(0,0,0,0.5); z-index: 10; color: white;">
-                <svg viewBox="0 0 24 24" fill="currentColor" style="width: 5px; height: 5px;"><path d="M12 2c-5.33 4.55-8 8.48-8 11.8 0 4.98 3.8 8.2 8 8.2s8-3.22 8-8.2c0-3.32-2.67-7.25-8-11.8z"/></svg>
-            </div>`);
-        }
-
-        return L.divIcon({
-            html: `<div style="position: relative;">
-                <div style="width: ${size}px; height: ${size}px; background-color: ${color}; border-radius: 50%; box-shadow: 0 0 0 1px rgba(0,0,0,0.6), 0 1px 2px rgba(0,0,0,0.5);"></div>
-                ${badges.join('')}
-            </div>`,
-            className: 'loot-dot',
-            iconSize: [size, size],
-            iconAnchor: [size / 2, size / 2]
-        });
-    };
-
     const visibleMarkers = useMemo(() => {
         return markers.filter(m => {
             if (!activeFilters[m.category_id]) return false;
@@ -352,229 +522,6 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
 
         return grouped;
     }, [visibleMarkers, categories, isMissionMode]);
-    const getIconForMarker = (marker) => {
-        const category = categories.find(c => c.id === marker.category_id);
-        const catName = category?.name?.toLowerCase() || '';
-        const groupName = category?.group_name?.toLowerCase() || '';
-        const title = marker.title?.toLowerCase() || '';
-
-        const isLocked = marker.requires_key || ['federal stockpile bunker'].some(k => title.includes(k));
-        // Water Badge Filter Logic
-        const waterCat = categories.find(c => c.name?.toLowerCase() === 'water source');
-        const showWaterBadgeFilter = waterCat ? !!activeFilters[waterCat.id] : true;
-        const hasWater = (marker.has_water_source && showWaterBadgeFilter);
-
-        // 0. LOOTABLE VEHICLES (High Priority Override)
-        // These must be small and subtle, checked before generic loot
-        if (catName.includes('lootable vehicle')) {
-            const carSvg = `<svg viewBox="0 0 24 24" fill="#d4d4d4"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z" stroke="black" stroke-width="0.8"/></svg>`;
-            return createNoBorderIcon(carSvg, '#d4d4d4', 8, hasWater);
-        }
-
-        // 1. RESOURCES (Water, Gas, Keys) - HIGH PRIORITY
-        if (catName.includes('water') && !catName.includes('tower')) return createMinorResourceIcon(personalIcons.water.svg, '#0369a1', 14); // Vibrant Blue (Match badge), size 14
-        if (catName.includes('gas source') || catName.includes('butane') || catName.includes('propane') || catName.includes('fuel')) return createMinorResourceIcon(mapIcons.propane, '#ea580c', 14); // Darker Orange, size 14
-        if (catName.includes('key')) return createCircleIcon(mapIcons.key, '#eab308');
-
-        // 1.5 HELICRASH - HIGH PRIORITY (Before loot detection)
-        if (catName.toLowerCase().includes('helicrash') || catName.toLowerCase().includes('heli')) {
-            return createPinIcon(mapIcons.helicopter, '#ef4444', isLocked, hasWater);
-        }
-
-        // 2. LOOT DETECTION (Explicit)
-        // We treat it as loot if 'loot' is in the name OR if it belongs to a primary loot group
-        const isLootGroup = ['military', 'industrial', 'civilian', 'medical', 'calculated'].includes(groupName);
-        const isLootName = catName.includes('loot') || title.includes('loot');
-
-        // Exclusions: even if in a loot group, some specific POIs should be pins
-        const isSpecificPOI = catName.includes('bunker') || catName.includes('tent') || catName.includes('station') || catName.includes('hospital') || catName.includes('factory') || catName.includes('hangar') || catName.includes('golf') || catName.includes('school') || catName.includes('university') || catName.includes('college') || catName.includes('academy') || catName.includes('deer stand') || catName.includes('firestation');
-
-        if ((isLootName || isLootGroup) && !isSpecificPOI) {
-            let dotColor = '#94a3b8'; // Default grey
-            if (groupName === 'military') dotColor = '#ef4444';
-            if (groupName === 'industrial') dotColor = '#f97316';
-            if (groupName === 'civilian') dotColor = '#22c55e';
-            if (groupName === 'medical') dotColor = '#ec4899';
-            if (groupName === 'calculated') dotColor = '#3b82f6';
-
-            return createDotIcon(dotColor, 8, isLocked, hasWater);
-        }
-
-        // 3. Zones
-        if (catName.includes('zones')) {
-            const isMinor = catName.includes('minor');
-            return L.divIcon({
-                className: `zone-label ${isMinor ? 'zone-minor' : 'zone-major'}`,
-                html: `<span>${marker.title}</span>`,
-                iconSize: [200, 20],
-                iconAnchor: [100, 10]
-            });
-        }
-
-        // 4. Orange Group (Factory, Hangar)
-        if (catName.includes('factory')) return createPinIcon(mapIcons.factory, '#f97316', isLocked, hasWater);
-        if (catName.includes('hangar')) return createPinIcon(mapIcons.hangar, '#f97316', isLocked, hasWater);
-
-        // 5. Green Group
-        if (catName.includes('bunker') && catName.includes('civilian')) return createPinIcon(mapIcons.bunker, '#22c55e', isLocked, hasWater);
-        if (catName.includes('deer stand')) return createPinIcon(mapIcons.tree, '#22c55e', isLocked, hasWater);
-        if (catName.includes('firestation')) return createPinIcon(mapIcons.fire, '#22c55e', isLocked, hasWater);
-        if (catName.includes('gas station')) return createPinIcon(personalIcons.gas.svg, '#22c55e', isLocked, hasWater);
-        if (catName.includes('golf')) return createPinIcon(mapIcons.golf, '#22c55e', isLocked, hasWater);
-        if (catName.includes('school') || catName.includes('university') || catName.includes('college') || catName.includes('academy')) return createPinIcon(mapIcons.school, '#22c55e', isLocked, hasWater);
-
-        // 6. Pink Group (Hospital, Nera Tent)
-        if (catName.includes('hospital')) return createPinIcon(mapIcons.hospital, '#ec4899', isLocked, hasWater);
-        if (catName.includes('nera tent')) return createPinIcon(mapIcons.tent, '#ec4899', isLocked, hasWater);
-
-        // 7. Vehicles
-        if (catName === 'vehicles') {
-            const carSvg = `<svg viewBox="0 0 24 24" fill="#3b82f6"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z" stroke="black" stroke-width="0.8"/></svg>`;
-            return createNoBorderIcon(carSvg, '#3b82f6', 18, hasWater);
-        }
-
-        // 8. Trailers
-        if (catName === 'trailers') {
-            const simpleTrailer = `<svg viewBox="0 0 24 24" fill="#3b82f6"><path d="M1 5h14v10H1V5zm14 4h6v6h-6V9zm2 6a2 2 0 110 4 2 2 0 010-4zm-12 0a2 2 0 110 4 2 2 0 010-4z" stroke="black" stroke-width="0.8"/></svg>`;
-            return createNoBorderIcon(simpleTrailer, '#3b82f6', 18, hasWater);
-        }
-
-        // 9. NPCs
-        if (catName.includes('npc') || catName.includes('vendors') || catName === 'traders') {
-            return createNoBorderIcon(mapIcons.person, '#ffffff', 30, hasWater);
-        }
-
-        // 10. Military Pins
-        if (catName.includes('shooting range')) return createPinIcon(mapIcons.target, '#ef4444', isLocked, hasWater);
-        if (catName.includes('military bunker')) return createPinIcon(mapIcons.bunker, '#ef4444', isLocked, hasWater);
-        if (catName.includes('barracks')) return createPinIcon(mapIcons.barracks, '#ef4444', isLocked, hasWater);
-        if (catName.includes('military base')) return createPinIcon(mapIcons.helmet, '#ef4444', isLocked, hasWater);
-        if (catName.includes('camping tent')) return createPinIcon(mapIcons.tent, '#ef4444', isLocked, hasWater);
-
-        if (groupName === 'military') {
-            const iconUrl = category?.icon_url;
-            const content = iconUrl ? `<img src="${iconUrl}" style="width: 18px; height: 18px; filter: invert(1);" />` : personalIcons.skull.svg;
-            return createPinIcon(content, '#ef4444', isLocked, hasWater);
-        }
-
-        // 11. Landmarks
-        const normalizedCatName = catName.replace(/\s+/g, '');
-        const isTargetLandmark = ['watchtower', 'watertower', 'towercrane', 'radiotower', 'huntingtower', 'huntingstand', 'cave'].some(id => normalizedCatName.includes(id));
-
-        if (groupName === 'landmarks' || isTargetLandmark) {
-            let explicitIcon = null;
-            if (normalizedCatName.includes('watchtower')) explicitIcon = mapIcons.watchtower;
-            else if (normalizedCatName.includes('watertower')) explicitIcon = mapIcons.watertower;
-            else if (normalizedCatName.includes('towercrane')) explicitIcon = mapIcons.towercrane;
-            else if (normalizedCatName.includes('radiotower')) explicitIcon = mapIcons.radiotower;
-            else if (normalizedCatName.includes('huntingtower') || normalizedCatName.includes('huntingstand')) explicitIcon = mapIcons.huntingtower;
-            else if (normalizedCatName.includes('cave')) explicitIcon = mapIcons.cave;
-
-            const iconUrl = category?.icon_url;
-            if (explicitIcon || iconUrl) {
-                const badges = [];
-                // ONLY add badges if it's NOT one of the specific landmarks requested to be "Solo el icono sin nada mas"
-                if (!explicitIcon) {
-                    if (isLocked) {
-                        badges.push(`<div style="position: absolute; top: -8px; right: -8px; width: 20px; height: 20px; background: #fbbf24; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid #1a1a1a; box-shadow: 0 2px 4px rgba(0,0,0,0.5); z-index: 10; color: #1a1a1a;">
-                            <svg viewBox="0 0 24 24" fill="currentColor" style="width: 13px; height: 13px;"><path d="M21 10h-8.35C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H13v2h2v-2h2v2h2v-2h2v-4zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
-                        </div>`);
-                    }
-                    if (hasWater) {
-                        badges.push(`<div style="position: absolute; top: -4px; left: -4px; width: 12px; height: 12px; background: #0369a1; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid #1a1a1a; box-shadow: 0 2px 4px rgba(0,0,0,0.5); z-index: 10; color: white;">
-                            <svg viewBox="0 0 24 24" fill="currentColor" style="width: 8px; height: 8px;"><path d="M12 2c-5.33 4.55-8 8.48-8 11.8 0 4.98 3.8 8.2 8 8.2s8-3.22 8-8.2c0-3.32-2.67-7.25-8-11.8z"/></svg>
-                        </div>`);
-                    }
-                }
-
-                return L.divIcon({
-                    html: `<div style="position: relative; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; transform: translateZ(0); backface-visibility: hidden;">
-                        ${explicitIcon ? (
-                            explicitIcon.startsWith('http')
-                                ? `<img src="${explicitIcon}" style="width: 100%; height: 100%; object-fit: contain; filter: brightness(0) drop-shadow(0 1px 1px rgba(0,0,0,0.8)); image-rendering: -webkit-optimize-contrast;" />`
-                                : `<div style="width: 100%; height: 100%; color: black; filter: drop-shadow(0 1px 1.5px rgba(0,0,0,0.7));">${explicitIcon}</div>`
-                        ) : `<img src="${iconUrl}" style="width: 30px; height: 30px; object-fit: contain; filter: drop-shadow(0 1px 1.5px rgba(0,0,0,0.7)); image-rendering: -webkit-optimize-contrast;" />`}
-                        ${badges.join('')}
-                    </div>`,
-                    className: 'precise-icon',
-                    iconSize: [36, 36],
-                    iconAnchor: [18, 36],
-                    popupAnchor: [0, -18]
-                });
-            }
-        }
-
-        // 12. Fallback
-        const iconUrl = category?.icon_url;
-        if (iconUrl) {
-            const content = `<img src="${iconUrl}" style="width: 18px; height: 18px; filter: invert(1);" />`;
-            return createPinIcon(content, '#94a3b8', isLocked, hasWater);
-        }
-
-        return createPinIcon(mapIcons.factory, category?.color || '#3b82f6', isLocked, hasWater);
-
-        return new L.Icon.Default();
-    };
-
-    const createDivIcon = (colorClassName) => {
-        // Mapping class names to colors for simplicity or keeping class logic if global CSS exists
-        // But better to use style directly for React
-        let color = '#fff';
-        if (colorClassName.includes('red')) color = '#e24a4a';
-        if (colorClassName.includes('orange')) color = '#f5a623';
-        if (colorClassName.includes('green')) color = '#7ee24a';
-        if (colorClassName.includes('purple')) color = '#b860f0';
-        if (colorClassName.includes('pink')) color = '#ec4899';
-
-        return L.divIcon({
-            html: `<div style="background-color: ${color}; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.4);"></div>`,
-            iconSize: [12, 12],
-            iconAnchor: [6, 6],
-            className: 'precise-icon'
-        });
-    };
-
-    const createClusterIcon = (cluster, className, color) => {
-        return L.divIcon({
-            html: `<div style="background-color: ${color}; width: 15px; height: 15px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 10px ${color}80;"></div>`,
-            className: className,
-            iconSize: [15, 15]
-        });
-    };
-
-    const getPersonalIcon = (marker) => {
-        const iconDef = personalIcons[marker.icon_name] || personalIcons.star;
-        // REDESIGN: "Glass Jewel" - Elegant, Dark, Frosted Diamond with Glowing Border
-        return L.divIcon({
-            html: `<div style="
-                background-color: rgba(15, 23, 42, 0.6);
-                width: 28px;
-                height: 28px;
-                border-radius: 5px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                border: 1.5px solid ${marker.color};
-                color: ${marker.color};
-                box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-                backdrop-filter: blur(4px);
-                transform: rotate(45deg);
-            ">
-                <div style="
-                    width: 18px;
-                    height: 18px;
-                    transform: rotate(-45deg);
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    filter: drop-shadow(0 0 2px rgba(255,255,255,0.5));
-                ">${iconDef.svg}</div>
-            </div>`,
-            className: 'personal-marker-icon', // Ensure CSS doesn't override transformation
-            iconSize: [28, 28],
-            iconAnchor: [14, 14]
-        });
-    };
 
     const [isMyMarkersOpen, setIsMyMarkersOpen] = useState(false);
 
@@ -893,7 +840,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                         animate={!adminMode}
                     >
                         {civilianLoot.map(marker => (
-                            <Marker key={marker.id} position={[marker.lat, marker.lng]} icon={getIconForMarker(marker)} eventHandlers={{ click: (e) => { if (adminMode && onMarkerClick) { L.DomEvent.stopPropagation(e.originalEvent || e); onMarkerClick(marker); } } }}>
+                            <Marker key={marker.id} position={[marker.lat, marker.lng]} icon={getIconForMarker(marker, categories, activeFilters)} eventHandlers={{ click: (e) => { if (adminMode && onMarkerClick) { L.DomEvent.stopPropagation(e.originalEvent || e); onMarkerClick(marker); } } }}>
                                 {!adminMode && (
                                     <Popup closeButton={false} offset={[0, -10]}>
                                         <MapPopup marker={marker} tags={lootTags.filter(t => t.marker_id === marker.id)} keys={keys} />
@@ -912,7 +859,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                         animate={!adminMode}
                     >
                         {medicalLoot.map(marker => (
-                            <Marker key={marker.id} position={[marker.lat, marker.lng]} icon={getIconForMarker(marker)} eventHandlers={{ click: (e) => { if (adminMode && onMarkerClick) { L.DomEvent.stopPropagation(e.originalEvent || e); onMarkerClick(marker); } } }}>
+                            <Marker key={marker.id} position={[marker.lat, marker.lng]} icon={getIconForMarker(marker, categories, activeFilters)} eventHandlers={{ click: (e) => { if (adminMode && onMarkerClick) { L.DomEvent.stopPropagation(e.originalEvent || e); onMarkerClick(marker); } } }}>
                                 {!adminMode && (
                                     <Popup closeButton={false} offset={[0, -10]}>
                                         <MapPopup marker={marker} tags={lootTags.filter(t => t.marker_id === marker.id)} keys={keys} />
@@ -931,7 +878,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                         animate={!adminMode}
                     >
                         {militaryLoot.map(marker => (
-                            <Marker key={marker.id} position={[marker.lat, marker.lng]} icon={getIconForMarker(marker)} eventHandlers={{ click: (e) => { if (adminMode && onMarkerClick) { L.DomEvent.stopPropagation(e.originalEvent || e); onMarkerClick(marker); } } }}>
+                            <Marker key={marker.id} position={[marker.lat, marker.lng]} icon={getIconForMarker(marker, categories, activeFilters)} eventHandlers={{ click: (e) => { if (adminMode && onMarkerClick) { L.DomEvent.stopPropagation(e.originalEvent || e); onMarkerClick(marker); } } }}>
                                 {!adminMode && (
                                     <Popup closeButton={false} offset={[0, -10]}>
                                         <MapPopup marker={marker} tags={lootTags.filter(t => t.marker_id === marker.id)} keys={keys} />
@@ -950,7 +897,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                         animate={!adminMode}
                     >
                         {industrialLoot.map(marker => (
-                            <Marker key={marker.id} position={[marker.lat, marker.lng]} icon={getIconForMarker(marker)} eventHandlers={{ click: (e) => { if (adminMode && onMarkerClick) { L.DomEvent.stopPropagation(e.originalEvent || e); onMarkerClick(marker); } } }}>
+                            <Marker key={marker.id} position={[marker.lat, marker.lng]} icon={getIconForMarker(marker, categories, activeFilters)} eventHandlers={{ click: (e) => { if (adminMode && onMarkerClick) { L.DomEvent.stopPropagation(e.originalEvent || e); onMarkerClick(marker); } } }}>
                                 {!adminMode && (
                                     <Popup closeButton={false} offset={[0, -10]}>
                                         <MapPopup marker={marker} tags={lootTags.filter(t => t.marker_id === marker.id)} keys={keys} />
@@ -970,7 +917,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                             <Marker
                                 key={marker.id}
                                 position={[marker.lat, marker.lng]}
-                                icon={getIconForMarker(marker)}
+                                icon={getIconForMarker(marker, categories, activeFilters)}
                                 interactive={!isZone} // Disable interactions for zones
                                 eventHandlers={!isZone ? { click: (e) => { if (adminMode && onMarkerClick) { L.DomEvent.stopPropagation(e.originalEvent || e); onMarkerClick(marker); } } } : {}}
                             >

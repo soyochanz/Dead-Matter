@@ -19,20 +19,8 @@ import KeyCard from '@/components/wiki/KeyCard';
 import KeyDetailModal from '@/components/wiki/KeyDetailModal';
 import NpcDetailModal from '@/pages/NpcsPage';
 import WikiCategoryLayout from '@/components/wiki/WikiCategoryLayout';
+import { slugify } from '@/utils/slugify';
 
-// Utility to generate SEO-friendly slugs from names
-const slugify = (text) => {
-    if (!text) return '';
-    return text
-        .toString()
-        .toLowerCase()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .trim()
-        .replace(/\s+/g, '-')
-        .replace(/[^\w-]+/g, '')
-        .replace(/--+/g, '-');
-};
 
 const WikiCategoryPage = ({ category, customTitle, customSubtitle, customDescription, extraHeadElements }) => {
     const { t } = useTranslation();

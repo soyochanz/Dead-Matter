@@ -257,14 +257,33 @@ const MediaForm = ({ item, onSave, onCancel }) => {
     const handleUrlChange = async (url) => {
         let thumbnail = '';
 
-        // Si es YouTube URL, generar thumbnail automáticamente
+        // Si es YouTube URL, generar thumbnail y metadatos automáticamente
         if (formData.type === 'video' && (url.includes('youtube.com') || url.includes('youtu.be'))) {
             thumbnail = getYouTubeThumbnail(url);
-            setFormData(prev => ({
-                ...prev,
-                url: url,
-                thumbnail: thumbnail || prev.thumbnail
-            }));
+            
+            // Intentar obtener metadatos vía oEmbed
+            try {
+                const response = await fetch(`https://noembed.com/embed?url=${encodeURIComponent(url)}`);
+                const data = await response.json();
+                
+                if (data) {
+                    setFormData(prev => ({
+                        ...prev,
+                        url: url,
+                        title: prev.title || data.title || '',
+                        author: prev.author || data.author_name || '',
+                        description: prev.description || (data.author_name ? `Video by ${data.author_name}` : ''),
+                        thumbnail: data.thumbnail_url || thumbnail || prev.thumbnail
+                    }));
+                }
+            } catch (err) {
+                console.error("Failed to fetch YouTube metadata:", err);
+                setFormData(prev => ({
+                    ...prev,
+                    url: url,
+                    thumbnail: thumbnail || prev.thumbnail
+                }));
+            }
         } else if (formData.type === 'video' && (url.toLowerCase().includes('.mp4') || url.toLowerCase().includes('.webm') || url.toLowerCase().includes('.mov') || url.includes('discordapp.net') || url.includes('cdn.discordapp.com'))) {
 
             // Es un video directo, intentar generar thumbnail
@@ -303,14 +322,12 @@ const MediaForm = ({ item, onSave, onCancel }) => {
                 toast({
                     title: "Thumbnail Warning",
                     description: detailedError,
-                    variant: "default" // Using default instead of destructive to not look like a crash
+                    variant: "default" 
                 });
             } finally {
                 setUploading(false);
             }
         } else {
-
-
             setFormData(prev => ({
                 ...prev,
                 url: url
