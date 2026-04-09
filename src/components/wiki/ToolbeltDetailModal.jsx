@@ -61,7 +61,7 @@ const ToolbeltDetailModal = ({ item, onClose }) => {
                             whileHover={{ scale: 1.1, rotate: 90 }}
                             whileTap={{ scale: 0.9 }}
                             onClick={onClose}
-                            className="absolute top-8 right-8 text-gray-500 hover:text-white transition-all bg-white/5 p-3 rounded-2xl hover:bg-red-600/20 hover:text-red-500 border border-white/5 z-20"
+                            className="absolute top-8 right-8 text-gray-500 transition-all bg-white/5 p-3 rounded-2xl hover:bg-red-600/20 hover:text-red-500 border border-white/5 z-20"
                         >
                             <X size={24} />
                         </motion.button>
@@ -130,7 +130,7 @@ const ToolbeltDetailModal = ({ item, onClose }) => {
                                             )}
                                             {item.use_function && (
                                                 <div className="mt-4 p-4 rounded-2xl bg-black/40 border border-white/5">
-                                                    <span className="text-[10px] font-black uppercase text-red-500 tracking-widest block mb-2 flex items-center gap-2">
+                                                    <span className="text-[10px] font-black uppercase text-red-500 tracking-widest mb-2 flex items-center gap-2">
                                                         <Cog size={14} /> Core Functionality
                                                     </span>
                                                     <p className="text-sm font-medium text-gray-300 leading-relaxed italic">
