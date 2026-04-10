@@ -216,7 +216,7 @@ const MapFilters = ({ categories, activeFilters, onToggleFilter, isOpen, onClose
                                                             else if (name.includes('hangar')) { bgColor = '#f97316'; iconContent = mapIcons.hangar; }
 
                                                             // 2. Green
-                                                            else if (name.includes('bunker') && name.includes('civilian')) { bgColor = '#22c55e'; iconContent = mapIcons.bunker; }
+                                                            else if (name.includes('bunker') && name.includes('civilian')) { bgColor = '#22c55e'; iconContent = mapIcons.bunker_civilian; }
                                                             else if (name.includes('deer')) { bgColor = '#22c55e'; iconContent = mapIcons.tree; }
                                                             else if (name.includes('fire')) { bgColor = '#22c55e'; iconContent = mapIcons.fire; }
                                                             else if (name.includes('gas station')) { bgColor = '#22c55e'; iconContent = personalIcons.gas.svg; }
@@ -245,7 +245,7 @@ const MapFilters = ({ categories, activeFilters, onToggleFilter, isOpen, onClose
                                                             // 7. Red Group
                                                             else if (name.includes('shooting range')) { bgColor = '#ef4444'; iconContent = mapIcons.target; }
                                                             else if (name.includes('helicrash')) { bgColor = '#ef4444'; iconContent = mapIcons.helicopter; }
-                                                            else if (name.includes('military bunker')) { bgColor = '#ef4444'; iconContent = mapIcons.bunker; }
+                                                            else if (name.includes('military bunker')) { bgColor = '#ef4444'; iconContent = mapIcons.bunker_military; }
                                                             else if (name.includes('barracks')) { bgColor = '#ef4444'; iconContent = mapIcons.barracks; }
                                                             else if (name.includes('military base')) { bgColor = '#ef4444'; iconContent = mapIcons.helmet; }
                                                             else if (name.includes('camping tent')) { bgColor = '#ef4444'; iconContent = mapIcons.tent; }
@@ -259,9 +259,9 @@ const MapFilters = ({ categories, activeFilters, onToggleFilter, isOpen, onClose
                                                             else if (name.includes('cave')) { iconContent = mapIcons.cave; }
 
                                                             // 8. Loot
-                                                            else if (name.includes('loot') && name.includes('civilian')) { bgColor = '#22c55e'; iconContent = null; }
+                                                            else if (name.includes('loot') && name.includes('civilian')) { bgColor = '#22c55e'; iconContent = mapIcons.loot; }
                                                             else if (name.includes('loot') && name.includes('medical')) { bgColor = '#ec4899'; iconContent = mapIcons.medical; }
-                                                            else if (name.includes('loot') && name.includes('military')) { bgColor = '#ef4444'; iconContent = null; }
+                                                            else if (name.includes('loot') && name.includes('military')) { bgColor = '#ef4444'; iconContent = mapIcons.loot; }
                                                             else if (name.includes('loot') && name.includes('industrial')) { bgColor = '#f97316'; iconContent = mapIcons.loot; }
 
                                                             // 9. Generic Red Checks
@@ -289,7 +289,11 @@ const MapFilters = ({ categories, activeFilters, onToggleFilter, isOpen, onClose
                                                                     <div className="w-8 h-8 rounded-md flex items-center justify-center shrink-0 border border-white/5 shadow-sm" style={{ backgroundColor: bgColor, color: textColor }}>
                                                                         {isUrl
                                                                             ? <img src={iconContent} style={{ width: '20px', height: '20px', objectFit: 'contain', filter: 'brightness(0) invert(1)' }} alt="" />
-                                                                            : <div style={{ width: '20px', height: '20px' }} dangerouslySetInnerHTML={{ __html: iconContent }} />
+                                                                            : <div 
+                                                                                className="flex items-center justify-center [&_span]:!text-[18px]" 
+                                                                                style={{ width: '100%', height: '100%' }} 
+                                                                                dangerouslySetInnerHTML={{ __html: iconContent }} 
+                                                                              />
                                                                         }
                                                                     </div>
                                                                 );
