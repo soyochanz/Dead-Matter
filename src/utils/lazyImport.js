@@ -10,7 +10,9 @@ export const lazyImport = (factory) => {
             if (
                 message.includes('Failed to fetch dynamically imported module') ||
                 message.includes('Importing a module script failed') ||
-                message.includes('error loading dynamically imported module')
+                message.includes('error loading dynamically imported module') ||
+                message.includes('net::ERR_ABORTED') ||
+                message.includes('status: 404')
             ) {
                 // Prevent infinite reload loops using sessionStorage
                 const storageKey = `lazyImport_reload_${window.location.pathname}`;

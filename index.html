@@ -102,6 +102,24 @@
     }
   </script>
 
+  <!-- Emergency reload script for chunk/asset load failures -->
+  <script>
+    window.addEventListener('error', function (e) {
+      if (e.target.tagName === 'SCRIPT') {
+        const src = e.target.src || '';
+        if (src.includes('/assets/index-') || src.includes('.js')) {
+          console.warn('Script load error detected:', src);
+          const lastReload = sessionStorage.getItem('last_emergency_reload');
+          const now = Date.now();
+          // Prevent infinite reload loops (max 1 reload every 10 seconds)
+          if (!lastReload || now - parseInt(lastReload) > 10000) {
+            sessionStorage.setItem('last_emergency_reload', now.toString());
+            window.location.reload();
+          }
+        }
+      }
+    }, true);
+  </script>
 </head>
 
 <body>
