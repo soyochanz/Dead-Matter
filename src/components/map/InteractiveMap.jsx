@@ -439,6 +439,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
         categories: hookCategories,
         lootTags: hookLootTags,
         missions: hookMissions,
+        npcs: hookNpcs,
         polygons: hookPolygons,
         paths: hookPaths,
         loading: dataLoading,
@@ -451,6 +452,7 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
     const lootTags = propLootTags || hookLootTags || [];
     const keys = propKeys || fetchedKeys || [];
     const missions = propMissions || hookMissions || [];
+    const npcs = hookNpcs || [];
     const polygonsToRender = (polygons && polygons.length > 0) ? polygons : (hookPolygons || []);
     const pathsToRender = propPaths || hookPaths || [];
     const [activeFilters, setActiveFilters] = useState({});
@@ -611,20 +613,21 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
     // --- MISSION FILTERS LOGIC ---
     const missionNpcs = useMemo(() => {
         if (!missions.length) return [];
-        const uniqueNpcs = new Set(missions.map(m => {
-            const npc = markers.find(mark => mark.id === m.npc_id);
-            return npc ? npc.title : null;
-        }).filter(Boolean));
-        return ['All', ...Array.from(uniqueNpcs).sort()];
-    }, [missions, markers]);
+        const uniqueNpcIds = new Set(missions.map(m => m.npc_id).filter(Boolean));
+        const npcNames = Array.from(uniqueNpcIds).map(id => {
+            const npc = npcs.find(n => n.id === id);
+            return npc ? npc.name : null;
+        }).filter(Boolean);
+        return ['All', ...npcNames.sort()];
+    }, [missions, npcs]);
 
     const filteredMissions = useMemo(() => {
         if (selectedNpcFilter === 'All') return missions;
         return missions.filter(m => {
-            const npcMarker = markers.find(mark => mark.id === m.npc_id);
-            return npcMarker && npcMarker.title === selectedNpcFilter;
+            const npc = npcs.find(n => n.id === m.npc_id);
+            return npc && npc.name === selectedNpcFilter;
         });
-    }, [missions, selectedNpcFilter, markers]);
+    }, [missions, selectedNpcFilter, npcs]);
 
     if (dataError) return <div className="text-red-500 text-center p-10">Error loading map data: {dataError}</div>;
 
@@ -1036,18 +1039,18 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                                 const sortedSteps = [...steps].sort((a, b) => a.step_order - b.step_order);
                                 const startStep = sortedSteps[0];
 
-                                // Path Positions
-                                const startNpcMarker = markers?.find(m => m.id === mission.start_npc_id);
-                                const npcMarker = markers?.find(m => m.id === mission.npc_id);
+                                // Determine Start/End NPCs (from Markers or Wiki NPCs)
+                                const startNpc = markers?.find(m => m.id === mission.start_npc_id) || npcs?.find(n => n.id === mission.start_npc_id);
+                                const endNpc = markers?.find(m => m.id === mission.npc_id) || npcs?.find(n => n.id === mission.npc_id);
 
                                 const pathPositions = [];
-                                if (startNpcMarker) pathPositions.push([startNpcMarker.lat, startNpcMarker.lng]);
+                                if (startNpc && startNpc.lat && startNpc.lng) pathPositions.push([startNpc.lat, startNpc.lng]);
                                 sortedSteps.forEach(s => pathPositions.push([s.lat, s.lng]));
-                                if (npcMarker) pathPositions.push([npcMarker.lat, npcMarker.lng]);
+                                if (endNpc && endNpc.lat && endNpc.lng) pathPositions.push([endNpc.lat, endNpc.lng]);
 
                                 // Determine Start Position & Icon
-                                const startPos = startNpcMarker ? [startNpcMarker.lat, startNpcMarker.lng] : [startStep.lat, startStep.lng];
-                                const startIcon = startNpcMarker
+                                const startPos = (startNpc && startNpc.lat) ? [startNpc.lat, startNpc.lng] : [startStep.lat, startStep.lng];
+                                const startIcon = startNpc
                                     ? createNoBorderIcon(mapIcons.person, '#fbbf24')
                                     : createPinIcon('👑', '#fbbf24');
 
@@ -1074,9 +1077,19 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                                                         <p className="text-xs text-amber-200 mt-1">{mission.content || mission.description}</p>
                                                     </div>
                                                     <div className="p-3 max-h-[300px] overflow-y-auto space-y-4">
+                                                        {/* START NPC */}
+                                                        {startNpc && (
+                                                            <div className="relative pl-4 border-l-2 border-amber-500/30 pb-2">
+                                                                <div className="absolute -left-[5px] top-0 w-2.5 h-2.5 rounded-full bg-amber-500 ring-4 ring-amber-500/10"></div>
+                                                                <h4 className="font-bold text-amber-500 text-sm uppercase tracking-tighter">Start: Talk to {startNpc.name || startNpc.title}</h4>
+                                                                <p className="text-[10px] text-gray-500">{startNpc.location || 'Initial contact point'}</p>
+                                                            </div>
+                                                        )}
+
+                                                        {/* INTERMEDIATE STEPS */}
                                                         {sortedSteps.map((step, i) => (
                                                             <div key={step.id} className="relative pl-4 border-l-2 border-amber-500/30 pb-2 last:pb-0">
-                                                                <div className="absolute -left-[5px] top-0 w-2.5 h-2.5 rounded-full bg-amber-500"></div>
+                                                                <div className="absolute -left-[5px] top-0 w-2.5 h-2.5 rounded-full bg-amber-200 ring-2 ring-white/5"></div>
                                                                 <h4 className="font-bold text-white text-sm">Step {step.step_order}: {step.title}</h4>
                                                                 {step.image_url && (
                                                                     <div className="relative w-full h-32 rounded-md my-2 overflow-hidden bg-black/40 border border-white/10 group">
@@ -1095,9 +1108,13 @@ const InteractiveMap = ({ adminMode = false, disableUI = false, onMapClick, onMa
                                                                 <p className="text-xs text-gray-300">{step.description}</p>
                                                             </div>
                                                         ))}
-                                                        {npcMarker && (
+
+                                                        {/* END NPC */}
+                                                        {endNpc && (
                                                             <div className="relative pl-4 border-l-2 border-amber-500/30 pt-2">
-                                                                <h4 className="font-bold text-green-400 text-sm">Final: Report to {npcMarker.title}</h4>
+                                                                <div className="absolute -left-[5px] top-2 w-2.5 h-2.5 rounded-full bg-green-500 ring-4 ring-green-500/10"></div>
+                                                                <h4 className="font-bold text-green-400 text-sm uppercase tracking-tighter">Final: Report to {endNpc.name || endNpc.title}</h4>
+                                                                <p className="text-[10px] text-gray-500">Operation conclusion</p>
                                                             </div>
                                                         )}
                                                     </div>

@@ -3,104 +3,112 @@ import { motion } from 'framer-motion';
 import { Wrench, Package, Zap } from 'lucide-react';
 
 const ToolbeltCard = ({ item, index, onClick }) => {
-    // Función para obtener los colores basados en la rareza
-    const getRarityColor = (rarityName) => {
-        const colors = {
-            'Common': '#94a3b8',
-            'Uncommon': '#22c55e',
-            'Rare': '#3b82f6',
-            'Epic': '#a855f7',
-            'Legendary': '#f59e0b',
-            'Mythic': '#ef4444'
+    const getRarityStyles = (rarityName) => {
+        const styles = {
+            'Common': { color: 'gray', from: 'from-gray-500/20', to: 'to-slate-600/20', border: 'border-gray-500/20', hoverBorder: 'group-hover:border-gray-500/50', text: 'text-gray-400', glow: 'shadow-gray-500/10', accent: 'via-gray-500/50', bgGlow: 'bg-gray-500/20', shadowPulse: 'shadow-[0_0_8px_rgba(107,114,128,0.5)]' },
+            'Uncommon': { color: 'emerald', from: 'from-emerald-500/20', to: 'to-green-600/20', border: 'border-emerald-500/20', hoverBorder: 'group-hover:border-emerald-500/50', text: 'text-emerald-400', glow: 'shadow-emerald-500/10', accent: 'via-emerald-500/50', bgGlow: 'bg-emerald-500/20', shadowPulse: 'shadow-[0_0_8px_rgba(16,185,129,0.5)]' },
+            'Rare': { color: 'blue', from: 'from-blue-500/20', to: 'to-cyan-600/20', border: 'border-blue-500/20', hoverBorder: 'group-hover:border-blue-500/50', text: 'text-blue-400', glow: 'shadow-blue-500/10', accent: 'via-blue-500/50', bgGlow: 'bg-blue-500/20', shadowPulse: 'shadow-[0_0_8px_rgba(59,130,246,0.5)]' },
+            'Epic': { color: 'purple', from: 'from-purple-500/20', to: 'to-violet-600/20', border: 'border-purple-500/20', hoverBorder: 'group-hover:border-purple-500/50', text: 'text-purple-400', glow: 'shadow-purple-500/10', accent: 'via-purple-500/50', bgGlow: 'bg-purple-500/20', shadowPulse: 'shadow-[0_0_8px_rgba(168,85,247,0.5)]' },
+            'Legendary': { color: 'orange', from: 'from-orange-500/20', to: 'to-amber-600/20', border: 'border-orange-500/20', hoverBorder: 'group-hover:border-orange-500/50', text: 'text-orange-400', glow: 'shadow-orange-500/10', accent: 'via-orange-500/50', bgGlow: 'bg-orange-500/20', shadowPulse: 'shadow-[0_0_8px_rgba(245,158,11,0.5)]' },
+            'Mythic': { color: 'red', from: 'from-red-500/20', to: 'to-rose-600/20', border: 'border-red-500/20', hoverBorder: 'group-hover:border-red-500/50', text: 'text-red-400', glow: 'shadow-red-500/10', accent: 'via-red-500/50', bgGlow: 'bg-red-500/20', shadowPulse: 'shadow-[0_0_8px_rgba(239,68,68,0.5)]' }
         };
-        return colors[rarityName] || colors['Common'];
+        return styles[rarityName] || styles['Common'];
     };
 
-    const rarityName = item.rarity?.name || 'Common';
-    const rarityColor = getRarityColor(rarityName);
+    const rarity = item.rarity?.name || 'Common';
+    const style = getRarityStyles(rarity);
+
+    const primaryStat = { label: 'Slots', value: item.inventory_slots || 0 };
+    const secondaryStat = { label: 'Weight', value: item.weight || 0 };
 
     return (
         <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            whileHover={{ y: -5 }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            whileHover={{ y: -8 }}
+            transition={{ duration: 0.5, delay: index * 0.03 }}
             onClick={onClick}
-            className="relative group cursor-pointer h-full"
+            className="group relative cursor-pointer"
         >
-            {/* Card Interior */}
-            <div className="relative bg-[#0a0a0c] border border-white/5 rounded-[2rem] overflow-hidden transition-all duration-500 group-hover:border-red-500/30 group-hover:shadow-[0_20px_50px_-15px_rgba(239,68,68,0.15)] h-full flex flex-col shadow-2xl backdrop-blur-3xl">
+            <div className={`absolute -inset-[1px] rounded-[2.5rem] opacity-0 group-hover:opacity-40 blur-2xl transition-all duration-700 ${style.bgGlow}`} />
 
-                {/* Image Section */}
-                <div className="relative h-64 bg-black/40 flex items-center justify-center p-2 overflow-hidden group-hover:bg-black/60 transition-colors">
-                    {/* Rarity Aura */}
-                    <div
-                        className="absolute inset-0 opacity-10 group-hover:opacity-20 blur-[60px] transition-opacity duration-500"
-                        style={{ backgroundColor: rarityColor }}
-                    />
+            <div className={`relative h-full bg-[#08080a] rounded-[2.2rem] border border-white/5 overflow-hidden transition-all duration-500 group-hover:border-white/20 shadow-2xl`}>
+                
+                <div className="absolute inset-0 pointer-events-none">
+                    <div className="absolute top-6 left-6 w-3 h-3 border-t border-l border-white/10 group-hover:border-white/30 transition-colors" />
+                    <div className="absolute top-6 right-6 w-3 h-3 border-t border-r border-white/10 group-hover:border-white/30 transition-colors" />
+                    <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:30px_30px] opacity-[0.03] group-hover:opacity-[0.06] transition-opacity" />
+                </div>
 
-                    {/* Scanline Effect */}
-                    <div className="absolute inset-0 opacity-5 pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay" />
+                <div className="relative flex flex-col h-full pt-8">
+                    <div className="relative h-60 w-full flex items-center justify-center p-8 group-hover:p-6 transition-all duration-700 overflow-hidden">
+                        <div className={`absolute w-48 h-48 rounded-full blur-[60px] opacity-30 group-hover:opacity-60 transition-all duration-1000 ${style.bgGlow}`} />
+                        <div className="absolute bottom-0 w-40 h-full bg-gradient-to-t from-white/[0.08] via-white/[0.03] to-transparent blur-2xl" />
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_70%,rgba(255,255,255,0.1),transparent_60%)] opacity-50" />
 
-                    {item.image_url ? (
-                        <div className="w-full h-full flex items-center justify-center p-1">
+                        {item.image_url ? (
                             <motion.img
-                                whileHover={{ scale: 1.05, rotate: 1 }}
-                                transition={{ type: "spring", stiffness: 300, damping: 15 }}
-                                className="relative z-10 max-h-[90%] max-w-[90%] object-contain transition-transform duration-700 drop-shadow-[0_20px_40px_rgba(0,0,0,0.6)]"
-                                alt={item.name}
                                 src={item.image_url}
+                                alt={item.name}
+                                whileHover={{ scale: 1.15, rotate: -3 }}
+                                transition={{ type: "spring", stiffness: 150, damping: 15 }}
+                                className="max-h-full max-w-full object-contain drop-shadow-[0_20px_30px_rgba(0,0,0,0.9)] z-10"
                             />
-                        </div>
-                    ) : (
-                        <div className="relative z-10 p-5 rounded-2xl bg-white/5 border border-white/5 group-hover:border-red-500/30 transition-colors">
-                            <Wrench className="w-16 h-16 text-gray-500 group-hover:text-red-500 transition-colors" />
-                        </div>
-                    )}
-
-                    {/* Badges */}
-                    <div className="absolute top-4 right-4 z-20 flex flex-col items-end gap-2">
-                        {item.inventory_slots > 0 && (
-                            <div className="flex items-center gap-2 px-3 py-1 rounded-lg bg-black/80 border border-blue-500/30 text-blue-500 text-[10px] font-black tracking-widest uppercase shadow-lg backdrop-blur-md">
-                                <Package size={12} />
-                                <span>{item.inventory_slots} SLOTS</span>
+                        ) : (
+                            <div className="text-white/5 relative z-10">
+                                <Wrench size={80} strokeWidth={1} />
                             </div>
                         )}
                     </div>
-                </div>
 
-                {/* Content Section */}
-                <div className="p-6 flex-grow flex flex-col relative">
-                    <div className="flex-grow">
-                        <div className="flex items-center gap-3 mb-3">
-                            <span
-                                className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded border transition-colors"
-                                style={{
-                                    borderColor: `${rarityColor}30`,
-                                    color: rarityColor,
-                                    backgroundColor: `${rarityColor}10`
-                                }}
-                            >
-                                {rarityName}
-                            </span>
-                            <span className="text-[9px] font-black uppercase tracking-widest text-gray-600">ID: {item.id.substring(0, 6)}</span>
+                    <div className="px-8 pb-8 mt-auto space-y-6 relative z-10">
+                        <div className="flex items-center gap-3">
+                            <div className={`px-3 py-1 rounded-full border border-white/5 bg-black/60 shadow-inner flex items-center gap-2`}>
+                                <div className={`w-1.5 h-1.5 rounded-full ${style.shadowPulse} ${style.text} animate-pulse`} />
+                                <span className={`text-[9px] font-black uppercase tracking-[0.2em] ${style.text}`}>{rarity}</span>
+                            </div>
                         </div>
 
-                        <h3 className="text-lg font-medium text-white leading-tight uppercase tracking-tight group-hover:text-red-500 transition-colors duration-300">
-                            {item.name}
-                        </h3>
+                        <div className="min-h-[140px] flex flex-col">
+                            <h3 className="text-3xl font-black text-white tracking-tighter uppercase leading-[0.9] group-hover:text-red-500 transition-colors duration-500 mb-6 whitespace-pre-line">
+                                {item.name}
+                            </h3>
+                            
+                            <div className="grid grid-cols-2 gap-6 pt-6 border-t border-white/5 mt-auto">
+                                <div className="space-y-2">
+                                    <div className="flex justify-between items-center px-1">
+                                        <span className="text-[8px] font-black text-white/20 uppercase tracking-widest">{primaryStat.label}</span>
+                                        <span className="text-[11px] font-bold text-white/80">{primaryStat.value}</span>
+                                    </div>
+                                    <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+                                        <motion.div 
+                                            initial={{ width: 0 }}
+                                            animate={{ width: `${Math.min((primaryStat.value / 20) * 100, 100)}%` }}
+                                            transition={{ duration: 1, ease: "easeOut" }}
+                                            className="h-full bg-red-600 rounded-full"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <div className="flex justify-between items-center px-1">
+                                        <span className="text-[8px] font-black text-white/20 uppercase tracking-widest">{secondaryStat.label}</span>
+                                        <span className="text-[11px] font-bold text-white/80">{secondaryStat.value}</span>
+                                    </div>
+                                    <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+                                        <motion.div 
+                                            initial={{ width: 0 }}
+                                            animate={{ width: `${Math.min(secondaryStat.value * 10, 100)}%` }}
+                                            transition={{ duration: 1, ease: "easeOut" }}
+                                            className="h-full bg-blue-600 rounded-full"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    {/* Footer Stats summary if needed */}
-                    {item.use_function && (
-                        <div className="mt-4 pt-4 border-t border-white/5 flex items-start gap-2">
-                            <Zap size={14} className="text-yellow-500/50 mt-0.5" />
-                            <p className="text-[10px] text-gray-500 font-medium uppercase tracking-tight line-clamp-1">{item.use_function}</p>
-                        </div>
-                    )}
+                    <div className={`absolute top-1/2 -translate-y-1/2 left-0 w-1 h-32 rounded-r-full transition-all duration-700 opacity-20 group-hover:opacity-100 group-hover:h-full ${style.bgGlow}`} />
                 </div>
-
-                {/* Interactive Bottom Bar */}
-                <div className="h-1 bg-red-600/0 group-hover:bg-red-600 transition-all duration-500" />
             </div>
         </motion.div>
     );

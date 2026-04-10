@@ -170,6 +170,7 @@
         "meta_generic_desc": "Explora {{title}} en la Wiki de Dead Matter."
     },
     "wiki_layout": {
+        "combat_wiki": "Wiki",
         "return_to_wiki": "Volver a la Wiki",
         "filter": "Filtrar",
         "all_types": "Todos",

@@ -33,7 +33,7 @@ const TAG_OPTIONS = [
 ];
 
 // ─── Mission Step Card ────────────────────────────────────────────────────────
-const MissionStepCard = ({ step, idx, total, onChange, onDelete }) => {
+const MissionStepCard = ({ step, idx, total, onChange, onDelete, wikiItems = [] }) => {
     const [expanded, setExpanded] = useState(true);
 
     return (
@@ -126,6 +126,34 @@ const MissionStepCard = ({ step, idx, total, onChange, onDelete }) => {
                             outline: 'none', width: '100%', boxSizing: 'border-box'
                         }}
                     />
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'min-content 1fr', gap: '8px', alignItems: 'center', background: 'rgba(251,191,36,0.03)', padding: '6px 8px', borderRadius: '6px', border: '1px solid rgba(251,191,36,0.1)' }}>
+                        <span style={{ fontSize: '9px', fontWeight: '800', color: '#f59e0b', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>Wiki Item</span>
+                        <select
+                            value={step.wiki_item_id || ""}
+                            onChange={e => {
+                                const itemId = e.target.value;
+                                const item = wikiItems.find(i => i.id === itemId);
+                                onChange(idx, { 
+                                    wiki_item_id: itemId || null, 
+                                    wiki_item_type: item ? item.type : null 
+                                });
+                            }}
+                            style={{
+                                background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(251,191,36,0.2)',
+                                borderRadius: '4px', padding: '4px 8px', fontSize: '11px', color: '#e5e7eb',
+                                outline: 'none', width: '100%', cursor: 'pointer'
+                            }}
+                        >
+                            <option value="">— No item linked —</option>
+                            {wikiItems.map(item => (
+                                <option key={`${item.type}-${item.id}`} value={item.id}>
+                                    [{item.type}] {item.name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' }}>
                         {['lat', 'lng'].map(field => (
                             <div key={field} style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
@@ -164,6 +192,9 @@ const MapManager = () => {
     const [polygons, setPolygons] = useState([]);
     const [paths, setPaths] = useState([]);
     const [lootTags, setLootTags] = useState([]);
+    const [wikiNpcs, setWikiNpcs] = useState([]);
+    const [wikiItems, setWikiItems] = useState([]);
+    const [editingMission, setEditingMission] = useState(null);
 
     const viewMode = searchParams.get('mode') || 'markers';
     const setViewMode = (mode) => setSearchParams({ ...Object.fromEntries(searchParams), mode });
@@ -207,6 +238,45 @@ const MapManager = () => {
     useEffect(() => {
         if (initialPaths) setPaths(prev => prev.length === 0 ? initialPaths : prev);
     }, [initialPaths]);
+
+    const fetchWikiNpcs = useCallback(async () => {
+        try {
+            const { data, error } = await supabase.from('npcs').select('id, name, location, lat, lng').order('name');
+            if (!error && data) setWikiNpcs(data);
+        } catch (e) {
+            console.warn('NPCs fetch warning:', e);
+        }
+    }, []);
+
+    const fetchWikiItems = useCallback(async () => {
+        const tables = [
+            { name: 'weapons', type: 'Weapon' },
+            { name: 'consumables', type: 'Consumable' },
+            { name: 'gear', type: 'Gear' },
+            { name: 'accessories', type: 'Accessory' },
+            { name: 'basebuilding_items', type: 'Basebuilding' },
+            { name: 'vehicles', type: 'Vehicle' },
+            { name: 'toolbelts', type: 'Toolbelt' },
+            { name: 'keys', type: 'Key' }
+        ];
+
+        try {
+            const results = await Promise.all(
+                tables.map(async table => {
+                    const { data } = await supabase.from(table.name).select('id, name').order('name');
+                    return (data || []).map(item => ({ ...item, type: table.type }));
+                })
+            );
+            setWikiItems(results.flat().sort((a, b) => a.name.localeCompare(b.name)));
+        } catch (e) {
+            console.warn('Wiki items fetch warning:', e);
+        }
+    }, []);
+
+    useEffect(() => {
+        fetchWikiNpcs();
+        fetchWikiItems();
+    }, [fetchWikiNpcs, fetchWikiItems]);
 
     // ── Form State ────────────────────────────────────────────────────────────
     const [formData, setFormData] = useState({
@@ -271,15 +341,16 @@ const MapManager = () => {
 
         if (mode === 'missions') {
             if (isAddingStepRef.current) {
+                const newStep = {
+                    title: `Step ${missionFormRef.current.steps.length + 1}`,
+                    description: '',
+                    lat: latlng.lat,
+                    lng: latlng.lng,
+                    image_url: ''
+                };
                 setMissionForm(prev => ({
                     ...prev,
-                    steps: [...prev.steps, {
-                        title: `Step ${prev.steps.length + 1}`,
-                        description: '',
-                        lat: latlng.lat,
-                        lng: latlng.lng,
-                        image_url: ''
-                    }]
+                    steps: [...prev.steps, newStep]
                 }));
                 setIsAddingStep(false);
                 isAddingStepRef.current = false;
@@ -379,12 +450,41 @@ const MapManager = () => {
         }
     };
 
-    // ── Mission Save ──────────────────────────────────────────────────────────
+    // ── Mission Management ──────────────────────────────────────────────────
     const handleCreateMission = () => {
+        setEditingMission(null);
         setMissionForm({ title: '', description: '', npc_id: '', start_npc_id: '', steps: [] });
         setIsAddingStep(false);
         setEditingMarker(null);
         setMissionDialogOpen(true);
+    };
+
+    const handleEditMission = (mission) => {
+        setEditingMission(mission);
+        setMissionForm({
+            title: mission.title,
+            description: mission.content_html || '',
+            npc_id: mission.npc_id || '',
+            start_npc_id: mission.start_npc_id || '',
+            steps: mission.mission_steps || []
+        });
+        setMissionDialogOpen(true);
+    };
+
+    const handleDeleteMission = async (missionId) => {
+        if (!confirm('Are you sure you want to delete this mission?')) return;
+        setLoading(true);
+        try {
+            await supabase.from('mission_steps').delete().eq('mission_id', missionId);
+            const { error } = await supabase.from('missions').delete().eq('id', missionId);
+            if (error) throw error;
+            setMissions(prev => prev.filter(m => m.id !== missionId));
+            toast({ title: 'Deleted', description: 'Mission removed.' });
+        } catch (e) {
+            toast({ title: 'Error', description: e.message, variant: 'destructive' });
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleMissionSave = async () => {
@@ -395,20 +495,32 @@ const MapManager = () => {
 
         setLoading(true);
         try {
-            const { data, error: missionError } = await supabase
-                .from('missions')
-                .insert({
-                    title: missionForm.title.trim(),
-                    content_html: missionForm.description || '',
-                    npc_id: missionForm.npc_id && missionForm.npc_id !== "" ? missionForm.npc_id : null,
-                    start_npc_id: missionForm.start_npc_id && missionForm.start_npc_id !== "" ? missionForm.start_npc_id : null
-                })
-                .select();
+            let mission;
+            const missionPayload = {
+                title: missionForm.title.trim(),
+                content_html: missionForm.description || '',
+                npc_id: missionForm.npc_id && missionForm.npc_id !== "" ? missionForm.npc_id : null,
+                start_npc_id: missionForm.start_npc_id && missionForm.start_npc_id !== "" ? missionForm.start_npc_id : null
+            };
 
-            if (missionError) throw missionError;
-            if (!data || data.length === 0) throw new Error("Could not create mission record.");
-            
-            const mission = data[0];
+            if (editingMission) {
+                const { data, error } = await supabase
+                    .from('missions')
+                    .update(missionPayload)
+                    .eq('id', editingMission.id)
+                    .select();
+                if (error) throw error;
+                mission = data[0];
+
+                await supabase.from('mission_steps').delete().eq('mission_id', editingMission.id);
+            } else {
+                const { data, error } = await supabase
+                    .from('missions')
+                    .insert(missionPayload)
+                    .select();
+                if (error) throw error;
+                mission = data[0];
+            }
 
             if (missionForm.steps.length > 0) {
                 const stepInserts = missionForm.steps.map((step, index) => ({
@@ -418,17 +530,29 @@ const MapManager = () => {
                     description: step.description || '',
                     image_url: step.image_url || null,
                     lat: step.lat || 0,
-                    lng: step.lng || 0
+                    lng: step.lng || 0,
+                    wiki_item_id: step.wiki_item_id || null,
+                    wiki_item_type: step.wiki_item_type || null
                 }));
                 
                 const { error: stepsError } = await supabase.from('mission_steps').insert(stepInserts);
                 if (stepsError) throw stepsError;
             }
 
-            toast({ title: 'Mission Created', description: `"${mission.title}" successfully saved.` });
-            setMissions(prev => [{ ...mission, mission_steps: missionForm.steps }, ...prev]);
+            const finalSteps = [...missionForm.steps];
+            console.log(`[MissionSave] Saving "${mission.title}" with ${finalSteps.length} steps:`, finalSteps);
+
+            if (editingMission) {
+                setMissions(prev => prev.map(m => m.id === editingMission.id ? { ...mission, mission_steps: finalSteps } : m));
+                toast({ title: 'Mission Updated', description: `Changes to "${mission.title}" saved with ${finalSteps.length} steps.` });
+            } else {
+                setMissions(prev => [{ ...mission, mission_steps: finalSteps }, ...prev]);
+                toast({ title: 'Mission Created', description: `"${mission.title}" successfully saved with ${finalSteps.length} steps.` });
+            }
+
             setMissionForm({ title: '', description: '', npc_id: '', start_npc_id: '', steps: [] });
             setMissionDialogOpen(false);
+            setEditingMission(null);
         } catch (e) {
             console.error("Save error:", e);
             toast({ title: 'Error', variant: 'destructive', description: e.message || 'Database error' });
@@ -624,26 +748,90 @@ const MapManager = () => {
                         </button>
                     </div>
                 )}
-                <div className="flex-grow border border-white/10 rounded-xl overflow-hidden relative min-h-[500px]">
-                    <InteractiveMap
-                        adminMode={true}
-                        disableUI={true}
-                        onMapClick={handleMapClick}
-                        onMarkerClick={handleMarkerClick}
-                        markers={markers}
-                        lootTags={lootTags}
-                        categories={categories}
-                        keys={availableKeys}
-                        manualPolylines={polylines}
-                        polygons={polygons}
-                        paths={paths}
-                        activePolygonPoints={activeZonePoints}
-                        missions={missions}
-                        currentMissionSteps={viewMode === 'missions' ? missionForm.steps : []}
-                        onPolygonClick={viewMode === 'zones' || viewMode === 'paths' ? handleZoneDelete : undefined}
-                        viewMode={viewMode}
-                        onUpdateMissionStep={handleUpdateMissionStep}
-                    />
+                <div className="flex-grow flex gap-6 min-h-0 bg-[#0c0c0e]/50 rounded-xl overflow-hidden border border-white/5 p-1">
+                    {viewMode === 'missions' && (
+                        <div style={{
+                            width: '320px',
+                            background: 'rgba(10,10,12,0.4)',
+                            borderRight: '1px solid rgba(255,255,255,0.05)',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            height: '100%',
+                            flexShrink: 0,
+                            borderRadius: '10px 0 0 10px',
+                            overflow: 'hidden'
+                        }}>
+                            <div style={{ padding: '16px', borderBottom: '1px solid rgba(255,255,255,0.05)', background: 'rgba(251,191,36,0.03)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                <h3 style={{ fontSize: '11px', fontWeight: '800', color: '#f59e0b', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    <Compass size={12} /> Database
+                                </h3>
+                                <span style={{ fontSize: '10px', color: '#6b7280', fontWeight: '600' }}>{missions.length} LOCATED</span>
+                            </div>
+                            <div style={{ padding: '12px', flexGrow: 1, overflowY: 'auto' }} className="space-y-3 custom-scrollbar">
+                                {missions.length === 0 ? (
+                                    <div style={{ textAlign: 'center', padding: '40px 20px', opacity: 0.5 }}>
+                                        <Compass size={32} style={{ margin: '0 auto 12px', color: '#4b5563' }} />
+                                        <p style={{ fontSize: '12px', color: '#9ca3af' }}>No missions found.</p>
+                                    </div>
+                                ) : (
+                                    missions.map(mission => (
+                                        <div key={mission.id} style={{
+                                            background: 'rgba(255,255,255,0.02)',
+                                            border: '1px solid rgba(255,255,255,0.06)',
+                                            borderRadius: '8px',
+                                            padding: '12px',
+                                            transition: 'all 0.2s',
+                                        }} className="group hover:border-amber-500/30 hover:bg-white/5">
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '8px' }}>
+                                                <div style={{ flex: 1, minWidth: 0 }}>
+                                                    <h4 style={{ fontSize: '13px', fontWeight: '700', color: '#f9fafb', marginBottom: '2px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{mission.title}</h4>
+                                                    <div style={{ display: 'flex', gap: '8px', fontSize: '9px', textTransform: 'uppercase', fontWeight: '800' }}>
+                                                        <span style={{ color: '#fbbf24' }}>{mission.mission_steps?.length || 0} Steps</span>
+                                                        {mission.npc_id && <span style={{ color: '#818cf8' }}>NPC LINK</span>}
+                                                    </div>
+                                                </div>
+                                                <div style={{ display: 'flex', gap: '4px', opacity: 0.4 }} className="group-hover:opacity-100 transition-opacity">
+                                                    <button onClick={() => handleEditMission(mission)} style={{ border: 'none', background: 'rgba(255,255,255,0.05)', color: '#e5e7eb', padding: '5px', borderRadius: '4px', cursor: 'pointer' }} className="hover:text-blue-400 hover:bg-blue-400/20 transition-colors">
+                                                        <GripVertical size={13} />
+                                                    </button>
+                                                    <button onClick={() => handleDeleteMission(mission.id)} style={{ border: 'none', background: 'rgba(255,255,255,0.05)', color: '#e5e7eb', padding: '5px', borderRadius: '4px', cursor: 'pointer' }} className="hover:text-red-400 hover:bg-red-400/20 transition-colors">
+                                                        <Trash2 size={13} />
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            {mission.content_html && (
+                                                <p style={{ fontSize: '10px', color: '#6b7280', overflow: 'hidden', display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 2, margin: 0 }}>
+                                                    {mission.content_html}
+                                                </p>
+                                            )}
+                                        </div>
+                                    ))
+                                )}
+                            </div>
+                        </div>
+                    )}
+                    <div className="flex-grow overflow-hidden relative min-h-[500px]">
+                        <InteractiveMap
+                            adminMode={true}
+                            disableUI={true}
+                            onMapClick={handleMapClick}
+                            onMarkerClick={handleMarkerClick}
+                            markers={markers}
+                            lootTags={lootTags}
+                            categories={categories}
+                            keys={availableKeys}
+                            manualPolylines={polylines}
+                            polygons={polygons}
+                            paths={paths}
+                            activePolygonPoints={activeZonePoints}
+                            missions={missions}
+                            npcs={wikiNpcs}
+                            currentMissionSteps={viewMode === 'missions' ? missionForm.steps : []}
+                            onPolygonClick={viewMode === 'zones' || viewMode === 'paths' ? handleZoneDelete : undefined}
+                            viewMode={viewMode}
+                            onUpdateMissionStep={handleUpdateMissionStep}
+                        />
+                    </div>
                 </div>
             </div>
         );
@@ -940,8 +1128,8 @@ const MapManager = () => {
                                             }}
                                         >
                                             <option value="">— None —</option>
-                                            {npcMarkers.map(m => (
-                                                <option key={m.id} value={m.id}>{m.title}</option>
+                                            {wikiNpcs.map(npc => (
+                                                <option key={npc.id} value={npc.id}>{npc.name}</option>
                                             ))}
                                         </select>
                                     </div>
@@ -1020,6 +1208,7 @@ const MapManager = () => {
                                             step={step}
                                             idx={idx}
                                             total={missionForm.steps.length}
+                                            wikiItems={wikiItems}
                                             onChange={handleUpdateMissionStep}
                                             onDelete={handleDeleteMissionStep}
                                         />

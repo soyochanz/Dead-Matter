@@ -10,6 +10,7 @@ export const useMapData = (refreshTrigger = 0, { enabled = true } = {}) => {
     const [groups, setGroups] = useState([]);
     const [keys, setKeys] = useState([]);
     const [missions, setMissions] = useState([]);
+    const [npcs, setNpcs] = useState([]);
     const [polygons, setPolygons] = useState([]);
     const [paths, setPaths] = useState([]); // [NEW] Added paths state
     const [loading, setLoading] = useState(enabled);
@@ -48,6 +49,7 @@ export const useMapData = (refreshTrigger = 0, { enabled = true } = {}) => {
                 let lootTagsData = [];
                 let keysData = [];
                 let missionsData = [];
+                let npcsData = [];
                 try {
                     const { data, error } = await supabase.from('marker_loot_tags').select('*');
                     if (error) console.warn('Loot tags fetch warning:', error.message);
@@ -77,6 +79,14 @@ export const useMapData = (refreshTrigger = 0, { enabled = true } = {}) => {
                     else missionsData = data;
                 } catch (e) {
                     console.warn('Missions fetch failed:', e);
+                }
+
+                try {
+                    const { data, error } = await supabase.from('npcs').select('*').order('name');
+                    if (error) console.warn('NPCs warning:', error.message);
+                    else npcsData = data;
+                } catch (e) {
+                    console.warn('NPCs fetch failed:', e);
                 }
 
                 let polygonsData = [];
@@ -122,6 +132,7 @@ export const useMapData = (refreshTrigger = 0, { enabled = true } = {}) => {
                 setGroups(userGroupsData || []);
                 setKeys(keysData || []);
                 setMissions(missionsData || []);
+                setNpcs(npcsData || []);
                 setPolygons(polygonsData || []);
                 setPaths(pathsData || []);
             } catch (err) {
@@ -143,11 +154,10 @@ export const useMapData = (refreshTrigger = 0, { enabled = true } = {}) => {
         groups,
         keys,
         missions,
+        npcs,
         polygons,
         paths,
         loading,
         error
-    }), [categories, markers, lootTags, personalMarkers, groups, keys, missions, polygons, paths, loading, error]);
+    }), [categories, markers, lootTags, personalMarkers, groups, keys, missions, npcs, polygons, paths, loading, error]);
 };
-// End of file
-

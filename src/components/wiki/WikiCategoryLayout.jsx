@@ -17,10 +17,13 @@ const WikiCategoryLayout = ({
   renderExtra,
 }) => {
   const { t } = useTranslation();
+  const isWeapons = title.toLowerCase().includes('weapons');
+
   return (
     <div className="relative max-w-7xl mx-auto px-4 py-8">
       {/* Technical background elements */}
-      <div className="fixed inset-0 pointer-events-none opacity-[0.02] bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:40px_40px] z-0" />
+      <div className="fixed inset-0 pointer-events-none opacity-[0.05] bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:40px_40px] z-0" />
+      <div className="fixed top-0 right-0 w-[500px] h-[500px] bg-red-600/5 blur-[120px] pointer-events-none z-0" />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -29,28 +32,30 @@ const WikiCategoryLayout = ({
         className="relative z-10"
       >
         {/* Header Section */}
-        <div className="mb-12">
+        <div className="mb-16">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-8">
             <div className="flex-1">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="h-[2px] w-8 bg-red-600 shadow-[0_0_8px_rgba(220,38,38,0.5)]" />
-                <nav className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em]">
-                  <Link to="/wiki" className="text-white/40 hover:text-white transition-colors">Wiki</Link>
-                  <span className="text-white/20">/</span>
-                  <span className="text-red-500">{title}</span>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="h-[2px] w-12 bg-red-600 shadow-[0_0_15px_rgba(220,38,38,0.8)]" />
+                <nav className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em]">
+                  <Link to="/wiki" className="text-white/30 hover:text-white transition-colors">{t('wiki_layout.combat_wiki', 'Wiki')}</Link>
+                  <span className="text-white/10">//</span>
+                  <span className="text-red-500">{title.replace('Dead Matter ', '')}</span>
                 </nav>
               </div>
-              <motion.h1
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-                className="text-5xl md:text-7xl font-black text-white tracking-tighter"
-              >
-                {title.split(' ').map((word, i) => (
-                  <span key={i} className={i === 0 ? 'text-white' : 'text-white/20'}>{word} </span>
-                ))}
-                <span className="sr-only">Dead Matter {title} Wiki</span>
-              </motion.h1>
+              
+              <div className="relative inline-block">
+                <motion.h1
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 0.1 }}
+                  className="text-6xl md:text-8xl font-black text-white tracking-tighter uppercase leading-none"
+                >
+                  {title.split(' ').map((word, i) => (
+                    <span key={i} className={i === 0 ? 'text-white' : 'text-white/20'}>{word} </span>
+                  ))}
+                </motion.h1>
+              </div>
             </div>
 
             <motion.div
@@ -58,23 +63,26 @@ const WikiCategoryLayout = ({
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              <Button asChild variant="outline" className="h-12 border-white/5 bg-white/5 hover:bg-white/10 text-white font-bold rounded-xl px-6">
+              <Button asChild variant="outline" className="h-14 border-white/5 bg-white/5 hover:bg-white/10 text-white font-black uppercase tracking-widest rounded-2xl px-8 group">
                 <Link to="/wiki">
-                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  <ArrowLeft className="mr-3 h-5 w-5 group-hover:-translate-x-1 transition-transform" />
                   {t('wiki_layout.return_to_wiki')}
                 </Link>
               </Button>
             </motion.div>
           </div>
 
-          <motion.p
+          <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="text-gray-400 text-lg max-w-3xl font-medium"
+            className="flex flex-col md:flex-row items-start md:items-center gap-8"
           >
-            Browse and discover detailed information about <span className="text-white italic">{title.toLowerCase()}</span> within the Dead Matter universe.
-          </motion.p>
+            <p className="text-gray-400 text-lg max-w-2xl font-medium leading-relaxed">
+              Explore the complete tactical record of <span className="text-white font-bold italic">{title.toLowerCase()}</span>. 
+              Review ballistics, performance metrics, and equipment compatibility.
+            </p>
+          </motion.div>
         </div>
 
         {/* Filters and Search Section */}

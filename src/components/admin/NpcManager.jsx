@@ -239,7 +239,7 @@ const ManageInventoryDialog = ({ npc, open, onOpenChange, onRefresh }) => {
 };
 
 const NpcForm = ({ item, onSave, onCancel }) => {
-    const [formData, setFormData] = useState({ name: '', location: '', image_url: '', image_path: '' });
+    const [formData, setFormData] = useState({ name: '', location: '', image_url: '', image_path: '', lat: null, lng: null });
     const [uploading, setUploading] = useState(false);
     const { toast } = useToast();
 
@@ -282,6 +282,24 @@ const NpcForm = ({ item, onSave, onCancel }) => {
                     onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                     placeholder="Coordinate sector..."
                 />
+                <div className="grid grid-cols-2 gap-4">
+                    <FormInput
+                        label="Latitude"
+                        type="number"
+                        step="any"
+                        value={formData.lat || ''}
+                        onChange={(e) => setFormData({ ...formData, lat: e.target.value ? parseFloat(e.target.value) : null })}
+                        placeholder="0.0000"
+                    />
+                    <FormInput
+                        label="Longitude"
+                        type="number"
+                        step="any"
+                        value={formData.lng || ''}
+                        onChange={(e) => setFormData({ ...formData, lng: e.target.value ? parseFloat(e.target.value) : null })}
+                        placeholder="0.0000"
+                    />
+                </div>
                 <FormFileUpload
                     label="Visual Profile Data"
                     accept="image/*"

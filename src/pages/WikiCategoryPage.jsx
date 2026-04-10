@@ -122,18 +122,27 @@ const WikiCategoryPage = ({ category, customTitle, customSubtitle, customDescrip
             if (queryError) console.error(queryError);
             setItems(fetchedItems);
 
-            // AUTO SELECT ITEM FROM SLUG FOR SEO
-            if (itemSlug && fetchedItems.length > 0) {
-                const itemBySlug = fetchedItems.find(i => 
-                    (i.slug || slugify(i.name) || i.id.toString()) === itemSlug
-                );
-                if (itemBySlug) setSelectedItem(itemBySlug);
-            }
             setLoading(false);
         };
 
         fetchData();
-    }, [activeCategory, navigate, customTitle, category, itemSlug, t]);
+    }, [activeCategory, customTitle, category, t]); // Removed itemSlug and navigate
+
+    // Sync itemSlug from URL to selectedItem state
+    useEffect(() => {
+        if (!loading && items.length > 0) {
+            if (itemSlug) {
+                const itemBySlug = items.find(i => 
+                    (i.slug || slugify(i.name) || i.id.toString()) === itemSlug
+                );
+                if (itemBySlug) {
+                    setSelectedItem(itemBySlug);
+                }
+            } else {
+                setSelectedItem(null);
+            }
+        }
+    }, [itemSlug, items, loading]);
 
     const handleNpcSelect = (npc) => {
         setSelectedItem(null);
@@ -225,7 +234,7 @@ const WikiCategoryPage = ({ category, customTitle, customSubtitle, customDescrip
                     <div className="flex justify-center items-center h-64"><Loader2 className="w-12 h-12 text-red-500 animate-spin" /></div>
                 ) : (
                     <>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
                             {Card && filteredItems.map((item, index) => (
                                 <Card 
                                     key={item.id} 
