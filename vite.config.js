@@ -164,10 +164,47 @@ if (window.navigation && window.self !== window.top) {
 }
 `;
 
+const configEmergencyReloadHandler = `
+(function () {
+	const handleLoadError = (e) => {
+		if (e && e.target && (e.target.tagName === 'SCRIPT' || e.target.tagName === 'LINK')) {
+			const src = e.target.src || e.target.href || '';
+			if (src.includes('/assets/') || src.includes('.js') || src.includes('.css')) {
+				console.warn('Critical asset load error detected:', src);
+				triggerReload();
+			}
+		}
+	};
+
+	const triggerReload = () => {
+		const lastReload = sessionStorage.getItem('last_emergency_reload');
+		const now = Date.now();
+		if (!lastReload || now - parseInt(lastReload) > 5000) {
+			sessionStorage.setItem('last_emergency_reload', now.toString());
+			const url = new URL(window.location.href);
+			url.searchParams.set('reload_v', now.toString());
+			window.location.replace(url.toString());
+		}
+	};
+
+	window.addEventListener('error', handleLoadError, true);
+	window.addEventListener('vite:preloadError', (e) => {
+		console.warn('Vite preload error detected');
+		triggerReload();
+	});
+})();
+`;
+
 const addTransformIndexHtml = {
 	name: 'add-transform-index-html',
 	transformIndexHtml(html) {
 		const tags = [
+			{
+				tag: 'script',
+				attrs: { type: 'module' },
+				children: configEmergencyReloadHandler,
+				injectTo: 'head',
+			},
 			{
 				tag: 'script',
 				attrs: { type: 'module' },
