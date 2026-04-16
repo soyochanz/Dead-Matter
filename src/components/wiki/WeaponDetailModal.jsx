@@ -91,7 +91,7 @@ const AccessorySlot = ({ id, type, equippedAccessory, onRemove, isCompatibleDrop
     if (equippedAccessory) stateClasses = 'bg-black border-white/10 shadow-2xl';
     else if (isOver && activeId) stateClasses = isCompatibleDrop ? 'bg-green-500/20 border-green-500 border-solid scale-110 z-10' : 'bg-red-500/20 border-red-500 border-solid';
 
-    const Icon = { 'Sights': Crosshair, 'Muzzle': Wind, 'Grip': Grip, 'Magazine': Box, 'Stock': Puzzle }[type] || Puzzle;
+    const Icon = { 'Sights': Crosshair, 'Muzzle': Wind, 'Grip': Grip, 'Magazine': Box, 'Stock': Puzzle, 'Lights': LucideIcons.Lightbulb }[type] || Puzzle;
 
     return (
         <div ref={setNodeRef} className={`${baseClasses} ${stateClasses}`} style={{
@@ -390,7 +390,7 @@ const WeaponDetailModal = ({ weapon, onClose, onNpcSelect }) => {
     };
 
     const isMelee = useMemo(() => weapon.subcategory.name.toLowerCase().includes('melee'), [weapon]);
-    const slots = ['Sights', 'Muzzle', 'Grip', 'Magazine', 'Stock'];
+    const slots = ['Sights', 'Muzzle', 'Grip', 'Magazine', 'Stock', 'Lights'];
 
     const hasModel = !!weapon.model_url;
     const hasAudio = !!weapon.audio_url;
@@ -482,7 +482,7 @@ const WeaponDetailModal = ({ weapon, onClose, onNpcSelect }) => {
                     <div className="w-8 h-px bg-red-500/20" /> {t('wiki.weapon.performance_analysis')}
                 </h4>
 
-                <StatBar icon={Target} label={t('wiki.weapon.stats.lethality')} value={calculatedStats.damage} max={100} unit="pt" color="#ef4444" />
+                <StatBar icon={Target} label={t('wiki.weapon.stats.damage')} value={calculatedStats.damage} max={100} unit="pt" color="#ef4444" />
                 <StatBar icon={Hand} label={t('wiki.weapon.stats.melee_range')} value={calculatedStats.melee_range} max={10} unit="m" color="#3b82f6" />
                 <StatBar icon={Clock} label={t('wiki.weapon.stats.attack_speed')} value={calculatedStats.attack_speed} max={100} unit="%" color="#10b981" />
                 <StatBar icon={Bolt} label={t('wiki.weapon.stats.stamina_efficiency')} value={calculatedStats.stamina_efficiency} max={100} unit="%" color="#f59e0b" />
@@ -506,8 +506,8 @@ const WeaponDetailModal = ({ weapon, onClose, onNpcSelect }) => {
             <div className="grid grid-cols-2 gap-4">
                 <SimpleStat icon={Ruler} label={t('wiki.common.size')} value={weapon.size || 'N/A'} unit="" />
                 <SimpleStat icon={Weight} label={t('wiki.common.weight')} value={weapon.weight || 0} unit="kg" />
-                <SimpleStat icon={Shield} label={t('wiki.weapon.stats.ammo_type')} value={weapon.ammo || 'N/A'} unit="" onClick={() => setShowAmmoModal(true)} className="cursor-pointer border-blue-500/20 hover:border-blue-500/50" valueClassName="text-blue-400" />
-                <SimpleStat icon={Box} label={t('wiki.weapon.stats.capacity')} value={calculatedStats.capacity} unit="rnd" />
+                <SimpleStat icon={Shield} label={t('wiki.weapon.stats.caliber')} value={weapon.ammo || 'N/A'} unit="" onClick={() => setShowAmmoModal(true)} className="cursor-pointer border-blue-500/20 hover:border-blue-500/50" valueClassName="text-blue-400" />
+                <SimpleStat icon={Box} label={t('wiki.weapon.stats.magazine_capacity')} value={calculatedStats.capacity} unit="rnd" />
             </div>
 
             <div className="bg-white/5 border border-white/5 p-6 rounded-[2rem] space-y-6 shadow-inner relative overflow-hidden">
@@ -519,7 +519,7 @@ const WeaponDetailModal = ({ weapon, onClose, onNpcSelect }) => {
                     <div className="w-8 h-px bg-red-500/20" /> {t('wiki.weapon.ballistic_performance')}
                 </h4>
 
-                <StatBar icon={Target} label={t('wiki.weapon.stats.lethality')} value={calculatedStats.damage} baseValue={weapon.damage} max={100} unit="pt" showModifier={true} color="#ef4444" />
+                <StatBar icon={Target} label={t('wiki.weapon.stats.damage')} value={calculatedStats.damage} baseValue={weapon.damage} max={100} unit="pt" showModifier={true} color="#ef4444" />
                 <StatBar icon={Zap} label={t('wiki.weapon.stats.rate_of_fire')} value={calculatedStats.rate_of_fire} baseValue={weapon.rate_of_fire} max={1200} unit="rpm" showModifier={true} color="#3b82f6" />
                 <StatBar icon={Crosshair} label={t('wiki.weapon.stats.accuracy')} value={calculatedStats.accuracy} baseValue={weapon.accuracy} max={100} unit="%" showModifier={true} color="#10b981" />
                 <StatBar icon={SlidersHorizontal} label={t('wiki.weapon.stats.handling')} value={calculatedStats.handling} baseValue={weapon.handling} max={100} unit="%" showModifier={true} color="#f59e0b" />

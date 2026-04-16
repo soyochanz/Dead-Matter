@@ -22,7 +22,7 @@ const ManageAttachmentsDialog = ({ weapon, onOpenChange, open }) => {
     const [linkedAccessories, setLinkedAccessories] = useState([]);
     const [loading, setLoading] = useState(true);
     const { toast } = useToast();
-    const accessoryTypes = ['Sights', 'Muzzle', 'Grip', 'Magazine', 'Stock', 'Other'];
+    const accessoryTypes = ['Sights', 'Muzzle', 'Grip', 'Magazine', 'Stock', 'Lights', 'Other'];
 
     const fetchAttachments = useCallback(async () => {
         setLoading(true);
@@ -295,13 +295,13 @@ const WeaponManager = ({ sharedMetadata }) => {
 
             <FormSection title="Ballistic Performance" icon={Target}>
                 <FormInput
-                    label="Lethality Index"
+                    label="Damage"
                     type="number"
                     value={editingWeapon.damage}
                     onChange={(e) => setEditingWeapon({ ...editingWeapon, damage: parseInt(e.target.value) || null })}
                 />
                 <FormInput
-                    label="Ammunition Caliber"
+                    label="Caliber"
                     value={editingWeapon.ammo}
                     onChange={(e) => setEditingWeapon({ ...editingWeapon, ammo: e.target.value })}
                 />
@@ -312,19 +312,19 @@ const WeaponManager = ({ sharedMetadata }) => {
                     onChange={(e) => setEditingWeapon({ ...editingWeapon, capacity: parseInt(e.target.value) || null })}
                 />
                 <FormInput
-                    label="Cyclic Rate (RPM)"
+                    label="Rate of Fire"
                     type="number"
                     value={editingWeapon.rate_of_fire}
                     onChange={(e) => setEditingWeapon({ ...editingWeapon, rate_of_fire: parseInt(e.target.value) || null })}
                 />
                 <FormInput
-                    label="Precision Factor"
+                    label="Accuracy"
                     type="number"
                     value={editingWeapon.accuracy}
                     onChange={(e) => setEditingWeapon({ ...editingWeapon, accuracy: parseInt(e.target.value) || null })}
                 />
                 <FormInput
-                    label="Stability/Handling"
+                    label="Handling"
                     type="number"
                     value={editingWeapon.handling}
                     onChange={(e) => setEditingWeapon({ ...editingWeapon, handling: parseInt(e.target.value) || null })}
@@ -333,13 +333,19 @@ const WeaponManager = ({ sharedMetadata }) => {
 
             <FormSection title="Melee Specifications" icon={Swords}>
                 <FormInput
-                    label="Effective Range"
+                    label="Damage"
+                    type="number"
+                    value={editingWeapon.damage}
+                    onChange={(e) => setEditingWeapon({ ...editingWeapon, damage: parseInt(e.target.value) || null })}
+                />
+                <FormInput
+                    label="Melee Range"
                     type="number"
                     value={editingWeapon.melee_range}
                     onChange={(e) => setEditingWeapon({ ...editingWeapon, melee_range: parseInt(e.target.value) || null })}
                 />
                 <FormInput
-                    label="Kinetic Velocity"
+                    label="Attack Speed"
                     type="number"
                     value={editingWeapon.attack_speed}
                     onChange={(e) => setEditingWeapon({ ...editingWeapon, attack_speed: parseInt(e.target.value) || null })}

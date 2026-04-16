@@ -65,15 +65,15 @@
             "integrated_systems": "Integrated Systems",
             "ballistic_performance": "Ballistic Performance",
             "stats": {
-                "lethality": "Lethality",
+                "damage": "Damage",
                 "melee_range": "Melee Range",
                 "attack_speed": "Attack Speed",
                 "stamina_efficiency": "Stamina Efficiency",
                 "rate_of_fire": "Rate of Fire",
                 "accuracy": "Accuracy",
                 "handling": "Handling",
-                "ammo_type": "Ammo Type",
-                "capacity": "Capacity"
+                "caliber": "Caliber",
+                "magazine_capacity": "Magazine Capacity"
             }
         },
         "gear": {

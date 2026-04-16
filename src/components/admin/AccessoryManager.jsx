@@ -6,7 +6,7 @@ import { AdminItemCard } from './AdminItemCard';
 import { FormContainer, FormSection, FormInput, FormSelect, FormTextarea, FormFileUpload } from './AdminUIComponents';
 import { Info, Tag, Sliders, DollarSign, Image as ImageIcon, Plus, Loader2 } from 'lucide-react';
 
-const accessoryTypes = ['Sights', 'Muzzle', 'Grip', 'Magazine', 'Stock', 'Other'];
+const accessoryTypes = ['Sights', 'Muzzle', 'Grip', 'Magazine', 'Stock', 'Lights', 'Other'];
 
 const AccessoryForm = ({ item, onSave, onCancel, sharedMetadata }) => {
     const defaultState = { name: '', type: accessoryTypes[0], image_url: '', image_path: '', rarity_id: null, price: 0, sell_price: 0, damage_modifier: 0, rate_of_fire_modifier: 0, accuracy_modifier: 0, capacity_modifier: 0 };

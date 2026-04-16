@@ -65,15 +65,15 @@
             "integrated_systems": "Sistemas Integrados",
             "ballistic_performance": "Rendimiento Balístico",
             "stats": {
-                "lethality": "Letalidad",
+                "damage": "Daño",
                 "melee_range": "Rango Melee",
                 "attack_speed": "Velocidad de Ataque",
                 "stamina_efficiency": "Eficiencia de Estamina",
                 "rate_of_fire": "Cadencia de Fuego",
                 "accuracy": "Precisión",
                 "handling": "Manejo",
-                "ammo_type": "Tipo de Munición",
-                "capacity": "Capacidad"
+                "caliber": "Calibre",
+                "magazine_capacity": "Capacidad del Cargador"
             }
         },
         "gear": {
