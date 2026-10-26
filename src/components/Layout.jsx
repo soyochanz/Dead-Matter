@@ -9,7 +9,7 @@ import LanguageSelector from '@/components/LanguageSelector';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 
 const Layout = ({ children }) => {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(() => window.matchMedia('(min-width: 1024px)').matches);
   const { authLoaded } = useAuth();
   const location = useLocation();
   const { t, i18n } = useTranslation();
@@ -39,8 +39,8 @@ const Layout = ({ children }) => {
       <Sidebar isOpen={sidebarOpen} toggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
 
       {/* Adjusted margin to ml-80 (20rem/320px) to match the w-80 sidebar width */}
-      <div className={`flex-grow flex flex-col transition-all duration-300 ${sidebarOpen ? 'ml-80' : 'ml-0'}`}>
-        <main className={`flex-grow p-8 pt-24 ${isMapPage ? 'flex flex-col' : 'min-h-[calc(100vh-80px)]'}`}>
+      <div className={`min-w-0 flex-grow flex flex-col transition-all duration-300 ${sidebarOpen ? 'lg:ml-80' : 'ml-0'}`}>
+        <main className={`flex-grow p-4 md:p-8 pt-24 md:pt-24 ${isMapPage ? 'flex flex-col' : 'min-h-[calc(100vh-80px)]'}`}>
           {children || <Outlet />}
         </main>
         {!isMapPage && <Footer />}

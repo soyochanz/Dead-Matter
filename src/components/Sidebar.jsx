@@ -141,6 +141,8 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     { path: '/wiki', label: t('nav.wiki'), icon: 'Database', gradient: 'from-blue-500 to-indigo-600', description: t('nav.wiki_desc') },
     { path: '/guides', label: t('nav.guides'), icon: 'ShieldCheck', gradient: 'from-emerald-500 to-teal-600', description: t('nav.guides_desc') },
     { path: '/updates', label: t('nav.updates'), icon: 'Terminal', gradient: 'from-violet-500 to-fuchsia-600', description: t('nav.updates_desc') },
+    { path: '/news', label: 'News', icon: 'Newspaper', gradient: 'from-red-500 to-orange-600', description: t('news.nav_description') },
+    { path: '/micro-changes', label: 'Commits', icon: 'GitCommit', gradient: 'from-blue-500 to-cyan-600', description: t('news.commits_description') },
     { path: '/map', label: t('nav.map'), icon: 'Compass', gradient: 'from-amber-400 to-orange-500', description: t('nav.map_desc') },
     { path: '/media', label: t('nav.media'), icon: 'Camera', gradient: 'from-rose-500 to-pink-600', description: t('nav.media_desc') },
   ];
@@ -221,7 +223,9 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         {/* Toggle Button */}
         <button
           onClick={toggleSidebar}
-          className="absolute -right-12 top-1/2 -translate-y-1/2 w-12 h-20 bg-[#0a0a0c] border border-l-0 border-white/5 rounded-r-2xl flex items-center justify-center cursor-pointer hover:bg-gray-900 transition-all group z-50 shadow-xl"
+          aria-label="Toggle navigation"
+          aria-expanded={isOpen}
+          className="absolute -right-12 top-4 lg:top-1/2 lg:-translate-y-1/2 w-12 h-12 lg:h-20 bg-[#0a0a0c] border border-l-0 border-white/5 rounded-r-2xl flex items-center justify-center cursor-pointer hover:bg-gray-900 transition-all group z-50 shadow-xl"
         >
           <div className={`w-1 h-8 rounded-full transition-all duration-300 ${isOpen ? 'bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.8)]' : 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]'}`} />
           <div className="flex flex-col items-center gap-1 text-gray-600 group-hover:text-white">

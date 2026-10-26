@@ -1,4 +1,34 @@
 {
+    "news": {
+      "nav_description": "Juego y comunidad",
+      "commits_description": "Actividad de desarrollo",
+      "subtitle": "Novedades del juego y su comunidad, con fuentes fechadas y una distinción clara entre adelantos y versiones publicadas.",
+      "home_subtitle": "Novedades del desarrollo y de la comunidad",
+      "read": "Leer noticia",
+      "back": "Todas las noticias",
+      "not_found": "Noticia no encontrada",
+      "published": "Publicado",
+      "source_date": "Última fuente",
+      "sources": "Fuentes",
+      "source_note": "Resumen editorial de la comunidad basado en publicaciones de los desarrolladores. Los enlaces de Discord pueden requerir iniciar sesión y tener acceso al servidor.",
+      "filter": "Filtrar noticias",
+      "search": "Buscar noticias...",
+      "empty": "No hay noticias que coincidan con tu búsqueda.",
+      "load_error": "No se pudieron cargar las notas de parche.",
+      "retry": "Reintentar",
+      "no_patches": "Todavía no hay notas de parche publicadas.",
+      "commit_note": "Commits de desarrollo recopilados del Discord oficial. Un commit no equivale a una actualización publicada. Última recopilación: 26 de octubre de 2026.",
+      "commit_error": "No se pudo cargar el archivo. Se muestran los commits de Discord verificados localmente.",
+      "truncated": "Mensaje recortado en la vista previa de Discord.",
+      "discord_source": "Ver fuente en Discord",
+      "discord_date": "Fecha mostrada: publicación en Discord.",
+      "categories": {
+        "all": "Todas",
+        "game": "Juego",
+        "development": "Desarrollo",
+        "community": "Comunidad"
+      }
+    },
     "nav": {
         "home": "Inicio",
         "home_desc": "Panel principal",

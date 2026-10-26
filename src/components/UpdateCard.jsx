@@ -5,7 +5,7 @@ import { Calendar, ArrowRight } from 'lucide-react';
 import { Button } from './ui/button';
 import { Link } from 'react-router-dom';
 
-const UpdateCard = ({ update, index, versionTag }) => {
+const UpdateCard = ({ update, index = 0, versionTag }) => {
   const { t, i18n } = useTranslation();
 
   // Get localized title

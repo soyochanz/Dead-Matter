@@ -1,12 +1,16 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { BookOpen, MapPin, Image as ImageIcon, ArrowRight, Bell, X, Calendar, Tag, GitCommit, Shield, Car, Backpack, Hammer, ThumbsUp, User, UserCircle, Zap, Video, ExternalLink, ChevronUp, Loader2, Sword, Soup, Stethoscope, Users, Package } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { supabase } from '@/lib/mySupabaseClient';
 import { Button } from '@/components/ui/button';
 import UpdateCard from '@/components/UpdateCard';
+import NewsCard from '@/components/NewsCard';
+import { news } from '@/data/news';
+import { mergeCommits } from '@/lib/commitFeed';
+import { loadFeed, readFeedCache, UPDATE_CARD_COLUMNS } from '@/lib/publicFeed';
 
 // ─── Design tokens ────────────────────────────────────────────────────────────
 // Card surface sits visibly above the page background
@@ -266,6 +270,7 @@ const CommitItem = ({ c, i18nLang }) => {
       <div className="mt-2 text-[10px] uppercase font-bold text-slate-600">
         {new Date(c.created_at).toLocaleDateString(i18nLang)}
       </div>
+      {c.source_url && <a href={c.source_url} target="_blank" rel="noopener noreferrer" className="inline-block mt-2 text-xs text-blue-400 hover:underline">Discord ↗</a>}
     </div>
   );
 };
@@ -273,12 +278,13 @@ const CommitItem = ({ c, i18nLang }) => {
 // ─── Home ─────────────────────────────────────────────────────────────────────
 const Home = () => {
   const { t, i18n } = useTranslation();
-  const [latestUpdates, setLatestUpdates] = useState([]);
+  const [latestUpdates, setLatestUpdates] = useState(() => readFeedCache('home:updates') || []);
   const [latestMedia, setLatestMedia] = useState([]);
-  const [latestCommits, setLatestCommits] = useState([]);
+  const [latestCommits, setLatestCommits] = useState(() => mergeCommits().slice(0, 8));
   const [topGuides, setTopGuides] = useState([]);
-  const [loading, setLoading] = useState({ update: true, media: true, commits: true, guides: true });
-  const [selectedUpdate, setSelectedUpdate] = useState(null);
+  const [loading, setLoading] = useState(() => ({ update: !readFeedCache('home:updates'), media: true, commits: true, guides: true }));
+  const [errors, setErrors] = useState({});
+  const [retry, setRetry] = useState(0);
 
   const extractYouTubeId = (url) => {
     if (!url) return null;
@@ -287,33 +293,41 @@ const Home = () => {
   };
 
   useEffect(() => {
-    supabase.from('guides')
+    const controller = new AbortController();
+    let active = true;
+    const fetchSection = async (section, query, onData) => {
+      setErrors(previous => ({ ...previous, [section]: false }));
+      setLoading(previous => ({ ...previous, [section]: !readFeedCache(`home:${section === 'update' ? 'updates' : section}`) }));
+      try {
+        const data = await loadFeed(`home:${section === 'update' ? 'updates' : section}`, query, controller.signal);
+        if (active) onData(data);
+      } catch {
+        if (active) setErrors(previous => ({ ...previous, [section]: true }));
+      } finally {
+        if (active) setLoading(previous => ({ ...previous, [section]: false }));
+      }
+    };
+    fetchSection('guides', () => supabase.from('guides')
       .select('id, title, title_en, title_es, title_pt, description, description_en, description_es, description_pt, likes_count, image_url, slug, hashtags, author:profiles(username)')
-      .eq('status', 'approved').order('likes_count', { ascending: false }).limit(4)
-      .then(res => { if (res.data) setTopGuides(res.data); setLoading(p => ({ ...p, guides: false })); });
+      .eq('status', 'approved').order('likes_count', { ascending: false }).limit(4), setTopGuides);
 
-    supabase.from('updates')
-      .select('*, title_en, title_es, title_pt, content_en, content_es, content_pt')
-      .order('date', { ascending: false }).limit(2)
-      .then(res => { if (res.data) setLatestUpdates(res.data); setLoading(p => ({ ...p, update: false })); });
+    fetchSection('update', () => supabase.from('updates')
+      .select(UPDATE_CARD_COLUMNS)
+      .order('date', { ascending: false }).limit(2), setLatestUpdates);
 
-    supabase.from('micro_changes').select('*').order('created_at', { ascending: false }).limit(8)
-      .then(res => { if (res.data) setLatestCommits(res.data); setLoading(p => ({ ...p, commits: false })); });
+    fetchSection('commits', () => supabase.from('micro_changes').select('id,created_at,author,message,commit_hash,category').order('created_at', { ascending: false }).limit(8), data => setLatestCommits(mergeCommits(data).slice(0, 8)));
 
-    supabase.from('media_items').select('*').order('created_at', { ascending: false }).limit(3)
-      .then(res => {
-        if (res.data) {
-          const processed = res.data.map(item => ({
+    fetchSection('media', () => supabase.from('media_items').select('*').order('created_at', { ascending: false }).limit(3), data => {
+          const processed = data.map(item => ({
             ...item,
             thumbnail: item.thumbnail || (item.type === 'video'
               ? `https://img.youtube.com/vi/${extractYouTubeId(item.url)}/hqdefault.jpg`
               : item.url)
           }));
           setLatestMedia(processed);
-        }
-        setLoading(p => ({ ...p, media: false }));
       });
-  }, []);
+    return () => { active = false; controller.abort(); };
+  }, [retry]);
 
   return (
     <>
@@ -383,16 +397,22 @@ const Home = () => {
         </section>
 
         {/* ── Updates + Commits ── */}
+        <section>
+          <SectionHeader icon={Bell} iconGlow="#f97316" title="News" subtitle={t('news.home_subtitle')} action={<Link to="/news" className="text-red-400 text-sm font-bold flex items-center gap-1">{t('home.view_all')} <ArrowRight size={14} /></Link>} />
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">{news.slice(0, 3).map(article => <NewsCard key={article.slug} article={article} />)}</div>
+        </section>
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
           {/* Left: Latest Updates */}
           <div className="lg:col-span-8">
             <SectionHeader icon={Bell} iconGlow="#ef4444" title={t('home.latest_patch_notes')} />
+            {errors.update && <div role="status" className="rounded-2xl border border-white/10 p-6 text-sm text-slate-400">{t('news.load_error')} <button onClick={() => setRetry(value => value + 1)} className="text-red-400 underline ml-2">{t('news.retry')}</button></div>}
+            {!loading.update && !errors.update && !latestUpdates.length && <p className="p-6 text-slate-400">{t('news.no_patches')}</p>}
             {loading.update
               ? <SkeletonCard />
               : (
                 <div className="space-y-5">
-                  {latestUpdates.map(update => (
+                  {latestUpdates.map((update, index) => (
                     <div
                       key={update.id}
                       className="rounded-2xl overflow-hidden"
@@ -400,7 +420,7 @@ const Home = () => {
                     >
                       <UpdateCard
                         update={update}
-                        onReadMore={setSelectedUpdate}
+                        index={index}
                         versionTag={<VersionTag version={update.version} />}
                       />
                     </div>
@@ -523,49 +543,6 @@ const Home = () => {
           </div>
         </section>
       </div>
-
-      {/* ── Update Modal ── */}
-      <AnimatePresence>
-        {selectedUpdate && (
-          <div
-            className="fixed inset-0 z-[6000] flex items-center justify-center p-4"
-            style={{ background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(12px)' }}
-            onClick={() => setSelectedUpdate(null)}
-          >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.92, y: 16 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.92 }}
-              className="rounded-3xl p-8 max-w-2xl w-full max-h-[80vh] overflow-y-auto custom-scrollbar"
-              style={{ background: '#13161d', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 32px 80px rgba(0,0,0,0.7)' }}
-              onClick={e => e.stopPropagation()}
-            >
-              <div className="flex justify-between items-start mb-6 gap-4">
-                <h3 className="text-2xl font-black text-white leading-tight">
-                  {i18n.language.startsWith('es') ? (selectedUpdate.title_es || selectedUpdate.title)
-                    : i18n.language.startsWith('pt') ? (selectedUpdate.title_pt || selectedUpdate.title)
-                      : (selectedUpdate.title_en || selectedUpdate.title)}
-                </h3>
-                <button
-                  onClick={() => setSelectedUpdate(null)}
-                  className="shrink-0 p-2 rounded-lg transition-colors hover:bg-white/10"
-                  style={{ color: '#6b7280' }}
-                >
-                  <X size={18} />
-                </button>
-              </div>
-              <div
-                className="prose prose-invert prose-sm max-w-none"
-                dangerouslySetInnerHTML={{
-                  __html: i18n.language.startsWith('es') ? (selectedUpdate.content_es || selectedUpdate.content)
-                    : i18n.language.startsWith('pt') ? (selectedUpdate.content_pt || selectedUpdate.content)
-                      : (selectedUpdate.content_en || selectedUpdate.content)
-                }}
-              />
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
 
       <style>{`
         @keyframes shimmer {

@@ -25,6 +25,7 @@ const MedsPage = lazyImport(() => import('@/pages/MedsPage'));
 const PerksPage = lazyImport(() => import('@/pages/PerksPage'));
 const NpcsPage = lazyImport(() => import('@/pages/NpcsPage'));
 const Updates = lazyImport(() => import('@/pages/Updates'));
+const News = lazyImport(() => import('@/pages/News'));
 const UpdateDetailPage = lazyImport(() => import('@/pages/UpdateDetailPage'));
 const Map = lazyImport(() => import('@/pages/Map'));
 const Media = lazyImport(() => import('@/pages/Media'));
@@ -175,6 +176,8 @@ function App() {
           <Route path="wiki/:categoryName/:itemSlug?" element={<WikiCategoryPage />} />
 
           <Route path="updates" element={<Updates />} />
+          <Route path="news" element={<News />} />
+          <Route path="news/:slug" element={<News />} />
           <Route path="updates/:slug" element={<UpdateDetailPage />} />
 
           {/* Map page - IMPORTANTE que cargue */}

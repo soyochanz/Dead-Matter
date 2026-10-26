@@ -1,4 +1,34 @@
 {
+    "news": {
+      "nav_description": "Game & community",
+      "commits_description": "Development activity",
+      "subtitle": "News from the game and its community, with dated sources and a clear distinction between previews and releases.",
+      "home_subtitle": "Game development and community news",
+      "read": "Read story",
+      "back": "All news",
+      "not_found": "Article not found",
+      "published": "Published",
+      "source_date": "Latest source",
+      "sources": "Sources",
+      "source_note": "Community editorial summary of developer posts. Discord links may require signing in and access to the server.",
+      "filter": "Filter news",
+      "search": "Search news...",
+      "empty": "No stories match your search.",
+      "load_error": "Patch notes could not be loaded.",
+      "retry": "Try again",
+      "no_patches": "No patch notes published yet.",
+      "commit_note": "Development commits collected from the official Discord. A commit is not a released update. Latest collection: October 26, 2026.",
+      "commit_error": "The archive could not be loaded. Showing the locally verified Discord commits.",
+      "truncated": "Message truncated in the Discord preview.",
+      "discord_source": "View Discord source",
+      "discord_date": "Date shown: published in Discord.",
+      "categories": {
+        "all": "All news",
+        "game": "Game",
+        "development": "Development",
+        "community": "Community"
+      }
+    },
     "nav": {
         "home": "Home",
         "home_desc": "Dead Matter Home",

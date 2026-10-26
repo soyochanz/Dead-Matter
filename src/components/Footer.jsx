@@ -70,7 +70,7 @@ const Footer = () => {
                         © 2026 <span className="text-white">Deadmatterwiki.com</span>. {t('footer.rights_reserved')}
                     </p>
                     <p className="text-[10px] text-gray-600 mt-1 uppercase tracking-wider">
-                        Made with <span className="text-red-500 animate-pulse">❤</span> by <a href="https://ignaciomartin.site" target="_blank" rel="noopener noreferrer" className="text-red-400/80 hover:text-red-400 transition-colors font-bold hover:underline decoration-red-500/30 underline-offset-4">ignaciomartin.site</a>
+                        Made with <span className="text-red-500 animate-pulse">❤</span> by <a href="https://altherasolutions.com" target="_blank" rel="noopener noreferrer" className="text-red-400/80 hover:text-red-400 transition-colors font-bold hover:underline decoration-red-500/30 underline-offset-4">Althera Solutions</a>
                     </p>
                 </div>
 
