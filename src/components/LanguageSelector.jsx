@@ -43,7 +43,7 @@ const LanguageSelector = () => {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <button className="relative group outline-none h-10 w-10 flex items-center justify-center rounded-full border border-white/10 bg-white/5 hover:bg-white/10 transition-all duration-300">
+                <button aria-label={`Language: ${currentLang.label}`} title={currentLang.label} className="relative group outline-none h-10 w-10 flex items-center justify-center rounded-full border border-white/10 bg-white/5 hover:bg-white/10 transition-all duration-300">
                     <Globe className="h-5 w-5 text-gray-400 group-hover:text-white transition-colors" />
 
                     {/* Scanline effect overlay */}

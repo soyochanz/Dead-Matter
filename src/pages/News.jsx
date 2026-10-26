@@ -21,14 +21,11 @@ export default function News() {
   const [search, setSearch] = useState('');
   const article = news.find(item => item.slug === slug);
   const date = value => new Date(`${value}T12:00:00`).toLocaleDateString(language, { year: 'numeric', month: 'long', day: 'numeric' });
-  const languageLinks = <nav aria-label="Article language" className="inline-flex rounded-full border border-white/10 p-1 gap-1 text-xs">
-    {['en', 'es'].map(lang => <Link key={lang} to={newsPath(lang, slug)} hrefLang={lang} lang={lang} aria-current={language === lang ? 'page' : undefined} className={`rounded-full px-3 py-1.5 ${language === lang ? 'bg-white/10 text-white' : 'text-slate-400 hover:text-white'}`}>{lang === 'en' ? 'English' : 'Español'}</Link>)}
-  </nav>;
 
   if (slug) return (
     <div className="max-w-3xl mx-auto py-10 md:py-16">
       <NewsSeo article={article} language={language} missing={!article} />
-      <div className="flex flex-wrap justify-between gap-4 mb-8"><Link to={newsPath(language)} className="inline-flex items-center gap-2 text-red-400"><ArrowLeft size={16} />{t('news.back')}</Link>{languageLinks}</div>
+      <div className="flex flex-wrap justify-between gap-4 mb-8"><Link to={newsPath(language)} className="inline-flex items-center gap-2 text-red-400"><ArrowLeft size={16} />{t('news.back')}</Link></div>
       {!article ? <h1 className="text-3xl text-white font-bold">{t('news.not_found')}</h1> : <article>
         <nav aria-label={language === 'es' ? 'Ruta de navegación' : 'Breadcrumb'} className="mb-6 text-xs text-slate-400 flex flex-wrap gap-2"><Link to="/">Dead Matter Wiki</Link><span>/</span><Link to={newsPath(language)}>News</Link><span>/</span><span>{t(`news.categories.${article.category}`)}</span></nav>
         <p className="text-red-400 font-bold text-sm uppercase tracking-widest mb-4">{t(`news.categories.${article.category}`)}</p>
@@ -56,7 +53,6 @@ export default function News() {
   return (
     <div className="max-w-6xl mx-auto py-10 md:py-16">
       <NewsSeo language={language} filtered={params.size > 0} />
-      <div className="flex justify-end mb-6">{languageLinks}</div>
       <div className="max-w-3xl mb-10">
         <span className="inline-flex items-center gap-2 text-red-400 text-sm font-bold mb-5"><Newspaper size={18} /> DEAD MATTER WIKI</span>
         <h1 className="text-5xl md:text-7xl font-black text-white tracking-tighter">{language === 'es' ? 'NOTICIAS' : 'NEWS'}<span className="text-red-500">.</span></h1>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { BookOpen, MapPin, Image as ImageIcon, ArrowRight, Bell, X, Calendar, Tag, GitCommit, Shield, Car, Backpack, Hammer, ThumbsUp, User, UserCircle, Zap, Video, ExternalLink, ChevronUp, Loader2, Sword, Soup, Stethoscope, Users, Package } from 'lucide-react';
-import CoreSeo, { CoreLanguages, useCoreLanguage } from '@/components/CoreSeo';
+import CoreSeo, { useCoreLanguage } from '@/components/CoreSeo';
 import GameResources from '@/components/GameResources';
 import { corePath } from '@/data/gameGuide';
 import { Link } from 'react-router-dom';
@@ -459,7 +459,6 @@ const Home = () => {
         </section>
 
         <GameResources language={language} compact />
-        <CoreLanguages language={language} />
       </div>
 
       <style>{`

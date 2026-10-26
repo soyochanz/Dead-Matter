@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Helmet } from 'react-helmet';
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { coreLanguage, corePath, gameGuide, languages } from '@/data/gameGuide';
 import { SITE_URL, jsonLd } from '@/lib/newsSeo';
@@ -13,11 +13,6 @@ export function useCoreLanguage() {
   return language;
 }
 
-export function CoreLanguages({ page = '', language }) {
-  return <nav aria-label="Languages" className="flex flex-wrap justify-center gap-4 text-sm my-6">
-    {languages.map((code, i) => <Link key={code} to={corePath(code, page)} lang={code} hrefLang={code} aria-current={code === language ? 'page' : undefined} className={code === language ? 'text-white font-bold' : 'text-slate-400 hover:text-red-400'}>{['English', 'Español', 'Português'][i]}</Link>)}
-  </nav>;
-}
 
 export default function CoreSeo({ page = '', language }) {
   const copy = gameGuide[language];

@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
 import { supabase } from '@/lib/mySupabaseClient';
 import * as Icons from 'lucide-react';
-import CoreSeo, { CoreLanguages, useCoreLanguage } from '@/components/CoreSeo';
+import CoreSeo, { useCoreLanguage } from '@/components/CoreSeo';
 import GameResources from '@/components/GameResources';
 import CategoryTile from '@/components/CategoryTile';
 
@@ -182,7 +182,6 @@ const Wiki = () => {
               ))}
             </div>
           )}
-          <CoreLanguages page="wiki" language={language} />
           <GameResources language={language} compact />
         </motion.div>
       </div>
