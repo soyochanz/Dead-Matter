@@ -16,6 +16,7 @@ const WikiCatalogPage = lazyImport(() => import('@/pages/WikiCatalogPage'));
 const CatalogRoute = ({ category, interactive }) => {
   const location = useLocation();
   const query = new URLSearchParams(location.search);
+  if (interactive && ['meds', 'perks'].includes(category)) return <>{interactive}<WikiCatalogPage category={category} metadataOnly /></>;
   if (interactive && (query.get('view') === 'interactive' || query.has('preset'))) return <>{interactive}<Helmet><meta name="robots" content="noindex,follow" /><link rel="canonical" href={'https://deadmatterwiki.com/wiki/' + category} /></Helmet></>;
   return <WikiCatalogPage category={category} />;
 };
@@ -178,6 +179,10 @@ function App() {
           <Route path="wiki/basebuilding" element={<CatalogRoute category="basebuilding" interactive={<BasebuildingPage />} />} />
 
           {/* Wiki Category & Item Pages */}
+          {['es','pt'].flatMap(language => [
+            <Route key={language + 'meds'} path={language + '/wiki/meds'} element={<CatalogRoute category="meds" interactive={<MedsPage />} />} />,
+            <Route key={language + 'perks'} path={language + '/wiki/perks'} element={<CatalogRoute category="perks" interactive={<PerksPage />} />} />
+          ])}
           <Route path="wiki/:categoryName/:itemSlug?" element={<WikiCatalogPage />} />
           <Route path="es/wiki/:categoryName/:itemSlug?" element={<WikiCatalogPage />} />
           <Route path="pt/wiki/:categoryName/:itemSlug?" element={<WikiCatalogPage />} />

@@ -13,6 +13,22 @@ const sitemap = await fs.readFile('dist/sitemap.xml', 'utf8');
 const urls = [...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map(match => match[1]);
 const escape = text => String(text).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#x27;');
 
+test('specialized sections preserve vehicle parts, cooking, prices and extended stats', async () => {
+  for (const item of records) {
+    const html = await fs.readFile(`dist${route(item.category, item.slug, 'en')}/index.html`, 'utf8');
+    for (const stat of item.details?.performance || []) assert.ok(html.includes(escape(stat.label)), item.name + ': performance');
+    for (const [key,value] of Object.entries(item.details?.sideEffects || {})) {
+      assert.ok(html.includes(escape(key)), item.name + ': side effect');
+      assert.ok(html.includes(escape(value)));
+    }
+    if ('price' in item.attributes) assert.ok(html.includes('Trading'), item.name + ': prices');
+  }
+  const kart = await fs.readFile('dist/wiki/vehicles/go-kart/index.html','utf8');
+  assert.ok(kart.includes('Vehicle specifications') && kart.includes('Required components') && kart.includes('Spark Plug'));
+  const bacon = await fs.readFile('dist/wiki/consumables/bacon/index.html','utf8');
+  assert.ok(bacon.includes('Nutrition &amp; effects') && bacon.includes('Preparation &amp; safety') && bacon.includes('Cooked Bacon'));
+});
+
 for (const category of categories) test(`${category}: every public record has complete HTML in all three languages`, async () => {
   for (const language of languages) {
     const index = await fs.readFile(`dist${route(category, '', language)}/index.html`, 'utf8');

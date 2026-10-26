@@ -1,5 +1,6 @@
 [
   {
+    "details": {},
     "id": "ffdad92b-bb1b-4132-bd62-d315ffd44033",
     "table": "accessories",
     "category": "accessories",
@@ -8,6 +9,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762338593986_stanag20rounds.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "damage_modifier": 0,
       "rate_of_fire_modifier": 0,
       "accuracy_modifier": 0,
@@ -18,6 +21,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "36875668-63e0-4cff-9079-f77d11a0d0fc",
     "table": "accessories",
     "category": "accessories",
@@ -26,6 +30,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762307606014_stanag30rounds.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "damage_modifier": 0,
       "rate_of_fire_modifier": 0,
       "accuracy_modifier": 0,
@@ -43,6 +49,7 @@
     ]
   },
   {
+    "details": {},
     "id": "16d3e5de-1274-40d2-9799-4d7af327781b",
     "table": "accessories",
     "category": "accessories",
@@ -51,6 +58,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762256298205_ChatGPT%20Image%204%20nov%202025,%2012_38_07.png",
     "attributes": {
+      "price": 5000,
+      "sell_price": 0,
       "damage_modifier": 0,
       "rate_of_fire_modifier": 0,
       "accuracy_modifier": 0,
@@ -68,6 +77,7 @@
     ]
   },
   {
+    "details": {},
     "id": "17b5e58a-05bd-4324-ba1c-e067704c5c26",
     "table": "accessories",
     "category": "accessories",
@@ -76,6 +86,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762338633880_angledgrip.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "damage_modifier": 0,
       "rate_of_fire_modifier": -6,
       "accuracy_modifier": 10,
@@ -86,6 +98,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "81bb7c85-b39d-46d2-971b-b9b853f72afa",
     "table": "accessories",
     "category": "accessories",
@@ -94,6 +107,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762338716500_ANPEQ-15%20Laser.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "damage_modifier": 0,
       "rate_of_fire_modifier": 0,
       "accuracy_modifier": 0,
@@ -111,6 +126,7 @@
     ]
   },
   {
+    "details": {},
     "id": "e769619f-6dbb-4a7d-8ba9-b3b555a2fd18",
     "table": "accessories",
     "category": "accessories",
@@ -119,6 +135,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762338731385_DMFA%20Stock%20Black.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "damage_modifier": 0,
       "rate_of_fire_modifier": 0,
       "accuracy_modifier": 0,
@@ -128,6 +146,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "569ac226-c81e-4041-872a-538bc6890131",
     "table": "accessories",
     "category": "accessories",
@@ -136,6 +155,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762338745950_DMFA%20Stock%20TAN.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "damage_modifier": 0,
       "rate_of_fire_modifier": 0,
       "accuracy_modifier": 0,
@@ -145,6 +166,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "f22dc8ef-d3ba-4c49-9ace-850283147e9f",
     "table": "accessories",
     "category": "accessories",
@@ -153,6 +175,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762338683933_flashhidder.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "damage_modifier": 0,
       "rate_of_fire_modifier": 0,
       "accuracy_modifier": 0,
@@ -163,6 +187,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "928cdc9c-4fc6-4ec3-861a-b6a00ed590e9",
     "table": "accessories",
     "category": "accessories",
@@ -171,6 +196,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762338810285_front%20Sight00.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "damage_modifier": 0,
       "rate_of_fire_modifier": 0,
       "accuracy_modifier": 0,
@@ -188,6 +215,7 @@
     ]
   },
   {
+    "details": {},
     "id": "f52f05eb-3c16-471d-9105-b64777099ac2",
     "table": "accessories",
     "category": "accessories",
@@ -196,6 +224,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762256781177_ChatGPT%20Image%204%20nov%202025,%2012_45_11.png",
     "attributes": {
+      "price": 12000,
+      "sell_price": 0,
       "damage_modifier": -6,
       "rate_of_fire_modifier": 5,
       "accuracy_modifier": 0,
@@ -213,6 +243,7 @@
     ]
   },
   {
+    "details": {},
     "id": "061a7581-c808-4d6a-aee7-2db41efd9052",
     "table": "accessories",
     "category": "accessories",
@@ -221,6 +252,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762338758211_Long%20Barrel(RB).png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "damage_modifier": 0,
       "rate_of_fire_modifier": 0,
       "accuracy_modifier": 0,
@@ -231,6 +264,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "9ce64135-fdec-4d89-b7ab-97a48959dc4d",
     "table": "accessories",
     "category": "accessories",
@@ -239,6 +273,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762338781057_Mid%20Barrel(RB).png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "damage_modifier": 0,
       "rate_of_fire_modifier": 0,
       "accuracy_modifier": 0,
@@ -249,6 +285,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "9b17e65a-27cb-4f3b-af3d-e8eb74605527",
     "table": "accessories",
     "category": "accessories",
@@ -280,6 +317,7 @@
     ]
   },
   {
+    "details": {},
     "id": "06ce847e-e733-49a0-8fb1-665fecb196f8",
     "table": "accessories",
     "category": "accessories",
@@ -288,6 +326,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762338826638_Muzzeldevice.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "damage_modifier": 0,
       "rate_of_fire_modifier": 0,
       "accuracy_modifier": 0,
@@ -298,6 +338,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "dcc68e85-2505-45d0-a70d-15e44dc59c4f",
     "table": "accessories",
     "category": "accessories",
@@ -306,6 +347,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762887619966_r700smallmag.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "damage_modifier": 0,
       "rate_of_fire_modifier": 0,
       "accuracy_modifier": 0,
@@ -323,6 +366,7 @@
     ]
   },
   {
+    "details": {},
     "id": "1ddc6696-330d-420b-a19a-bf1381177101",
     "table": "accessories",
     "category": "accessories",
@@ -331,6 +375,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762887713793_r700medmag.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "damage_modifier": 0,
       "rate_of_fire_modifier": 0,
       "accuracy_modifier": 0,
@@ -348,6 +394,7 @@
     ]
   },
   {
+    "details": {},
     "id": "91a0f959-f9ca-4798-9402-66c34cb7761d",
     "table": "accessories",
     "category": "accessories",
@@ -356,6 +403,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762338612869_Snub%20Barrel(RB).png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "damage_modifier": 0,
       "rate_of_fire_modifier": 0,
       "accuracy_modifier": 0,
@@ -366,6 +415,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "23afd40a-cc74-41af-be55-2cc57871fff5",
     "table": "accessories",
     "category": "accessories",
@@ -391,6 +441,7 @@
     ]
   },
   {
+    "details": {},
     "id": "f4b5ee54-9856-43fa-8dcb-e804ca33464b",
     "table": "accessories",
     "category": "accessories",
@@ -399,6 +450,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762307572976_Standard%20Carabine%20Stock.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "damage_modifier": 0,
       "rate_of_fire_modifier": 0,
       "accuracy_modifier": 0,
@@ -416,6 +469,7 @@
     ]
   },
   {
+    "details": {},
     "id": "46721af9-b16b-4911-bf40-91e12742934d",
     "table": "accessories",
     "category": "accessories",
@@ -424,6 +478,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1776381496954_f0448c96-ce9d-4232-8ed5-62366bd05d86_removalai_preview.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "damage_modifier": 0,
       "rate_of_fire_modifier": 0,
       "accuracy_modifier": 0,
@@ -441,6 +497,7 @@
     ]
   },
   {
+    "details": {},
     "id": "a9572717-c1b9-4aaa-8a81-f98045301eb5",
     "table": "accessories",
     "category": "accessories",
@@ -466,6 +523,7 @@
     ]
   },
   {
+    "details": {},
     "id": "2171fa20-5e57-41b9-912d-e6de8c249875",
     "table": "accessories",
     "category": "accessories",
@@ -474,6 +532,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762307532601_Verticalgrip01.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "damage_modifier": 0,
       "rate_of_fire_modifier": -5,
       "accuracy_modifier": 20,
@@ -491,6 +551,7 @@
     ]
   },
   {
+    "details": {},
     "id": "172aec3c-b967-400e-ae17-3f6ff9a30272",
     "table": "accessories",
     "category": "accessories",
@@ -499,6 +560,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762219650572_wooder-gripRB.webp",
     "attributes": {
+      "price": 100,
+      "sell_price": 0,
       "damage_modifier": 0,
       "rate_of_fire_modifier": 0,
       "accuracy_modifier": 6,
@@ -516,6 +579,7 @@
     ]
   },
   {
+    "details": {},
     "id": "cd2b4284-9f52-481f-98a2-4db091797c1c",
     "table": "ammo_types",
     "category": "ammo",
@@ -552,6 +616,7 @@
     ]
   },
   {
+    "details": {},
     "id": "feedea1d-2999-4797-800b-f644f155c930",
     "table": "ammo_types",
     "category": "ammo",
@@ -576,6 +641,7 @@
     ]
   },
   {
+    "details": {},
     "id": "bf480eae-7a11-4d22-a9d8-b493154e840e",
     "table": "ammo_types",
     "category": "ammo",
@@ -594,6 +660,7 @@
     ]
   },
   {
+    "details": {},
     "id": "641c5f76-6b3c-4482-a593-78cf9b003da7",
     "table": "ammo_types",
     "category": "ammo",
@@ -618,6 +685,7 @@
     ]
   },
   {
+    "details": {},
     "id": "030d0a51-4038-474b-9445-1031ca0abe85",
     "table": "ammo_types",
     "category": "ammo",
@@ -642,6 +710,7 @@
     ]
   },
   {
+    "details": {},
     "id": "0208b22a-16c7-47bc-85e9-a7ce525b253f",
     "table": "ammo_types",
     "category": "ammo",
@@ -660,6 +729,7 @@
     ]
   },
   {
+    "details": {},
     "id": "1e105708-297e-47f7-8138-cce086f70e7f",
     "table": "ammo_types",
     "category": "ammo",
@@ -690,6 +760,7 @@
     ]
   },
   {
+    "details": {},
     "id": "46bdcf23-60d8-414f-81dc-c04cd5396f65",
     "table": "ammo_types",
     "category": "ammo",
@@ -708,6 +779,7 @@
     ]
   },
   {
+    "details": {},
     "id": "dd56ee42-1566-44b9-a1ec-77b712ecb469",
     "table": "ammo_types",
     "category": "ammo",
@@ -726,6 +798,7 @@
     ]
   },
   {
+    "details": {},
     "id": "98292b76-f0b9-4ab3-8348-ca2c3079b6d1",
     "table": "ammo_types",
     "category": "ammo",
@@ -750,6 +823,7 @@
     ]
   },
   {
+    "details": {},
     "id": "2bcbf6e9-b72d-406c-bd0b-9e462dcb109d",
     "table": "ammo_types",
     "category": "ammo",
@@ -768,6 +842,7 @@
     ]
   },
   {
+    "details": {},
     "id": "5f5a036f-4186-4964-9092-20b5834e0cae",
     "table": "ammo_types",
     "category": "ammo",
@@ -798,6 +873,7 @@
     ]
   },
   {
+    "details": {},
     "id": "32996a5c-23c3-47af-81aa-f9c3115da615",
     "table": "ammo_types",
     "category": "ammo",
@@ -816,6 +892,7 @@
     ]
   },
   {
+    "details": {},
     "id": "bb565ec6-f810-499b-92e5-7e7f6011be26",
     "table": "ammo_types",
     "category": "ammo",
@@ -870,6 +947,7 @@
     ]
   },
   {
+    "details": {},
     "id": "4cd7db93-fefa-40e6-ac6f-3b7d4f08aad3",
     "table": "ammo_types",
     "category": "ammo",
@@ -888,6 +966,7 @@
     ]
   },
   {
+    "details": {},
     "id": "70cc1fc3-4252-4b74-b8d9-21e6cef44d27",
     "table": "basebuilding_items",
     "category": "basebuilding",
@@ -904,6 +983,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "544a4696-a4f8-4db3-8c9b-df3ba69a576b",
     "table": "basebuilding_items",
     "category": "basebuilding",
@@ -920,6 +1000,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "fa63539b-8b79-4a44-877f-bcb54f1ad7cb",
     "table": "basebuilding_items",
     "category": "basebuilding",
@@ -935,6 +1016,7 @@
     "disambiguator": "fa63539b"
   },
   {
+    "details": {},
     "id": "b4b8d4fe-c995-446b-92a4-5aae5f1d17e6",
     "table": "basebuilding_items",
     "category": "basebuilding",
@@ -951,6 +1033,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "b6ab7790-09b2-4fc3-9cfa-f9ebbd42e572",
     "table": "basebuilding_items",
     "category": "basebuilding",
@@ -965,6 +1048,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "ba58566a-7576-4a52-b9ea-832fee8c0dd3",
     "table": "basebuilding_items",
     "category": "basebuilding",
@@ -979,6 +1063,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "08103fbb-7ddf-4c12-89d4-89fbf7b87994",
     "table": "basebuilding_items",
     "category": "basebuilding",
@@ -993,6 +1078,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "25f9ddef-1f8e-4915-963c-aff1243f4913",
     "table": "basebuilding_items",
     "category": "basebuilding",
@@ -1009,6 +1095,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "ca8dfadf-e07f-46ee-82c4-01cceab73e8b",
     "table": "basebuilding_items",
     "category": "basebuilding",
@@ -1024,6 +1111,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "189e2611-8687-4998-a474-337b7db6fcfa",
     "table": "basebuilding_items",
     "category": "basebuilding",
@@ -1032,6 +1120,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/basebuilding/1769976825552_metalshelves.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "weight": 0,
       "health": 100,
       "rarity": "Legendary",
@@ -1040,6 +1130,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "ed10a4c9-5be5-4435-9eb0-297cf298d124",
     "table": "basebuilding_items",
     "category": "basebuilding",
@@ -1054,6 +1145,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "db999a34-5f83-49b0-a7d3-3facb22cc879",
     "table": "basebuilding_items",
     "category": "basebuilding",
@@ -1091,6 +1183,7 @@
     ]
   },
   {
+    "details": {},
     "id": "50dc91a9-4f0c-4e92-9e9b-fb48b1e5fa13",
     "table": "basebuilding_items",
     "category": "basebuilding",
@@ -1105,6 +1198,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "60116d70-1e5e-4620-85c6-207d31f10056",
     "table": "basebuilding_items",
     "category": "basebuilding",
@@ -1119,6 +1213,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "68fca8f2-72d1-494a-b400-abca678deaf2",
     "table": "consumables",
     "category": "consumables",
@@ -1127,6 +1224,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762766983656_Bacon.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "type": "food",
       "hydration": -15,
       "energy": 3,
@@ -1145,6 +1244,9 @@
     ]
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "5d5a5af5-85a5-44e7-8373-2bbe5f8020a6",
     "table": "consumables",
     "category": "consumables",
@@ -1153,6 +1255,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1769690632176_00000000001b001b97bfa07fc610805700000000000000000000000000000000.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "type": "food",
       "hydration": 0,
       "energy": 0,
@@ -1165,6 +1269,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "5b64a061-2882-4410-a8a0-1c1e821f57fa",
     "table": "consumables",
     "category": "consumables",
@@ -1173,6 +1280,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1769690674927_0000000000240030a88db162884ce5c700000000000000000000000000000000.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "type": "food",
       "hydration": 0,
       "energy": 0,
@@ -1185,6 +1294,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "8e69cba7-f94d-40df-9c06-2520c6fff045",
     "table": "consumables",
     "category": "consumables",
@@ -1204,6 +1316,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "1bc2d0fa-ed5c-4ad0-9230-11fc20af052c",
     "table": "consumables",
     "category": "consumables",
@@ -1212,6 +1327,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762816512548_cannedpizza.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "type": "food",
       "hydration": 0,
       "energy": 25,
@@ -1224,6 +1341,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "1d8dfc0a-fcdc-4fa5-8249-d5df9646cb4e",
     "table": "consumables",
     "category": "consumables",
@@ -1232,6 +1352,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762767528783_Vegetable%20soup.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "type": "food",
       "hydration": 5,
       "energy": 25,
@@ -1244,6 +1366,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "ebb53809-3812-4264-a2bd-a5f1499d4a2f",
     "table": "consumables",
     "category": "consumables",
@@ -1252,6 +1377,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1769690942874_00000000000400024a9c4ed5581774e900000000000000000000000000000000.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "type": "food",
       "hydration": 0,
       "energy": 0,
@@ -1264,6 +1391,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "82a5a686-260a-49b2-b866-d90cc045d74e",
     "table": "consumables",
     "category": "consumables",
@@ -1272,6 +1402,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762764935664_ChatGPT%20Image%2010%20nov%202025,%2009_54_52.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "type": "drink",
       "hydration": 25,
       "energy": 0,
@@ -1284,6 +1416,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "c9e4c34a-6671-4cb1-94ef-83a00d3d6070",
     "table": "consumables",
     "category": "consumables",
@@ -1292,6 +1427,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762766596199_bott.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "type": "drink",
       "hydration": 25,
       "energy": 0,
@@ -1303,6 +1440,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "a779deff-b33e-4e66-87fe-cf1f566e501e",
     "table": "consumables",
     "category": "consumables",
@@ -1311,6 +1451,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762767220972_Cooked%20Bancom.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "type": "food",
       "hydration": 10,
       "energy": 30,
@@ -1322,6 +1464,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "375a2854-6974-43eb-87ee-4fbdea3308f7",
     "table": "consumables",
     "category": "consumables",
@@ -1341,6 +1486,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "4a599930-79d0-45de-b006-97d4ea3f4d8d",
     "table": "consumables",
     "category": "consumables",
@@ -1349,6 +1497,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762815544296_croissant.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "type": "food",
       "hydration": -15,
       "energy": 3,
@@ -1361,6 +1511,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "b6118e6e-bf9e-4efc-a53d-a3b7570bfec8",
     "table": "consumables",
     "category": "consumables",
@@ -1369,6 +1522,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762765583412_DrPepperdrink.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "type": "drink",
       "hydration": 25,
       "energy": 0,
@@ -1380,6 +1535,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "78761e7e-acfc-416f-9a04-0d0bbf4554bd",
     "table": "consumables",
     "category": "consumables",
@@ -1388,6 +1544,8 @@
     "description": "A can of incredibly beer",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762726783552_Adobe%20Express%20-%20file%20(2).png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "type": "drink",
       "hydration": 25,
       "energy": 0,
@@ -1400,6 +1558,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "f1b31b92-eaaa-4196-8a44-468fd62c664a",
     "table": "consumables",
     "category": "consumables",
@@ -1408,6 +1569,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762726968202_Adobe%20Express%20-%20file%20(2).png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "type": "drink",
       "hydration": 25,
       "energy": 0,
@@ -1420,6 +1583,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "785d27cc-864f-4a5a-9a7b-efd05dfbf59b",
     "table": "consumables",
     "category": "consumables",
@@ -1428,6 +1594,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1769690980931_000000000030002437563a4bdf23249700000000000000000000000000000000.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "type": "food",
       "hydration": 0,
       "energy": 0,
@@ -1440,6 +1608,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "af5590b3-20b4-4459-9755-b4fc4952c1ff",
     "table": "consumables",
     "category": "consumables",
@@ -1448,6 +1619,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1769691020492_00000000003000248249895fec7cdc5700000000000000000000000000000000.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "type": "food",
       "hydration": 0,
       "energy": 0,
@@ -1461,6 +1634,9 @@
     "disambiguator": "af5590b3"
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "5ece54e9-5d78-40b9-a01a-3fe2ac3998e9",
     "table": "consumables",
     "category": "consumables",
@@ -1469,6 +1645,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762766265929_Gamer%20Juice.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "type": "drink",
       "hydration": 25,
       "energy": 0,
@@ -1480,6 +1658,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "f264e45e-9457-4a21-bee7-e6a7edb0ea5d",
     "table": "consumables",
     "category": "consumables",
@@ -1488,6 +1669,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762307826705_jakes%20cereals.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "type": "food",
       "hydration": -15,
       "energy": 50,
@@ -1500,6 +1683,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "fab7f1c4-d03d-4ce8-b20b-9da31d82a5ce",
     "table": "consumables",
     "category": "consumables",
@@ -1526,6 +1712,9 @@
     ]
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "199742f9-af63-43f7-96a8-a0e88f2f97c2",
     "table": "consumables",
     "category": "consumables",
@@ -1534,6 +1723,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762767143006_Mixed%20Vegetables%20%20Can.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "type": "food",
       "hydration": 5,
       "energy": 20,
@@ -1546,6 +1737,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "1713854c-135c-47c2-aa61-aae85a1921d0",
     "table": "consumables",
     "category": "consumables",
@@ -1554,6 +1748,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762722525041_Adobe%20Express%20-%20file.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "type": "drink",
       "hydration": 25,
       "energy": 0,
@@ -1566,6 +1762,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "d00d7c87-ae8b-4dfa-92b2-cd08730ad512",
     "table": "consumables",
     "category": "consumables",
@@ -1574,6 +1773,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762727505286_ChatGPT%20Image%209%20nov%202025,%2023_30_39.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "type": "drink",
       "hydration": 25,
       "energy": 0,
@@ -1586,6 +1787,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "b1956972-46d6-4793-8452-e03da14492f8",
     "table": "consumables",
     "category": "consumables",
@@ -1594,6 +1798,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762765761229_OasisH2o.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "type": "drink",
       "hydration": 25,
       "energy": 0,
@@ -1605,6 +1811,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "a960ef64-e3aa-463d-94eb-9724eae2ce59",
     "table": "consumables",
     "category": "consumables",
@@ -1613,6 +1822,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1769690600143_00000000000c0012e796f4db2f18114900000000000000000000000000000000.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "type": "food",
       "hydration": 0,
       "energy": 0,
@@ -1625,6 +1836,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "7429ec7f-8047-48c4-8dff-d6e90e295c4e",
     "table": "consumables",
     "category": "consumables",
@@ -1633,6 +1847,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1769690915985_0000000000100020d296df65362b4e3400000000000000000000000000000000.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "type": "food",
       "hydration": 0,
       "energy": 0,
@@ -1645,6 +1861,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "8a0209fe-815f-43d5-8116-bc7af3195228",
     "table": "consumables",
     "category": "consumables",
@@ -1653,6 +1872,8 @@
     "description": "A can of incredibly sweet Slush cream soda",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762765318339_ChatGPT%20Image%2010%20nov%202025,%2010_01_16.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "type": "drink",
       "hydration": 25,
       "energy": 0,
@@ -1665,6 +1886,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "61154f7d-6e3c-43a7-a3e6-9df6f060ad76",
     "table": "consumables",
     "category": "consumables",
@@ -1673,6 +1897,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762764429463_Adobe%20Express%20-%20file.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "type": "drink",
       "hydration": 25,
       "energy": 0,
@@ -1685,6 +1911,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "c8d5dbda-ea24-4ca8-b1e4-47df199b52a3",
     "table": "consumables",
     "category": "consumables",
@@ -1693,6 +1922,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762766009623_ChatGPT%20Image%2010%20nov%202025,%2010_12_43.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "type": "drink",
       "hydration": 24,
       "energy": 0,
@@ -1705,6 +1936,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "9b076959-1329-47d8-a2bb-aa5fdd3c6bf8",
     "table": "consumables",
     "category": "consumables",
@@ -1713,6 +1947,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1769691049518_0000000000140032906b99170c01079c00000000000000000000000000000000.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "type": "drink",
       "hydration": 0,
       "energy": 0,
@@ -1725,6 +1961,9 @@
     "relations": []
   },
   {
+    "details": {
+      "performance": []
+    },
     "id": "0354a618-f8aa-4970-8073-1533ea17fe1f",
     "table": "gear",
     "category": "gear",
@@ -1733,6 +1972,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762908221192_ChatGPT%20Image%2012%20nov%202025,%2000_42_50.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "weight": 0.2,
       "size": "3x5",
       "inventory_slots": 0,
@@ -1747,6 +1988,9 @@
     "relations": []
   },
   {
+    "details": {
+      "performance": []
+    },
     "id": "935b2afe-8017-403f-bf42-6a22ccae9636",
     "table": "gear",
     "category": "gear",
@@ -1755,6 +1999,8 @@
     "description": "We’ll also accept ‘toque’.",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762908278821_beannie.png",
     "attributes": {
+      "price": 30,
+      "sell_price": 30,
       "weight": 0.11,
       "size": "3x3",
       "inventory_slots": 0,
@@ -1769,6 +2015,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "4644173d-6cca-494f-8994-cc51493a97fc",
     "table": "gear",
     "category": "gear",
@@ -1777,6 +2024,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762216804698_felxionblack.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "weight": 0.33,
       "inventory_slots": 0,
       "insulation": 4,
@@ -1797,6 +2046,7 @@
     ]
   },
   {
+    "details": {},
     "id": "eb6bb50a-3040-4e1f-a25b-a84ed279eca1",
     "table": "gear",
     "category": "gear",
@@ -1805,6 +2055,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762339042393_shoes.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "weight": 0,
       "inventory_slots": 0,
       "insulation": 0,
@@ -1818,6 +2070,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "ae3cd19b-1882-4e28-9282-d54c96c17561",
     "table": "gear",
     "category": "gear",
@@ -1826,6 +2079,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762339207575_felxionbrown.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "weight": 0.33,
       "inventory_slots": 0,
       "insulation": 4,
@@ -1846,6 +2101,7 @@
     ]
   },
   {
+    "details": {},
     "id": "ffb653bf-68c7-42ba-921c-9ac55566e053",
     "table": "gear",
     "category": "gear",
@@ -1854,6 +2110,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762339384797_hard%20knu%20br.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "weight": 0.66,
       "inventory_slots": 0,
       "insulation": 0,
@@ -1874,6 +2132,7 @@
     ]
   },
   {
+    "details": {},
     "id": "56a44ffb-281b-44ff-aed9-01ecd19600d8",
     "table": "gear",
     "category": "gear",
@@ -1882,6 +2141,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762307500402_tbrender_001-removebg-preview-1-e1696582291618.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "weight": 0,
       "inventory_slots": 0,
       "insulation": 0,
@@ -1895,6 +2156,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "f6077e7a-17df-4da8-8397-694d3b06ec57",
     "table": "gear",
     "category": "gear",
@@ -1903,6 +2165,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762339118231_del.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "weight": 0,
       "inventory_slots": 0,
       "insulation": 0,
@@ -1916,6 +2180,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "8902c0f3-018d-42a3-8cb2-aa6a94f02971",
     "table": "gear",
     "category": "gear",
@@ -1924,6 +2189,8 @@
     "description": "A suit jacket & button up.",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762720487970_Suitjacket.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "weight": 0.9,
       "inventory_slots": 24,
       "insulation": 5,
@@ -1937,6 +2204,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "2f6d13be-3682-4092-9d89-625645596738",
     "table": "gear",
     "category": "gear",
@@ -1945,6 +2213,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762338966995_dress%20shoes.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "weight": 0,
       "inventory_slots": 0,
       "insulation": 0,
@@ -1958,6 +2228,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "55cd91a1-141c-40cc-89eb-979b5b61288c",
     "table": "gear",
     "category": "gear",
@@ -1966,6 +2237,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762215636103_1.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "weight": 4.5,
       "inventory_slots": 308,
       "insulation": 5,
@@ -1979,6 +2252,9 @@
     "relations": []
   },
   {
+    "details": {
+      "performance": []
+    },
     "id": "f69c0a93-c1e1-4bf4-8373-912204171b9b",
     "table": "gear",
     "category": "gear",
@@ -1987,6 +2263,8 @@
     "description": "Emergency Response Team helmet. Offers protection against incoming damage.",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762908593273_1762720860775_Mask.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "weight": 1.3,
       "inventory_slots": 0,
       "insulation": 0,
@@ -2007,6 +2285,9 @@
     ]
   },
   {
+    "details": {
+      "performance": []
+    },
     "id": "fa8b12da-1dd5-4907-86cd-1ef56a0445ac",
     "table": "gear",
     "category": "gear",
@@ -2015,6 +2296,8 @@
     "description": "A small backpack used by EMT",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762216727090_EMT.png",
     "attributes": {
+      "price": 654,
+      "sell_price": 654,
       "weight": 2.3,
       "size": "8x10",
       "inventory_slots": 126,
@@ -2029,6 +2312,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "ec9d3bcc-d702-4e08-a117-4ad601e3856a",
     "table": "gear",
     "category": "gear",
@@ -2037,6 +2321,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762216252626_2.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "weight": 6,
       "inventory_slots": 642,
       "insulation": 5,
@@ -2050,6 +2336,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "19f37805-815f-4655-a9b1-966ea0d28c82",
     "table": "gear",
     "category": "gear",
@@ -2058,6 +2345,8 @@
     "description": "A pair of loafers.",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762720588779_shoe1.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "weight": 0.8,
       "inventory_slots": 0,
       "insulation": 2,
@@ -2071,6 +2360,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "3a54a25d-d19c-4801-9d8e-a38cef4de6d8",
     "table": "gear",
     "category": "gear",
@@ -2079,6 +2369,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762339102744_mil.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "weight": 0,
       "inventory_slots": 0,
       "insulation": 0,
@@ -2092,6 +2384,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "f5d810d4-ebe8-4ade-93fd-8580db6b41af",
     "table": "gear",
     "category": "gear",
@@ -2100,6 +2393,8 @@
     "description": "A tweed military sweater.",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762719343467_ChatGPT%20Image%209%20nov%202025,%2021_15_27.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "weight": 0.66,
       "inventory_slots": 42,
       "insulation": 8,
@@ -2120,6 +2415,9 @@
     ]
   },
   {
+    "details": {
+      "performance": []
+    },
     "id": "cfddbc97-d53c-4f9e-b52e-2c9b43f7dfd7",
     "table": "gear",
     "category": "gear",
@@ -2128,6 +2426,8 @@
     "description": "A military vest.",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762907943430_ChatGPT%20Image%2012%20nov%202025,%2000_38_28.png",
     "attributes": {
+      "price": 8486,
+      "sell_price": 8486,
       "weight": 7,
       "size": "5x5",
       "inventory_slots": 0,
@@ -2149,6 +2449,9 @@
     ]
   },
   {
+    "details": {
+      "performance": []
+    },
     "id": "f4ee8076-96dd-4132-bb66-10c20aae8711",
     "table": "gear",
     "category": "gear",
@@ -2157,6 +2460,8 @@
     "description": "A PAT 82 hat.",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762908582455_1762720433184_Pat82hat.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "weight": 0.11,
       "inventory_slots": 0,
       "insulation": 1,
@@ -2170,6 +2475,9 @@
     "relations": []
   },
   {
+    "details": {
+      "performance": []
+    },
     "id": "000b0593-482e-41b5-b5c8-ce9d995ce30d",
     "table": "gear",
     "category": "gear",
@@ -2178,6 +2486,8 @@
     "description": "A Privateer security solutions cap.",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762908573742_1762720203513_cap.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "weight": 0.11,
       "inventory_slots": 0,
       "insulation": 1,
@@ -2191,6 +2501,9 @@
     "relations": []
   },
   {
+    "details": {
+      "performance": []
+    },
     "id": "53434f2c-8ef4-4f08-a9b5-0ec55e3a5c43",
     "table": "gear",
     "category": "gear",
@@ -2199,6 +2512,8 @@
     "description": "A protective, bullet proof RCMP vest.",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762908122432_ChatGPT%20Image%2012%20nov%202025,%2000_41_09.png",
     "attributes": {
+      "price": 5245,
+      "sell_price": 5245,
       "weight": 4.5,
       "size": "5x5",
       "inventory_slots": 0,
@@ -2220,6 +2535,7 @@
     ]
   },
   {
+    "details": {},
     "id": "8f1b225a-3adc-4a6d-abe5-cbabd2d545d3",
     "table": "gear",
     "category": "gear",
@@ -2228,6 +2544,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762216679038_4.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "weight": 2.8,
       "inventory_slots": 196,
       "insulation": 4,
@@ -2241,6 +2559,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "5fde2fd4-8bba-4eba-ab1d-c0172e236680",
     "table": "gear",
     "category": "gear",
@@ -2249,6 +2568,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762339008714_sec.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "weight": 0,
       "inventory_slots": 0,
       "insulation": 0,
@@ -2262,6 +2583,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "ca921013-7d0e-4307-935d-39bbba563a5a",
     "table": "gear",
     "category": "gear",
@@ -2270,6 +2592,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762339136015_2.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "weight": 0,
       "inventory_slots": 0,
       "insulation": 0,
@@ -2283,6 +2607,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "47deb7ff-4b6c-4905-a07c-952065c1670c",
     "table": "gear",
     "category": "gear",
@@ -2291,6 +2616,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762339057508_shoes3.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "weight": 0,
       "inventory_slots": 0,
       "insulation": 0,
@@ -2305,6 +2632,7 @@
     "disambiguator": "47deb7ff"
   },
   {
+    "details": {},
     "id": "74b53a48-1e3f-45a2-9540-4dcbf7e2e810",
     "table": "gear",
     "category": "gear",
@@ -2313,6 +2641,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762339070115_shoes4.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "weight": 0,
       "inventory_slots": 0,
       "insulation": 0,
@@ -2327,6 +2657,7 @@
     "disambiguator": "74b53a48"
   },
   {
+    "details": {},
     "id": "972e4141-f530-4d3d-9eb9-865294237e93",
     "table": "gear",
     "category": "gear",
@@ -2335,6 +2666,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762339021236_shoes2.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "weight": 0,
       "inventory_slots": 0,
       "insulation": 0,
@@ -2349,6 +2682,9 @@
     "disambiguator": "972e4141"
   },
   {
+    "details": {
+      "performance": []
+    },
     "id": "96005bba-f7dd-4206-9d90-51516a26914c",
     "table": "gear",
     "category": "gear",
@@ -2357,6 +2693,8 @@
     "description": "A pair of strippled grip gloves",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762218282774_ChatGPT%20Image%204%20nov%202025,%2002_04_31.png",
     "attributes": {
+      "price": 30,
+      "sell_price": 30,
       "weight": 0.25,
       "size": "5x4",
       "inventory_slots": 0,
@@ -2370,6 +2708,9 @@
     "relations": []
   },
   {
+    "details": {
+      "performance": []
+    },
     "id": "a90bff61-c67f-4b72-b6fd-b6ec6ed1b6f1",
     "table": "gear",
     "category": "gear",
@@ -2378,6 +2719,8 @@
     "description": "An upgraded version of a military helmet.",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762908748842_milh.png",
     "attributes": {
+      "price": 863,
+      "sell_price": 863,
       "weight": 3.33,
       "size": "4x4",
       "inventory_slots": 0,
@@ -2399,6 +2742,7 @@
     ]
   },
   {
+    "details": {},
     "id": "84f1048c-571a-4897-8079-4782a2b72c58",
     "table": "gear",
     "category": "gear",
@@ -2407,6 +2751,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762339349278_felxiontan.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "weight": 0.33,
       "inventory_slots": 0,
       "insulation": 4,
@@ -2427,6 +2773,7 @@
     ]
   },
   {
+    "details": {},
     "id": "3c44f470-b04f-4843-90b4-491acb9da3f2",
     "table": "gear",
     "category": "gear",
@@ -2435,6 +2782,8 @@
     "description": "A Trakker track jacket.",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762720315672_Trackjacket.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "weight": 1.3,
       "inventory_slots": 24,
       "insulation": 5,
@@ -2448,6 +2797,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "df54835e-b993-4e3f-9a3b-b8c901292e50",
     "table": "gear",
     "category": "gear",
@@ -2456,6 +2806,8 @@
     "description": "An adventure brand Sherpa 7R hiking backpack.",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762719378511_Vintagebackpack.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "weight": 4.5,
       "inventory_slots": 270,
       "insulation": 5,
@@ -2469,6 +2821,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "8c766999-6eda-46af-a4b4-3af79d248674",
     "table": "keys",
     "category": "keys",
@@ -2477,6 +2830,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762816788913_BlueNeracard.png",
     "attributes": {
+      "price": 1840,
+      "sell_price": 1840,
       "spawn_locations": "Infecteds",
       "rarity": "Rare"
     },
@@ -2490,6 +2845,7 @@
     ]
   },
   {
+    "details": {},
     "id": "a1719926-edbe-4b6f-932c-05cedf880cf3",
     "table": "keys",
     "category": "keys",
@@ -2498,6 +2854,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762816688593_YellowNeracard.png",
     "attributes": {
+      "price": 1840,
+      "sell_price": 1840,
       "spawn_locations": "Infecteds",
       "rarity": "Rare"
     },
@@ -2511,6 +2869,7 @@
     ]
   },
   {
+    "details": {},
     "id": "ad817920-b06c-4db7-b433-7460d7fabca2",
     "table": "keys",
     "category": "keys",
@@ -2519,6 +2878,7 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762816613132_NeracardFederalstockpile.png",
     "attributes": {
+      "price": 2500,
       "spawn_locations": "Infecteds",
       "rarity": "Rare",
       "doors": "Federal Stockpile Bunker"
@@ -2533,6 +2893,7 @@
     ]
   },
   {
+    "details": {},
     "id": "d51f8da5-e2a3-4436-8e14-c43ebd45446d",
     "table": "keys",
     "category": "keys",
@@ -2541,6 +2902,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762816865612_PurpleNeracard.png",
     "attributes": {
+      "price": 1840,
+      "sell_price": 1840,
       "spawn_locations": "Infecteds",
       "rarity": "Epic"
     },
@@ -2554,6 +2917,7 @@
     ]
   },
   {
+    "details": {},
     "id": "acb3c7c2-58a5-475e-b372-3bbcf4ef90f4",
     "table": "keys",
     "category": "keys",
@@ -2562,6 +2926,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762817003505_OrangeNeracard.png",
     "attributes": {
+      "price": 1840,
+      "sell_price": 1840,
       "spawn_locations": "Infecteds",
       "rarity": "Rare"
     },
@@ -2575,6 +2941,7 @@
     ]
   },
   {
+    "details": {},
     "id": "4cee5ad6-fe46-4a1b-b103-994a71cb62d1",
     "table": "keys",
     "category": "keys",
@@ -2583,11 +2950,14 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762817096983_Ratnestkey.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "rarity": "Uncommon"
     },
     "relations": []
   },
   {
+    "details": {},
     "id": "ac9969c2-6a9d-4835-9e51-33c7c29d5119",
     "table": "crafting_materials",
     "category": "materials",
@@ -2606,6 +2976,7 @@
     ]
   },
   {
+    "details": {},
     "id": "498176de-dcb6-40e6-8d78-c73271a9925f",
     "table": "crafting_materials",
     "category": "materials",
@@ -2624,6 +2995,7 @@
     ]
   },
   {
+    "details": {},
     "id": "027e6eb8-1647-4d77-8640-e6991e900155",
     "table": "crafting_materials",
     "category": "materials",
@@ -2642,6 +3014,9 @@
     ]
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "d52168dc-1145-45e6-b865-2ef6efd9d066",
     "table": "medicines",
     "category": "meds",
@@ -2650,6 +3025,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762218826645_ChatGPT%20Image%204%20nov%202025,%2002_13_32.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "hydration": 0,
       "energy": 0,
       "health": 0,
@@ -2665,6 +3042,7 @@
     ]
   },
   {
+    "details": {},
     "id": "380ab61d-a85c-44c5-9030-822234e0d4f0",
     "table": "diseases",
     "category": "meds",
@@ -2678,6 +3056,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "5f9794d6-d403-44fa-a0b8-dd356318adda",
     "table": "medicines",
     "category": "meds",
@@ -2686,6 +3067,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762218793486_Antibiotic.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "hydration": 0,
       "energy": 0,
       "health": 0,
@@ -2694,6 +3077,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "89a3823c-73f9-4514-8c2f-843083623b7f",
     "table": "medicines",
     "category": "meds",
@@ -2702,6 +3088,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762305252620_wipe.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "hydration": 0,
       "energy": 0,
       "health": 0,
@@ -2710,6 +3098,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "2e07412d-dda6-4105-8a07-8e76cfeec0a7",
     "table": "medicines",
     "category": "meds",
@@ -2718,6 +3109,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762304982273_000000070012000ced07fad02787529e00010000000000000000000000000000-e1743144282553.webp",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "hydration": 0,
       "energy": 0,
       "health": 0,
@@ -2726,6 +3119,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "30bd9421-bee8-4a09-9cc4-934104177dc0",
     "table": "diseases",
     "category": "meds",
@@ -2739,6 +3133,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "5f52ece1-0e7a-4005-b9a0-06c10d820e0d",
     "table": "diseases",
     "category": "meds",
@@ -2760,6 +3155,7 @@
     "disambiguator": "5f52ece1"
   },
   {
+    "details": {},
     "id": "bc3f2c2d-bddb-46d2-b681-f1da7ebc15c4",
     "table": "diseases",
     "category": "meds",
@@ -2773,6 +3169,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "b3cd713e-d2bc-4268-8c5d-4fecd872645e",
     "table": "diseases",
     "category": "meds",
@@ -2786,6 +3183,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "e9eddfc1-5b37-4460-b856-bc55add3a7c3",
     "table": "medicines",
     "category": "meds",
@@ -2794,6 +3194,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762305146034_bloodtestingkit.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "hydration": 0,
       "energy": 0,
       "health": 0,
@@ -2802,6 +3204,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "8a2ea47c-13c8-448b-ae19-4e08b2dd9217",
     "table": "medicines",
     "category": "meds",
@@ -2810,6 +3215,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762218759699_bloodbag.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "hydration": 0,
       "energy": 0,
       "health": 0,
@@ -2818,6 +3225,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "e0eaf0fa-4e2c-423b-874b-4ec024702958",
     "table": "diseases",
     "category": "meds",
@@ -2831,6 +3239,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "c6491746-af2c-4adf-b8f1-587176e35632",
     "table": "diseases",
     "category": "meds",
@@ -2851,6 +3260,9 @@
     ]
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "1721db30-46a3-419d-b947-2e672613f39c",
     "table": "medicines",
     "category": "meds",
@@ -2859,6 +3271,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762818880182_burncream.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "hydration": 0,
       "energy": 0,
       "health": 0,
@@ -2874,6 +3288,7 @@
     ]
   },
   {
+    "details": {},
     "id": "6ba1d1b4-4a87-469b-b2f8-ba66742aa984",
     "table": "diseases",
     "category": "meds",
@@ -2887,6 +3302,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "3ec8565c-bd18-4e30-9f84-d7e3451113ee",
     "table": "diseases",
     "category": "meds",
@@ -2900,6 +3316,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "03355581-dc41-494d-ac42-483447c4ffc7",
     "table": "diseases",
     "category": "meds",
@@ -2913,6 +3330,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "58f99a83-ebcc-4dd8-86ea-72695ac8ec59",
     "table": "diseases",
     "category": "meds",
@@ -2926,6 +3344,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "b6bd37f8-1578-4f42-821c-d4a151b4a5e1",
     "table": "diseases",
     "category": "meds",
@@ -2946,6 +3365,7 @@
     ]
   },
   {
+    "details": {},
     "id": "0efef73f-f79d-400d-a743-1674f86d0918",
     "table": "diseases",
     "category": "meds",
@@ -2959,6 +3379,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "8ccff3ba-9a3b-4f6b-bcb8-3f7d2133056e",
     "table": "diseases",
     "category": "meds",
@@ -2972,6 +3393,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "a237027c-57c6-49e1-ba4b-392ec44dd5d1",
     "table": "diseases",
     "category": "meds",
@@ -2992,6 +3414,9 @@
     ]
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "0e8cc947-c07a-44be-9ed9-680cc086a93b",
     "table": "medicines",
     "category": "meds",
@@ -3000,6 +3425,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762305393217_00000007000c00127f1184cf11957b7c00010000000000000000000000000000.webp",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "hydration": 0,
       "energy": 0,
       "health": 0,
@@ -3008,6 +3435,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "0369e594-5b13-4d16-adc1-49166c6a771b",
     "table": "medicines",
     "category": "meds",
@@ -3016,6 +3446,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762218741182_Flozan-removebg-preview.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "hydration": 0,
       "energy": 0,
       "health": 0,
@@ -3024,6 +3456,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "a6121e90-01f4-4b1f-91a6-4caea1656a9f",
     "table": "medicines",
     "category": "meds",
@@ -3032,6 +3467,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762817341065_Heatpack.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "hydration": 0,
       "energy": 0,
       "health": 0,
@@ -3040,6 +3477,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "3f475bf7-9c72-4830-93c6-5528ffdaf992",
     "table": "medicines",
     "category": "meds",
@@ -3048,6 +3488,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762218456637_Ibuprofen_IB-removebg-preview.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "hydration": 0,
       "energy": 0,
       "health": 0,
@@ -3063,6 +3505,9 @@
     ]
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "44358e6b-03d2-4329-bd37-038f93220d4d",
     "table": "medicines",
     "category": "meds",
@@ -3071,6 +3516,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762818354420_Splint.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "hydration": 0,
       "energy": 0,
       "health": 0,
@@ -3079,6 +3526,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "4566b022-458d-479b-9c2a-0b39192bd710",
     "table": "diseases",
     "category": "meds",
@@ -3092,6 +3540,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "10cdf89c-3eb7-4405-b3d0-f7e9f1f95ada",
     "table": "medicines",
     "category": "meds",
@@ -3100,6 +3551,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/medicines/1775672991595_785d3e55-1307-456e-b911-9531297cdaae_removalai_preview.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "hydration": 0,
       "energy": 0,
       "health": 0,
@@ -3108,6 +3561,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "b690f9cb-5682-4ae6-83f2-44e86dec2aa0",
     "table": "medicines",
     "category": "meds",
@@ -3116,6 +3572,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762304876410_IVstarterkit.webp",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "hydration": 0,
       "energy": 0,
       "health": 0,
@@ -3124,6 +3582,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "c4046730-1517-4b9d-9ce6-2e46d687a4a8",
     "table": "medicines",
     "category": "meds",
@@ -3132,6 +3593,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762820038626_Medkit.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "hydration": 0,
       "energy": 0,
       "health": 30,
@@ -3140,6 +3603,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "72bd7a2c-42f6-4cd1-892c-0ef6eb47b79a",
     "table": "medicines",
     "category": "meds",
@@ -3148,6 +3614,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762305167349_Morphine%20sulfate%20tablets%20(2).png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "hydration": 0,
       "energy": 0,
       "health": 0,
@@ -3156,6 +3624,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "f7dbb036-d34a-44ff-90a5-b80c2377a3ba",
     "table": "diseases",
     "category": "meds",
@@ -3169,6 +3638,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "4a7e89ca-1d71-44d1-b4fb-beefacc8ba54",
     "table": "diseases",
     "category": "meds",
@@ -3182,6 +3652,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "44245ad6-8311-45af-b984-b4f730398e54",
     "table": "diseases",
     "category": "meds",
@@ -3195,6 +3666,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "4cd02d0f-8191-4a23-a918-85147057ce02",
     "table": "medicines",
     "category": "meds",
@@ -3203,6 +3677,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762219753330_ChatGPT%20Image%204%20nov%202025,%2002_27_03.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "hydration": 0,
       "energy": 0,
       "health": 0,
@@ -3211,6 +3687,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "e718e38f-2388-46c8-bc2e-642165403766",
     "table": "medicines",
     "category": "meds",
@@ -3219,6 +3698,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762819385837_Painkillers%20(2).png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "hydration": 0,
       "energy": 0,
       "health": 0,
@@ -3227,6 +3708,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "14bba0b9-86da-40c0-98db-e0620307c7ce",
     "table": "medicines",
     "category": "meds",
@@ -3235,6 +3719,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/medicines/1769702024950_00000000000c0012ef30fd153c22a61600000000000000000000000000000000.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "hydration": 0,
       "energy": 0,
       "health": 0,
@@ -3243,6 +3729,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "4da159f6-30a4-4fd5-959a-60df3f337392",
     "table": "diseases",
     "category": "meds",
@@ -3256,6 +3743,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "f30a4243-2ee2-485c-ac0c-90f62ab12f5f",
     "table": "diseases",
     "category": "meds",
@@ -3269,6 +3757,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "2378594b-ba1a-42fe-8198-0ab792d12a1f",
     "table": "medicines",
     "category": "meds",
@@ -3277,6 +3768,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762304947045_000000070012000cb067b9588630b51f00010000000000000000000000000000-e1743144274994.webp",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "hydration": 0,
       "energy": 0,
       "health": 0,
@@ -3285,6 +3778,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "d9bff8d1-14dc-4a44-b785-d8ef6d09d689",
     "table": "diseases",
     "category": "meds",
@@ -3298,6 +3792,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "5e3ef409-8a9b-43b8-b4c1-3cdc355ffdfe",
     "table": "diseases",
     "category": "meds",
@@ -3311,6 +3806,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "b1868e16-96ce-4bd7-bfd4-b32e98f20688",
     "table": "medicines",
     "category": "meds",
@@ -3319,6 +3817,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762820716361_Splint.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "hydration": 0,
       "energy": 0,
       "health": 0,
@@ -3327,6 +3827,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "b2c7c25b-ebfb-4f6b-9800-3182f51844ab",
     "table": "medicines",
     "category": "meds",
@@ -3335,6 +3838,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/medicines/1775673988763_0e9991ab-c55a-499d-92c4-b34c9d4418c0_removalai_preview.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "hydration": 0,
       "energy": 0,
       "health": 0,
@@ -3343,6 +3848,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "d351dc9f-0108-4eca-b144-725bf06629c3",
     "table": "medicines",
     "category": "meds",
@@ -3351,6 +3859,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762817479989_Suturekitred.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "hydration": 0,
       "energy": 0,
       "health": 0,
@@ -3359,6 +3869,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "80f2f450-c1dd-4933-b15d-4bf234d3aa9b",
     "table": "medicines",
     "category": "meds",
@@ -3367,6 +3880,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762817691985_Suturekitgreen.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "hydration": 0,
       "energy": 0,
       "health": 0,
@@ -3376,6 +3891,7 @@
     "disambiguator": "80f2f450"
   },
   {
+    "details": {},
     "id": "50c4a3df-ee25-4e15-8c63-f456d4dafc2d",
     "table": "diseases",
     "category": "meds",
@@ -3389,6 +3905,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "61f9de4c-e5f4-4e50-a46c-d1a259d1edcb",
     "table": "medicines",
     "category": "meds",
@@ -3397,6 +3916,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762305504468_toilet%20paper%20bandage.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "hydration": 0,
       "energy": 0,
       "health": 0,
@@ -3405,6 +3926,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "24b1b2a8-9e19-4b4c-a418-190629dddc1e",
     "table": "medicines",
     "category": "meds",
@@ -3413,6 +3937,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762817866105_Tourniquet.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "hydration": 0,
       "energy": 0,
       "health": 0,
@@ -3421,6 +3947,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "f4439af1-92d6-482a-973c-aadb075447ce",
     "table": "medicines",
     "category": "meds",
@@ -3429,6 +3958,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762818218254_Tranexamic%20Acid.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "hydration": 0,
       "energy": 0,
       "health": 0,
@@ -3437,6 +3968,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "fcedab56-9ce0-4433-88a7-41b539d2c780",
     "table": "medicines",
     "category": "meds",
@@ -3445,6 +3979,7 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762820542972_Traumabandage.png",
     "attributes": {
+      "price": 0,
       "hydration": 0,
       "energy": 0,
       "health": 0,
@@ -3460,6 +3995,9 @@
     ]
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "0a69c966-3baf-4e91-b0c6-6bb9eb668abc",
     "table": "medicines",
     "category": "meds",
@@ -3468,6 +4006,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762818095193_Traumakit.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "hydration": 0,
       "energy": 0,
       "health": 0,
@@ -3476,6 +4016,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "5c7fd33e-a25a-4bb3-b669-692b2491ef23",
     "table": "diseases",
     "category": "meds",
@@ -3489,6 +4030,9 @@
     "relations": []
   },
   {
+    "details": {
+      "sideEffects": {}
+    },
     "id": "e4300d57-3dcc-403c-b0c7-0631ff0a038c",
     "table": "medicines",
     "category": "meds",
@@ -3497,6 +4041,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762305543587_Water_purification_Tablets-removebg-preview.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "hydration": 0,
       "energy": 0,
       "health": 0,
@@ -3505,6 +4051,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "d57b461c-e201-48ca-830a-d9e505d1e1fd",
     "table": "npcs",
     "category": "npcs",
@@ -3705,6 +4252,7 @@
     ]
   },
   {
+    "details": {},
     "id": "b40766ab-04d0-4a09-a681-df3d5d50144d",
     "table": "npcs",
     "category": "npcs",
@@ -3725,6 +4273,7 @@
     ]
   },
   {
+    "details": {},
     "id": "b51eaa98-2687-4764-a6af-5da6e17e0d15",
     "table": "npcs",
     "category": "npcs",
@@ -3738,6 +4287,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "1c74aa7f-0fb9-4c54-bc28-23cb29929510",
     "table": "npcs",
     "category": "npcs",
@@ -3751,6 +4301,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "0df59597-3617-4341-a6e9-3dca4714a01f",
     "table": "npcs",
     "category": "npcs",
@@ -3764,6 +4315,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "f182702b-1660-4571-ac09-498e26621181",
     "table": "npcs",
     "category": "npcs",
@@ -3777,6 +4329,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "25188eee-f423-4f89-a70e-95d35cfed8e3",
     "table": "perks",
     "category": "perks",
@@ -3791,6 +4344,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "b14e69ad-34cb-40c4-ab68-7d33f1449e5b",
     "table": "perks",
     "category": "perks",
@@ -3805,6 +4359,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "af0df72f-5acc-43f1-8fc0-b3d662bf53b7",
     "table": "perks",
     "category": "perks",
@@ -3819,6 +4374,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "74d0af3e-21c8-49c2-b789-c6c0519b6460",
     "table": "perks",
     "category": "perks",
@@ -3833,6 +4389,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "5f340ac3-dc5b-42f0-abad-74934b029a16",
     "table": "occupations",
     "category": "perks",
@@ -3846,6 +4403,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "5b271db5-059b-4446-8213-234234c891c3",
     "table": "perks",
     "category": "perks",
@@ -3860,6 +4418,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "b8bea1b9-dbce-4a6e-8c06-58f5f4a5505f",
     "table": "occupations",
     "category": "perks",
@@ -3873,6 +4432,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "3b09ed95-b38b-4c4e-9c30-ccf6728db80f",
     "table": "occupations",
     "category": "perks",
@@ -3886,6 +4446,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "2a743641-3d0d-46a1-bb9d-919b5e69026e",
     "table": "perks",
     "category": "perks",
@@ -3900,6 +4461,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "bc84be48-ef93-4f1a-8b0d-9a8cb393be73",
     "table": "perks",
     "category": "perks",
@@ -3914,6 +4476,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "e6faf4d7-f845-460c-b21c-2baab3229bc0",
     "table": "occupations",
     "category": "perks",
@@ -3927,6 +4490,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "9e4bce62-e815-4f67-99d2-a47352cedc8d",
     "table": "perks",
     "category": "perks",
@@ -3941,6 +4505,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "04120d1f-c5cb-46d0-8d98-8cf7bb35c831",
     "table": "occupations",
     "category": "perks",
@@ -3954,6 +4519,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "56f7b36d-b964-47da-91de-e6dc74055b59",
     "table": "occupations",
     "category": "perks",
@@ -3967,6 +4533,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "18c060fa-e5c7-496e-8074-c29073187bb1",
     "table": "perks",
     "category": "perks",
@@ -3981,6 +4548,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "0f895213-a642-4deb-89db-e467e0be7a03",
     "table": "perks",
     "category": "perks",
@@ -3995,6 +4563,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "72b6cf79-5713-4e4e-bdb3-895361e60ef2",
     "table": "occupations",
     "category": "perks",
@@ -4008,6 +4577,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "1db5103e-1dd6-475a-930d-8be7e44a0fcb",
     "table": "perks",
     "category": "perks",
@@ -4022,6 +4592,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "a0aaba6b-df2f-4715-b4cf-1f73c85de1e5",
     "table": "perks",
     "category": "perks",
@@ -4036,6 +4607,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "ef3e79cb-d639-4211-b43b-13e8fd30f4d8",
     "table": "perks",
     "category": "perks",
@@ -4050,6 +4622,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "076c252b-4557-424d-b653-4107e4480368",
     "table": "perks",
     "category": "perks",
@@ -4064,6 +4637,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "fc1680fc-a8b8-4e50-b00c-84cc490be9dd",
     "table": "occupations",
     "category": "perks",
@@ -4077,6 +4651,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "a2c6313d-2c85-400a-9681-e002d03360f0",
     "table": "perks",
     "category": "perks",
@@ -4091,6 +4666,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "3af533f0-c669-4651-9ba9-641232a4310d",
     "table": "perks",
     "category": "perks",
@@ -4105,6 +4681,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "c2ac1633-0d0b-4958-b8ba-2b239e7badc2",
     "table": "perks",
     "category": "perks",
@@ -4119,6 +4696,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "baea4c68-599b-40cf-9507-e7f60e47ad81",
     "table": "perks",
     "category": "perks",
@@ -4133,6 +4711,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "1d8b78aa-5a9b-4464-8a68-550056085e90",
     "table": "perks",
     "category": "perks",
@@ -4147,6 +4726,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "236ce287-5f76-4828-ad66-96db528832aa",
     "table": "occupations",
     "category": "perks",
@@ -4160,6 +4740,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "2b65f0f1-cf23-4200-9b81-e13a5f190ab6",
     "table": "perks",
     "category": "perks",
@@ -4174,6 +4755,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "17ee99d3-0a0d-474e-90d8-11a605f14ce6",
     "table": "perks",
     "category": "perks",
@@ -4188,6 +4770,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "776d7f91-f059-40b5-b1ae-449f9a7985b0",
     "table": "perks",
     "category": "perks",
@@ -4202,6 +4785,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "e33dc002-21d0-439a-bb62-8a50b4bd7609",
     "table": "toolbelts",
     "category": "toolbelts",
@@ -4210,12 +4794,15 @@
     "description": "Analog tool for finding direction.",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/toolbelts/0.3276168486531016.PNG",
     "attributes": {
+      "price": 1200,
+      "sell_price": 200,
       "use_function": "Navigation",
       "rarity": "Rare"
     },
     "relations": []
   },
   {
+    "details": {},
     "id": "97a63e65-bc39-42cc-b330-c70e38361d9a",
     "table": "toolbelts",
     "category": "toolbelts",
@@ -4224,12 +4811,15 @@
     "description": "handheld light source.",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/toolbelts/0.6524494062598688.png",
     "attributes": {
+      "price": 1200,
+      "sell_price": 200,
       "use_function": "Light Source",
       "rarity": "Common"
     },
     "relations": []
   },
   {
+    "details": {},
     "id": "cc3d7d71-70cc-4e35-8f1f-325b91807aa2",
     "table": "toolbelts",
     "category": "toolbelts",
@@ -4238,12 +4828,15 @@
     "description": "Portable device that shows your position on the map.",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/toolbelts/0.9757863607158788.PNG",
     "attributes": {
+      "price": 1500,
+      "sell_price": 300,
       "use_function": "Navigation",
       "rarity": "Legendary"
     },
     "relations": []
   },
   {
+    "details": {},
     "id": "2667d213-4779-468e-b91b-0688f60d887c",
     "table": "toolbelts",
     "category": "toolbelts",
@@ -4259,6 +4852,20 @@
     "relations": []
   },
   {
+    "details": {
+      "performance": [
+        {
+          "label": "Luminosity",
+          "value": 85,
+          "max": 100
+        },
+        {
+          "label": "Power Efficiency",
+          "value": 50,
+          "max": 100
+        }
+      ]
+    },
     "id": "e82f8822-a5f0-4277-8150-fc4c08e49002",
     "table": "toolbelts",
     "category": "toolbelts",
@@ -4267,6 +4874,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762905237134_ChatGPT%20Image%2011%20nov%202025,%2023_46_12.png",
     "attributes": {
+      "price": 1000,
+      "sell_price": 250,
       "weight": 2.5,
       "size": "6x4",
       "storage_capacity": 0,
@@ -4276,6 +4885,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "043a7c01-f421-40ec-bf46-c4fc64af2e02",
     "table": "toolbelts",
     "category": "toolbelts",
@@ -4284,12 +4894,15 @@
     "description": "Compact handheld light source.",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/toolbelts/0.5756179761709962.PNG",
     "attributes": {
+      "price": 1500,
+      "sell_price": 300,
       "use_function": "Light source",
       "rarity": "Uncommon"
     },
     "relations": []
   },
   {
+    "details": {},
     "id": "bff29dc3-827a-4298-8330-075602f4a26d",
     "table": "toolbelts",
     "category": "toolbelts",
@@ -4306,6 +4919,9 @@
     "relations": []
   },
   {
+    "details": {
+      "performance": []
+    },
     "id": "9dcd715a-5cae-433b-8597-09d4f02dcb84",
     "table": "toolbelts",
     "category": "toolbelts",
@@ -4323,6 +4939,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "f8bcd338-113d-4add-9e71-5baefb6f3d66",
     "table": "vehicle_components",
     "category": "vehicle-parts",
@@ -4371,6 +4988,7 @@
     ]
   },
   {
+    "details": {},
     "id": "f4d0a2ca-87a5-4590-b470-aa224c010931",
     "table": "vehicle_components",
     "category": "vehicle-parts",
@@ -4382,6 +5000,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "0b5aa174-c6fe-41e0-bae4-a9ee63904662",
     "table": "vehicle_components",
     "category": "vehicle-parts",
@@ -4430,6 +5049,7 @@
     ]
   },
   {
+    "details": {},
     "id": "f9fbc75b-4cd2-4324-a790-afdcd4d28f41",
     "table": "vehicle_components",
     "category": "vehicle-parts",
@@ -4472,6 +5092,7 @@
     ]
   },
   {
+    "details": {},
     "id": "7ffb9800-e789-4ff7-8d65-913208b41820",
     "table": "vehicle_components",
     "category": "vehicle-parts",
@@ -4520,6 +5141,7 @@
     ]
   },
   {
+    "details": {},
     "id": "17ae6ddb-ee64-4580-82fb-f039830c12fe",
     "table": "vehicle_components",
     "category": "vehicle-parts",
@@ -4568,6 +5190,7 @@
     ]
   },
   {
+    "details": {},
     "id": "819edb52-0bd3-452f-a49b-a984badcd801",
     "table": "vehicle_components",
     "category": "vehicle-parts",
@@ -4616,6 +5239,7 @@
     ]
   },
   {
+    "details": {},
     "id": "9d3611ba-859a-4923-b5c3-6b1aba95a85e",
     "table": "vehicle_components",
     "category": "vehicle-parts",
@@ -4634,6 +5258,7 @@
     ]
   },
   {
+    "details": {},
     "id": "e8fa4766-eb70-43bf-91f0-3e0ba0c6cffe",
     "table": "vehicles",
     "category": "vehicles",
@@ -4650,6 +5275,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "f54469fc-75a7-4e8e-9dfc-b364e89acf23",
     "table": "vehicles",
     "category": "vehicles",
@@ -4667,6 +5293,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "4a998e7b-72c6-4dfc-bd9c-903e5f9987e8",
     "table": "vehicles",
     "category": "vehicles",
@@ -4687,6 +5314,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "671f8ed2-5691-4e8f-96ff-34d138b8c52a",
     "table": "vehicles",
     "category": "vehicles",
@@ -4729,6 +5357,7 @@
     ]
   },
   {
+    "details": {},
     "id": "7cb8ae59-02c7-4ccb-8c8f-64c2345860a7",
     "table": "vehicles",
     "category": "vehicles",
@@ -4750,6 +5379,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "e983254e-0566-4159-9b98-071912c708c3",
     "table": "vehicles",
     "category": "vehicles",
@@ -4798,6 +5428,7 @@
     ]
   },
   {
+    "details": {},
     "id": "76e6b98f-9dc7-4add-821e-1557fa4f7414",
     "table": "vehicles",
     "category": "vehicles",
@@ -4838,6 +5469,7 @@
     "disambiguator": "76e6b98f"
   },
   {
+    "details": {},
     "id": "f93877c4-e568-4390-a7c1-3a1b3e21b537",
     "table": "vehicles",
     "category": "vehicles",
@@ -4859,6 +5491,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "c1fc6832-5b0c-488c-8acc-fad7aac26298",
     "table": "vehicles",
     "category": "vehicles",
@@ -4914,6 +5547,7 @@
     ]
   },
   {
+    "details": {},
     "id": "67fc97ba-1312-45bb-9c5f-96a23f24c5a0",
     "table": "vehicles",
     "category": "vehicles",
@@ -4983,6 +5617,7 @@
     ]
   },
   {
+    "details": {},
     "id": "3e7157c5-fa7d-4996-8624-23027f2680da",
     "table": "vehicles",
     "category": "vehicles",
@@ -5038,6 +5673,7 @@
     ]
   },
   {
+    "details": {},
     "id": "d03c51e3-8d1e-4f1b-b9a4-b49db6b658c7",
     "table": "vehicles",
     "category": "vehicles",
@@ -5058,6 +5694,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "fdb0f56e-18e5-41ab-9ebe-0385cf234c46",
     "table": "vehicles",
     "category": "vehicles",
@@ -5120,6 +5757,7 @@
     ]
   },
   {
+    "details": {},
     "id": "25f8a781-a5d1-4619-b53b-262e5751d887",
     "table": "vehicles",
     "category": "vehicles",
@@ -5141,6 +5779,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "20d63c49-f74c-4880-a596-0aaf7b9b8da8",
     "table": "vehicles",
     "category": "vehicles",
@@ -5184,6 +5823,7 @@
     ]
   },
   {
+    "details": {},
     "id": "bcf9c739-9159-44eb-8b65-4c00a9435998",
     "table": "weapons",
     "category": "weapons",
@@ -5192,6 +5832,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762307132232_1887.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "ammo": "12 Gauge",
       "damage": 10,
       "accuracy": 100,
@@ -5210,6 +5852,7 @@
     ]
   },
   {
+    "details": {},
     "id": "0e250f0a-d101-4a02-9a29-642673fa3f32",
     "table": "weapons",
     "category": "weapons",
@@ -5218,6 +5861,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762217325472_1911.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "ammo": ".45ACP",
       "damage": 30,
       "accuracy": 100,
@@ -5242,6 +5887,7 @@
     ]
   },
   {
+    "details": {},
     "id": "0508cb49-358c-46b6-9415-a72f5f756dd5",
     "table": "weapons",
     "category": "weapons",
@@ -5250,6 +5896,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762217389246_1911%20tactical.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "ammo": ".45ACP",
       "damage": 50,
       "accuracy": 100,
@@ -5268,6 +5916,7 @@
     ]
   },
   {
+    "details": {},
     "id": "db5badd2-9915-4bd3-905d-2f7ef55d902d",
     "table": "weapons",
     "category": "weapons",
@@ -5276,6 +5925,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762306596955_ak47.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "ammo": "5.45x39",
       "damage": 60,
       "accuracy": 100,
@@ -5294,6 +5945,7 @@
     ]
   },
   {
+    "details": {},
     "id": "6fdf6eb7-6247-43ac-8afd-b77d45991cc2",
     "table": "weapons",
     "category": "weapons",
@@ -5302,6 +5954,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/weapons/0.9922093493184025.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "ammo": "5.45x39",
       "damage": 60,
       "accuracy": 100,
@@ -5320,6 +5974,7 @@
     ]
   },
   {
+    "details": {},
     "id": "5592aec0-1895-44ef-8c53-8d7be1488ec0",
     "table": "weapons",
     "category": "weapons",
@@ -5328,6 +5983,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762306763200_akm.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "ammo": "7.62x39",
       "damage": 60,
       "accuracy": 100,
@@ -5346,6 +6003,7 @@
     ]
   },
   {
+    "details": {},
     "id": "432e539b-cb42-4393-90ce-61ee29403023",
     "table": "weapons",
     "category": "weapons",
@@ -5354,6 +6012,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/weapons/0.5926247425667329.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "ammo": "9x39",
       "damage": 90,
       "accuracy": 100,
@@ -5378,6 +6038,7 @@
     ]
   },
   {
+    "details": {},
     "id": "42deaf30-8c23-4560-9f29-5de2e907f5d7",
     "table": "weapons",
     "category": "weapons",
@@ -5386,6 +6047,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762306717251_c7a1.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "ammo": "5.56x45",
       "damage": 80,
       "accuracy": 100,
@@ -5410,6 +6073,7 @@
     ]
   },
   {
+    "details": {},
     "id": "6ceaaa5d-6503-49d7-bf6f-486c82e0b308",
     "table": "weapons",
     "category": "weapons",
@@ -5418,6 +6082,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/weapons/0.33787090927399244.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "ammo": "5.45x39",
       "damage": 85,
       "accuracy": 100,
@@ -5442,6 +6108,7 @@
     ]
   },
   {
+    "details": {},
     "id": "4558c826-0b93-46f5-895b-3805fa0c9722",
     "table": "weapons",
     "category": "weapons",
@@ -5461,6 +6128,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "92431324-500e-47b0-b765-9e97d52dda80",
     "table": "weapons",
     "category": "weapons",
@@ -5469,6 +6137,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762217292989_Eder17.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "ammo": "9x19",
       "damage": 60,
       "accuracy": 100,
@@ -5511,6 +6181,7 @@
     ]
   },
   {
+    "details": {},
     "id": "e286c493-7629-473c-8253-b21899575876",
     "table": "weapons",
     "category": "weapons",
@@ -5519,6 +6190,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762217260874_Eder18c.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "ammo": "9x19",
       "damage": 90,
       "accuracy": 100,
@@ -5537,6 +6210,7 @@
     ]
   },
   {
+    "details": {},
     "id": "6db18843-b051-4823-8c7c-df521a4eaf64",
     "table": "weapons",
     "category": "weapons",
@@ -5557,6 +6231,9 @@
     "relations": []
   },
   {
+    "details": {
+      "audio_url": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/weapons/sounds/HK_Fire_3.ogg"
+    },
     "id": "d2feae98-2d31-456a-a1f3-ca905c210f8e",
     "table": "weapons",
     "category": "weapons",
@@ -5565,6 +6242,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762257484415_ChatGPT%20Image%204%20nov%202025,%2012_57_53.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "ammo": "5.56x45",
       "damage": 50,
       "accuracy": 100,
@@ -5607,6 +6286,7 @@
     ]
   },
   {
+    "details": {},
     "id": "4af3a14e-877f-4664-8ff9-252e2e777716",
     "table": "weapons",
     "category": "weapons",
@@ -5615,6 +6295,7 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762210633589_tec.png",
     "attributes": {
+      "price": 1000,
       "ammo": "9x19",
       "damage": 30,
       "accuracy": 100,
@@ -5632,6 +6313,7 @@
     ]
   },
   {
+    "details": {},
     "id": "e096bde0-3afb-4dac-9c38-603f91a61914",
     "table": "weapons",
     "category": "weapons",
@@ -5640,6 +6322,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762307214168_enfield.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "ammo": ".303",
       "damage": 50,
       "accuracy": 100,
@@ -5658,6 +6342,7 @@
     ]
   },
   {
+    "details": {},
     "id": "943216c8-0518-45d7-8f8f-1f8cd9128de6",
     "table": "weapons",
     "category": "weapons",
@@ -5666,6 +6351,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762306684169_m16.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "ammo": "5.56x45",
       "damage": 5,
       "accuracy": 100,
@@ -5690,6 +6377,7 @@
     ]
   },
   {
+    "details": {},
     "id": "391e5831-b8fc-4764-8cd0-be2d08857a93",
     "table": "weapons",
     "category": "weapons",
@@ -5698,6 +6386,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762307413940_000000070016000531d13a7eb9ebb1380000000000000000000000028250b485.webp",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "ammo": ".357",
       "damage": 5,
       "accuracy": 100,
@@ -5716,6 +6406,9 @@
     ]
   },
   {
+    "details": {
+      "performance": []
+    },
     "id": "9b7d0b73-a45a-43cb-baf9-e4da5c7f4e2c",
     "table": "weapons",
     "category": "weapons",
@@ -5724,6 +6417,8 @@
     "description": "A modern hunting and trap shooting shotgun.",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762307094581_m2.png",
     "attributes": {
+      "price": 2380,
+      "sell_price": 2380,
       "ammo": "12 Gauge",
       "damage": 0,
       "accuracy": 50,
@@ -5751,6 +6446,7 @@
     ]
   },
   {
+    "details": {},
     "id": "ddba8924-d802-44c1-b491-4cba3a375019",
     "table": "weapons",
     "category": "weapons",
@@ -5759,6 +6455,8 @@
     "description": "22",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/weapons/0.9260917342343873.png",
     "attributes": {
+      "price": 1200,
+      "sell_price": 400,
       "damage": 20,
       "weight": 2,
       "size": "x",
@@ -5771,6 +6469,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "44d3b657-e473-42c0-a776-cbfff2576633",
     "table": "weapons",
     "category": "weapons",
@@ -5791,6 +6490,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "f626b261-aa68-4ec5-a5ce-87f1808dc175",
     "table": "weapons",
     "category": "weapons",
@@ -5799,6 +6499,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762217177570_maxim.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "ammo": "9x19",
       "damage": 60,
       "accuracy": 100,
@@ -5817,6 +6519,7 @@
     ]
   },
   {
+    "details": {},
     "id": "898d31e1-f8f4-4839-9a28-cc97900902a7",
     "table": "weapons",
     "category": "weapons",
@@ -5825,6 +6528,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762217418599_22lr.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "ammo": ".22LR",
       "damage": 60,
       "accuracy": 100,
@@ -5849,6 +6554,9 @@
     ]
   },
   {
+    "details": {
+      "performance": []
+    },
     "id": "1967d986-3827-41eb-8b93-02e0a0885007",
     "table": "weapons",
     "category": "weapons",
@@ -5857,6 +6565,8 @@
     "description": "Big boom. Perfect for moose-hunting.",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762306993277_Mooseberg500.png",
     "attributes": {
+      "price": 1825,
+      "sell_price": 1825,
       "ammo": "12 Gauge",
       "damage": 10,
       "accuracy": 100,
@@ -5883,6 +6593,7 @@
     ]
   },
   {
+    "details": {},
     "id": "5817ce58-9602-415a-9dac-17714816cc09",
     "table": "weapons",
     "category": "weapons",
@@ -5891,6 +6602,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762307266380_mossin.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "ammo": "7.62X54",
       "damage": 5,
       "accuracy": 100,
@@ -5909,6 +6622,7 @@
     ]
   },
   {
+    "details": {},
     "id": "b5452d0f-848f-4a08-a019-f65d0ea01f06",
     "table": "weapons",
     "category": "weapons",
@@ -5917,6 +6631,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762306581284_mp5.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "ammo": "9x19",
       "damage": 80,
       "accuracy": 100,
@@ -5941,6 +6657,7 @@
     ]
   },
   {
+    "details": {},
     "id": "954ace27-18a6-4cc5-9801-41730913a6fb",
     "table": "weapons",
     "category": "weapons",
@@ -5949,6 +6666,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762306508040_mp5k.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "ammo": "9x19",
       "damage": 90,
       "accuracy": 100,
@@ -5967,6 +6686,7 @@
     ]
   },
   {
+    "details": {},
     "id": "a2bac8ff-1eea-4706-a1ef-dbb75e0d3cbe",
     "table": "weapons",
     "category": "weapons",
@@ -5975,6 +6695,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/weapons/0.47752000865285904.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "ammo": "4.6x30",
       "damage": 100,
       "accuracy": 100,
@@ -6005,6 +6727,7 @@
     ]
   },
   {
+    "details": {},
     "id": "39fc7da0-90c4-45d4-836e-748e059c3054",
     "table": "weapons",
     "category": "weapons",
@@ -6013,6 +6736,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762306375108_p90.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "ammo": "5.7x28",
       "damage": 90,
       "accuracy": 100,
@@ -6031,6 +6756,7 @@
     ]
   },
   {
+    "details": {},
     "id": "1b02151e-6669-4053-b169-dd535b5cebed",
     "table": "weapons",
     "category": "weapons",
@@ -6039,6 +6765,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/weapons/0.10199691975756353.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "ammo": "9x18",
       "damage": 60,
       "accuracy": 100,
@@ -6063,6 +6791,7 @@
     ]
   },
   {
+    "details": {},
     "id": "5fb0e7ec-8570-4bac-a19d-b903205e3975",
     "table": "weapons",
     "category": "weapons",
@@ -6071,6 +6800,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762307332487_r700.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "ammo": "7.62x51",
       "damage": 5,
       "accuracy": 100,
@@ -6107,6 +6838,7 @@
     ]
   },
   {
+    "details": {},
     "id": "e63f9768-f01f-4109-b110-c67990c65096",
     "table": "weapons",
     "category": "weapons",
@@ -6115,6 +6847,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762307048250_R870.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "ammo": "12 Gauge",
       "damage": 10,
       "accuracy": 35,
@@ -6139,6 +6873,9 @@
     ]
   },
   {
+    "details": {
+      "performance": []
+    },
     "id": "01266af4-5280-4f55-ad5d-412e6e310c09",
     "table": "weapons",
     "category": "weapons",
@@ -6147,6 +6884,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762210570245_ragingbull.png",
     "attributes": {
+      "price": 1000,
+      "sell_price": 500,
       "ammo": ".357",
       "damage": 0,
       "accuracy": 100,
@@ -6197,6 +6936,7 @@
     ]
   },
   {
+    "details": {},
     "id": "80e6ce4c-6739-40a8-a176-c3a2833841fa",
     "table": "weapons",
     "category": "weapons",
@@ -6205,6 +6945,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/weapons/0.736533865572631.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "ammo": ".22LR",
       "damage": 50,
       "accuracy": 100,
@@ -6223,6 +6965,7 @@
     ]
   },
   {
+    "details": {},
     "id": "6a5abd08-7d74-40db-8bab-11ec2476d4ce",
     "table": "weapons",
     "category": "weapons",
@@ -6242,6 +6985,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "4bfc1881-4d75-4a85-8be3-5b8dff19ef5f",
     "table": "weapons",
     "category": "weapons",
@@ -6250,6 +6994,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762360948690_sledgehammer01.webp",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "damage": 30,
       "accuracy": 0,
       "rate_of_fire": 0,
@@ -6265,6 +7011,7 @@
     "relations": []
   },
   {
+    "details": {},
     "id": "09fc7943-1849-4cf1-b3be-8c5d11e71d28",
     "table": "weapons",
     "category": "weapons",
@@ -6273,6 +7020,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762307172219_svd%20dragunov.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "ammo": "7.62X54",
       "damage": 30,
       "accuracy": 100,
@@ -6297,6 +7046,7 @@
     ]
   },
   {
+    "details": {},
     "id": "ab5a6535-1424-4fec-9219-0b92c736dac5",
     "table": "weapons",
     "category": "weapons",
@@ -6305,6 +7055,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762307305298_svt.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "ammo": "7.62X54",
       "damage": 25,
       "accuracy": 100,
@@ -6329,6 +7081,7 @@
     ]
   },
   {
+    "details": {},
     "id": "d78c7506-5da9-4db0-981b-5d0bfeab00a9",
     "table": "weapons",
     "category": "weapons",
@@ -6337,6 +7090,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762306383859_uzi.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "ammo": "9x19",
       "damage": 60,
       "accuracy": 100,
@@ -6355,6 +7110,7 @@
     ]
   },
   {
+    "details": {},
     "id": "13b24dcd-1f36-4b52-a650-303b7f14e8ec",
     "table": "weapons",
     "category": "weapons",
@@ -6363,6 +7119,8 @@
     "description": "",
     "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762306802964_vz58.png",
     "attributes": {
+      "price": 0,
+      "sell_price": 0,
       "ammo": "7.62x39",
       "damage": 80,
       "accuracy": 100,
@@ -6381,6 +7139,7 @@
     ]
   },
   {
+    "details": {},
     "id": "05f3f9cf-0a30-4bfc-87e2-990f9adfd4d1",
     "table": "weapons",
     "category": "weapons",

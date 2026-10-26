@@ -25,7 +25,7 @@ async function read(table) {
   }
 }
 const database = Object.fromEntries(await Promise.all([...Object.keys(tables), ...relations].map(async table => [table, await read(table)])));
-const statFields = ['damage_modifier', 'rate_of_fire_modifier', 'accuracy_modifier', 'capacity_modifier', 'ammo', 'type', 'damage', 'accuracy', 'rate_of_fire', 'capacity', 'weight', 'size', 'handling', 'melee_range', 'attack_speed', 'stamina_efficiency', 'inventory_slots', 'insulation', 'bleed_protection', 'blunt_protection', 'fire_protection', 'armor_rating', 'storage_capacity', 'use_function', 'hydration', 'energy', 'health', 'is_refillable', 'requires_can_opener', 'is_safe_to_eat_raw', 'speed', 'driving_handling', 'occupants', 'fuel_capacity', 'use_case', 'spawn_locations', 'location', 'points', 'is_lethal', 'slots', 'use'];
+const statFields = ['price', 'sell_price', 'armor_value','damage_modifier', 'rate_of_fire_modifier', 'accuracy_modifier', 'capacity_modifier', 'ammo', 'type', 'damage', 'accuracy', 'rate_of_fire', 'capacity', 'weight', 'size', 'handling', 'melee_range', 'attack_speed', 'stamina_efficiency', 'inventory_slots', 'insulation', 'bleed_protection', 'blunt_protection', 'fire_protection', 'armor_rating', 'storage_capacity', 'use_function', 'hydration', 'energy', 'health', 'is_refillable', 'requires_can_opener', 'is_safe_to_eat_raw', 'speed', 'driving_handling', 'occupants', 'fuel_capacity', 'use_case', 'spawn_locations', 'location', 'points', 'is_lethal', 'slots', 'use'];
 const text = value => typeof value === 'string' ? value.replace(/<[^>]*>/g, '').trim() : '';
 const records = [];
 for (const [table, category] of Object.entries(tables)) for (const row of database[table]) {
@@ -37,7 +37,11 @@ for (const [table, category] of Object.entries(tables)) for (const row of databa
   const subcategory = database.wiki_subcategories.find(r => r.id === row.subcategory_id)?.name || row.category;
   if (rarity) attributes.rarity = rarity;
   if (subcategory) attributes.subcategory = subcategory;
-  records.push({ id: row.id, table, category, slug, name: text(row.name), description: text(row.description), image: /^https:\/\//.test(row.image_url || '') ? row.image_url : null, attributes, relations: [] });
+  const details = {};
+  if (Array.isArray(row.stats)) details.performance = row.stats.filter(stat => stat && typeof stat.label === 'string' && Number.isFinite(Number(stat.value))).map(stat => ({ label: text(stat.label), value: Number(stat.value), max: Number(stat.max) || 0 }));
+  if (row.side_effects && typeof row.side_effects === 'object' && !Array.isArray(row.side_effects)) details.sideEffects = Object.fromEntries(Object.entries(row.side_effects).filter(([,v]) => ['string','number','boolean'].includes(typeof v)).map(([k,v]) => [text(k), typeof v === 'string' ? text(v) : v]));
+  for (const field of ['image_unpacked_url', 'model_url', 'audio_url']) if (/^https:\/\//.test(row[field] || '')) details[field] = row[field];
+  records.push({ details, id: row.id, table, category, slug, name: text(row.name), description: text(row.description), image: /^https:\/\//.test(row.image_url || '') ? row.image_url : null, attributes, relations: [] });
 }
 // Preserve the legacy name URL for the first record, and give same-name records
 // stable identities rather than silently dropping them from the catalogue.
