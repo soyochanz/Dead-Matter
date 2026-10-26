@@ -1,4 +1,7 @@
 export const newsTopics = {
+  crowdfunding: { en: 'Crowdfunding', es: 'Financiación colectiva' },
+  kickstarter: { en: 'Kickstarter', es: 'Kickstarter' },
+  indiegogo: { en: 'Indiegogo', es: 'Indiegogo' },
   updates: { en: 'Game updates', es: 'Actualizaciones' },
   development: { en: 'Development', es: 'Desarrollo' },
   multiplayer: { en: 'Multiplayer', es: 'Multijugador' },
@@ -12,6 +15,7 @@ export const newsTopics = {
 };
 
 const articleTopics = {
+  'dead-matter-crowdfunding-kickstarter-indiegogo-history': ['crowdfunding', 'kickstarter', 'indiegogo', 'community', 'development'],
   'development-outlook-october-2026': ['updates', 'development', 'multiplayer'],
   'community-and-development-team': ['community', 'development', 'canmore'],
   'infected-rebuild-preview': ['infected', 'survival', 'multiplayer'],
@@ -32,6 +36,7 @@ export function relatedNews(article, articles) {
 
 export const wikiLinksFor = article => {
   const links = {
+    'dead-matter-crowdfunding-kickstarter-indiegogo-history': [{ path: '/dead-matter-game', en: 'Dead Matter game overview', es: 'Información del juego Dead Matter' }, { path: '/updates', en: 'Released patch notes', es: 'Notas de parches publicados' }, { path: '/micro-changes', en: 'Development commits', es: 'Commits del desarrollo' }],
     'development-outlook-october-2026': [{ path: '/updates', en: 'Released patch notes', es: 'Notas de parches publicados' }, { path: '/micro-changes', en: 'Development commits', es: 'Commits de desarrollo' }],
     'community-and-development-team': [{ path: '/guides', en: 'Community survival guides', es: 'Guías de supervivencia de la comunidad' }],
     'infected-rebuild-preview': [{ path: '/wiki/meds', en: 'Medicine and survival', es: 'Medicina y supervivencia' }, { path: '/wiki/basebuilding', en: 'Basebuilding guide', es: 'Guía de construcción' }],

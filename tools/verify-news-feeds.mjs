@@ -56,7 +56,13 @@ test('every news article and imported commit has traceable source metadata', () 
     for (const language of ['en', 'es']) assert.ok(item.title[language] && item.summary[language] && item.body[language].length);
     assert.ok(item.sources.length);
     assert.ok(item.sourceDate <= item.date);
-    for (const source of item.sources) assert.match(source.url, /^https:\/\/discord\.com\/channels\/\d+\/\d+\/\d+$/);
+    for (const source of item.sources) {
+      const url = new URL(source.url);
+      assert.equal(url.protocol, 'https:');
+      assert.ok(source.label && url.pathname !== '/');
+      assert.ok(['discord.com', 'www.kickstarter.com', 'www.indiegogo.com', 'store.steampowered.com'].includes(url.hostname));
+      if (url.hostname === 'discord.com') assert.match(url.pathname, /^\/channels\/\d+\/\d+\/\d+$/);
+    }
   }
   assert.equal(new Set(discordCommits.map(item => item.commit_hash)).size, discordCommits.length);
   for (const item of discordCommits) {

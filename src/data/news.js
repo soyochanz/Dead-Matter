@@ -1,9 +1,11 @@
+import { crowdfundingNews } from './crowdfundingNews.js';
 // Editorial summaries. Source dates are separate from publication dates;
 // announced work must not be presented as a released patch.
 const general = 'https://discord.com/channels/268929973882978308/337281364921679882/';
 const sneak = 'https://discord.com/channels/268929973882978308/1202363220585881680/';
 
 export const news = [
+  crowdfundingNews,
   {
     slug: 'development-outlook-october-2026', category: 'development', date: '2026-10-26', sourceDate: '2026-10-23',
     title: { en: 'A playable build in 2026? What Johnny actually said', es: '¿Una build jugable en 2026? Lo que dijo Johnny' },
