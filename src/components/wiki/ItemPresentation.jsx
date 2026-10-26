@@ -31,6 +31,7 @@ export default function ItemPresentation({ item, items, language }) {
   const copy = catalogCopy[language];
   const stats = keyStats(item);
   const related = items.filter(entry=>entry.slug!==item.slug).sort((a,b)=>Number(b.attributes.subcategory===item.attributes.subcategory)-Number(a.attributes.subcategory===item.attributes.subcategory)).slice(0,4);
+  const toolLabel = localized(item.details?.model_url ? ['3D viewer & item tools','Visor 3D y funciones del objeto','Visualizador 3D e ferramentas'] : item.category === 'consumables' && item.relations.some(link=>link.kind==='cooked') ? ['Open cooking simulator','Abrir simulador de cocina','Abrir simulador de cozinha'] : ['Open classic detail view','Abrir ficha clásica','Abrir ficha clássica'],language);
   const interactive = !['ammo','materials','vehicle-parts'].includes(item.category);
   return <div className="wiki-item-detail" style={{'--item-accent':itemAccent(item.category)}}>
     <div className="wiki-item-overview">
@@ -44,7 +45,7 @@ export default function ItemPresentation({ item, items, language }) {
         <div className="wiki-item-section-heading"><div><p className="wiki-item-eyebrow">{copy.entry}</p><h2>{copy.details}</h2></div><SlidersHorizontal size={20} aria-hidden="true"/></div>
         <ItemSections item={item} language={language}/>
         {!Object.keys(item.attributes).length && <p className="wiki-item-muted">{copy.unknown}</p>}
-        {interactive && <Link className="wiki-item-action" to={`/wiki/${item.category}?view=interactive&item=${item.slug}&record=${item.id}`}><SlidersHorizontal size={16} aria-hidden="true"/>{copy.tools}<ArrowUpRight size={17} aria-hidden="true"/></Link>}
+        {interactive && <Link className="wiki-item-action" to={`/wiki/${item.category}?view=interactive&item=${item.slug}&record=${item.id}`}><SlidersHorizontal size={16} aria-hidden="true"/>{toolLabel}<ArrowUpRight size={17} aria-hidden="true"/></Link>}
       </section>
     </div>
     <ExtraItemSections item={item} language={language}/>

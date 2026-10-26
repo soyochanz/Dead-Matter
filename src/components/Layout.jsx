@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
@@ -13,6 +13,8 @@ const Layout = ({ children }) => {
   const { authLoaded } = useAuth();
   const location = useLocation();
   const { t, i18n } = useTranslation();
+
+  useEffect(() => { window.scrollTo({ top: 0, left: 0, behavior: 'instant' }); }, [location.pathname]);
 
   const isMapPage = location.pathname === '/map';
 

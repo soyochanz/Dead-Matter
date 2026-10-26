@@ -1,3 +1,4 @@
+import { ArrowLeft } from 'lucide-react';
 import ItemPresentation, { ItemCard, itemAccent } from '@/components/wiki/ItemPresentation';
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
@@ -47,10 +48,11 @@ export default function WikiCatalogPage({ category: categoryProp, metadataOnly =
       {!missing && <script type="application/ld+json">{jsonLd({ '@context': 'https://schema.org', '@graph': graph })}</script>}
     </Helmet>
     {!metadataOnly && <article className="wiki-catalog" style={{'--item-accent':itemAccent(category)}}>
+      <Link className="wiki-back-button" to={slug ? itemPath(category,'',language) : language === 'en' ? '/wiki' : '/' + language + '/wiki'}><ArrowLeft size={16} aria-hidden="true"/>{ { en:'Go back',es:'Volver atrás',pt:'Voltar' }[language] }</Link>
       <nav aria-label="Breadcrumb" className="flex flex-wrap gap-3 text-sm text-slate-400"><Link to={language === 'en' ? '/wiki' : `/${language}/wiki`}>Wiki</Link><span>/</span><Link to={itemPath(category, '', language)}>{name}</Link>{item && <><span>/</span><span className="text-slate-200">{item.name}</span></>}</nav>
       <header className="wiki-catalog__header space-y-4"><p className="text-red-400 text-xs uppercase tracking-widest font-bold">Dead Matter · {copy.entry}</p><h1 className="text-4xl md:text-6xl font-black tracking-tight text-white break-words">{missing ? copy.missing : item ? `${item.name} — Dead Matter` : `Dead Matter ${name}`}</h1><p className="text-slate-400 max-w-3xl leading-relaxed">{missing ? copy.back : item ? description : copy.intro}</p>{item?.disambiguator && <p className="text-xs text-slate-500">{copy.variant}: {item.disambiguator}</p>}</header>
       {item ? <ItemPresentation item={item} items={items} language={language} /> : !missing && <section className="space-y-6"><label className="block max-w-lg text-sm text-slate-400">{copy.search}<input type="search" value={query} onChange={e=>setQuery(e.target.value)} className="block w-full mt-2 bg-white/5 border border-white/15 rounded-xl p-3 text-white" /></label><h2 className="text-lg font-bold text-white">{copy.records} · {filters.length}</h2><div className="wiki-item-grid">{filters.map(entry => <ItemCard key={entry.slug} item={entry} language={language} />)}</div></section>}
-      <nav className="wiki-catalog__footer flex flex-wrap gap-x-5 gap-y-2 text-xs text-slate-400" aria-label={copy.directory}><Link to={language === 'en' ? '/wiki' : `/${language}/wiki`}>{copy.back}</Link>{Object.keys(categoryNames).map(cat => <Link key={cat} to={itemPath(cat,'',language)}>{categoryName(cat,language)}</Link>)}{!['ammo','materials','vehicle-parts'].includes(category) && <Link to={`/wiki/${category}?view=interactive${item ? `&item=${item.slug}&record=${item.id}` : ''}`}>{copy.tools} →</Link>}</nav>
+      <nav className="wiki-catalog__footer flex flex-wrap gap-x-5 gap-y-2 text-xs text-slate-400" aria-label={copy.directory}><Link to={language === 'en' ? '/wiki' : `/${language}/wiki`}>{copy.back}</Link>{Object.keys(categoryNames).map(cat => <Link key={cat} to={itemPath(cat,'',language)}>{categoryName(cat,language)}</Link>)}{!['ammo','materials','vehicle-parts'].includes(category) && <Link to={`/wiki/${category}?view=interactive${item ? `&item=${item.slug}&record=${item.id}` : ''}`}>{{en:'Classic category view',es:'Vista clásica de la categoría',pt:'Vista clássica da categoria'}[language]} →</Link>}</nav>
     </article>}
   </>;
 }
