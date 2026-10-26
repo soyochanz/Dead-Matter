@@ -1,5 +1,5 @@
 import ItemSections, { ExtraItemSections, StatIcon, sectionIcons } from './ItemSections';
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowUpRight, Box, FileText, SlidersHorizontal } from 'lucide-react';
 import { catalog, categoryName, itemPath, fieldName, fieldValue, relationName, catalogCopy, localized } from '@/lib/wikiCatalog';
@@ -29,10 +29,11 @@ export function ItemCard({ item, language, compact = false, quantity }) {
 
 export default function ItemPresentation({ item, items, language }) {
   const copy = catalogCopy[language];
+  const [inventoryQuery, setInventoryQuery] = useState('');
+  const normalize = value => value.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
+  const inventoryMatches = link => link.kind !== 'inventory' || normalize(link.name).includes(normalize(inventoryQuery));
   const stats = keyStats(item);
   const related = items.filter(entry=>entry.slug!==item.slug).sort((a,b)=>Number(b.attributes.subcategory===item.attributes.subcategory)-Number(a.attributes.subcategory===item.attributes.subcategory)).slice(0,4);
-  const toolLabel = localized(item.details?.model_url ? ['3D viewer & item tools','Visor 3D y funciones del objeto','Visualizador 3D e ferramentas'] : item.category === 'consumables' && item.relations.some(link=>link.kind==='cooked') ? ['Open cooking simulator','Abrir simulador de cocina','Abrir simulador de cozinha'] : ['Open classic detail view','Abrir ficha clásica','Abrir ficha clássica'],language);
-  const interactive = !['ammo','materials','vehicle-parts'].includes(item.category);
   return <div className="wiki-item-detail" style={{'--item-accent':itemAccent(item.category)}}>
     <div className="wiki-item-overview">
       <section className="wiki-item-showcase" aria-label={item.name}>
@@ -45,12 +46,11 @@ export default function ItemPresentation({ item, items, language }) {
         <div className="wiki-item-section-heading"><div><p className="wiki-item-eyebrow">{copy.entry}</p><h2>{copy.details}</h2></div><SlidersHorizontal size={20} aria-hidden="true"/></div>
         <ItemSections item={item} language={language}/>
         {!Object.keys(item.attributes).length && <p className="wiki-item-muted">{copy.unknown}</p>}
-        {interactive && <Link className="wiki-item-action" to={`/wiki/${item.category}?view=interactive&item=${item.slug}&record=${item.id}`}><SlidersHorizontal size={16} aria-hidden="true"/>{toolLabel}<ArrowUpRight size={17} aria-hidden="true"/></Link>}
       </section>
     </div>
     <ExtraItemSections item={item} language={language}/>
     {item.description && <section className="wiki-item-description"><FileText size={20} aria-hidden="true"/><div><h2>{language==='en' ? localized(['Description','Descripción','Descrição'],language) : copy.original}</h2><p lang="en">{item.description}</p></div></section>}
-    {[...new Set(item.relations.map(link=>link.kind))].map(kind=><section key={kind} className="wiki-item-section"><div className="wiki-item-section-heading"><h2>{React.createElement(sectionIcons[kind] || Box,{size:20,"aria-hidden":true})}{relationName(kind,language)}</h2><span className="wiki-item-count">{item.relations.filter(link=>link.kind===kind).length}</span></div><ul className="wiki-item-connections">{item.relations.filter(link=>link.kind===kind).map(link=>{const record=byPath.get(`${link.category}/${link.slug}`);return <li key={`${kind}-${link.category}-${link.slug}`}>{record ? <ItemCard item={record} language={language} compact quantity={link.quantity}/> : <Link to={itemPath(link.category,link.slug,language)}>{link.name}</Link>}</li>;})}</ul></section>)}
+    {[...new Set(item.relations.map(link=>link.kind))].map(kind=><section key={kind} className="wiki-item-section"><div className="wiki-item-section-heading"><h2>{React.createElement(sectionIcons[kind] || Box,{size:20,"aria-hidden":true})}{relationName(kind,language)}</h2><span className="wiki-item-count">{item.relations.filter(link=>link.kind===kind && inventoryMatches(link)).length}</span></div>{kind === 'inventory' && <label className="wiki-inventory-search">{localized(['Search items sold by this NPC','Buscar objetos que vende este NPC','Buscar itens vendidos por este NPC'],language)}<input type="search" value={inventoryQuery} onChange={e=>setInventoryQuery(e.target.value)} /></label>}<ul className="wiki-item-connections">{item.relations.filter(link=>link.kind===kind && inventoryMatches(link)).map(link=>{const record=byPath.get(`${link.category}/${link.slug}`);return <li key={`${kind}-${link.category}-${link.slug}`}>{record ? <ItemCard item={record} language={language} compact quantity={link.quantity}/> : <Link to={itemPath(link.category,link.slug,language)}>{link.name}</Link>}</li>;})}</ul>{kind === 'inventory' && !item.relations.some(link=>link.kind===kind && inventoryMatches(link)) && <p role="status" className="wiki-item-muted">{localized(['No matching items.','No hay objetos que coincidan.','Nenhum item encontrado.'],language)}</p>}</section>)}
     {related.length > 0 && <section className="wiki-item-section"><div className="wiki-item-section-heading"><h2>{copy.related}</h2><Link to={itemPath(item.category,'',language)}>{categoryName(item.category,language)} <ArrowUpRight size={15} aria-hidden="true"/></Link></div><div className="wiki-item-grid">{related.map(entry=><ItemCard key={entry.slug} item={entry} language={language}/>)}</div></section>}
     <aside className="wiki-item-source"><FileText size={17} aria-hidden="true"/><div><h2>{copy.source}</h2><p>{copy.note}</p></div></aside>
   </div>;

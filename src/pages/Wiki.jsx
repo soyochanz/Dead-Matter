@@ -1,3 +1,4 @@
+import WikiSearch from '@/components/wiki/WikiSearch';
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
@@ -163,6 +164,7 @@ const Wiki = () => {
             </p>
           </div>
 
+          <WikiSearch language={language} />
           {loading ? (
             <div className="flex justify-center items-center h-64">
               <div className="text-center">

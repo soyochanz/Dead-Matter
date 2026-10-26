@@ -17,7 +17,7 @@ const CatalogRoute = ({ category, interactive }) => {
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   if (interactive && ['meds', 'perks'].includes(category)) return <>{interactive}<WikiCatalogPage category={category} metadataOnly /></>;
-  if (interactive && (query.get('view') === 'interactive' || query.has('preset'))) return <>{interactive}<Helmet><meta name="robots" content="noindex,follow" /><link rel="canonical" href={'https://deadmatterwiki.com/wiki/' + category} /></Helmet></>;
+  if (query.get('view') === 'interactive') return <Navigate replace to={'/wiki/' + category + (query.get('item') ? '/' + encodeURIComponent(query.get('item')) : '')} />;
   return <WikiCatalogPage category={category} />;
 };
 // Lazy load de páginas secundarias
