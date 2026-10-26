@@ -1,13 +1,13 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
-  # Serve the generated news HTML before the SPA fallback (also without a trailing slash).
+  # Serve the generated public HTML before the SPA fallback (also without a trailing slash).
   RewriteCond %{DOCUMENT_ROOT}/$1/index.html -f
-  RewriteRule ^((?:es/)?news(?:/[a-z0-9-]+)?)/?$ $1/index.html [L]
+  RewriteRule ^((?:es/)?news(?:/[a-z0-9-]+)?|(?:es|pt)(?:/(?:wiki|dead-matter-game))?|wiki|dead-matter-game)/?$ $1/index.html [L]
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteCond %{REQUEST_URI} !\.(js|css|gif|png|jpg|jpeg|svg|webp|ico|json|map|woff|woff2|ttf|eot|otf)$ [NC]
-  RewriteRule ^ index.html [L]
+  RewriteRule ^ spa.html [L]
 </IfModule>
 
 <IfModule mod_headers.c>

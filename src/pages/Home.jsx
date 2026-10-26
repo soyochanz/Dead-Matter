@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Helmet } from 'react-helmet';
 import { motion } from 'framer-motion';
 import { BookOpen, MapPin, Image as ImageIcon, ArrowRight, Bell, X, Calendar, Tag, GitCommit, Shield, Car, Backpack, Hammer, ThumbsUp, User, UserCircle, Zap, Video, ExternalLink, ChevronUp, Loader2, Sword, Soup, Stethoscope, Users, Package } from 'lucide-react';
+import CoreSeo, { CoreLanguages, useCoreLanguage } from '@/components/CoreSeo';
+import GameResources from '@/components/GameResources';
+import { corePath } from '@/data/gameGuide';
 import { Link } from 'react-router-dom';
 import { supabase } from '@/lib/mySupabaseClient';
 import { Button } from '@/components/ui/button';
@@ -56,7 +58,7 @@ const GuideCard = ({ guide, index }) => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 24 }}
+      initial={false}
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ y: -6, transition: { duration: 0.2 } }}
       transition={{ delay: index * 0.08, duration: 0.4 }}
@@ -114,7 +116,7 @@ const GuideCard = ({ guide, index }) => {
 // ─── Media Card ───────────────────────────────────────────────────────────────
 const MediaCard = ({ item, index }) => (
   <motion.div
-    initial={{ opacity: 0, scale: 0.96 }}
+    initial={false}
     animate={{ opacity: 1, scale: 1 }}
     transition={{ delay: index * 0.1 }}
     className="group relative aspect-video rounded-xl overflow-hidden"
@@ -252,7 +254,9 @@ const CommitItem = ({ c, i18nLang }) => {
 
 // ─── Home ─────────────────────────────────────────────────────────────────────
 const Home = () => {
-  const { t, i18n } = useTranslation();
+  const language = useCoreLanguage();
+  const { i18n } = useTranslation();
+  const t = i18n.getFixedT(language);
   const [latestUpdates, setLatestUpdates] = useState(() => readFeedCache('home:updates') || []);
   const [latestMedia, setLatestMedia] = useState([]);
   const [latestCommits, setLatestCommits] = useState(() => mergeCommits().slice(0, 8));
@@ -306,10 +310,7 @@ const Home = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Dead Matter Wiki | #1 Community Map, Wiki & Survival Guides</title>
-        <meta name="description" content="The ultimate community resource for Dead Matter. Explore our interactive map, comprehensive wiki, weapon stats, crafting guides, and latest game updates." />
-      </Helmet>
+      <CoreSeo language={language} />
 
       <div className="max-w-7xl mx-auto px-4 py-12 md:py-20 space-y-20">
 
@@ -320,21 +321,21 @@ const Home = () => {
             <div style={{ width: '600px', height: '300px', background: 'radial-gradient(ellipse at center, rgba(239,68,68,0.12) 0%, transparent 70%)', filter: 'blur(40px)' }} />
           </div>
 
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} style={{ position: 'relative' }}>
+          <motion.div initial={false} animate={{ opacity: 1, y: 0 }} style={{ position: 'relative' }}>
             <h1 className="text-6xl md:text-8xl font-black text-white tracking-tighter leading-none">
               {t('home.hero_title')} <span style={{ color: '#ef4444' }}>WIKI</span>
             </h1>
           </motion.div>
 
           <motion.p
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
+            initial={false} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
             className="text-lg text-slate-400 font-medium leading-relaxed max-w-2xl mx-auto"
           >
             {t('home.hero_subtitle')}
           </motion.p>
 
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.4 }}
+            initial={false} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.4 }}
             className="flex flex-wrap justify-center gap-4 pt-4"
           >
             <Button asChild size="lg" className="bg-red-600 hover:bg-red-500 text-white rounded-full px-8 shadow-lg shadow-red-600/20">
@@ -343,7 +344,7 @@ const Home = () => {
             <Button asChild variant="outline" size="lg"
               className="rounded-full px-8"
               style={{ borderColor: 'rgba(255,255,255,0.12)', background: 'rgba(255,255,255,0.04)' }}>
-              <Link to="/wiki"><BookOpen className="mr-2 h-4 w-4" /> {t('home.wiki_button')}</Link>
+              <Link to={corePath(language, 'wiki')}><BookOpen className="mr-2 h-4 w-4" /> {t('home.wiki_button')}</Link>
             </Button>
           </motion.div>
         </section>
@@ -457,66 +458,8 @@ const Home = () => {
           </div>
         </section>
 
-        {/* ── About / Trailer ── */}
-        <section>
-          <div
-            className="rounded-3xl overflow-hidden p-8 md:p-12"
-            style={{
-              background: `linear-gradient(135deg, #13161d 0%, #111318 60%, #0e1014 100%)`,
-              border: `1px solid ${BORDER}`,
-              boxShadow: '0 8px 48px rgba(0,0,0,0.5)',
-            }}
-          >
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-              <div className="space-y-5">
-                {/* Label */}
-                <span className="text-[10px] font-black uppercase tracking-[0.2em] px-3 py-1.5 rounded-full inline-block"
-                  style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)', color: '#f87171' }}>
-                  About the Game
-                </span>
-                <h2 className="text-3xl font-black text-white uppercase tracking-tight leading-tight">
-                  Dead Matter<br />Survival Experience
-                </h2>
-                <div className="space-y-4 text-slate-400 leading-relaxed text-sm">
-                  <p>
-                    <span className="text-red-400 font-bold">Dead Matter</span> is a true sandbox survival horror game
-                    set in the beautiful yet dangerous wilderness of{' '}
-                    <span className="text-white font-semibold">Alberta, Canada</span>.
-                    Players scavenge for resources, craft essential gear, and survive against both infected and other survivors.
-                  </p>
-                  <p>
-                    As the most complete <span className="text-white font-semibold">Dead Matter Wiki</span>, our mission is to
-                    arm you with every technical detail you need — from interactive maps to full weapon stats.
-                  </p>
-                </div>
-                <div className="flex gap-3 pt-2">
-                  <Button asChild size="sm" className="bg-red-600 hover:bg-red-500 rounded-full px-5">
-                    <Link to="/map"><MapPin size={14} className="mr-1.5" /> Explore Map</Link>
-                  </Button>
-                  <Button asChild variant="outline" size="sm"
-                    className="rounded-full px-5"
-                    style={{ borderColor: 'rgba(255,255,255,0.12)', background: 'rgba(255,255,255,0.04)' }}>
-                    <Link to="/wiki"><BookOpen size={14} className="mr-1.5" /> Browse Wiki</Link>
-                  </Button>
-                </div>
-              </div>
-
-              {/* Trailer */}
-              <div className="aspect-video w-full rounded-2xl overflow-hidden shadow-2xl"
-                style={{ border: '1px solid rgba(255,255,255,0.08)' }}>
-                <iframe
-                  width="100%" height="100%"
-                  src="https://www.youtube-nocookie.com/embed/8R0fkYHOpzA"
-                  title="Dead Matter Official Trailer"
-                  frameBorder="0"
-                  allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen loading="lazy"
-                  className="w-full h-full"
-                />
-              </div>
-            </div>
-          </div>
-        </section>
+        <GameResources language={language} compact />
+        <CoreLanguages language={language} />
       </div>
 
       <style>{`

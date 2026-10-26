@@ -1,3 +1,4 @@
+import { corePath, isCorePath } from '@/data/gameGuide';
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -23,6 +24,10 @@ const LanguageSelector = () => {
     const availableLanguages = isNews ? languages.filter(language => language.code !== 'pt') : languages;
     const changeLanguage = code => {
         if (isNews) navigate(`${code === 'es' ? '/es' : ''}${pathname.replace(/^\/es(?=\/news)/, '')}${search}`);
+        if (isCorePath(pathname)) {
+            const page = pathname.replace(/^\/(es|pt)(?=\/|$)/, '').replace(/^\/|\/$/g, '');
+            navigate(corePath(code, page));
+        }
         i18n.changeLanguage(code);
     };
 

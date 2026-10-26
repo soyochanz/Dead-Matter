@@ -7,6 +7,7 @@ import Layout from '@/components/Layout';
 
 // Lazy load de páginas
 // Regular imports for main entry points to avoid chunk loading issues on initial load
+import GameOverview from '@/pages/GameOverview';
 import Home from '@/pages/Home';
 import Wiki from '@/pages/Wiki';
 import { lazyImport } from '@/utils/lazyImport';
@@ -144,6 +145,13 @@ function App() {
         <Route element={<MainLayout />}>
           <Route index element={<Home />} />
           <Route path="wiki" element={<Wiki />} />
+          <Route path="es" element={<Home />} />
+          <Route path="es/wiki" element={<Wiki />} />
+          <Route path="pt" element={<Home />} />
+          <Route path="pt/wiki" element={<Wiki />} />
+          <Route path="dead-matter-game" element={<GameOverview />} />
+          <Route path="es/dead-matter-game" element={<GameOverview />} />
+          <Route path="pt/dead-matter-game" element={<GameOverview />} />
 
 
           {/* Individual Category Pages */}

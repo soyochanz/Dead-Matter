@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Helmet } from 'react-helmet';
 import { motion } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
 import { supabase } from '@/lib/mySupabaseClient';
 import * as Icons from 'lucide-react';
+import CoreSeo, { CoreLanguages, useCoreLanguage } from '@/components/CoreSeo';
+import GameResources from '@/components/GameResources';
 import CategoryTile from '@/components/CategoryTile';
 
-const WikiCategoryCard = ({ category, itemCount }) => {
-  const { t } = useTranslation();
+const WikiCategoryCard = ({ category, itemCount, language }) => {
+  const { i18n } = useTranslation();
+  const t = i18n.getFixedT(language);
   const IconComponent = Icons[category.icon_name] || Icons.HelpCircle;
   const isTool = ['Perks', 'NPCs', 'Meds', 'Basebuilding'].includes(category.name);
   const isDisabled = itemCount === 0 && !isTool;
@@ -20,20 +22,22 @@ const WikiCategoryCard = ({ category, itemCount }) => {
     icon={IconComponent}
     to={path}
     description={t(`category_descriptions.${category.name.toLowerCase()}`, t('category_descriptions.default'))}
-    status={isDisabled ? t('wiki_page.coming_soon') : itemCount > 0 ? t('wiki_page.item_count_plural', { count: itemCount }) : t('wiki_page.available')}
+    status={itemCount == null ? t('wiki_page.explore') : isDisabled ? t('wiki_page.coming_soon') : itemCount > 0 ? t('wiki_page.item_count_plural', { count: itemCount }) : t('wiki_page.available')}
     action={t('wiki_page.explore')}
     disabled={isDisabled}
   />;
 };
 
 const Wiki = () => {
-  const { t } = useTranslation();
-  const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const language = useCoreLanguage();
+  const { i18n } = useTranslation();
+  const t = i18n.getFixedT(language);
+  const [categories, setCategories] = useState(() => ['Weapons', 'Gear', 'Toolbelts', 'Consumables', 'Meds', 'Keys', 'Vehicles', 'NPCs', 'Perks', 'Basebuilding'].map((name, id) => ({ id: `initial-${id}`, name, icon_name: { Weapons: 'Sword', Gear: 'Shirt', Toolbelts: 'Wrench', Consumables: 'Apple', Meds: 'HeartPulse', Keys: 'Key', Vehicles: 'Car', NPCs: 'Users', Perks: 'Sparkles', Basebuilding: 'Hammer' }[name] })));
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchCategoriesAndCounts = async () => {
-      setLoading(true);
+
       const { data: categoriesData, error: categoriesError } = await supabase
         .from('wiki_categories')
         .select('id, name, icon_name');
@@ -140,27 +144,18 @@ const Wiki = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Dead Matter Items | Weapons, Gear, Consumables, Vehicles, NPCs & Full Wiki Database</title>
-
-        <meta
-          name="description"
-          content="Explore the complete Dead Matter item database: weapons, gear, consumables, crafting items, accessories, toolbelts, vehicles, NPCs, perks, basebuilding items and more. All categories from the Dead Matter wiki in one place."
-        />
-
-        <link rel="canonical" href="https://deadmatterwiki.com/wiki" />
-      </Helmet>
+      <CoreSeo page="wiki" language={language} />
 
       <div className="max-w-7xl mx-auto px-4 py-12 md:py-24">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
           {/* Header estilo Home Hero */}
           <div className="text-center mb-14 space-y-6">
             <h1 className="text-5xl md:text-8xl font-black text-white tracking-tighter uppercase">
-              {t('wiki_page.title')} <span className="text-red-500">{t('wiki_page.title_suffix')}</span>
+              Dead Matter <span className="text-red-500">Wiki</span>
             </h1>
 
             <p className="text-xl text-slate-400 font-medium max-w-3xl mx-auto leading-relaxed">
@@ -181,11 +176,14 @@ const Wiki = () => {
                 <WikiCategoryCard
                   key={category.id}
                   category={category}
+                  language={language}
                   itemCount={category.itemCount}
                 />
               ))}
             </div>
           )}
+          <CoreLanguages page="wiki" language={language} />
+          <GameResources language={language} compact />
         </motion.div>
       </div>
     </>

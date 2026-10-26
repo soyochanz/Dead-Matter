@@ -1,3 +1,4 @@
+import { corePath } from '@/data/gameGuide';
 import React, { useState, useEffect } from 'react';
 import { NavLink, Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -137,8 +138,8 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
   };
 
   const navItems = [
-    { path: '/', label: t('nav.home'), icon: 'Home', gradient: 'from-orange-500 to-red-600', description: t('nav.home_desc') },
-    { path: '/wiki', label: t('nav.wiki'), icon: 'Database', gradient: 'from-blue-500 to-indigo-600', description: t('nav.wiki_desc') },
+    { path: corePath(['es', 'pt'].includes(i18n.language) ? i18n.language : 'en'), label: t('nav.home'), icon: 'Home', gradient: 'from-orange-500 to-red-600', description: t('nav.home_desc') },
+    { path: corePath(['es', 'pt'].includes(i18n.language) ? i18n.language : 'en', 'wiki'), label: t('nav.wiki'), icon: 'Database', gradient: 'from-blue-500 to-indigo-600', description: t('nav.wiki_desc') },
     { path: '/guides', label: t('nav.guides'), icon: 'ShieldCheck', gradient: 'from-emerald-500 to-teal-600', description: t('nav.guides_desc') },
     { path: '/updates', label: t('nav.updates'), icon: 'Terminal', gradient: 'from-violet-500 to-fuchsia-600', description: t('nav.updates_desc') },
     { path: i18n.language.startsWith('es') ? '/es/news' : '/news', label: 'News', icon: 'Newspaper', gradient: 'from-red-500 to-orange-600', description: t('news.nav_description') },
@@ -251,11 +252,12 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         <nav className="flex-1 px-4 py-6 space-y-1.5 overflow-y-auto custom-scrollbar">
           {navItems.map((item) => {
             const IconComponent = Icons[item.icon] || Icons.HelpCircle;
-            const isActive = location.pathname === item.path || (item.path !== '/' && location.pathname.startsWith(item.path + '/'));
+            const isActive = location.pathname === item.path || (!['/', '/es', '/pt'].includes(item.path) && location.pathname.startsWith(item.path + '/'));
             return (
               <NavLink
                 key={item.path}
                 to={item.path}
+                  end={['/', '/es', '/pt'].includes(item.path)}
                 className={({ isActive }) => `
                   relative flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-500 group overflow-hidden
                   ${isActive ? 'bg-white/5 text-white' : 'text-gray-500 hover:text-gray-200'}
