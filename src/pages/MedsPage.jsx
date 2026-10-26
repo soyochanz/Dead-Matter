@@ -1,3 +1,4 @@
+import WikiToolHeader from '@/components/wiki/WikiToolHeader';
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { supabase } from '@/lib/mySupabaseClient';
@@ -248,69 +249,26 @@ const MedsPage = () => {
     const noSelectionActive = !selectedItem && !selectedDisease;
 
     return (
-        <div className="relative min-h-screen pb-20">
-            {/* Technical background elements */}
-            <div className="fixed inset-0 pointer-events-none opacity-[0.02] bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:40px_40px] z-0" />
+        <div className="wiki-tool-page wiki-tool-page--medical relative pb-20">
             <Helmet>
                 <title>Medical Guide - Dead Matter Wiki</title>
                 <meta name="description" content="Complete medical guide for diseases and medicines in Dead Matter" />
             </Helmet>
 
-            <div className="max-w-7xl mx-auto px-4 py-8 relative z-10">
+            <div className="wiki-tool-content relative z-10">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
                 >
-                    {/* Header Section */}
-                    <div className="mb-12">
-                        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-8">
-                            <div className="flex-1">
-                                <div className="flex items-center gap-3 mb-2">
-                                    <div className="h-[2px] w-8 bg-red-600 shadow-[0_0_8px_rgba(220,38,38,0.5)]" />
-                                    <span className="text-[10px] font-black text-white/40 uppercase tracking-[0.4em]">Wiki</span>
-                                </div>
-                                <motion.h1
-                                    initial={{ opacity: 0, x: -20 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{ duration: 0.6, delay: 0.1 }}
-                                    className="text-5xl md:text-7xl font-black text-white tracking-tighter"
-                                >
-                                    <span className="text-white">Medical </span>
-                                    <span className="text-white/20">Guide</span>
-                                </motion.h1>
-                            </div>
-
-                            <motion.div
-                                initial={{ opacity: 0, x: 20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ duration: 0.6, delay: 0.2 }}
-                            >
-                                <Button asChild variant="outline" className="h-12 border-white/5 bg-white/5 hover:bg-white/10 text-white font-bold rounded-xl px-6">
-                                    <Link to="/wiki">
-                                        <ArrowLeft className="mr-2 h-4 w-4" />
-                                        Return to Wiki
-                                    </Link>
-                                </Button>
-                            </motion.div>
-                        </div>
-
-                        <motion.p
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.6, delay: 0.3 }}
-                            className="text-gray-400 text-lg max-w-3xl font-medium"
-                        >
-                            Explore the <span className="text-white italic">medical database</span> of Dead Matter. Identify pathogens, infections, and discover clinical solutions to survive the waste.
-                        </motion.p>
-                    </div>
+                    <WikiToolHeader medical />
 
                     {/* Filters and Search Section */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.4 }}
-                        className="bg-[#0a0a0c]/80 backdrop-blur-2xl border border-white/5 rounded-3xl p-8 mb-12 shadow-2xl"
+                        className="wiki-tool-panel wiki-medical-toolbar p-6 mb-8"
                     >
                         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8">
                             <div className="flex flex-col gap-4 flex-1">
@@ -336,9 +294,10 @@ const MedsPage = () => {
                                     <Search className="w-3 h-3 text-red-500" />
                                     <span className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em]">Search Database</span>
                                 </div>
-                                <div className="relative group min-w-[320px]">
+                                <div className="relative group w-full lg:w-80">
                                     <Input
                                         type="text"
+                                        aria-label="Search clinical records"
                                         placeholder="Search clinical records..."
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
@@ -359,7 +318,7 @@ const MedsPage = () => {
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.6, delay: 0.4 }}
-                            className="bg-[#0a0a0c]/80 backdrop-blur-2xl border border-white/5 rounded-[2rem] p-8 shadow-2xl relative overflow-hidden group/section"
+                            className="wiki-tool-panel p-6 relative overflow-hidden group/section"
                         >
                             {/* Grid highlight effect */}
                             <div className="absolute top-0 right-0 w-32 h-32 bg-red-600/5 blur-[100px] pointer-events-none group-hover/section:bg-red-600/10 transition-colors duration-700" />
@@ -395,7 +354,7 @@ const MedsPage = () => {
                                                 className={`relative group cursor-pointer transition-all duration-500 ${isDimmed ? 'opacity-20 grayscale' : 'opacity-100 grayscale-0'}`}
                                                 onClick={() => handleDiseaseClick(disease)}
                                             >
-                                                <div className={`relative overflow-hidden rounded-[1.5rem] bg-[#0a0a0c] border transition-all duration-300 h-full flex flex-col ${isSelected
+                                                <div className={`wiki-tool-card relative overflow-hidden rounded-[1.5rem] border transition-all duration-300 h-full flex flex-col ${isSelected
                                                     ? 'border-blue-500 shadow-[0_0_20px_rgba(59,130,246,0.3)]'
                                                     : isHighlighted
                                                         ? 'border-green-500 shadow-[0_0_20px_rgba(34,197,94,0.3)]'
@@ -451,7 +410,7 @@ const MedsPage = () => {
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.6, delay: 0.5 }}
-                            className="bg-[#0a0a0c]/80 backdrop-blur-2xl border border-white/5 rounded-[2rem] p-8 shadow-2xl relative overflow-hidden group/section"
+                            className="wiki-tool-panel p-6 relative overflow-hidden group/section"
                         >
                             {/* Grid highlight effect */}
                             <div className="absolute top-0 right-0 w-32 h-32 bg-green-600/5 blur-[100px] pointer-events-none group-hover/section:bg-green-600/10 transition-colors duration-700" />
@@ -488,7 +447,7 @@ const MedsPage = () => {
                                                 className={`relative group cursor-pointer transition-all duration-500 ${isDimmed ? 'opacity-20 grayscale' : 'opacity-100 grayscale-0'}`}
                                                 onClick={() => handleItemClick(med)}
                                             >
-                                                <div className={`relative overflow-hidden rounded-[1.5rem] bg-[#0a0a0c] border transition-all duration-300 h-full flex flex-col ${isSelected
+                                                <div className={`wiki-tool-card relative overflow-hidden rounded-[1.5rem] border transition-all duration-300 h-full flex flex-col ${isSelected
                                                     ? 'border-blue-500 shadow-[0_0_20px_rgba(59,130,246,0.3)]'
                                                     : isHighlighted
                                                         ? 'border-green-500 shadow-[0_0_20px_rgba(34,197,94,0.3)]'

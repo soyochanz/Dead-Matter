@@ -1,3 +1,4 @@
+import WikiToolHeader from '@/components/wiki/WikiToolHeader';
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Helmet } from 'react-helmet';
 import { motion } from 'framer-motion';
@@ -47,7 +48,7 @@ const OccupationCard = ({ occ, isSelected, onSelect }) => (
     <motion.div
         layout
         onClick={() => onSelect(occ)}
-        className={`relative p-4 rounded-xl cursor-pointer border transition-all duration-300 group overflow-hidden ${isSelected
+        className={`wiki-tool-card relative p-4 rounded-xl cursor-pointer border transition-all duration-300 group overflow-hidden ${isSelected
                 ? 'bg-gradient-to-br from-blue-900/20 to-blue-800/10 border-blue-500/50'
                 : 'bg-[#0a0a0c] border-white/10 hover:border-white/20 hover:bg-white/[0.02]'
             }`}
@@ -89,7 +90,7 @@ const PerkCard = ({ perk, isSelected, onSelect, type }) => {
         <motion.div
             layout
             onClick={() => onSelect(perk)}
-            className={`relative p-3 rounded-lg cursor-pointer border transition-all duration-300 group ${isSelected
+            className={`wiki-tool-card relative p-3 rounded-lg cursor-pointer border transition-all duration-300 group ${isSelected
                     ? activeClass
                     : `bg-[#0a0a0c] border-white/5 hover:border-${baseColor}-500/30 hover:bg-white/[0.02]`
                 }`}
@@ -299,43 +300,20 @@ const PerksPage = () => {
     const negativePerks = perks.filter(p => p.type === 'negative');
 
     return (
-        <div className="min-h-screen bg-[#0a0a0c] text-white selection:bg-red-500/30">
+        <div className="wiki-tool-page wiki-tool-page--perks text-white">
             <Helmet><title>Perks Manager - Dead Matter Wiki</title></Helmet>
 
-            {/* Technical Background */}
-            <div className="fixed inset-0 pointer-events-none opacity-[0.03]"
-                style={{
-                    backgroundImage: `linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)`,
-                    backgroundSize: '50px 50px'
-                }}
-            />
-
-            <div className="relative max-w-screen-2xl mx-auto p-4 md:p-8 z-10">
-                {/* Header */}
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-                    <div>
-                        <Link to="/wiki" className="inline-flex items-center text-sm text-gray-400 hover:text-white transition-colors mb-2">
-                            <ChevronLeft className="mr-1 h-4 w-4" /> Back to Wiki
-                        </Link>
-                        <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tighter text-white">
-                            Operative <span className="text-gray-600">Builder</span>
-                        </h1>
-                    </div>
-
-                    <div className="flex items-center gap-4 bg-white/5 border border-white/10 px-6 py-3 rounded-xl backdrop-blur-sm">
-                        <span className="text-sm font-bold text-gray-400 uppercase tracking-wider">Available Points</span>
-                        <span className={`text-3xl font-black font-mono ${availablePoints < 0 ? 'text-red-500' : 'text-green-500'}`}>
-                            {availablePoints}
-                        </span>
-                    </div>
-                </div>
+            <div className="wiki-tool-content">
+                <WikiToolHeader>
+                  <div className="wiki-tool-points"><Zap size={18}/><span>Available Points</span><strong className={availablePoints < 0 ? 'text-red-400' : 'text-green-400'}>{availablePoints}</strong></div>
+                </WikiToolHeader>
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                     {/* Left Column: Selection */}
                     <div className="lg:col-span-9 grid grid-cols-1 md:grid-cols-3 gap-6">
 
                         {/* Occupations */}
-                        <div className="md:col-span-1 space-y-4">
+                        <div className="wiki-tool-panel p-5 md:col-span-1 space-y-4">
                             <div className="flex items-center gap-2 mb-2 pb-2 border-b border-white/10">
                                 <Target className="text-blue-500" size={18} />
                                 <h2 className="text-sm font-bold text-white uppercase tracking-wider">Occupations</h2>
@@ -356,7 +334,7 @@ const PerksPage = () => {
                         <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
 
                             {/* Negative Perks */}
-                            <div>
+                            <div className="wiki-tool-panel p-5">
                                 <div className="flex items-center gap-2 mb-4 pb-2 border-b border-white/10">
                                     <Skull className="text-red-500" size={18} />
                                     <h2 className="text-sm font-bold text-red-500 uppercase tracking-wider">Negative Perks (Add Points)</h2>
@@ -375,7 +353,7 @@ const PerksPage = () => {
                             </div>
 
                             {/* Positive Perks */}
-                            <div>
+                            <div className="wiki-tool-panel p-5">
                                 <div className="flex items-center gap-2 mb-4 pb-2 border-b border-white/10">
                                     <Zap className="text-green-500" size={18} />
                                     <h2 className="text-sm font-bold text-green-500 uppercase tracking-wider">Positive Perks (Cost Points)</h2>
@@ -398,7 +376,7 @@ const PerksPage = () => {
                     {/* Right Column: Stats & Save */}
                     <div className="lg:col-span-3 space-y-6">
                         {/* Stats Panel */}
-                        <div className="bg-white/[0.02] border border-white/10 p-5 rounded-xl backdrop-blur-md">
+                        <div className="wiki-tool-panel p-5">
                             <div className="flex items-center gap-2 mb-4">
                                 <Brain className="text-purple-500" size={18} />
                                 <h3 className="text-sm font-bold text-white uppercase tracking-wider">Build Statistics</h3>
@@ -430,7 +408,7 @@ const PerksPage = () => {
                         </div>
 
                         {/* Preset Manager */}
-                        <div className="bg-white/[0.02] border border-white/10 p-5 rounded-xl backdrop-blur-md sticky top-8">
+                        <div className="wiki-tool-panel p-5 sticky top-8">
                             <div className="flex items-center gap-2 mb-4">
                                 <Save className="text-orange-500" size={18} />
                                 <h3 className="text-sm font-bold text-white uppercase tracking-wider">Preset Manager</h3>

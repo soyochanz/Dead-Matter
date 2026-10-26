@@ -69,6 +69,23 @@
 .wiki-item-source p { font-size:11px; line-height:1.8; max-width:880px; }
 .wiki-item-source h2 { font-size:11px; color:#97a7bc; }
 .wiki-item-muted { font-size:13px; color:#94a3b8; }
+.wiki-tool-page { --item-accent:#c084fc; max-width:1200px; margin:0 auto; padding:24px 8px 40px; }
+.wiki-tool-page--medical { --item-accent:#f472b6; }
+.wiki-tool-header { margin-bottom:32px; }
+.wiki-tool-header > .wiki-item-eyebrow { display:flex; align-items:center; gap:9px; color:var(--item-accent); margin-top:28px; margin-bottom:14px; }
+.wiki-tool-header h1 { font-size:clamp(2rem,4vw,3.5rem); font-weight:750; line-height:1.12; letter-spacing:-.045em; color:#f1f5f9; }
+.wiki-tool-intro { max-width:760px; font-size:14px; line-height:1.8; color:#94a3b8; margin-top:18px; }
+.wiki-tool-panel { background:linear-gradient(145deg,#151a23,#10141b); border:1px solid #ffffff14; border-radius:20px; box-shadow:inset 0 1px 0 #ffffff06,0 8px 28px #00000018; min-width:0; }
+.wiki-tool-card { background:linear-gradient(150deg,#171c25,#11151c); border-radius:14px; box-shadow:inset 0 1px 0 #ffffff05; }
+.wiki-tool-card:hover { border-color:var(--item-accent); }
+.wiki-tool-page h2,.wiki-tool-page h3 { text-transform:none; letter-spacing:-.02em; line-height:1.4; }
+.wiki-tool-page h2 { font-size:17px; font-weight:650; }
+.wiki-tool-points { display:inline-flex; align-items:center; gap:12px; margin-top:24px; padding:12px 18px; border:1px solid #ffffff14; border-radius:14px; background:#151a23; color:#a5b2c5; font-size:12px; }
+.wiki-tool-points > svg { color:var(--item-accent); }
+.wiki-tool-points strong { font-size:26px; font-variant-numeric:tabular-nums; }
+.wiki-tool-page input:focus-visible,.wiki-tool-page button:focus-visible,.wiki-tool-page a:focus-visible { outline:2px solid var(--item-accent); outline-offset:3px; }
+.wiki-medical-toolbar .bg-red-600 { background:#f472b614; border:1px solid #f472b630; color:#f9a8d4; box-shadow:none; }
+@media(max-width:640px) { .wiki-tool-page { padding:18px 0 30px; } .wiki-tool-panel { padding:18px; } .wiki-tool-page--medical .grid-cols-2 { gap:10px; } }
 .wiki-inventory-search { display:block; color:#a5b2c5; font-size:12px; margin-bottom:20px; }
 .wiki-inventory-search input { display:block; width:100%; max-width:480px; margin-top:8px; padding:12px 16px; background:#ffffff05; border:1px solid #ffffff18; border-radius:12px; color:#fff; }
 .wiki-global-search { position:relative; max-width:720px; margin:0 auto 36px; z-index:10; text-align:left; }
