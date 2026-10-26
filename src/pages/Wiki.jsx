@@ -14,7 +14,7 @@ const WikiCategoryCard = ({ category, itemCount, language }) => {
   const IconComponent = Icons[category.icon_name] || Icons.HelpCircle;
   const isTool = ['Perks', 'NPCs', 'Meds', 'Basebuilding'].includes(category.name);
   const isDisabled = itemCount === 0 && !isTool;
-  const path = `/wiki/${category.name.toLowerCase().replace(' ', '-')}`;
+  const path = `${language === 'en' ? '' : '/' + language}/wiki/${category.name.toLowerCase().replace(' ', '-')}`;
 
   return <CategoryTile
     category={category.name}

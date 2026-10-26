@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '@/lib/mySupabaseClient';
@@ -17,14 +17,17 @@ import VehicleCard from '@/components/wiki/VehicleCard';
 import VehicleDetailModal from '@/components/wiki/VehicleDetailModal';
 import KeyCard from '@/components/wiki/KeyCard';
 import KeyDetailModal from '@/components/wiki/KeyDetailModal';
-import NpcDetailModal from '@/pages/NpcsPage';
+import NpcDetailModal from '@/components/wiki/NpcDetailModal';
 import WikiCategoryLayout from '@/components/wiki/WikiCategoryLayout';
 import { slugify } from '@/utils/slugify';
 
 
 const WikiCategoryPage = ({ category, customTitle, customSubtitle, customDescription, extraHeadElements }) => {
     const { t } = useTranslation();
-    const { categoryName: paramCategoryName, itemSlug } = useParams();
+    const { categoryName: paramCategoryName, itemSlug: routeSlug } = useParams();
+    const location = useLocation();
+    const itemSlug = routeSlug || new URLSearchParams(location.search).get('item');
+    const recordId = new URLSearchParams(location.search).get('record');
     const navigate = useNavigate();
 
     // Prefer prop 'category', fallback to url param
@@ -133,7 +136,7 @@ const WikiCategoryPage = ({ category, customTitle, customSubtitle, customDescrip
         if (!loading && items.length > 0) {
             if (itemSlug) {
                 const itemBySlug = items.find(i => 
-                    (i.slug || slugify(i.name) || i.id.toString()) === itemSlug
+                    recordId ? String(i.id) === recordId : (i.slug || slugify(i.name) || i.id.toString()) === itemSlug
                 );
                 if (itemBySlug) {
                     setSelectedItem(itemBySlug);
@@ -142,7 +145,7 @@ const WikiCategoryPage = ({ category, customTitle, customSubtitle, customDescrip
                 setSelectedItem(null);
             }
         }
-    }, [itemSlug, items, loading]);
+    }, [itemSlug, recordId, items, loading]);
 
     const handleNpcSelect = (npc) => {
         setSelectedItem(null);

@@ -20,7 +20,7 @@ import {
     Filter,
     Grid
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -173,6 +173,7 @@ const InfoModal = ({ item, open, onOpenChange }) => {
 };
 
 const MedsPage = () => {
+    const location = useLocation();
     const [medicines, setMedicines] = useState([]);
     const [diseases, setDiseases] = useState([]);
     const [relations, setRelations] = useState([]);
@@ -193,6 +194,8 @@ const MedsPage = () => {
             setMedicines(medData || []);
             setDiseases(diseaseData || []);
             setRelations(relationData || []);
+            const recordId = new URLSearchParams(location.search).get('record');
+            if (recordId) { setSelectedItem((medData || []).find(item => String(item.id) === recordId) || null); setSelectedDisease((diseaseData || []).find(item => String(item.id) === recordId) || null); }
             setLoading(false);
         };
         fetchData();

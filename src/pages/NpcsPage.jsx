@@ -28,8 +28,8 @@ const NpcsPage = () => {
                 const locations = [...new Set(data.map(npc => npc.location).filter(Boolean))];
                 setFilters(locations.map(loc => ({ id: loc, name: loc })));
 
-                if (location.state?.openNpcId) {
-                    const npcToOpen = data.find(npc => npc.id === location.state.openNpcId);
+                if (location.state?.openNpcId || new URLSearchParams(location.search).get('record')) {
+                    const npcToOpen = data.find(npc => String(npc.id) === String(location.state?.openNpcId || new URLSearchParams(location.search).get('record')));
                     if (npcToOpen) {
                         setSelectedNpc(npcToOpen);
                     }
@@ -39,7 +39,7 @@ const NpcsPage = () => {
         };
 
         fetchNpcs();
-    }, [location.state]);
+    }, [location.state, location.search]);
 
     const filteredNpcs = useMemo(() => {
         let results = npcs;

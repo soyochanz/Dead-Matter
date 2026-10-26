@@ -1,9 +1,12 @@
+ErrorDocument 404 /404.html
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
   # Serve the generated public HTML before the SPA fallback (also without a trailing slash).
   RewriteCond %{DOCUMENT_ROOT}/$1/index.html -f
-  RewriteRule ^((?:es/)?news(?:/[a-z0-9-]+)?|(?:es|pt)(?:/(?:wiki|dead-matter-game))?|wiki|dead-matter-game)/?$ $1/index.html [L]
+  RewriteRule ^((?:(?:es|pt)/)?wiki(?:/[a-z0-9_-]+){1,2}|(?:es/)?news(?:/[a-z0-9-]+)?|(?:es|pt)(?:/(?:wiki|dead-matter-game))?|wiki|dead-matter-game)/?$ $1/index.html [L]
+  # Unknown catalogue URLs must not look like successful item pages.
+  RewriteRule ^(?:(?:es|pt)/)?wiki/[a-z0-9_-]+(?:/[a-z0-9_-]+)?/?$ - [R=404,L]
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteCond %{REQUEST_URI} !\.(js|css|gif|png|jpg|jpeg|svg|webp|ico|json|map|woff|woff2|ttf|eot|otf)$ [NC]

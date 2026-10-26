@@ -21,9 +21,11 @@ const LanguageSelector = () => {
     const { pathname, search } = useLocation();
     const navigate = useNavigate();
     const isNews = /^\/(es\/)?news(?:\/|$)/.test(pathname);
+    const isWiki = /^\/(?:es\/|pt\/)?wiki\/[^/]+(?:\/[^/]+)?\/?$/.test(pathname);
     const availableLanguages = isNews ? languages.filter(language => language.code !== 'pt') : languages;
     const changeLanguage = code => {
         if (isNews) navigate(`${code === 'es' ? '/es' : ''}${pathname.replace(/^\/es(?=\/news)/, '')}${search}`);
+        if (isWiki) navigate(`${code === 'en' ? '' : '/' + code}${pathname.replace(/^\/(es|pt)(?=\/wiki)/, '')}`);
         if (isCorePath(pathname)) {
             const page = pathname.replace(/^\/(es|pt)(?=\/|$)/, '').replace(/^\/|\/$/g, '');
             navigate(corePath(code, page));

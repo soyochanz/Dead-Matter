@@ -12,6 +12,13 @@ import Home from '@/pages/Home';
 import Wiki from '@/pages/Wiki';
 import { lazyImport } from '@/utils/lazyImport';
 
+const WikiCatalogPage = lazyImport(() => import('@/pages/WikiCatalogPage'));
+const CatalogRoute = ({ category, interactive }) => {
+  const location = useLocation();
+  const query = new URLSearchParams(location.search);
+  if (interactive && (query.get('view') === 'interactive' || query.has('preset'))) return <>{interactive}<Helmet><meta name="robots" content="noindex,follow" /><link rel="canonical" href={'https://deadmatterwiki.com/wiki/' + category} /></Helmet></>;
+  return <WikiCatalogPage category={category} />;
+};
 // Lazy load de páginas secundarias
 const WeaponsPage = lazyImport(() => import('@/pages/WeaponsPage'));
 
@@ -155,23 +162,25 @@ function App() {
 
 
           {/* Individual Category Pages */}
-          <Route path="wiki/weapons/:itemSlug?" element={<WeaponsPage />} />
-          <Route path="wiki/consumables/:itemSlug?" element={<ConsumablesPage />} />
-          <Route path="wiki/gear/:itemSlug?" element={<GearPage />} />
-          <Route path="wiki/toolbelts/:itemSlug?" element={<ToolbeltsPage />} />
-          <Route path="wiki/keys/:itemSlug?" element={<KeysPage />} />
-          <Route path="wiki/vehicles/:itemSlug?" element={<VehiclesPage />} />
-          <Route path="wiki/accessories/:itemSlug?" element={<AccessoriesPage />} />
+          <Route path="wiki/weapons" element={<CatalogRoute category="weapons" interactive={<WeaponsPage />} />} />
+          <Route path="wiki/consumables" element={<CatalogRoute category="consumables" interactive={<ConsumablesPage />} />} />
+          <Route path="wiki/gear" element={<CatalogRoute category="gear" interactive={<GearPage />} />} />
+          <Route path="wiki/toolbelts" element={<CatalogRoute category="toolbelts" interactive={<ToolbeltsPage />} />} />
+          <Route path="wiki/keys" element={<CatalogRoute category="keys" interactive={<KeysPage />} />} />
+          <Route path="wiki/vehicles" element={<CatalogRoute category="vehicles" interactive={<VehiclesPage />} />} />
+          <Route path="wiki/accessories" element={<CatalogRoute category="accessories" interactive={<AccessoriesPage />} />} />
 
 
           {/* Specialized Pages */}
-          <Route path="wiki/meds/:itemSlug?" element={<MedsPage />} />
-          <Route path="wiki/perks/:itemSlug?" element={<PerksPage />} />
-          <Route path="wiki/npcs/:itemSlug?" element={<NpcsPage />} />
-          <Route path="wiki/basebuilding/:itemSlug?" element={<BasebuildingPage />} />
+          <Route path="wiki/meds" element={<CatalogRoute category="meds" interactive={<MedsPage />} />} />
+          <Route path="wiki/perks" element={<CatalogRoute category="perks" interactive={<PerksPage />} />} />
+          <Route path="wiki/npcs" element={<CatalogRoute category="npcs" interactive={<NpcsPage />} />} />
+          <Route path="wiki/basebuilding" element={<CatalogRoute category="basebuilding" interactive={<BasebuildingPage />} />} />
 
           {/* Wiki Category & Item Pages */}
-          <Route path="wiki/:categoryName/:itemSlug?" element={<WikiCategoryPage />} />
+          <Route path="wiki/:categoryName/:itemSlug?" element={<WikiCatalogPage />} />
+          <Route path="es/wiki/:categoryName/:itemSlug?" element={<WikiCatalogPage />} />
+          <Route path="pt/wiki/:categoryName/:itemSlug?" element={<WikiCatalogPage />} />
 
           <Route path="updates" element={<Updates />} />
           <Route path="news" element={<News />} />

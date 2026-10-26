@@ -1,0 +1,6402 @@
+[
+  {
+    "id": "ffdad92b-bb1b-4132-bd62-d315ffd44033",
+    "table": "accessories",
+    "category": "accessories",
+    "slug": "20-rnd-stanag",
+    "name": "20 RND Stanag",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762338593986_stanag20rounds.png",
+    "attributes": {
+      "damage_modifier": 0,
+      "rate_of_fire_modifier": 0,
+      "accuracy_modifier": 0,
+      "capacity_modifier": 20,
+      "type": "Magazine",
+      "rarity": "Uncommon"
+    },
+    "relations": []
+  },
+  {
+    "id": "36875668-63e0-4cff-9079-f77d11a0d0fc",
+    "table": "accessories",
+    "category": "accessories",
+    "slug": "30-rnd-stanag",
+    "name": "30 RND Stanag",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762307606014_stanag30rounds.png",
+    "attributes": {
+      "damage_modifier": 0,
+      "rate_of_fire_modifier": 0,
+      "accuracy_modifier": 0,
+      "capacity_modifier": 30,
+      "type": "Magazine",
+      "rarity": "Common"
+    },
+    "relations": [
+      {
+        "category": "weapons",
+        "slug": "hk416",
+        "name": "HK416",
+        "kind": "compatible"
+      }
+    ]
+  },
+  {
+    "id": "16d3e5de-1274-40d2-9799-4d7af327781b",
+    "table": "accessories",
+    "category": "accessories",
+    "slug": "60-rnd-stanag",
+    "name": "60 RND Stanag",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762256298205_ChatGPT%20Image%204%20nov%202025,%2012_38_07.png",
+    "attributes": {
+      "damage_modifier": 0,
+      "rate_of_fire_modifier": 0,
+      "accuracy_modifier": 0,
+      "capacity_modifier": 60,
+      "type": "Magazine",
+      "rarity": "Rare"
+    },
+    "relations": [
+      {
+        "category": "weapons",
+        "slug": "hk416",
+        "name": "HK416",
+        "kind": "compatible"
+      }
+    ]
+  },
+  {
+    "id": "17b5e58a-05bd-4324-ba1c-e067704c5c26",
+    "table": "accessories",
+    "category": "accessories",
+    "slug": "angle-grip",
+    "name": "Angle Grip",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762338633880_angledgrip.png",
+    "attributes": {
+      "damage_modifier": 0,
+      "rate_of_fire_modifier": -6,
+      "accuracy_modifier": 10,
+      "capacity_modifier": 0,
+      "type": "Grip",
+      "rarity": "Rare"
+    },
+    "relations": []
+  },
+  {
+    "id": "81bb7c85-b39d-46d2-971b-b9b853f72afa",
+    "table": "accessories",
+    "category": "accessories",
+    "slug": "anpeq-15-laser",
+    "name": "ANPEQ-15 Laser",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762338716500_ANPEQ-15%20Laser.png",
+    "attributes": {
+      "damage_modifier": 0,
+      "rate_of_fire_modifier": 0,
+      "accuracy_modifier": 0,
+      "capacity_modifier": 0,
+      "type": "Sights",
+      "rarity": "Epic"
+    },
+    "relations": [
+      {
+        "category": "weapons",
+        "slug": "eder-17",
+        "name": "Eder-17",
+        "kind": "compatible"
+      }
+    ]
+  },
+  {
+    "id": "e769619f-6dbb-4a7d-8ba9-b3b555a2fd18",
+    "table": "accessories",
+    "category": "accessories",
+    "slug": "dmfa-stock-black",
+    "name": "DMFA Stock Black",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762338731385_DMFA%20Stock%20Black.png",
+    "attributes": {
+      "damage_modifier": 0,
+      "rate_of_fire_modifier": 0,
+      "accuracy_modifier": 0,
+      "capacity_modifier": 0,
+      "type": "Stock"
+    },
+    "relations": []
+  },
+  {
+    "id": "569ac226-c81e-4041-872a-538bc6890131",
+    "table": "accessories",
+    "category": "accessories",
+    "slug": "dmfa-stock-tan",
+    "name": "DMFA Stock Tan",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762338745950_DMFA%20Stock%20TAN.png",
+    "attributes": {
+      "damage_modifier": 0,
+      "rate_of_fire_modifier": 0,
+      "accuracy_modifier": 0,
+      "capacity_modifier": 0,
+      "type": "Stock"
+    },
+    "relations": []
+  },
+  {
+    "id": "f22dc8ef-d3ba-4c49-9ace-850283147e9f",
+    "table": "accessories",
+    "category": "accessories",
+    "slug": "flash-hider",
+    "name": "Flash Hider",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762338683933_flashhidder.png",
+    "attributes": {
+      "damage_modifier": 0,
+      "rate_of_fire_modifier": 0,
+      "accuracy_modifier": 0,
+      "capacity_modifier": 0,
+      "type": "Muzzle",
+      "rarity": "Rare"
+    },
+    "relations": []
+  },
+  {
+    "id": "928cdc9c-4fc6-4ec3-861a-b6a00ed590e9",
+    "table": "accessories",
+    "category": "accessories",
+    "slug": "front-sight",
+    "name": "front Sight",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762338810285_front%20Sight00.png",
+    "attributes": {
+      "damage_modifier": 0,
+      "rate_of_fire_modifier": 0,
+      "accuracy_modifier": 0,
+      "capacity_modifier": 0,
+      "type": "Sights",
+      "rarity": "Common"
+    },
+    "relations": [
+      {
+        "category": "weapons",
+        "slug": "eder-17",
+        "name": "Eder-17",
+        "kind": "compatible"
+      }
+    ]
+  },
+  {
+    "id": "f52f05eb-3c16-471d-9105-b64777099ac2",
+    "table": "accessories",
+    "category": "accessories",
+    "slug": "generic-suppressor",
+    "name": "Generic Suppressor",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762256781177_ChatGPT%20Image%204%20nov%202025,%2012_45_11.png",
+    "attributes": {
+      "damage_modifier": -6,
+      "rate_of_fire_modifier": 5,
+      "accuracy_modifier": 0,
+      "capacity_modifier": 0,
+      "type": "Muzzle",
+      "rarity": "Epic"
+    },
+    "relations": [
+      {
+        "category": "weapons",
+        "slug": "hk416",
+        "name": "HK416",
+        "kind": "compatible"
+      }
+    ]
+  },
+  {
+    "id": "061a7581-c808-4d6a-aee7-2db41efd9052",
+    "table": "accessories",
+    "category": "accessories",
+    "slug": "long-barrel",
+    "name": "Long Barrel",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762338758211_Long%20Barrel(RB).png",
+    "attributes": {
+      "damage_modifier": 0,
+      "rate_of_fire_modifier": 0,
+      "accuracy_modifier": 0,
+      "capacity_modifier": 0,
+      "type": "Muzzle",
+      "rarity": "Uncommon"
+    },
+    "relations": []
+  },
+  {
+    "id": "9ce64135-fdec-4d89-b7ab-97a48959dc4d",
+    "table": "accessories",
+    "category": "accessories",
+    "slug": "mid-barrel",
+    "name": "Mid Barrel",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762338781057_Mid%20Barrel(RB).png",
+    "attributes": {
+      "damage_modifier": 0,
+      "rate_of_fire_modifier": 0,
+      "accuracy_modifier": 0,
+      "capacity_modifier": 0,
+      "type": "Muzzle",
+      "rarity": "Rare"
+    },
+    "relations": []
+  },
+  {
+    "id": "9b17e65a-27cb-4f3b-af3d-e8eb74605527",
+    "table": "accessories",
+    "category": "accessories",
+    "slug": "modern-grip",
+    "name": "Modern Grip",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762211495460_modern-gripRB.webp",
+    "attributes": {
+      "damage_modifier": 0,
+      "rate_of_fire_modifier": 0,
+      "accuracy_modifier": 6,
+      "capacity_modifier": 0,
+      "type": "Grip",
+      "rarity": "Rare"
+    },
+    "relations": [
+      {
+        "category": "weapons",
+        "slug": "c7a1",
+        "name": "C7A1",
+        "kind": "compatible"
+      },
+      {
+        "category": "weapons",
+        "slug": "raging-bull",
+        "name": "Raging Bull",
+        "kind": "compatible"
+      }
+    ]
+  },
+  {
+    "id": "06ce847e-e733-49a0-8fb1-665fecb196f8",
+    "table": "accessories",
+    "category": "accessories",
+    "slug": "muzzle-device",
+    "name": "Muzzle Device",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762338826638_Muzzeldevice.png",
+    "attributes": {
+      "damage_modifier": 0,
+      "rate_of_fire_modifier": 0,
+      "accuracy_modifier": 0,
+      "capacity_modifier": 0,
+      "type": "Muzzle",
+      "rarity": "Uncommon"
+    },
+    "relations": []
+  },
+  {
+    "id": "dcc68e85-2505-45d0-a70d-15e44dc59c4f",
+    "table": "accessories",
+    "category": "accessories",
+    "slug": "r700-3-rnd-762-magazine",
+    "name": "R700 3 Rnd 7.62 Magazine",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762887619966_r700smallmag.png",
+    "attributes": {
+      "damage_modifier": 0,
+      "rate_of_fire_modifier": 0,
+      "accuracy_modifier": 0,
+      "capacity_modifier": 3,
+      "type": "Magazine",
+      "rarity": "Common"
+    },
+    "relations": [
+      {
+        "category": "weapons",
+        "slug": "r700",
+        "name": "R700",
+        "kind": "compatible"
+      }
+    ]
+  },
+  {
+    "id": "1ddc6696-330d-420b-a19a-bf1381177101",
+    "table": "accessories",
+    "category": "accessories",
+    "slug": "r700-5-rnd-762-magazine",
+    "name": "R700 5 Rnd 7.62 Magazine",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762887713793_r700medmag.png",
+    "attributes": {
+      "damage_modifier": 0,
+      "rate_of_fire_modifier": 0,
+      "accuracy_modifier": 0,
+      "capacity_modifier": 5,
+      "type": "Magazine",
+      "rarity": "Common"
+    },
+    "relations": [
+      {
+        "category": "weapons",
+        "slug": "r700",
+        "name": "R700",
+        "kind": "compatible"
+      }
+    ]
+  },
+  {
+    "id": "91a0f959-f9ca-4798-9402-66c34cb7761d",
+    "table": "accessories",
+    "category": "accessories",
+    "slug": "snub-barrel",
+    "name": "Snub Barrel",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762338612869_Snub%20Barrel(RB).png",
+    "attributes": {
+      "damage_modifier": 0,
+      "rate_of_fire_modifier": 0,
+      "accuracy_modifier": 0,
+      "capacity_modifier": 0,
+      "type": "Muzzle",
+      "rarity": "Rare"
+    },
+    "relations": []
+  },
+  {
+    "id": "23afd40a-cc74-41af-be55-2cc57871fff5",
+    "table": "accessories",
+    "category": "accessories",
+    "slug": "speedloader",
+    "name": "Speedloader",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762212145201_SpeedloaderRB.webp",
+    "attributes": {
+      "damage_modifier": 0,
+      "rate_of_fire_modifier": 0,
+      "accuracy_modifier": 0,
+      "capacity_modifier": 0,
+      "type": "Magazine",
+      "rarity": "Uncommon"
+    },
+    "relations": [
+      {
+        "category": "weapons",
+        "slug": "raging-bull",
+        "name": "Raging Bull",
+        "kind": "compatible"
+      }
+    ]
+  },
+  {
+    "id": "f4b5ee54-9856-43fa-8dcb-e804ca33464b",
+    "table": "accessories",
+    "category": "accessories",
+    "slug": "standard-carabine-stock",
+    "name": "Standard Carabine Stock",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762307572976_Standard%20Carabine%20Stock.png",
+    "attributes": {
+      "damage_modifier": 0,
+      "rate_of_fire_modifier": 0,
+      "accuracy_modifier": 0,
+      "capacity_modifier": 0,
+      "type": "Stock",
+      "rarity": "Common"
+    },
+    "relations": [
+      {
+        "category": "weapons",
+        "slug": "hk416",
+        "name": "HK416",
+        "kind": "compatible"
+      }
+    ]
+  },
+  {
+    "id": "46721af9-b16b-4911-bf40-91e12742934d",
+    "table": "accessories",
+    "category": "accessories",
+    "slug": "tac-lightlaser",
+    "name": "Tac-Light/Laser",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1776381496954_f0448c96-ce9d-4232-8ed5-62366bd05d86_removalai_preview.png",
+    "attributes": {
+      "damage_modifier": 0,
+      "rate_of_fire_modifier": 0,
+      "accuracy_modifier": 0,
+      "capacity_modifier": 0,
+      "type": "Lights",
+      "rarity": "Rare"
+    },
+    "relations": [
+      {
+        "category": "weapons",
+        "slug": "eder-17",
+        "name": "Eder-17",
+        "kind": "compatible"
+      }
+    ]
+  },
+  {
+    "id": "a9572717-c1b9-4aaa-8a81-f98045301eb5",
+    "table": "accessories",
+    "category": "accessories",
+    "slug": "tactical-barrel",
+    "name": "Tactical Barrel",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762212179668_Tactical-BarrelRB.webp",
+    "attributes": {
+      "damage_modifier": 5,
+      "rate_of_fire_modifier": -8,
+      "accuracy_modifier": 10,
+      "capacity_modifier": 0,
+      "type": "Muzzle",
+      "rarity": "Epic"
+    },
+    "relations": [
+      {
+        "category": "weapons",
+        "slug": "raging-bull",
+        "name": "Raging Bull",
+        "kind": "compatible"
+      }
+    ]
+  },
+  {
+    "id": "2171fa20-5e57-41b9-912d-e6de8c249875",
+    "table": "accessories",
+    "category": "accessories",
+    "slug": "vertical-grip",
+    "name": "Vertical Grip",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762307532601_Verticalgrip01.png",
+    "attributes": {
+      "damage_modifier": 0,
+      "rate_of_fire_modifier": -5,
+      "accuracy_modifier": 20,
+      "capacity_modifier": 0,
+      "type": "Grip",
+      "rarity": "Uncommon"
+    },
+    "relations": [
+      {
+        "category": "weapons",
+        "slug": "hk416",
+        "name": "HK416",
+        "kind": "compatible"
+      }
+    ]
+  },
+  {
+    "id": "172aec3c-b967-400e-ae17-3f6ff9a30272",
+    "table": "accessories",
+    "category": "accessories",
+    "slug": "wooden-grip",
+    "name": "Wooden Grip",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762219650572_wooder-gripRB.webp",
+    "attributes": {
+      "damage_modifier": 0,
+      "rate_of_fire_modifier": 0,
+      "accuracy_modifier": 6,
+      "capacity_modifier": 0,
+      "type": "Grip",
+      "rarity": "Rare"
+    },
+    "relations": [
+      {
+        "category": "weapons",
+        "slug": "raging-bull",
+        "name": "Raging Bull",
+        "kind": "compatible"
+      }
+    ]
+  },
+  {
+    "id": "cd2b4284-9f52-481f-98a2-4db091797c1c",
+    "table": "ammo_types",
+    "category": "ammo",
+    "slug": "12-gauge",
+    "name": "12 Gauge",
+    "description": "Versatile shotgun ammunition capable of firing a variety of shells.",
+    "image": null,
+    "attributes": {},
+    "relations": [
+      {
+        "category": "weapons",
+        "slug": "1887",
+        "name": "1887",
+        "kind": "compatible"
+      },
+      {
+        "category": "weapons",
+        "slug": "m2",
+        "name": "M2",
+        "kind": "compatible"
+      },
+      {
+        "category": "weapons",
+        "slug": "mooseberg-500",
+        "name": "Mooseberg 500",
+        "kind": "compatible"
+      },
+      {
+        "category": "weapons",
+        "slug": "r870",
+        "name": "R870",
+        "kind": "compatible"
+      }
+    ]
+  },
+  {
+    "id": "feedea1d-2999-4797-800b-f644f155c930",
+    "table": "ammo_types",
+    "category": "ammo",
+    "slug": "22lr",
+    "name": ".22LR",
+    "description": "Small caliber used for training and small game hunting. Low recoil.",
+    "image": null,
+    "attributes": {},
+    "relations": [
+      {
+        "category": "weapons",
+        "slug": "mkii",
+        "name": "MKII",
+        "kind": "compatible"
+      },
+      {
+        "category": "weapons",
+        "slug": "ruger-1022",
+        "name": "Ruger 10/22",
+        "kind": "compatible"
+      }
+    ]
+  },
+  {
+    "id": "bf480eae-7a11-4d22-a9d8-b493154e840e",
+    "table": "ammo_types",
+    "category": "ammo",
+    "slug": "303",
+    "name": ".303",
+    "description": "Historic rifle caliber used in bolt-action service rifles.",
+    "image": null,
+    "attributes": {},
+    "relations": [
+      {
+        "category": "weapons",
+        "slug": "lee-enfield",
+        "name": "Lee Enfield",
+        "kind": "compatible"
+      }
+    ]
+  },
+  {
+    "id": "641c5f76-6b3c-4482-a593-78cf9b003da7",
+    "table": "ammo_types",
+    "category": "ammo",
+    "slug": "357",
+    "name": ".357",
+    "description": "Powerful revolver ammunition known for its high stopping power.",
+    "image": null,
+    "attributes": {},
+    "relations": [
+      {
+        "category": "weapons",
+        "slug": "m1873",
+        "name": "M1873",
+        "kind": "compatible"
+      },
+      {
+        "category": "weapons",
+        "slug": "raging-bull",
+        "name": "Raging Bull",
+        "kind": "compatible"
+      }
+    ]
+  },
+  {
+    "id": "030d0a51-4038-474b-9445-1031ca0abe85",
+    "table": "ammo_types",
+    "category": "ammo",
+    "slug": "45acp",
+    "name": ".45ACP",
+    "description": "Classic heavy pistol round with significant stopping power but lower velocity.",
+    "image": null,
+    "attributes": {},
+    "relations": [
+      {
+        "category": "weapons",
+        "slug": "1911",
+        "name": "1911",
+        "kind": "compatible"
+      },
+      {
+        "category": "weapons",
+        "slug": "1911-tactical",
+        "name": "1911 Tactical",
+        "kind": "compatible"
+      }
+    ]
+  },
+  {
+    "id": "0208b22a-16c7-47bc-85e9-a7ce525b253f",
+    "table": "ammo_types",
+    "category": "ammo",
+    "slug": "46x30",
+    "name": "4.6x30",
+    "description": "High-velocity armor-piercing round used mainly in submachine guns.",
+    "image": null,
+    "attributes": {},
+    "relations": [
+      {
+        "category": "weapons",
+        "slug": "mp7",
+        "name": "MP7",
+        "kind": "compatible"
+      }
+    ]
+  },
+  {
+    "id": "1e105708-297e-47f7-8138-cce086f70e7f",
+    "table": "ammo_types",
+    "category": "ammo",
+    "slug": "545x39",
+    "name": "5.45x39",
+    "description": "Modern high-velocity intermediate caliber used in eastern assault rifles.",
+    "image": null,
+    "attributes": {},
+    "relations": [
+      {
+        "category": "weapons",
+        "slug": "ak-74",
+        "name": "AK-74",
+        "kind": "compatible"
+      },
+      {
+        "category": "weapons",
+        "slug": "ak-74u",
+        "name": "AK-74u",
+        "kind": "compatible"
+      },
+      {
+        "category": "weapons",
+        "slug": "c8a2",
+        "name": "C8A2",
+        "kind": "compatible"
+      }
+    ]
+  },
+  {
+    "id": "46bdcf23-60d8-414f-81dc-c04cd5396f65",
+    "table": "ammo_types",
+    "category": "ammo",
+    "slug": "556x45",
+    "name": "5.56x45",
+    "description": "Standard high-velocity intermediate caliber used globally in modern rifles.",
+    "image": null,
+    "attributes": {},
+    "relations": [
+      {
+        "category": "weapons",
+        "slug": "m14",
+        "name": "M14",
+        "kind": "compatible"
+      }
+    ]
+  },
+  {
+    "id": "dd56ee42-1566-44b9-a1ec-77b712ecb469",
+    "table": "ammo_types",
+    "category": "ammo",
+    "slug": "57x28",
+    "name": "5.7x28",
+    "description": "Small-caliber, high-velocity round designed to penetrate body armor.",
+    "image": null,
+    "attributes": {},
+    "relations": [
+      {
+        "category": "weapons",
+        "slug": "p90",
+        "name": "P90",
+        "kind": "compatible"
+      }
+    ]
+  },
+  {
+    "id": "98292b76-f0b9-4ab3-8348-ca2c3079b6d1",
+    "table": "ammo_types",
+    "category": "ammo",
+    "slug": "762x39",
+    "name": "7.62x39",
+    "description": "Standard intermediate caliber for older assault rifles. Rugged and reliable.",
+    "image": null,
+    "attributes": {},
+    "relations": [
+      {
+        "category": "weapons",
+        "slug": "akm",
+        "name": "AKM",
+        "kind": "compatible"
+      },
+      {
+        "category": "weapons",
+        "slug": "vz58",
+        "name": "VZ58",
+        "kind": "compatible"
+      }
+    ]
+  },
+  {
+    "id": "2bcbf6e9-b72d-406c-bd0b-9e462dcb109d",
+    "table": "ammo_types",
+    "category": "ammo",
+    "slug": "762x51",
+    "name": "7.62x51",
+    "description": "Full-power rifle cartridge used in battle rifles and precision platforms.",
+    "image": null,
+    "attributes": {},
+    "relations": [
+      {
+        "category": "weapons",
+        "slug": "r700",
+        "name": "R700",
+        "kind": "compatible"
+      }
+    ]
+  },
+  {
+    "id": "5f5a036f-4186-4964-9092-20b5834e0cae",
+    "table": "ammo_types",
+    "category": "ammo",
+    "slug": "762x54",
+    "name": "7.62X54",
+    "description": "Long-range rifle caliber used in legacy sniper and machine gun platforms.",
+    "image": null,
+    "attributes": {},
+    "relations": [
+      {
+        "category": "weapons",
+        "slug": "mossin-nagant",
+        "name": "Mossin Nagant",
+        "kind": "compatible"
+      },
+      {
+        "category": "weapons",
+        "slug": "svd-dragunov",
+        "name": "SVD Dragunov",
+        "kind": "compatible"
+      },
+      {
+        "category": "weapons",
+        "slug": "svt-40",
+        "name": "SVT-40",
+        "kind": "compatible"
+      }
+    ]
+  },
+  {
+    "id": "32996a5c-23c3-47af-81aa-f9c3115da615",
+    "table": "ammo_types",
+    "category": "ammo",
+    "slug": "9x18",
+    "name": "9x18",
+    "description": "Standard pistol ammunition for older eastern service sidearms.",
+    "image": null,
+    "attributes": {},
+    "relations": [
+      {
+        "category": "weapons",
+        "slug": "pm",
+        "name": "PM",
+        "kind": "compatible"
+      }
+    ]
+  },
+  {
+    "id": "bb565ec6-f810-499b-92e5-7e7f6011be26",
+    "table": "ammo_types",
+    "category": "ammo",
+    "slug": "9x19",
+    "name": "9x19",
+    "description": "Standard pistol and submachine gun ammunition. Reliable and widely available.",
+    "image": null,
+    "attributes": {},
+    "relations": [
+      {
+        "category": "weapons",
+        "slug": "eder-17",
+        "name": "Eder-17",
+        "kind": "compatible"
+      },
+      {
+        "category": "weapons",
+        "slug": "eder-18c",
+        "name": "Eder-18c",
+        "kind": "compatible"
+      },
+      {
+        "category": "weapons",
+        "slug": "intratec-9",
+        "name": "Intratec-9",
+        "kind": "compatible"
+      },
+      {
+        "category": "weapons",
+        "slug": "maxim-9",
+        "name": "Maxim 9",
+        "kind": "compatible"
+      },
+      {
+        "category": "weapons",
+        "slug": "mp5",
+        "name": "MP5",
+        "kind": "compatible"
+      },
+      {
+        "category": "weapons",
+        "slug": "mp5k",
+        "name": "MP5K",
+        "kind": "compatible"
+      },
+      {
+        "category": "weapons",
+        "slug": "uzi",
+        "name": "UZI",
+        "kind": "compatible"
+      }
+    ]
+  },
+  {
+    "id": "4cd7db93-fefa-40e6-ac6f-3b7d4f08aad3",
+    "table": "ammo_types",
+    "category": "ammo",
+    "slug": "9x39",
+    "name": "9x39",
+    "description": "Subsonic armor-piercing ammunition designed for suppressed rifles.",
+    "image": null,
+    "attributes": {},
+    "relations": [
+      {
+        "category": "weapons",
+        "slug": "as-val",
+        "name": "AS VAL",
+        "kind": "compatible"
+      }
+    ]
+  },
+  {
+    "id": "70cc1fc3-4252-4b74-b8d9-21e6cef44d27",
+    "table": "basebuilding_items",
+    "category": "basebuilding",
+    "slug": "bucket",
+    "name": "Bucket",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/basebuilding/1763036943400_plastic-bucket-removebg-preview-e1721817205863.webp",
+    "attributes": {
+      "weight": 0.25,
+      "health": 100,
+      "slots": 30,
+      "subcategory": "Storage"
+    },
+    "relations": []
+  },
+  {
+    "id": "544a4696-a4f8-4db3-8c9b-df3ba69a576b",
+    "table": "basebuilding_items",
+    "category": "basebuilding",
+    "slug": "camping-lantern",
+    "name": "Camping Lantern",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/basebuilding/1763037030783_0000000700030005c013caa43daf559600000000000000000000000000000000.webp",
+    "attributes": {
+      "weight": 0.25,
+      "health": 100,
+      "use": "Portable Light Source",
+      "subcategory": "Items"
+    },
+    "relations": []
+  },
+  {
+    "id": "fa63539b-8b79-4a44-877f-bcb54f1ad7cb",
+    "table": "basebuilding_items",
+    "category": "basebuilding",
+    "slug": "camping-lantern-fa63539b",
+    "name": "Camping Lantern",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/basebuilding/1769690545682_00000000006000904a5a4e8f593c814800000000000000000000000000000000.png",
+    "attributes": {
+      "rarity": "Common",
+      "subcategory": "Items"
+    },
+    "relations": [],
+    "disambiguator": "fa63539b"
+  },
+  {
+    "id": "b4b8d4fe-c995-446b-92a4-5aae5f1d17e6",
+    "table": "basebuilding_items",
+    "category": "basebuilding",
+    "slug": "camping-table",
+    "name": "Camping Table",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/basebuilding/1763037085804_00000007000c00068cb9943a6018c3c800000000000000000000000000000000.webp",
+    "attributes": {
+      "weight": 0.25,
+      "health": 100,
+      "use": "Decorative and organization",
+      "subcategory": "Items"
+    },
+    "relations": []
+  },
+  {
+    "id": "b6ab7790-09b2-4fc3-9cfa-f9ebbd42e572",
+    "table": "basebuilding_items",
+    "category": "basebuilding",
+    "slug": "chair",
+    "name": "Chair",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/basebuilding/1769690487007_0000000000e1019569876edc2bdfe00c80000000000000000000000000000000.png",
+    "attributes": {
+      "rarity": "Common",
+      "subcategory": "Items"
+    },
+    "relations": []
+  },
+  {
+    "id": "ba58566a-7576-4a52-b9ea-832fee8c0dd3",
+    "table": "basebuilding_items",
+    "category": "basebuilding",
+    "slug": "electric-grill",
+    "name": "Electric Grill",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/basebuilding/1769690287405_000000000090006069056d8f0d2d538800000000000000000000000000000000.png",
+    "attributes": {
+      "rarity": "Common",
+      "subcategory": "Items"
+    },
+    "relations": []
+  },
+  {
+    "id": "08103fbb-7ddf-4c12-89d4-89fbf7b87994",
+    "table": "basebuilding_items",
+    "category": "basebuilding",
+    "slug": "gas-barrel",
+    "name": "Gas Barrel",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/basebuilding/1769690324588_00000000000c0012e71bf4e0d71aee6c00000000000000000000000000000000.png",
+    "attributes": {
+      "rarity": "Uncommon",
+      "subcategory": "Items"
+    },
+    "relations": []
+  },
+  {
+    "id": "25f9ddef-1f8e-4915-963c-aff1243f4913",
+    "table": "basebuilding_items",
+    "category": "basebuilding",
+    "slug": "insulated-bag",
+    "name": "Insulated Bag",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/basebuilding/1763036978448_insulated-removebg-preview.webp",
+    "attributes": {
+      "weight": 0.25,
+      "health": 100,
+      "slots": 30,
+      "subcategory": "Storage"
+    },
+    "relations": []
+  },
+  {
+    "id": "ca8dfadf-e07f-46ee-82c4-01cceab73e8b",
+    "table": "basebuilding_items",
+    "category": "basebuilding",
+    "slug": "large-crate",
+    "name": "Large Crate",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/basebuilding/1763036921415_largecrate-e1721607742551.webp",
+    "attributes": {
+      "health": 100,
+      "slots": 150,
+      "subcategory": "Storage"
+    },
+    "relations": []
+  },
+  {
+    "id": "189e2611-8687-4998-a474-337b7db6fcfa",
+    "table": "basebuilding_items",
+    "category": "basebuilding",
+    "slug": "metal-shelves",
+    "name": "Metal Shelves",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/basebuilding/1769976825552_metalshelves.png",
+    "attributes": {
+      "weight": 0,
+      "health": 100,
+      "rarity": "Legendary",
+      "subcategory": "Items"
+    },
+    "relations": []
+  },
+  {
+    "id": "ed10a4c9-5be5-4435-9eb0-297cf298d124",
+    "table": "basebuilding_items",
+    "category": "basebuilding",
+    "slug": "metal-wire",
+    "name": "Metal Wire",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/basebuilding/1769690356771_0000000000c801400d7a0c803adeb1ca00000000000000000000000000000000.png",
+    "attributes": {
+      "rarity": "Rare",
+      "subcategory": "Items"
+    },
+    "relations": []
+  },
+  {
+    "id": "db999a34-5f83-49b0-a7d3-3facb22cc879",
+    "table": "basebuilding_items",
+    "category": "basebuilding",
+    "slug": "small-crate",
+    "name": "Small Crate",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/basebuilding/1763036749505_smallcrate-e1721607607329.webp",
+    "attributes": {
+      "health": 100,
+      "slots": 60,
+      "subcategory": "Storage"
+    },
+    "relations": [
+      {
+        "category": "materials",
+        "slug": "hammer",
+        "name": "hammer",
+        "kind": "materials",
+        "quantity": 1
+      },
+      {
+        "category": "materials",
+        "slug": "nails",
+        "name": "Nails",
+        "kind": "materials",
+        "quantity": 15
+      },
+      {
+        "category": "materials",
+        "slug": "planks",
+        "name": "Planks",
+        "kind": "materials",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "id": "50dc91a9-4f0c-4e92-9e9b-fb48b1e5fa13",
+    "table": "basebuilding_items",
+    "category": "basebuilding",
+    "slug": "small-tent",
+    "name": "Small Tent",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/basebuilding/1769690461619_0000000001440090aef9b826b8a791f900000000000000000000000000000000.png",
+    "attributes": {
+      "rarity": "Common",
+      "subcategory": "Tents"
+    },
+    "relations": []
+  },
+  {
+    "id": "60116d70-1e5e-4620-85c6-207d31f10056",
+    "table": "basebuilding_items",
+    "category": "basebuilding",
+    "slug": "tent",
+    "name": "Tent",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/basebuilding/1769690431968_00000000019000a05db262a494d0032a00000000000000000000000000000000.png",
+    "attributes": {
+      "rarity": "Uncommon",
+      "subcategory": "Tents"
+    },
+    "relations": []
+  },
+  {
+    "id": "68fca8f2-72d1-494a-b400-abca678deaf2",
+    "table": "consumables",
+    "category": "consumables",
+    "slug": "bacon",
+    "name": "Bacon",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762766983656_Bacon.png",
+    "attributes": {
+      "type": "food",
+      "hydration": -15,
+      "energy": 3,
+      "health": 0,
+      "is_refillable": false,
+      "requires_can_opener": false,
+      "is_safe_to_eat_raw": false
+    },
+    "relations": [
+      {
+        "category": "consumables",
+        "slug": "cooked-bacon",
+        "name": "Cooked Bacon",
+        "kind": "cooked"
+      }
+    ]
+  },
+  {
+    "id": "5d5a5af5-85a5-44e7-8373-2bbe5f8020a6",
+    "table": "consumables",
+    "category": "consumables",
+    "slug": "brad",
+    "name": "Brad",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1769690632176_00000000001b001b97bfa07fc610805700000000000000000000000000000000.png",
+    "attributes": {
+      "type": "food",
+      "hydration": 0,
+      "energy": 0,
+      "health": 0,
+      "is_refillable": false,
+      "requires_can_opener": false,
+      "is_safe_to_eat_raw": true,
+      "rarity": "Common"
+    },
+    "relations": []
+  },
+  {
+    "id": "5b64a061-2882-4410-a8a0-1c1e821f57fa",
+    "table": "consumables",
+    "category": "consumables",
+    "slug": "canned-chicken",
+    "name": "Canned Chicken",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1769690674927_0000000000240030a88db162884ce5c700000000000000000000000000000000.png",
+    "attributes": {
+      "type": "food",
+      "hydration": 0,
+      "energy": 0,
+      "health": 0,
+      "is_refillable": false,
+      "requires_can_opener": true,
+      "is_safe_to_eat_raw": true,
+      "rarity": "Common"
+    },
+    "relations": []
+  },
+  {
+    "id": "8e69cba7-f94d-40df-9c06-2520c6fff045",
+    "table": "consumables",
+    "category": "consumables",
+    "slug": "canned-olives",
+    "name": "Canned Olives",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762767780256_ChatGPT%20Image%2010%20nov%202025,%2010_42_20.png",
+    "attributes": {
+      "type": "food",
+      "hydration": -5,
+      "energy": 25,
+      "health": 0,
+      "is_refillable": false,
+      "requires_can_opener": true,
+      "is_safe_to_eat_raw": true
+    },
+    "relations": []
+  },
+  {
+    "id": "1bc2d0fa-ed5c-4ad0-9230-11fc20af052c",
+    "table": "consumables",
+    "category": "consumables",
+    "slug": "canned-pizza",
+    "name": "Canned Pizza",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762816512548_cannedpizza.png",
+    "attributes": {
+      "type": "food",
+      "hydration": 0,
+      "energy": 25,
+      "health": 0,
+      "is_refillable": false,
+      "requires_can_opener": true,
+      "is_safe_to_eat_raw": true,
+      "rarity": "Rare"
+    },
+    "relations": []
+  },
+  {
+    "id": "1d8dfc0a-fcdc-4fa5-8249-d5df9646cb4e",
+    "table": "consumables",
+    "category": "consumables",
+    "slug": "canned-soup",
+    "name": "Canned Soup",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762767528783_Vegetable%20soup.png",
+    "attributes": {
+      "type": "food",
+      "hydration": 5,
+      "energy": 25,
+      "health": 0,
+      "is_refillable": false,
+      "requires_can_opener": true,
+      "is_safe_to_eat_raw": true,
+      "rarity": "Common"
+    },
+    "relations": []
+  },
+  {
+    "id": "ebb53809-3812-4264-a2bd-a5f1499d4a2f",
+    "table": "consumables",
+    "category": "consumables",
+    "slug": "chocolate-bar",
+    "name": "Chocolate Bar",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1769690942874_00000000000400024a9c4ed5581774e900000000000000000000000000000000.png",
+    "attributes": {
+      "type": "food",
+      "hydration": 0,
+      "energy": 0,
+      "health": 0,
+      "is_refillable": false,
+      "requires_can_opener": false,
+      "is_safe_to_eat_raw": true,
+      "rarity": "Common"
+    },
+    "relations": []
+  },
+  {
+    "id": "82a5a686-260a-49b2-b866-d90cc045d74e",
+    "table": "consumables",
+    "category": "consumables",
+    "slug": "citreo-lemonade",
+    "name": "Citreo Lemonade",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762764935664_ChatGPT%20Image%2010%20nov%202025,%2009_54_52.png",
+    "attributes": {
+      "type": "drink",
+      "hydration": 25,
+      "energy": 0,
+      "health": 0,
+      "is_refillable": true,
+      "requires_can_opener": false,
+      "is_safe_to_eat_raw": true,
+      "rarity": "Common"
+    },
+    "relations": []
+  },
+  {
+    "id": "c9e4c34a-6671-4cb1-94ef-83a00d3d6070",
+    "table": "consumables",
+    "category": "consumables",
+    "slug": "citreo-lemonade-bottle",
+    "name": "Citreo Lemonade Bottle",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762766596199_bott.png",
+    "attributes": {
+      "type": "drink",
+      "hydration": 25,
+      "energy": 0,
+      "health": 0,
+      "is_refillable": false,
+      "requires_can_opener": false,
+      "is_safe_to_eat_raw": true
+    },
+    "relations": []
+  },
+  {
+    "id": "a779deff-b33e-4e66-87fe-cf1f566e501e",
+    "table": "consumables",
+    "category": "consumables",
+    "slug": "cooked-bacon",
+    "name": "Cooked Bacon",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762767220972_Cooked%20Bancom.png",
+    "attributes": {
+      "type": "food",
+      "hydration": 10,
+      "energy": 30,
+      "health": 0,
+      "is_refillable": false,
+      "requires_can_opener": false,
+      "is_safe_to_eat_raw": true
+    },
+    "relations": []
+  },
+  {
+    "id": "375a2854-6974-43eb-87ee-4fbdea3308f7",
+    "table": "consumables",
+    "category": "consumables",
+    "slug": "cooked-meat",
+    "name": "Cooked Meat",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762815099860_cookedmeat.png",
+    "attributes": {
+      "type": "food",
+      "hydration": 10,
+      "energy": 30,
+      "health": 0,
+      "is_refillable": false,
+      "requires_can_opener": false,
+      "is_safe_to_eat_raw": true
+    },
+    "relations": []
+  },
+  {
+    "id": "4a599930-79d0-45de-b006-97d4ea3f4d8d",
+    "table": "consumables",
+    "category": "consumables",
+    "slug": "croissant",
+    "name": "Croissant",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762815544296_croissant.png",
+    "attributes": {
+      "type": "food",
+      "hydration": -15,
+      "energy": 3,
+      "health": 0,
+      "is_refillable": false,
+      "requires_can_opener": false,
+      "is_safe_to_eat_raw": true,
+      "rarity": "Common"
+    },
+    "relations": []
+  },
+  {
+    "id": "b6118e6e-bf9e-4efc-a53d-a3b7570bfec8",
+    "table": "consumables",
+    "category": "consumables",
+    "slug": "dr-pepper-can",
+    "name": "Dr Pepper Can",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762765583412_DrPepperdrink.png",
+    "attributes": {
+      "type": "drink",
+      "hydration": 25,
+      "energy": 0,
+      "health": 0,
+      "is_refillable": false,
+      "requires_can_opener": false,
+      "is_safe_to_eat_raw": true
+    },
+    "relations": []
+  },
+  {
+    "id": "78761e7e-acfc-416f-9a04-0d0bbf4554bd",
+    "table": "consumables",
+    "category": "consumables",
+    "slug": "drunk-driver-beer",
+    "name": "Drunk Driver Beer",
+    "description": "A can of incredibly beer",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762726783552_Adobe%20Express%20-%20file%20(2).png",
+    "attributes": {
+      "type": "drink",
+      "hydration": 25,
+      "energy": 0,
+      "health": 0,
+      "is_refillable": true,
+      "requires_can_opener": false,
+      "is_safe_to_eat_raw": true,
+      "rarity": "Common"
+    },
+    "relations": []
+  },
+  {
+    "id": "f1b31b92-eaaa-4196-8a44-468fd62c664a",
+    "table": "consumables",
+    "category": "consumables",
+    "slug": "frostea",
+    "name": "Frostea",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762726968202_Adobe%20Express%20-%20file%20(2).png",
+    "attributes": {
+      "type": "drink",
+      "hydration": 25,
+      "energy": 0,
+      "health": 0,
+      "is_refillable": true,
+      "requires_can_opener": false,
+      "is_safe_to_eat_raw": true,
+      "rarity": "Common"
+    },
+    "relations": []
+  },
+  {
+    "id": "785d27cc-864f-4a5a-9a7b-efd05dfbf59b",
+    "table": "consumables",
+    "category": "consumables",
+    "slug": "frosted-toasties",
+    "name": "Frosted Toasties",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1769690980931_000000000030002437563a4bdf23249700000000000000000000000000000000.png",
+    "attributes": {
+      "type": "food",
+      "hydration": 0,
+      "energy": 0,
+      "health": 0,
+      "is_refillable": false,
+      "requires_can_opener": false,
+      "is_safe_to_eat_raw": true,
+      "rarity": "Common"
+    },
+    "relations": []
+  },
+  {
+    "id": "af5590b3-20b4-4459-9755-b4fc4952c1ff",
+    "table": "consumables",
+    "category": "consumables",
+    "slug": "frosted-toasties-af5590b3",
+    "name": "Frosted Toasties",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1769691020492_00000000003000248249895fec7cdc5700000000000000000000000000000000.png",
+    "attributes": {
+      "type": "food",
+      "hydration": 0,
+      "energy": 0,
+      "health": 0,
+      "is_refillable": false,
+      "requires_can_opener": false,
+      "is_safe_to_eat_raw": true,
+      "rarity": "Common"
+    },
+    "relations": [],
+    "disambiguator": "af5590b3"
+  },
+  {
+    "id": "5ece54e9-5d78-40b9-a01a-3fe2ac3998e9",
+    "table": "consumables",
+    "category": "consumables",
+    "slug": "gamer-juice-can",
+    "name": "Gamer Juice Can",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762766265929_Gamer%20Juice.png",
+    "attributes": {
+      "type": "drink",
+      "hydration": 25,
+      "energy": 0,
+      "health": 0,
+      "is_refillable": true,
+      "requires_can_opener": false,
+      "is_safe_to_eat_raw": true
+    },
+    "relations": []
+  },
+  {
+    "id": "f264e45e-9457-4a21-bee7-e6a7edb0ea5d",
+    "table": "consumables",
+    "category": "consumables",
+    "slug": "jakes-cereals",
+    "name": "Jake's Cereals",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762307826705_jakes%20cereals.png",
+    "attributes": {
+      "type": "food",
+      "hydration": -15,
+      "energy": 50,
+      "health": 0,
+      "is_refillable": false,
+      "requires_can_opener": false,
+      "is_safe_to_eat_raw": true,
+      "rarity": "Uncommon"
+    },
+    "relations": []
+  },
+  {
+    "id": "fab7f1c4-d03d-4ce8-b20b-9da31d82a5ce",
+    "table": "consumables",
+    "category": "consumables",
+    "slug": "meat",
+    "name": "Meat",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762767950461_ChatGPT%20Image%2010%20nov%202025,%2010_45_13.png",
+    "attributes": {
+      "type": "food",
+      "hydration": -15,
+      "energy": 3,
+      "health": 0,
+      "is_refillable": false,
+      "requires_can_opener": false,
+      "is_safe_to_eat_raw": false
+    },
+    "relations": [
+      {
+        "category": "consumables",
+        "slug": "cooked-meat",
+        "name": "Cooked Meat",
+        "kind": "cooked"
+      }
+    ]
+  },
+  {
+    "id": "199742f9-af63-43f7-96a8-a0e88f2f97c2",
+    "table": "consumables",
+    "category": "consumables",
+    "slug": "mixed-vegetables-can",
+    "name": "Mixed Vegetables Can",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762767143006_Mixed%20Vegetables%20%20Can.png",
+    "attributes": {
+      "type": "food",
+      "hydration": 5,
+      "energy": 20,
+      "health": 0,
+      "is_refillable": false,
+      "requires_can_opener": true,
+      "is_safe_to_eat_raw": true,
+      "rarity": "Common"
+    },
+    "relations": []
+  },
+  {
+    "id": "1713854c-135c-47c2-aa61-aae85a1921d0",
+    "table": "consumables",
+    "category": "consumables",
+    "slug": "nota-cola",
+    "name": "Nota Cola",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762722525041_Adobe%20Express%20-%20file.png",
+    "attributes": {
+      "type": "drink",
+      "hydration": 25,
+      "energy": 0,
+      "health": 0,
+      "is_refillable": true,
+      "requires_can_opener": false,
+      "is_safe_to_eat_raw": true,
+      "rarity": "Common"
+    },
+    "relations": []
+  },
+  {
+    "id": "d00d7c87-ae8b-4dfa-92b2-cd08730ad512",
+    "table": "consumables",
+    "category": "consumables",
+    "slug": "nota-cola-bottle",
+    "name": "Nota Cola Bottle",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762727505286_ChatGPT%20Image%209%20nov%202025,%2023_30_39.png",
+    "attributes": {
+      "type": "drink",
+      "hydration": 25,
+      "energy": 0,
+      "health": 0,
+      "is_refillable": true,
+      "requires_can_opener": false,
+      "is_safe_to_eat_raw": true,
+      "rarity": "Common"
+    },
+    "relations": []
+  },
+  {
+    "id": "b1956972-46d6-4793-8452-e03da14492f8",
+    "table": "consumables",
+    "category": "consumables",
+    "slug": "oasis-water-can",
+    "name": "Oasis Water Can",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762765761229_OasisH2o.png",
+    "attributes": {
+      "type": "drink",
+      "hydration": 25,
+      "energy": 0,
+      "health": 0,
+      "is_refillable": true,
+      "requires_can_opener": false,
+      "is_safe_to_eat_raw": true
+    },
+    "relations": []
+  },
+  {
+    "id": "a960ef64-e3aa-463d-94eb-9724eae2ce59",
+    "table": "consumables",
+    "category": "consumables",
+    "slug": "pasta-can",
+    "name": "Pasta Can",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1769690600143_00000000000c0012e796f4db2f18114900000000000000000000000000000000.png",
+    "attributes": {
+      "type": "food",
+      "hydration": 0,
+      "energy": 0,
+      "health": 0,
+      "is_refillable": false,
+      "requires_can_opener": true,
+      "is_safe_to_eat_raw": true,
+      "rarity": "Common"
+    },
+    "relations": []
+  },
+  {
+    "id": "7429ec7f-8047-48c4-8dff-d6e90e295c4e",
+    "table": "consumables",
+    "category": "consumables",
+    "slug": "sausages",
+    "name": "Sausages",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1769690915985_0000000000100020d296df65362b4e3400000000000000000000000000000000.png",
+    "attributes": {
+      "type": "food",
+      "hydration": 0,
+      "energy": 0,
+      "health": 0,
+      "is_refillable": false,
+      "requires_can_opener": false,
+      "is_safe_to_eat_raw": true,
+      "rarity": "Common"
+    },
+    "relations": []
+  },
+  {
+    "id": "8a0209fe-815f-43d5-8116-bc7af3195228",
+    "table": "consumables",
+    "category": "consumables",
+    "slug": "slush-cream-soda",
+    "name": "Slush Cream Soda",
+    "description": "A can of incredibly sweet Slush cream soda",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762765318339_ChatGPT%20Image%2010%20nov%202025,%2010_01_16.png",
+    "attributes": {
+      "type": "drink",
+      "hydration": 25,
+      "energy": 0,
+      "health": 0,
+      "is_refillable": true,
+      "requires_can_opener": false,
+      "is_safe_to_eat_raw": true,
+      "rarity": "Common"
+    },
+    "relations": []
+  },
+  {
+    "id": "61154f7d-6e3c-43a7-a3e6-9df6f060ad76",
+    "table": "consumables",
+    "category": "consumables",
+    "slug": "teeth-poison",
+    "name": "Teeth Poison",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762764429463_Adobe%20Express%20-%20file.png",
+    "attributes": {
+      "type": "drink",
+      "hydration": 25,
+      "energy": 0,
+      "health": 0,
+      "is_refillable": true,
+      "requires_can_opener": false,
+      "is_safe_to_eat_raw": true,
+      "rarity": "Uncommon"
+    },
+    "relations": []
+  },
+  {
+    "id": "c8d5dbda-ea24-4ca8-b1e4-47df199b52a3",
+    "table": "consumables",
+    "category": "consumables",
+    "slug": "water-bottle-h2o",
+    "name": "Water Bottle H2O",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762766009623_ChatGPT%20Image%2010%20nov%202025,%2010_12_43.png",
+    "attributes": {
+      "type": "drink",
+      "hydration": 24,
+      "energy": 0,
+      "health": 0,
+      "is_refillable": true,
+      "requires_can_opener": false,
+      "is_safe_to_eat_raw": true,
+      "rarity": "Common"
+    },
+    "relations": []
+  },
+  {
+    "id": "9b076959-1329-47d8-a2bb-aa5fdd3c6bf8",
+    "table": "consumables",
+    "category": "consumables",
+    "slug": "whiskey-bottle",
+    "name": "Whiskey Bottle",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1769691049518_0000000000140032906b99170c01079c00000000000000000000000000000000.png",
+    "attributes": {
+      "type": "drink",
+      "hydration": 0,
+      "energy": 0,
+      "health": 0,
+      "is_refillable": true,
+      "requires_can_opener": false,
+      "is_safe_to_eat_raw": true,
+      "rarity": "Uncommon"
+    },
+    "relations": []
+  },
+  {
+    "id": "0354a618-f8aa-4970-8073-1533ea17fe1f",
+    "table": "gear",
+    "category": "gear",
+    "slug": "balaclava",
+    "name": "Balaclava",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762908221192_ChatGPT%20Image%2012%20nov%202025,%2000_42_50.png",
+    "attributes": {
+      "weight": 0.2,
+      "size": "3x5",
+      "inventory_slots": 0,
+      "insulation": 0,
+      "bleed_protection": 0,
+      "blunt_protection": 0,
+      "fire_protection": 0,
+      "armor_rating": 0,
+      "rarity": "Epic",
+      "subcategory": "Head"
+    },
+    "relations": []
+  },
+  {
+    "id": "935b2afe-8017-403f-bf42-6a22ccae9636",
+    "table": "gear",
+    "category": "gear",
+    "slug": "beanie",
+    "name": "Beanie",
+    "description": "We’ll also accept ‘toque’.",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762908278821_beannie.png",
+    "attributes": {
+      "weight": 0.11,
+      "size": "3x3",
+      "inventory_slots": 0,
+      "insulation": 5,
+      "bleed_protection": 5,
+      "blunt_protection": 0,
+      "fire_protection": 10,
+      "armor_rating": 0,
+      "rarity": "Common",
+      "subcategory": "Head"
+    },
+    "relations": []
+  },
+  {
+    "id": "4644173d-6cca-494f-8994-cc51493a97fc",
+    "table": "gear",
+    "category": "gear",
+    "slug": "black-flexion-gloves",
+    "name": "Black Flexion Gloves",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762216804698_felxionblack.png",
+    "attributes": {
+      "weight": 0.33,
+      "inventory_slots": 0,
+      "insulation": 4,
+      "bleed_protection": 5,
+      "blunt_protection": 10,
+      "fire_protection": 5,
+      "armor_rating": 0,
+      "rarity": "Rare",
+      "subcategory": "Gloves"
+    },
+    "relations": [
+      {
+        "category": "npcs",
+        "slug": "blackjack",
+        "name": "Blackjack",
+        "kind": "sellers"
+      }
+    ]
+  },
+  {
+    "id": "eb6bb50a-3040-4e1f-a25b-a84ed279eca1",
+    "table": "gear",
+    "category": "gear",
+    "slug": "boots",
+    "name": "Boots",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762339042393_shoes.png",
+    "attributes": {
+      "weight": 0,
+      "inventory_slots": 0,
+      "insulation": 0,
+      "bleed_protection": 0,
+      "blunt_protection": 0,
+      "fire_protection": 0,
+      "armor_rating": 0,
+      "rarity": "Common",
+      "subcategory": "Shoes"
+    },
+    "relations": []
+  },
+  {
+    "id": "ae3cd19b-1882-4e28-9282-d54c96c17561",
+    "table": "gear",
+    "category": "gear",
+    "slug": "brown-flexion-gloves",
+    "name": "Brown Flexion Gloves",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762339207575_felxionbrown.png",
+    "attributes": {
+      "weight": 0.33,
+      "inventory_slots": 0,
+      "insulation": 4,
+      "bleed_protection": 5,
+      "blunt_protection": 10,
+      "fire_protection": 5,
+      "armor_rating": 0,
+      "rarity": "Rare",
+      "subcategory": "Gloves"
+    },
+    "relations": [
+      {
+        "category": "npcs",
+        "slug": "blackjack",
+        "name": "Blackjack",
+        "kind": "sellers"
+      }
+    ]
+  },
+  {
+    "id": "ffb653bf-68c7-42ba-921c-9ac55566e053",
+    "table": "gear",
+    "category": "gear",
+    "slug": "brown-hard-knuckle-gloves",
+    "name": "Brown Hard Knuckle Gloves",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762339384797_hard%20knu%20br.png",
+    "attributes": {
+      "weight": 0.66,
+      "inventory_slots": 0,
+      "insulation": 0,
+      "bleed_protection": 10,
+      "blunt_protection": 15,
+      "fire_protection": 10,
+      "armor_rating": 0,
+      "rarity": "Rare",
+      "subcategory": "Gloves"
+    },
+    "relations": [
+      {
+        "category": "npcs",
+        "slug": "blackjack",
+        "name": "Blackjack",
+        "kind": "sellers"
+      }
+    ]
+  },
+  {
+    "id": "56a44ffb-281b-44ff-aed9-01ecd19600d8",
+    "table": "gear",
+    "category": "gear",
+    "slug": "delivery-jacket",
+    "name": "Delivery Jacket",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762307500402_tbrender_001-removebg-preview-1-e1696582291618.png",
+    "attributes": {
+      "weight": 0,
+      "inventory_slots": 0,
+      "insulation": 0,
+      "bleed_protection": 0,
+      "blunt_protection": 0,
+      "fire_protection": 0,
+      "armor_rating": 0,
+      "rarity": "Rare",
+      "subcategory": "Top"
+    },
+    "relations": []
+  },
+  {
+    "id": "f6077e7a-17df-4da8-8397-694d3b06ec57",
+    "table": "gear",
+    "category": "gear",
+    "slug": "delivery-shoes",
+    "name": "Delivery Shoes",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762339118231_del.png",
+    "attributes": {
+      "weight": 0,
+      "inventory_slots": 0,
+      "insulation": 0,
+      "bleed_protection": 0,
+      "blunt_protection": 0,
+      "fire_protection": 0,
+      "armor_rating": 0,
+      "rarity": "Common",
+      "subcategory": "Shoes"
+    },
+    "relations": []
+  },
+  {
+    "id": "8902c0f3-018d-42a3-8cb2-aa6a94f02971",
+    "table": "gear",
+    "category": "gear",
+    "slug": "double-breasted-suit",
+    "name": "Double-Breasted Suit",
+    "description": "A suit jacket & button up.",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762720487970_Suitjacket.png",
+    "attributes": {
+      "weight": 0.9,
+      "inventory_slots": 24,
+      "insulation": 5,
+      "bleed_protection": 5,
+      "blunt_protection": 5,
+      "fire_protection": 5,
+      "armor_rating": 0,
+      "rarity": "Common",
+      "subcategory": "Top"
+    },
+    "relations": []
+  },
+  {
+    "id": "2f6d13be-3682-4092-9d89-625645596738",
+    "table": "gear",
+    "category": "gear",
+    "slug": "dress-shoes",
+    "name": "Dress Shoes",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762338966995_dress%20shoes.png",
+    "attributes": {
+      "weight": 0,
+      "inventory_slots": 0,
+      "insulation": 0,
+      "bleed_protection": 0,
+      "blunt_protection": 0,
+      "fire_protection": 0,
+      "armor_rating": 0,
+      "rarity": "Common",
+      "subcategory": "Shoes"
+    },
+    "relations": []
+  },
+  {
+    "id": "55cd91a1-141c-40cc-89eb-979b5b61288c",
+    "table": "gear",
+    "category": "gear",
+    "slug": "dufflebag",
+    "name": "Dufflebag",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762215636103_1.png",
+    "attributes": {
+      "weight": 4.5,
+      "inventory_slots": 308,
+      "insulation": 5,
+      "bleed_protection": 0,
+      "blunt_protection": 0,
+      "fire_protection": 0,
+      "armor_rating": 0,
+      "rarity": "Uncommon",
+      "subcategory": "Backpacks"
+    },
+    "relations": []
+  },
+  {
+    "id": "f69c0a93-c1e1-4bf4-8373-912204171b9b",
+    "table": "gear",
+    "category": "gear",
+    "slug": "emergency-response-gas-mask",
+    "name": "Emergency Response Gas Mask",
+    "description": "Emergency Response Team helmet. Offers protection against incoming damage.",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762908593273_1762720860775_Mask.png",
+    "attributes": {
+      "weight": 1.3,
+      "inventory_slots": 0,
+      "insulation": 0,
+      "bleed_protection": 0,
+      "blunt_protection": 0,
+      "fire_protection": 0,
+      "armor_rating": 0,
+      "rarity": "Rare",
+      "subcategory": "Head"
+    },
+    "relations": [
+      {
+        "category": "npcs",
+        "slug": "blackjack",
+        "name": "Blackjack",
+        "kind": "sellers"
+      }
+    ]
+  },
+  {
+    "id": "fa8b12da-1dd5-4907-86cd-1ef56a0445ac",
+    "table": "gear",
+    "category": "gear",
+    "slug": "emt-backpack",
+    "name": "EMT Backpack",
+    "description": "A small backpack used by EMT",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762216727090_EMT.png",
+    "attributes": {
+      "weight": 2.3,
+      "size": "8x10",
+      "inventory_slots": 126,
+      "insulation": 4,
+      "bleed_protection": 0,
+      "blunt_protection": 0,
+      "fire_protection": 0,
+      "armor_rating": 0,
+      "rarity": "Epic",
+      "subcategory": "Backpacks"
+    },
+    "relations": []
+  },
+  {
+    "id": "ec9d3bcc-d702-4e08-a117-4ad601e3856a",
+    "table": "gear",
+    "category": "gear",
+    "slug": "hikking-backpack",
+    "name": "Hikking Backpack",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762216252626_2.png",
+    "attributes": {
+      "weight": 6,
+      "inventory_slots": 642,
+      "insulation": 5,
+      "bleed_protection": 0,
+      "blunt_protection": 0,
+      "fire_protection": 0,
+      "armor_rating": 0,
+      "rarity": "Rare",
+      "subcategory": "Backpacks"
+    },
+    "relations": []
+  },
+  {
+    "id": "19f37805-815f-4655-a9b1-966ea0d28c82",
+    "table": "gear",
+    "category": "gear",
+    "slug": "loafers",
+    "name": "Loafers",
+    "description": "A pair of loafers.",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762720588779_shoe1.png",
+    "attributes": {
+      "weight": 0.8,
+      "inventory_slots": 0,
+      "insulation": 2,
+      "bleed_protection": 5,
+      "blunt_protection": 5,
+      "fire_protection": 0,
+      "armor_rating": 0,
+      "rarity": "Common",
+      "subcategory": "Shoes"
+    },
+    "relations": []
+  },
+  {
+    "id": "3a54a25d-d19c-4801-9d8e-a38cef4de6d8",
+    "table": "gear",
+    "category": "gear",
+    "slug": "military-boots",
+    "name": "Military Boots",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762339102744_mil.png",
+    "attributes": {
+      "weight": 0,
+      "inventory_slots": 0,
+      "insulation": 0,
+      "bleed_protection": 0,
+      "blunt_protection": 0,
+      "fire_protection": 0,
+      "armor_rating": 0,
+      "rarity": "Rare",
+      "subcategory": "Shoes"
+    },
+    "relations": []
+  },
+  {
+    "id": "f5d810d4-ebe8-4ade-93fd-8580db6b41af",
+    "table": "gear",
+    "category": "gear",
+    "slug": "military-sweater",
+    "name": "Military Sweater",
+    "description": "A tweed military sweater.",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762719343467_ChatGPT%20Image%209%20nov%202025,%2021_15_27.png",
+    "attributes": {
+      "weight": 0.66,
+      "inventory_slots": 42,
+      "insulation": 8,
+      "bleed_protection": 15,
+      "blunt_protection": 10,
+      "fire_protection": 10,
+      "armor_rating": 0,
+      "rarity": "Rare",
+      "subcategory": "Top"
+    },
+    "relations": [
+      {
+        "category": "npcs",
+        "slug": "blackjack",
+        "name": "Blackjack",
+        "kind": "sellers"
+      }
+    ]
+  },
+  {
+    "id": "cfddbc97-d53c-4f9e-b52e-2c9b43f7dfd7",
+    "table": "gear",
+    "category": "gear",
+    "slug": "military-vest",
+    "name": "Military Vest",
+    "description": "A military vest.",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762907943430_ChatGPT%20Image%2012%20nov%202025,%2000_38_28.png",
+    "attributes": {
+      "weight": 7,
+      "size": "5x5",
+      "inventory_slots": 0,
+      "insulation": 0,
+      "bleed_protection": 0,
+      "blunt_protection": 0,
+      "fire_protection": 0,
+      "armor_rating": 50,
+      "rarity": "Legendary",
+      "subcategory": "Vests"
+    },
+    "relations": [
+      {
+        "category": "npcs",
+        "slug": "blackjack",
+        "name": "Blackjack",
+        "kind": "sellers"
+      }
+    ]
+  },
+  {
+    "id": "f4ee8076-96dd-4132-bb66-10c20aae8711",
+    "table": "gear",
+    "category": "gear",
+    "slug": "pat-82-hat",
+    "name": "Pat 82 Hat",
+    "description": "A PAT 82 hat.",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762908582455_1762720433184_Pat82hat.png",
+    "attributes": {
+      "weight": 0.11,
+      "inventory_slots": 0,
+      "insulation": 1,
+      "bleed_protection": 5,
+      "blunt_protection": 5,
+      "fire_protection": 5,
+      "armor_rating": 0,
+      "rarity": "Uncommon",
+      "subcategory": "Head"
+    },
+    "relations": []
+  },
+  {
+    "id": "000b0593-482e-41b5-b5c8-ce9d995ce30d",
+    "table": "gear",
+    "category": "gear",
+    "slug": "patrol-hat",
+    "name": "Patrol Hat",
+    "description": "A Privateer security solutions cap.",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762908573742_1762720203513_cap.png",
+    "attributes": {
+      "weight": 0.11,
+      "inventory_slots": 0,
+      "insulation": 1,
+      "bleed_protection": 5,
+      "blunt_protection": 5,
+      "fire_protection": 5,
+      "armor_rating": 0,
+      "rarity": "Common",
+      "subcategory": "Head"
+    },
+    "relations": []
+  },
+  {
+    "id": "53434f2c-8ef4-4f08-a9b5-0ec55e3a5c43",
+    "table": "gear",
+    "category": "gear",
+    "slug": "rcmp-vest",
+    "name": "RCMP Vest",
+    "description": "A protective, bullet proof RCMP vest.",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762908122432_ChatGPT%20Image%2012%20nov%202025,%2000_41_09.png",
+    "attributes": {
+      "weight": 4.5,
+      "size": "5x5",
+      "inventory_slots": 0,
+      "insulation": 5,
+      "bleed_protection": 30,
+      "blunt_protection": 20,
+      "fire_protection": 20,
+      "armor_rating": 30,
+      "rarity": "Epic",
+      "subcategory": "Vests"
+    },
+    "relations": [
+      {
+        "category": "npcs",
+        "slug": "blackjack",
+        "name": "Blackjack",
+        "kind": "sellers"
+      }
+    ]
+  },
+  {
+    "id": "8f1b225a-3adc-4a6d-abe5-cbabd2d545d3",
+    "table": "gear",
+    "category": "gear",
+    "slug": "school-backpack",
+    "name": "School Backpack",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762216679038_4.png",
+    "attributes": {
+      "weight": 2.8,
+      "inventory_slots": 196,
+      "insulation": 4,
+      "bleed_protection": 0,
+      "blunt_protection": 0,
+      "fire_protection": 0,
+      "armor_rating": 0,
+      "rarity": "Common",
+      "subcategory": "Backpacks"
+    },
+    "relations": []
+  },
+  {
+    "id": "5fde2fd4-8bba-4eba-ab1d-c0172e236680",
+    "table": "gear",
+    "category": "gear",
+    "slug": "security-shoes",
+    "name": "Security Shoes",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762339008714_sec.png",
+    "attributes": {
+      "weight": 0,
+      "inventory_slots": 0,
+      "insulation": 0,
+      "bleed_protection": 0,
+      "blunt_protection": 0,
+      "fire_protection": 0,
+      "armor_rating": 0,
+      "rarity": "Uncommon",
+      "subcategory": "Shoes"
+    },
+    "relations": []
+  },
+  {
+    "id": "ca921013-7d0e-4307-935d-39bbba563a5a",
+    "table": "gear",
+    "category": "gear",
+    "slug": "shoes",
+    "name": "Shoes",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762339136015_2.png",
+    "attributes": {
+      "weight": 0,
+      "inventory_slots": 0,
+      "insulation": 0,
+      "bleed_protection": 0,
+      "blunt_protection": 0,
+      "fire_protection": 0,
+      "armor_rating": 0,
+      "rarity": "Common",
+      "subcategory": "Shoes"
+    },
+    "relations": []
+  },
+  {
+    "id": "47deb7ff-4b6c-4905-a07c-952065c1670c",
+    "table": "gear",
+    "category": "gear",
+    "slug": "shoes-47deb7ff",
+    "name": "Shoes",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762339057508_shoes3.png",
+    "attributes": {
+      "weight": 0,
+      "inventory_slots": 0,
+      "insulation": 0,
+      "bleed_protection": 0,
+      "blunt_protection": 0,
+      "fire_protection": 0,
+      "armor_rating": 0,
+      "rarity": "Common",
+      "subcategory": "Shoes"
+    },
+    "relations": [],
+    "disambiguator": "47deb7ff"
+  },
+  {
+    "id": "74b53a48-1e3f-45a2-9540-4dcbf7e2e810",
+    "table": "gear",
+    "category": "gear",
+    "slug": "shoes-74b53a48",
+    "name": "Shoes",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762339070115_shoes4.png",
+    "attributes": {
+      "weight": 0,
+      "inventory_slots": 0,
+      "insulation": 0,
+      "bleed_protection": 0,
+      "blunt_protection": 0,
+      "fire_protection": 0,
+      "armor_rating": 0,
+      "rarity": "Uncommon",
+      "subcategory": "Shoes"
+    },
+    "relations": [],
+    "disambiguator": "74b53a48"
+  },
+  {
+    "id": "972e4141-f530-4d3d-9eb9-865294237e93",
+    "table": "gear",
+    "category": "gear",
+    "slug": "shoes-972e4141",
+    "name": "Shoes",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762339021236_shoes2.png",
+    "attributes": {
+      "weight": 0,
+      "inventory_slots": 0,
+      "insulation": 0,
+      "bleed_protection": 0,
+      "blunt_protection": 0,
+      "fire_protection": 0,
+      "armor_rating": 0,
+      "rarity": "Common",
+      "subcategory": "Shoes"
+    },
+    "relations": [],
+    "disambiguator": "972e4141"
+  },
+  {
+    "id": "96005bba-f7dd-4206-9d90-51516a26914c",
+    "table": "gear",
+    "category": "gear",
+    "slug": "stippled-grip-gloves",
+    "name": "Stippled Grip Gloves",
+    "description": "A pair of strippled grip gloves",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762218282774_ChatGPT%20Image%204%20nov%202025,%2002_04_31.png",
+    "attributes": {
+      "weight": 0.25,
+      "size": "5x4",
+      "inventory_slots": 0,
+      "insulation": 6,
+      "bleed_protection": 0,
+      "blunt_protection": 0,
+      "fire_protection": 10,
+      "armor_rating": 0,
+      "rarity": "Uncommon"
+    },
+    "relations": []
+  },
+  {
+    "id": "a90bff61-c67f-4b72-b6fd-b6ec6ed1b6f1",
+    "table": "gear",
+    "category": "gear",
+    "slug": "tactical-military-helmet",
+    "name": "Tactical Military Helmet",
+    "description": "An upgraded version of a military helmet.",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762908748842_milh.png",
+    "attributes": {
+      "weight": 3.33,
+      "size": "4x4",
+      "inventory_slots": 0,
+      "insulation": 6,
+      "bleed_protection": 20,
+      "blunt_protection": 50,
+      "fire_protection": 50,
+      "armor_rating": 50,
+      "rarity": "Legendary",
+      "subcategory": "Head"
+    },
+    "relations": [
+      {
+        "category": "npcs",
+        "slug": "blackjack",
+        "name": "Blackjack",
+        "kind": "sellers"
+      }
+    ]
+  },
+  {
+    "id": "84f1048c-571a-4897-8079-4782a2b72c58",
+    "table": "gear",
+    "category": "gear",
+    "slug": "tan-flexion-gloves",
+    "name": "Tan Flexion Gloves",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762339349278_felxiontan.png",
+    "attributes": {
+      "weight": 0.33,
+      "inventory_slots": 0,
+      "insulation": 4,
+      "bleed_protection": 5,
+      "blunt_protection": 10,
+      "fire_protection": 5,
+      "armor_rating": 0,
+      "rarity": "Rare",
+      "subcategory": "Gloves"
+    },
+    "relations": [
+      {
+        "category": "npcs",
+        "slug": "blackjack",
+        "name": "Blackjack",
+        "kind": "sellers"
+      }
+    ]
+  },
+  {
+    "id": "3c44f470-b04f-4843-90b4-491acb9da3f2",
+    "table": "gear",
+    "category": "gear",
+    "slug": "track-jacket",
+    "name": "Track Jacket",
+    "description": "A Trakker track jacket.",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762720315672_Trackjacket.png",
+    "attributes": {
+      "weight": 1.3,
+      "inventory_slots": 24,
+      "insulation": 5,
+      "bleed_protection": 10,
+      "blunt_protection": 0,
+      "fire_protection": 5,
+      "armor_rating": 0,
+      "rarity": "Common",
+      "subcategory": "Top"
+    },
+    "relations": []
+  },
+  {
+    "id": "df54835e-b993-4e3f-9a3b-b8c901292e50",
+    "table": "gear",
+    "category": "gear",
+    "slug": "vintage-bag",
+    "name": "Vintage Bag",
+    "description": "An adventure brand Sherpa 7R hiking backpack.",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762719378511_Vintagebackpack.png",
+    "attributes": {
+      "weight": 4.5,
+      "inventory_slots": 270,
+      "insulation": 5,
+      "bleed_protection": 0,
+      "blunt_protection": 0,
+      "fire_protection": 0,
+      "armor_rating": 0,
+      "rarity": "Uncommon",
+      "subcategory": "Backpacks"
+    },
+    "relations": []
+  },
+  {
+    "id": "8c766999-6eda-46af-a4b4-3af79d248674",
+    "table": "keys",
+    "category": "keys",
+    "slug": "nera-alpha-access-card",
+    "name": "Nera Alpha Access Card",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762816788913_BlueNeracard.png",
+    "attributes": {
+      "spawn_locations": "Infecteds",
+      "rarity": "Rare"
+    },
+    "relations": [
+      {
+        "category": "npcs",
+        "slug": "blackjack",
+        "name": "Blackjack",
+        "kind": "sellers"
+      }
+    ]
+  },
+  {
+    "id": "a1719926-edbe-4b6f-932c-05cedf880cf3",
+    "table": "keys",
+    "category": "keys",
+    "slug": "nera-beta-access-card",
+    "name": "Nera Beta Access Card",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762816688593_YellowNeracard.png",
+    "attributes": {
+      "spawn_locations": "Infecteds",
+      "rarity": "Rare"
+    },
+    "relations": [
+      {
+        "category": "npcs",
+        "slug": "blackjack",
+        "name": "Blackjack",
+        "kind": "sellers"
+      }
+    ]
+  },
+  {
+    "id": "ad817920-b06c-4db7-b433-7460d7fabca2",
+    "table": "keys",
+    "category": "keys",
+    "slug": "nera-federal-stockpile-card",
+    "name": "Nera Federal Stockpile Card",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762816613132_NeracardFederalstockpile.png",
+    "attributes": {
+      "spawn_locations": "Infecteds",
+      "rarity": "Rare",
+      "doors": "Federal Stockpile Bunker"
+    },
+    "relations": [
+      {
+        "category": "npcs",
+        "slug": "blackjack",
+        "name": "Blackjack",
+        "kind": "sellers"
+      }
+    ]
+  },
+  {
+    "id": "d51f8da5-e2a3-4436-8e14-c43ebd45446d",
+    "table": "keys",
+    "category": "keys",
+    "slug": "nera-gamma-access-card",
+    "name": "Nera Gamma Access Card",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762816865612_PurpleNeracard.png",
+    "attributes": {
+      "spawn_locations": "Infecteds",
+      "rarity": "Epic"
+    },
+    "relations": [
+      {
+        "category": "npcs",
+        "slug": "blackjack",
+        "name": "Blackjack",
+        "kind": "sellers"
+      }
+    ]
+  },
+  {
+    "id": "acb3c7c2-58a5-475e-b372-3bbcf4ef90f4",
+    "table": "keys",
+    "category": "keys",
+    "slug": "nera-sigma-access-card",
+    "name": "Nera Sigma Access Card",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762817003505_OrangeNeracard.png",
+    "attributes": {
+      "spawn_locations": "Infecteds",
+      "rarity": "Rare"
+    },
+    "relations": [
+      {
+        "category": "npcs",
+        "slug": "blackjack",
+        "name": "Blackjack",
+        "kind": "sellers"
+      }
+    ]
+  },
+  {
+    "id": "4cee5ad6-fe46-4a1b-b103-994a71cb62d1",
+    "table": "keys",
+    "category": "keys",
+    "slug": "rats-nest-cave-key",
+    "name": "Rats Nest Cave Key",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762817096983_Ratnestkey.png",
+    "attributes": {
+      "rarity": "Uncommon"
+    },
+    "relations": []
+  },
+  {
+    "id": "ac9969c2-6a9d-4835-9e51-33c7c29d5119",
+    "table": "crafting_materials",
+    "category": "materials",
+    "slug": "hammer",
+    "name": "hammer",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/crafting_materials/1763036828781_hammer-e1740741760514.webp",
+    "attributes": {},
+    "relations": [
+      {
+        "category": "basebuilding",
+        "slug": "small-crate",
+        "name": "Small Crate",
+        "kind": "recipes"
+      }
+    ]
+  },
+  {
+    "id": "498176de-dcb6-40e6-8d78-c73271a9925f",
+    "table": "crafting_materials",
+    "category": "materials",
+    "slug": "nails",
+    "name": "Nails",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/crafting_materials/1763036378005_000000070002000196869ec96b72881000000000000000000000000000000000.webp",
+    "attributes": {},
+    "relations": [
+      {
+        "category": "basebuilding",
+        "slug": "small-crate",
+        "name": "Small Crate",
+        "kind": "recipes"
+      }
+    ]
+  },
+  {
+    "id": "027e6eb8-1647-4d77-8640-e6991e900155",
+    "table": "crafting_materials",
+    "category": "materials",
+    "slug": "planks",
+    "name": "Planks",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/crafting_materials/1763036819885_000000070003000c33f03664ef4ecfb480000000000000000000000000000000-e1721608017965.webp",
+    "attributes": {},
+    "relations": [
+      {
+        "category": "basebuilding",
+        "slug": "small-crate",
+        "name": "Small Crate",
+        "kind": "recipes"
+      }
+    ]
+  },
+  {
+    "id": "d52168dc-1145-45e6-b865-2ef6efd9d066",
+    "table": "medicines",
+    "category": "meds",
+    "slug": "activated-charcoal-tablets",
+    "name": "Activated Charcoal Tablets",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762218826645_ChatGPT%20Image%204%20nov%202025,%2002_13_32.png",
+    "attributes": {
+      "hydration": 0,
+      "energy": 0,
+      "health": 0,
+      "rarity": "Epic"
+    },
+    "relations": [
+      {
+        "category": "meds",
+        "slug": "exshaustion",
+        "name": "Exshaustion",
+        "kind": "treats"
+      }
+    ]
+  },
+  {
+    "id": "380ab61d-a85c-44c5-9030-822234e0d4f0",
+    "table": "diseases",
+    "category": "meds",
+    "slug": "adiction",
+    "name": "Adiction",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/diseases/1775674910198_95e253e9-fb13-4b83-b47a-863a3aa4e746_removalai_preview.png",
+    "attributes": {
+      "is_lethal": false
+    },
+    "relations": []
+  },
+  {
+    "id": "5f9794d6-d403-44fa-a0b8-dd356318adda",
+    "table": "medicines",
+    "category": "meds",
+    "slug": "antibiotic",
+    "name": "Antibiotic",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762218793486_Antibiotic.png",
+    "attributes": {
+      "hydration": 0,
+      "energy": 0,
+      "health": 0,
+      "rarity": "Rare"
+    },
+    "relations": []
+  },
+  {
+    "id": "89a3823c-73f9-4514-8c2f-843083623b7f",
+    "table": "medicines",
+    "category": "meds",
+    "slug": "antiseptic-wipes",
+    "name": "Antiseptic Wipes",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762305252620_wipe.png",
+    "attributes": {
+      "hydration": 0,
+      "energy": 0,
+      "health": 0,
+      "rarity": "Epic"
+    },
+    "relations": []
+  },
+  {
+    "id": "2e07412d-dda6-4105-8a07-8e76cfeec0a7",
+    "table": "medicines",
+    "category": "meds",
+    "slug": "bandage",
+    "name": "Bandage",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762304982273_000000070012000ced07fad02787529e00010000000000000000000000000000-e1743144282553.webp",
+    "attributes": {
+      "hydration": 0,
+      "energy": 0,
+      "health": 0,
+      "rarity": "Common"
+    },
+    "relations": []
+  },
+  {
+    "id": "30bd9421-bee8-4a09-9cc4-934104177dc0",
+    "table": "diseases",
+    "category": "meds",
+    "slug": "bleeding",
+    "name": "Bleeding",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/diseases/1762822829261_Adobe%20Express%20-%20file%20(1).png",
+    "attributes": {
+      "is_lethal": true
+    },
+    "relations": []
+  },
+  {
+    "id": "5f52ece1-0e7a-4005-b9a0-06c10d820e0d",
+    "table": "diseases",
+    "category": "meds",
+    "slug": "bleeding-5f52ece1",
+    "name": "Bleeding",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/diseases/1763031641177_blood1.png",
+    "attributes": {
+      "is_lethal": true
+    },
+    "relations": [
+      {
+        "category": "meds",
+        "slug": "trauma-bandage",
+        "name": "Trauma bandage",
+        "kind": "treatments"
+      }
+    ],
+    "disambiguator": "5f52ece1"
+  },
+  {
+    "id": "bc3f2c2d-bddb-46d2-b681-f1da7ebc15c4",
+    "table": "diseases",
+    "category": "meds",
+    "slug": "bleeding-high",
+    "name": "Bleeding High",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/diseases/1762822917583_Adobe%20Express%20-%20file%20(2).png",
+    "attributes": {
+      "is_lethal": true
+    },
+    "relations": []
+  },
+  {
+    "id": "b3cd713e-d2bc-4268-8c5d-4fecd872645e",
+    "table": "diseases",
+    "category": "meds",
+    "slug": "bleeding-low",
+    "name": "Bleeding Low",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/diseases/1762822525583_Lowbleeding.png",
+    "attributes": {
+      "is_lethal": true
+    },
+    "relations": []
+  },
+  {
+    "id": "e9eddfc1-5b37-4460-b856-bc55add3a7c3",
+    "table": "medicines",
+    "category": "meds",
+    "slug": "blood-test-kit",
+    "name": "Blood Test Kit",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762305146034_bloodtestingkit.png",
+    "attributes": {
+      "hydration": 0,
+      "energy": 0,
+      "health": 0,
+      "rarity": "Legendary"
+    },
+    "relations": []
+  },
+  {
+    "id": "8a2ea47c-13c8-448b-ae19-4e08b2dd9217",
+    "table": "medicines",
+    "category": "meds",
+    "slug": "bloodbag",
+    "name": "Bloodbag",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762218759699_bloodbag.png",
+    "attributes": {
+      "hydration": 0,
+      "energy": 0,
+      "health": 0,
+      "rarity": "Epic"
+    },
+    "relations": []
+  },
+  {
+    "id": "e0eaf0fa-4e2c-423b-874b-4ec024702958",
+    "table": "diseases",
+    "category": "meds",
+    "slug": "broken-craneo",
+    "name": "Broken Craneo",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/diseases/1763031277472_crane.png",
+    "attributes": {
+      "is_lethal": false
+    },
+    "relations": []
+  },
+  {
+    "id": "c6491746-af2c-4adf-b8f1-587176e35632",
+    "table": "diseases",
+    "category": "meds",
+    "slug": "burn",
+    "name": "Burn",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/diseases/1762823065558_Adobe%20Express%20-%20file%20(3).png",
+    "attributes": {
+      "is_lethal": false
+    },
+    "relations": [
+      {
+        "category": "meds",
+        "slug": "burn-cream",
+        "name": "Burn Cream",
+        "kind": "treatments"
+      }
+    ]
+  },
+  {
+    "id": "1721db30-46a3-419d-b947-2e672613f39c",
+    "table": "medicines",
+    "category": "meds",
+    "slug": "burn-cream",
+    "name": "Burn Cream",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762818880182_burncream.png",
+    "attributes": {
+      "hydration": 0,
+      "energy": 0,
+      "health": 0,
+      "rarity": "Rare"
+    },
+    "relations": [
+      {
+        "category": "meds",
+        "slug": "burn",
+        "name": "Burn",
+        "kind": "treats"
+      }
+    ]
+  },
+  {
+    "id": "6ba1d1b4-4a87-469b-b2f8-ba66742aa984",
+    "table": "diseases",
+    "category": "meds",
+    "slug": "cant-jump",
+    "name": "Can't Jump",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/diseases/1762305937414_cantjump-removebg-preview.webp",
+    "attributes": {
+      "is_lethal": false
+    },
+    "relations": []
+  },
+  {
+    "id": "3ec8565c-bd18-4e30-9f84-d7e3451113ee",
+    "table": "diseases",
+    "category": "meds",
+    "slug": "cant-sprint",
+    "name": "Can't Sprint",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/diseases/1762305907429_cantsprint-removebg-preview.webp",
+    "attributes": {
+      "is_lethal": false
+    },
+    "relations": []
+  },
+  {
+    "id": "03355581-dc41-494d-ac42-483447c4ffc7",
+    "table": "diseases",
+    "category": "meds",
+    "slug": "cant-use-both-hands",
+    "name": "Can't Use Both Hands",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/diseases/1762306013539_canttwohand-removebg-preview.webp",
+    "attributes": {
+      "is_lethal": false
+    },
+    "relations": []
+  },
+  {
+    "id": "58f99a83-ebcc-4dd8-86ea-72695ac8ec59",
+    "table": "diseases",
+    "category": "meds",
+    "slug": "clot-blood",
+    "name": "Clot Blood",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/diseases/1762822167935_ChatGPT%20Image%2011%20nov%202025,%2001_48_19.png",
+    "attributes": {
+      "is_lethal": true
+    },
+    "relations": []
+  },
+  {
+    "id": "b6bd37f8-1578-4f42-821c-d4a151b4a5e1",
+    "table": "diseases",
+    "category": "meds",
+    "slug": "concussion",
+    "name": "Concussion",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/diseases/1763030611345_headache.png",
+    "attributes": {
+      "is_lethal": false
+    },
+    "relations": [
+      {
+        "category": "meds",
+        "slug": "ibuprofen",
+        "name": "Ibuprofen",
+        "kind": "treatments"
+      }
+    ]
+  },
+  {
+    "id": "0efef73f-f79d-400d-a743-1674f86d0918",
+    "table": "diseases",
+    "category": "meds",
+    "slug": "cough",
+    "name": "Cough",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/diseases/1762214792392_cough.webp",
+    "attributes": {
+      "is_lethal": false
+    },
+    "relations": []
+  },
+  {
+    "id": "8ccff3ba-9a3b-4f6b-bcb8-3f7d2133056e",
+    "table": "diseases",
+    "category": "meds",
+    "slug": "drunk",
+    "name": "Drunk",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/diseases/1763030905021_drunk.png",
+    "attributes": {
+      "is_lethal": false
+    },
+    "relations": []
+  },
+  {
+    "id": "a237027c-57c6-49e1-ba4b-392ec44dd5d1",
+    "table": "diseases",
+    "category": "meds",
+    "slug": "exshaustion",
+    "name": "Exshaustion",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/diseases/1763031418169_linea.png",
+    "attributes": {
+      "is_lethal": false
+    },
+    "relations": [
+      {
+        "category": "meds",
+        "slug": "activated-charcoal-tablets",
+        "name": "Activated Charcoal Tablets",
+        "kind": "treatments"
+      }
+    ]
+  },
+  {
+    "id": "0e8cc947-c07a-44be-9ed9-680cc086a93b",
+    "table": "medicines",
+    "category": "meds",
+    "slug": "fentanyl",
+    "name": "Fentanyl",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762305393217_00000007000c00127f1184cf11957b7c00010000000000000000000000000000.webp",
+    "attributes": {
+      "hydration": 0,
+      "energy": 0,
+      "health": 0,
+      "rarity": "Legendary"
+    },
+    "relations": []
+  },
+  {
+    "id": "0369e594-5b13-4d16-adc1-49166c6a771b",
+    "table": "medicines",
+    "category": "meds",
+    "slug": "flozan",
+    "name": "Flozan",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762218741182_Flozan-removebg-preview.png",
+    "attributes": {
+      "hydration": 0,
+      "energy": 0,
+      "health": 0,
+      "rarity": "Rare"
+    },
+    "relations": []
+  },
+  {
+    "id": "a6121e90-01f4-4b1f-91a6-4caea1656a9f",
+    "table": "medicines",
+    "category": "meds",
+    "slug": "heatpack",
+    "name": "Heatpack",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762817341065_Heatpack.png",
+    "attributes": {
+      "hydration": 0,
+      "energy": 0,
+      "health": 0,
+      "rarity": "Epic"
+    },
+    "relations": []
+  },
+  {
+    "id": "3f475bf7-9c72-4830-93c6-5528ffdaf992",
+    "table": "medicines",
+    "category": "meds",
+    "slug": "ibuprofen",
+    "name": "Ibuprofen",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762218456637_Ibuprofen_IB-removebg-preview.png",
+    "attributes": {
+      "hydration": 0,
+      "energy": 0,
+      "health": 0,
+      "rarity": "Uncommon"
+    },
+    "relations": [
+      {
+        "category": "meds",
+        "slug": "concussion",
+        "name": "Concussion",
+        "kind": "treats"
+      }
+    ]
+  },
+  {
+    "id": "44358e6b-03d2-4329-bd37-038f93220d4d",
+    "table": "medicines",
+    "category": "meds",
+    "slug": "improvised-splint",
+    "name": "Improvised Splint",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762818354420_Splint.png",
+    "attributes": {
+      "hydration": 0,
+      "energy": 0,
+      "health": 0,
+      "rarity": "Common"
+    },
+    "relations": []
+  },
+  {
+    "id": "4566b022-458d-479b-9c2a-0b39192bd710",
+    "table": "diseases",
+    "category": "meds",
+    "slug": "insomnia",
+    "name": "Insomnia",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/diseases/1762306107727_insomnia-1.webp",
+    "attributes": {
+      "is_lethal": false
+    },
+    "relations": []
+  },
+  {
+    "id": "10cdf89c-3eb7-4405-b3d0-f7e9f1f95ada",
+    "table": "medicines",
+    "category": "meds",
+    "slug": "iodine",
+    "name": "Iodine",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/medicines/1775672991595_785d3e55-1307-456e-b911-9531297cdaae_removalai_preview.png",
+    "attributes": {
+      "hydration": 0,
+      "energy": 0,
+      "health": 0,
+      "rarity": "Common"
+    },
+    "relations": []
+  },
+  {
+    "id": "b690f9cb-5682-4ae6-83f2-44e86dec2aa0",
+    "table": "medicines",
+    "category": "meds",
+    "slug": "iv-starter-kit",
+    "name": "IV Starter Kit",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762304876410_IVstarterkit.webp",
+    "attributes": {
+      "hydration": 0,
+      "energy": 0,
+      "health": 0,
+      "rarity": "Legendary"
+    },
+    "relations": []
+  },
+  {
+    "id": "c4046730-1517-4b9d-9ce6-2e46d687a4a8",
+    "table": "medicines",
+    "category": "meds",
+    "slug": "medkit",
+    "name": "Medkit",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762820038626_Medkit.png",
+    "attributes": {
+      "hydration": 0,
+      "energy": 0,
+      "health": 30,
+      "rarity": "Common"
+    },
+    "relations": []
+  },
+  {
+    "id": "72bd7a2c-42f6-4cd1-892c-0ef6eb47b79a",
+    "table": "medicines",
+    "category": "meds",
+    "slug": "morphine-sulfate",
+    "name": "Morphine Sulfate",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762305167349_Morphine%20sulfate%20tablets%20(2).png",
+    "attributes": {
+      "hydration": 0,
+      "energy": 0,
+      "health": 0,
+      "rarity": "Rare"
+    },
+    "relations": []
+  },
+  {
+    "id": "f7dbb036-d34a-44ff-90a5-b80c2377a3ba",
+    "table": "diseases",
+    "category": "meds",
+    "slug": "motionless",
+    "name": "Motionless",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/diseases/1762219038796_cantmove-removebg-preview.webp",
+    "attributes": {
+      "is_lethal": false
+    },
+    "relations": []
+  },
+  {
+    "id": "4a7e89ca-1d71-44d1-b4fb-beefacc8ba54",
+    "table": "diseases",
+    "category": "meds",
+    "slug": "nausea",
+    "name": "Nausea",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/diseases/1775674191956_e3845c0c-8d57-4b82-8317-89ca166aaca2_removalai_preview.png",
+    "attributes": {
+      "is_lethal": false
+    },
+    "relations": []
+  },
+  {
+    "id": "44245ad6-8311-45af-b984-b4f730398e54",
+    "table": "diseases",
+    "category": "meds",
+    "slug": "overdose",
+    "name": "Overdose",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/diseases/1763031626847_Overdose.png",
+    "attributes": {
+      "is_lethal": true
+    },
+    "relations": []
+  },
+  {
+    "id": "4cd02d0f-8191-4a23-a918-85147057ce02",
+    "table": "medicines",
+    "category": "meds",
+    "slug": "painkiller",
+    "name": "Painkiller",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762219753330_ChatGPT%20Image%204%20nov%202025,%2002_27_03.png",
+    "attributes": {
+      "hydration": 0,
+      "energy": 0,
+      "health": 0,
+      "rarity": "Common"
+    },
+    "relations": []
+  },
+  {
+    "id": "e718e38f-2388-46c8-bc2e-642165403766",
+    "table": "medicines",
+    "category": "meds",
+    "slug": "painkillers",
+    "name": "Painkillers",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762819385837_Painkillers%20(2).png",
+    "attributes": {
+      "hydration": 0,
+      "energy": 0,
+      "health": 0,
+      "rarity": "Uncommon"
+    },
+    "relations": []
+  },
+  {
+    "id": "14bba0b9-86da-40c0-98db-e0620307c7ce",
+    "table": "medicines",
+    "category": "meds",
+    "slug": "paracetophem",
+    "name": "Paracetophem",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/medicines/1769702024950_00000000000c0012ef30fd153c22a61600000000000000000000000000000000.png",
+    "attributes": {
+      "hydration": 0,
+      "energy": 0,
+      "health": 0,
+      "rarity": "Common"
+    },
+    "relations": []
+  },
+  {
+    "id": "4da159f6-30a4-4fd5-959a-60df3f337392",
+    "table": "diseases",
+    "category": "meds",
+    "slug": "poisoned",
+    "name": "Poisoned",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/diseases/1762306229960_poison-removebg-preview.webp",
+    "attributes": {
+      "is_lethal": true
+    },
+    "relations": []
+  },
+  {
+    "id": "f30a4243-2ee2-485c-ac0c-90f62ab12f5f",
+    "table": "diseases",
+    "category": "meds",
+    "slug": "radiation",
+    "name": "Radiation",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/diseases/1762218992705_radiation-1.webp",
+    "attributes": {
+      "is_lethal": true
+    },
+    "relations": []
+  },
+  {
+    "id": "2378594b-ba1a-42fe-8198-0ab792d12a1f",
+    "table": "medicines",
+    "category": "meds",
+    "slug": "savaged-bangage",
+    "name": "Savaged Bangage",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762304947045_000000070012000cb067b9588630b51f00010000000000000000000000000000-e1743144274994.webp",
+    "attributes": {
+      "hydration": 0,
+      "energy": 0,
+      "health": 0,
+      "rarity": "Common"
+    },
+    "relations": []
+  },
+  {
+    "id": "d9bff8d1-14dc-4a44-b785-d8ef6d09d689",
+    "table": "diseases",
+    "category": "meds",
+    "slug": "shiver",
+    "name": "Shiver",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/diseases/1762219017154_shiver-removebg-preview.webp",
+    "attributes": {
+      "is_lethal": false
+    },
+    "relations": []
+  },
+  {
+    "id": "5e3ef409-8a9b-43b8-b4c1-3cdc355ffdfe",
+    "table": "diseases",
+    "category": "meds",
+    "slug": "sick",
+    "name": "Sick",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/diseases/1762219026013_sick-removebg-preview.webp",
+    "attributes": {
+      "is_lethal": true
+    },
+    "relations": []
+  },
+  {
+    "id": "b1868e16-96ce-4bd7-bfd4-b32e98f20688",
+    "table": "medicines",
+    "category": "meds",
+    "slug": "splint",
+    "name": "Splint",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762820716361_Splint.png",
+    "attributes": {
+      "hydration": 0,
+      "energy": 0,
+      "health": 0,
+      "rarity": "Uncommon"
+    },
+    "relations": []
+  },
+  {
+    "id": "b2c7c25b-ebfb-4f6b-9800-3182f51844ab",
+    "table": "medicines",
+    "category": "meds",
+    "slug": "sterile-bandage-roll",
+    "name": "Sterile Bandage Roll",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/medicines/1775673988763_0e9991ab-c55a-499d-92c4-b34c9d4418c0_removalai_preview.png",
+    "attributes": {
+      "hydration": 0,
+      "energy": 0,
+      "health": 0,
+      "rarity": "Epic"
+    },
+    "relations": []
+  },
+  {
+    "id": "d351dc9f-0108-4eca-b144-725bf06629c3",
+    "table": "medicines",
+    "category": "meds",
+    "slug": "suture-kit",
+    "name": "Suture Kit",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762817479989_Suturekitred.png",
+    "attributes": {
+      "hydration": 0,
+      "energy": 0,
+      "health": 0,
+      "rarity": "Common"
+    },
+    "relations": []
+  },
+  {
+    "id": "80f2f450-c1dd-4933-b15d-4bf234d3aa9b",
+    "table": "medicines",
+    "category": "meds",
+    "slug": "suture-kit-80f2f450",
+    "name": "Suture Kit",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762817691985_Suturekitgreen.png",
+    "attributes": {
+      "hydration": 0,
+      "energy": 0,
+      "health": 0,
+      "rarity": "Rare"
+    },
+    "relations": [],
+    "disambiguator": "80f2f450"
+  },
+  {
+    "id": "50c4a3df-ee25-4e15-8c63-f456d4dafc2d",
+    "table": "diseases",
+    "category": "meds",
+    "slug": "tired",
+    "name": "Tired",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/diseases/1762305968626_tired-removebg-preview.webp",
+    "attributes": {
+      "is_lethal": false
+    },
+    "relations": []
+  },
+  {
+    "id": "61f9de4c-e5f4-4e50-a46c-d1a259d1edcb",
+    "table": "medicines",
+    "category": "meds",
+    "slug": "toilet-paper-bandage",
+    "name": "Toilet Paper Bandage",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762305504468_toilet%20paper%20bandage.png",
+    "attributes": {
+      "hydration": 0,
+      "energy": 0,
+      "health": 0,
+      "rarity": "Common"
+    },
+    "relations": []
+  },
+  {
+    "id": "24b1b2a8-9e19-4b4c-a418-190629dddc1e",
+    "table": "medicines",
+    "category": "meds",
+    "slug": "tourniquet",
+    "name": "Tourniquet",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762817866105_Tourniquet.png",
+    "attributes": {
+      "hydration": 0,
+      "energy": 0,
+      "health": 0,
+      "rarity": "Rare"
+    },
+    "relations": []
+  },
+  {
+    "id": "f4439af1-92d6-482a-973c-aadb075447ce",
+    "table": "medicines",
+    "category": "meds",
+    "slug": "tranexamic",
+    "name": "Tranexamic",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762818218254_Tranexamic%20Acid.png",
+    "attributes": {
+      "hydration": 0,
+      "energy": 0,
+      "health": 0,
+      "rarity": "Epic"
+    },
+    "relations": []
+  },
+  {
+    "id": "fcedab56-9ce0-4433-88a7-41b539d2c780",
+    "table": "medicines",
+    "category": "meds",
+    "slug": "trauma-bandage",
+    "name": "Trauma bandage",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762820542972_Traumabandage.png",
+    "attributes": {
+      "hydration": 0,
+      "energy": 0,
+      "health": 0,
+      "rarity": "Rare"
+    },
+    "relations": [
+      {
+        "category": "meds",
+        "slug": "bleeding-5f52ece1",
+        "name": "Bleeding",
+        "kind": "treats"
+      }
+    ]
+  },
+  {
+    "id": "0a69c966-3baf-4e91-b0c6-6bb9eb668abc",
+    "table": "medicines",
+    "category": "meds",
+    "slug": "trauma-kit",
+    "name": "Trauma Kit",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762818095193_Traumakit.png",
+    "attributes": {
+      "hydration": 0,
+      "energy": 0,
+      "health": 0,
+      "rarity": "Uncommon"
+    },
+    "relations": []
+  },
+  {
+    "id": "5c7fd33e-a25a-4bb3-b669-692b2491ef23",
+    "table": "diseases",
+    "category": "meds",
+    "slug": "virus",
+    "name": "Virus",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/diseases/1775674239233_1b59111a-60ec-48b8-8722-836b483d6551_removalai_preview.png",
+    "attributes": {
+      "is_lethal": false
+    },
+    "relations": []
+  },
+  {
+    "id": "e4300d57-3dcc-403c-b0c7-0631ff0a038c",
+    "table": "medicines",
+    "category": "meds",
+    "slug": "water-purification-tablets",
+    "name": "Water Purification Tablets",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762305543587_Water_purification_Tablets-removebg-preview.png",
+    "attributes": {
+      "hydration": 0,
+      "energy": 0,
+      "health": 0,
+      "rarity": "Legendary"
+    },
+    "relations": []
+  },
+  {
+    "id": "d57b461c-e201-48ca-830a-d9e505d1e1fd",
+    "table": "npcs",
+    "category": "npcs",
+    "slug": "blackjack",
+    "name": "Blackjack",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/npcs/1762358712122_dmbr-blackjackicon_orig.png",
+    "attributes": {
+      "location": "Dominion"
+    },
+    "relations": [
+      {
+        "category": "weapons",
+        "slug": "1911",
+        "name": "1911",
+        "kind": "inventory"
+      },
+      {
+        "category": "weapons",
+        "slug": "as-val",
+        "name": "AS VAL",
+        "kind": "inventory"
+      },
+      {
+        "category": "gear",
+        "slug": "black-flexion-gloves",
+        "name": "Black Flexion Gloves",
+        "kind": "inventory"
+      },
+      {
+        "category": "gear",
+        "slug": "brown-flexion-gloves",
+        "name": "Brown Flexion Gloves",
+        "kind": "inventory"
+      },
+      {
+        "category": "gear",
+        "slug": "brown-hard-knuckle-gloves",
+        "name": "Brown Hard Knuckle Gloves",
+        "kind": "inventory"
+      },
+      {
+        "category": "weapons",
+        "slug": "c7a1",
+        "name": "C7A1",
+        "kind": "inventory"
+      },
+      {
+        "category": "weapons",
+        "slug": "c8a2",
+        "name": "C8A2",
+        "kind": "inventory"
+      },
+      {
+        "category": "weapons",
+        "slug": "eder-17",
+        "name": "Eder-17",
+        "kind": "inventory"
+      },
+      {
+        "category": "gear",
+        "slug": "emergency-response-gas-mask",
+        "name": "Emergency Response Gas Mask",
+        "kind": "inventory"
+      },
+      {
+        "category": "weapons",
+        "slug": "m14",
+        "name": "M14",
+        "kind": "inventory"
+      },
+      {
+        "category": "weapons",
+        "slug": "m2",
+        "name": "M2",
+        "kind": "inventory"
+      },
+      {
+        "category": "gear",
+        "slug": "military-sweater",
+        "name": "Military Sweater",
+        "kind": "inventory"
+      },
+      {
+        "category": "gear",
+        "slug": "military-vest",
+        "name": "Military Vest",
+        "kind": "inventory"
+      },
+      {
+        "category": "weapons",
+        "slug": "mkii",
+        "name": "MKII",
+        "kind": "inventory"
+      },
+      {
+        "category": "weapons",
+        "slug": "mooseberg-500",
+        "name": "Mooseberg 500",
+        "kind": "inventory"
+      },
+      {
+        "category": "weapons",
+        "slug": "mp5",
+        "name": "MP5",
+        "kind": "inventory"
+      },
+      {
+        "category": "weapons",
+        "slug": "mp7",
+        "name": "MP7",
+        "kind": "inventory"
+      },
+      {
+        "category": "keys",
+        "slug": "nera-alpha-access-card",
+        "name": "Nera Alpha Access Card",
+        "kind": "inventory"
+      },
+      {
+        "category": "keys",
+        "slug": "nera-beta-access-card",
+        "name": "Nera Beta Access Card",
+        "kind": "inventory"
+      },
+      {
+        "category": "keys",
+        "slug": "nera-federal-stockpile-card",
+        "name": "Nera Federal Stockpile Card",
+        "kind": "inventory"
+      },
+      {
+        "category": "keys",
+        "slug": "nera-gamma-access-card",
+        "name": "Nera Gamma Access Card",
+        "kind": "inventory"
+      },
+      {
+        "category": "keys",
+        "slug": "nera-sigma-access-card",
+        "name": "Nera Sigma Access Card",
+        "kind": "inventory"
+      },
+      {
+        "category": "weapons",
+        "slug": "pm",
+        "name": "PM",
+        "kind": "inventory"
+      },
+      {
+        "category": "weapons",
+        "slug": "r700",
+        "name": "R700",
+        "kind": "inventory"
+      },
+      {
+        "category": "weapons",
+        "slug": "r870",
+        "name": "R870",
+        "kind": "inventory"
+      },
+      {
+        "category": "weapons",
+        "slug": "raging-bull",
+        "name": "Raging Bull",
+        "kind": "inventory"
+      },
+      {
+        "category": "gear",
+        "slug": "rcmp-vest",
+        "name": "RCMP Vest",
+        "kind": "inventory"
+      },
+      {
+        "category": "weapons",
+        "slug": "svd-dragunov",
+        "name": "SVD Dragunov",
+        "kind": "inventory"
+      },
+      {
+        "category": "weapons",
+        "slug": "svt-40",
+        "name": "SVT-40",
+        "kind": "inventory"
+      },
+      {
+        "category": "gear",
+        "slug": "tactical-military-helmet",
+        "name": "Tactical Military Helmet",
+        "kind": "inventory"
+      },
+      {
+        "category": "gear",
+        "slug": "tan-flexion-gloves",
+        "name": "Tan Flexion Gloves",
+        "kind": "inventory"
+      }
+    ]
+  },
+  {
+    "id": "b40766ab-04d0-4a09-a681-df3d5d50144d",
+    "table": "npcs",
+    "category": "npcs",
+    "slug": "cowboy",
+    "name": "Cowboy",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/npcs/1762359767855_cowboy-dmbr_orig.png",
+    "attributes": {
+      "location": "Dominion"
+    },
+    "relations": [
+      {
+        "category": "weapons",
+        "slug": "mp7",
+        "name": "MP7",
+        "kind": "inventory"
+      }
+    ]
+  },
+  {
+    "id": "b51eaa98-2687-4764-a6af-5da6e17e0d15",
+    "table": "npcs",
+    "category": "npcs",
+    "slug": "dirty-dick",
+    "name": "Dirty Dick",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/npcs/1762359734074_dirtydick-dmbr_orig.png",
+    "attributes": {
+      "location": "Dominion"
+    },
+    "relations": []
+  },
+  {
+    "id": "1c74aa7f-0fb9-4c54-bc28-23cb29929510",
+    "table": "npcs",
+    "category": "npcs",
+    "slug": "duke",
+    "name": "Duke",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/npcs/1762359794805_duke-dmbr1_orig.png",
+    "attributes": {
+      "location": "Radio Tower"
+    },
+    "relations": []
+  },
+  {
+    "id": "0df59597-3617-4341-a6e9-3dca4714a01f",
+    "table": "npcs",
+    "category": "npcs",
+    "slug": "harry",
+    "name": "Harry",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/npcs/1762909803706_Signo-de-interrogacion.png",
+    "attributes": {
+      "location": "Dead mans flat"
+    },
+    "relations": []
+  },
+  {
+    "id": "f182702b-1660-4571-ac09-498e26621181",
+    "table": "npcs",
+    "category": "npcs",
+    "slug": "mitch",
+    "name": "Mitch",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/npcs/1762909699380_ChatGPT%20Image%2012%20nov%202025,%2001_07_14.png",
+    "attributes": {
+      "location": "Dominion"
+    },
+    "relations": []
+  },
+  {
+    "id": "25188eee-f423-4f89-a70e-95d35cfed8e3",
+    "table": "perks",
+    "category": "perks",
+    "slug": "alcoholic",
+    "name": "Alcoholic",
+    "description": "",
+    "image": null,
+    "attributes": {
+      "type": "negative",
+      "points": -4
+    },
+    "relations": []
+  },
+  {
+    "id": "b14e69ad-34cb-40c4-ab68-7d33f1449e5b",
+    "table": "perks",
+    "category": "perks",
+    "slug": "baby-body-slam",
+    "name": "Baby Body Slam",
+    "description": "",
+    "image": null,
+    "attributes": {
+      "type": "positive",
+      "points": 3
+    },
+    "relations": []
+  },
+  {
+    "id": "af0df72f-5acc-43f1-8fc0-b3d662bf53b7",
+    "table": "perks",
+    "category": "perks",
+    "slug": "beautiful",
+    "name": "Beautiful",
+    "description": "",
+    "image": null,
+    "attributes": {
+      "type": "positive",
+      "points": 2
+    },
+    "relations": []
+  },
+  {
+    "id": "74d0af3e-21c8-49c2-b789-c6c0519b6460",
+    "table": "perks",
+    "category": "perks",
+    "slug": "black-cat",
+    "name": "Black Cat",
+    "description": "",
+    "image": null,
+    "attributes": {
+      "type": "positive",
+      "points": 8
+    },
+    "relations": []
+  },
+  {
+    "id": "5f340ac3-dc5b-42f0-abad-74934b029a16",
+    "table": "occupations",
+    "category": "perks",
+    "slug": "blacksmith",
+    "name": "Blacksmith",
+    "description": "",
+    "image": null,
+    "attributes": {
+      "points": 0
+    },
+    "relations": []
+  },
+  {
+    "id": "5b271db5-059b-4446-8213-234234c891c3",
+    "table": "perks",
+    "category": "perks",
+    "slug": "bright",
+    "name": "Bright",
+    "description": "",
+    "image": null,
+    "attributes": {
+      "type": "positive",
+      "points": 4
+    },
+    "relations": []
+  },
+  {
+    "id": "b8bea1b9-dbce-4a6e-8c06-58f5f4a5505f",
+    "table": "occupations",
+    "category": "perks",
+    "slug": "construction-worker",
+    "name": "Construction Worker",
+    "description": "",
+    "image": null,
+    "attributes": {
+      "points": -4
+    },
+    "relations": []
+  },
+  {
+    "id": "3b09ed95-b38b-4c4e-9c30-ccf6728db80f",
+    "table": "occupations",
+    "category": "perks",
+    "slug": "delivery-driver",
+    "name": "Delivery Driver",
+    "description": "",
+    "image": null,
+    "attributes": {
+      "points": -4
+    },
+    "relations": []
+  },
+  {
+    "id": "2a743641-3d0d-46a1-bb9d-919b5e69026e",
+    "table": "perks",
+    "category": "perks",
+    "slug": "diabetic",
+    "name": "Diabetic",
+    "description": "",
+    "image": null,
+    "attributes": {
+      "type": "negative",
+      "points": -8
+    },
+    "relations": []
+  },
+  {
+    "id": "bc84be48-ef93-4f1a-8b0d-9a8cb393be73",
+    "table": "perks",
+    "category": "perks",
+    "slug": "eagle-eyed",
+    "name": "Eagle Eyed",
+    "description": "",
+    "image": null,
+    "attributes": {
+      "type": "positive",
+      "points": 8
+    },
+    "relations": []
+  },
+  {
+    "id": "e6faf4d7-f845-460c-b21c-2baab3229bc0",
+    "table": "occupations",
+    "category": "perks",
+    "slug": "emergency-medical-technician",
+    "name": "Emergency Medical Technician",
+    "description": "",
+    "image": null,
+    "attributes": {
+      "points": -2
+    },
+    "relations": []
+  },
+  {
+    "id": "9e4bce62-e815-4f67-99d2-a47352cedc8d",
+    "table": "perks",
+    "category": "perks",
+    "slug": "extremely-underweight",
+    "name": "Extremely Underweight",
+    "description": "",
+    "image": null,
+    "attributes": {
+      "type": "negative",
+      "points": -8
+    },
+    "relations": []
+  },
+  {
+    "id": "04120d1f-c5cb-46d0-8d98-8cf7bb35c831",
+    "table": "occupations",
+    "category": "perks",
+    "slug": "farmer",
+    "name": "Farmer",
+    "description": "",
+    "image": null,
+    "attributes": {
+      "points": 0
+    },
+    "relations": []
+  },
+  {
+    "id": "56f7b36d-b964-47da-91de-e6dc74055b59",
+    "table": "occupations",
+    "category": "perks",
+    "slug": "firefighter",
+    "name": "Firefighter",
+    "description": "",
+    "image": null,
+    "attributes": {
+      "points": -2
+    },
+    "relations": []
+  },
+  {
+    "id": "18c060fa-e5c7-496e-8074-c29073187bb1",
+    "table": "perks",
+    "category": "perks",
+    "slug": "gamer",
+    "name": "Gamer",
+    "description": "",
+    "image": null,
+    "attributes": {
+      "type": "positive",
+      "points": 3
+    },
+    "relations": []
+  },
+  {
+    "id": "0f895213-a642-4deb-89db-e467e0be7a03",
+    "table": "perks",
+    "category": "perks",
+    "slug": "illiterate",
+    "name": "Illiterate",
+    "description": "",
+    "image": null,
+    "attributes": {
+      "type": "negative",
+      "points": -4
+    },
+    "relations": []
+  },
+  {
+    "id": "72b6cf79-5713-4e4e-bdb3-895361e60ef2",
+    "table": "occupations",
+    "category": "perks",
+    "slug": "line-cook",
+    "name": "Line Cook",
+    "description": "",
+    "image": null,
+    "attributes": {
+      "points": -4
+    },
+    "relations": []
+  },
+  {
+    "id": "1db5103e-1dd6-475a-930d-8be7e44a0fcb",
+    "table": "perks",
+    "category": "perks",
+    "slug": "observant",
+    "name": "Observant",
+    "description": "",
+    "image": null,
+    "attributes": {
+      "type": "positive",
+      "points": 8
+    },
+    "relations": []
+  },
+  {
+    "id": "a0aaba6b-df2f-4715-b4cf-1f73c85de1e5",
+    "table": "perks",
+    "category": "perks",
+    "slug": "overweight",
+    "name": "Overweight",
+    "description": "",
+    "image": null,
+    "attributes": {
+      "type": "negative",
+      "points": -2
+    },
+    "relations": []
+  },
+  {
+    "id": "ef3e79cb-d639-4211-b43b-13e8fd30f4d8",
+    "table": "perks",
+    "category": "perks",
+    "slug": "partly-blind",
+    "name": "Partly Blind",
+    "description": "",
+    "image": null,
+    "attributes": {
+      "type": "negative",
+      "points": -6
+    },
+    "relations": []
+  },
+  {
+    "id": "076c252b-4557-424d-b653-4107e4480368",
+    "table": "perks",
+    "category": "perks",
+    "slug": "point-dexter",
+    "name": "Point Dexter",
+    "description": "",
+    "image": null,
+    "attributes": {
+      "type": "positive",
+      "points": 4
+    },
+    "relations": []
+  },
+  {
+    "id": "fc1680fc-a8b8-4e50-b00c-84cc490be9dd",
+    "table": "occupations",
+    "category": "perks",
+    "slug": "police-officer",
+    "name": "Police Officer",
+    "description": "",
+    "image": null,
+    "attributes": {
+      "points": -4
+    },
+    "relations": []
+  },
+  {
+    "id": "a2c6313d-2c85-400a-9681-e002d03360f0",
+    "table": "perks",
+    "category": "perks",
+    "slug": "pretty",
+    "name": "Pretty",
+    "description": "",
+    "image": null,
+    "attributes": {
+      "type": "positive",
+      "points": 2
+    },
+    "relations": []
+  },
+  {
+    "id": "3af533f0-c669-4651-9ba9-641232a4310d",
+    "table": "perks",
+    "category": "perks",
+    "slug": "professional-gamer",
+    "name": "Professional Gamer",
+    "description": "",
+    "image": null,
+    "attributes": {
+      "type": "positive",
+      "points": 2
+    },
+    "relations": []
+  },
+  {
+    "id": "c2ac1633-0d0b-4958-b8ba-2b239e7badc2",
+    "table": "perks",
+    "category": "perks",
+    "slug": "seven-leaf-clover",
+    "name": "Seven Leaf Clover",
+    "description": "",
+    "image": null,
+    "attributes": {
+      "type": "positive",
+      "points": 6
+    },
+    "relations": []
+  },
+  {
+    "id": "baea4c68-599b-40cf-9507-e7f60e47ad81",
+    "table": "perks",
+    "category": "perks",
+    "slug": "smoker",
+    "name": "Smoker",
+    "description": "",
+    "image": null,
+    "attributes": {
+      "type": "negative",
+      "points": -3
+    },
+    "relations": []
+  },
+  {
+    "id": "1d8b78aa-5a9b-4464-8a68-550056085e90",
+    "table": "perks",
+    "category": "perks",
+    "slug": "underweight",
+    "name": "Underweight",
+    "description": "",
+    "image": null,
+    "attributes": {
+      "type": "negative",
+      "points": -2
+    },
+    "relations": []
+  },
+  {
+    "id": "236ce287-5f76-4828-ad66-96db528832aa",
+    "table": "occupations",
+    "category": "perks",
+    "slug": "unemployed",
+    "name": "Unemployed",
+    "description": "",
+    "image": null,
+    "attributes": {
+      "points": 12
+    },
+    "relations": []
+  },
+  {
+    "id": "2b65f0f1-cf23-4200-9b81-e13a5f190ab6",
+    "table": "perks",
+    "category": "perks",
+    "slug": "universal-donor",
+    "name": "Universal Donor",
+    "description": "",
+    "image": null,
+    "attributes": {
+      "type": "negative",
+      "points": -2
+    },
+    "relations": []
+  },
+  {
+    "id": "17ee99d3-0a0d-474e-90d8-11a605f14ce6",
+    "table": "perks",
+    "category": "perks",
+    "slug": "very-strong",
+    "name": "Very Strong",
+    "description": "",
+    "image": null,
+    "attributes": {
+      "type": "positive",
+      "points": 2
+    },
+    "relations": []
+  },
+  {
+    "id": "776d7f91-f059-40b5-b1ae-449f9a7985b0",
+    "table": "perks",
+    "category": "perks",
+    "slug": "weak-stomach",
+    "name": "Weak Stomach",
+    "description": "",
+    "image": null,
+    "attributes": {
+      "type": "negative",
+      "points": -3
+    },
+    "relations": []
+  },
+  {
+    "id": "e33dc002-21d0-439a-bb62-8a50b4bd7609",
+    "table": "toolbelts",
+    "category": "toolbelts",
+    "slug": "compass",
+    "name": "Compass",
+    "description": "Analog tool for finding direction.",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/toolbelts/0.3276168486531016.PNG",
+    "attributes": {
+      "use_function": "Navigation",
+      "rarity": "Rare"
+    },
+    "relations": []
+  },
+  {
+    "id": "97a63e65-bc39-42cc-b330-c70e38361d9a",
+    "table": "toolbelts",
+    "category": "toolbelts",
+    "slug": "flashlight",
+    "name": "Flashlight",
+    "description": "handheld light source.",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/toolbelts/0.6524494062598688.png",
+    "attributes": {
+      "use_function": "Light Source",
+      "rarity": "Common"
+    },
+    "relations": []
+  },
+  {
+    "id": "cc3d7d71-70cc-4e35-8f1f-325b91807aa2",
+    "table": "toolbelts",
+    "category": "toolbelts",
+    "slug": "gps",
+    "name": "GPS",
+    "description": "Portable device that shows your position on the map.",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/toolbelts/0.9757863607158788.PNG",
+    "attributes": {
+      "use_function": "Navigation",
+      "rarity": "Legendary"
+    },
+    "relations": []
+  },
+  {
+    "id": "2667d213-4779-468e-b91b-0688f60d887c",
+    "table": "toolbelts",
+    "category": "toolbelts",
+    "slug": "keyring",
+    "name": "Keyring",
+    "description": "Small holder for carrying keys together.",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/toolbelts/0.1420305538193405.png",
+    "attributes": {
+      "storage_capacity": 20,
+      "use_function": "Key storage",
+      "rarity": "Uncommon"
+    },
+    "relations": []
+  },
+  {
+    "id": "e82f8822-a5f0-4277-8150-fc4c08e49002",
+    "table": "toolbelts",
+    "category": "toolbelts",
+    "slug": "large-searchlight",
+    "name": "Large Searchlight",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762905237134_ChatGPT%20Image%2011%20nov%202025,%2023_46_12.png",
+    "attributes": {
+      "weight": 2.5,
+      "size": "6x4",
+      "storage_capacity": 0,
+      "use_function": "Powerfull light source",
+      "rarity": "Rare"
+    },
+    "relations": []
+  },
+  {
+    "id": "043a7c01-f421-40ec-bf46-c4fc64af2e02",
+    "table": "toolbelts",
+    "category": "toolbelts",
+    "slug": "led-flashlight",
+    "name": "Led Flashlight",
+    "description": "Compact handheld light source.",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/toolbelts/0.5756179761709962.PNG",
+    "attributes": {
+      "use_function": "Light source",
+      "rarity": "Uncommon"
+    },
+    "relations": []
+  },
+  {
+    "id": "bff29dc3-827a-4298-8330-075602f4a26d",
+    "table": "toolbelts",
+    "category": "toolbelts",
+    "slug": "lighter",
+    "name": "Lighter",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/toolbelts/0.30915440289290175.png",
+    "attributes": {
+      "weight": 0.6,
+      "size": "2x3",
+      "use_function": "Light source and ignition tool",
+      "rarity": "Uncommon"
+    },
+    "relations": []
+  },
+  {
+    "id": "9dcd715a-5cae-433b-8597-09d4f02dcb84",
+    "table": "toolbelts",
+    "category": "toolbelts",
+    "slug": "wallet",
+    "name": "Wallet",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/toolbelts/0.4350339751666411.png",
+    "attributes": {
+      "weight": 0.25,
+      "size": "2x2",
+      "storage_capacity": 24,
+      "use_function": "Money storage",
+      "rarity": "Common"
+    },
+    "relations": []
+  },
+  {
+    "id": "f8bcd338-113d-4add-9e71-5baefb6f3d66",
+    "table": "vehicle_components",
+    "category": "vehicle-parts",
+    "slug": "back-lights",
+    "name": "Back Lights",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/vehicle_components/0.8757514256034561.png",
+    "attributes": {},
+    "relations": [
+      {
+        "category": "vehicles",
+        "slug": "construction-sign",
+        "name": "Construction Sign",
+        "kind": "compatible"
+      },
+      {
+        "category": "vehicles",
+        "slug": "motorcycle",
+        "name": "Motorcycle",
+        "kind": "compatible"
+      },
+      {
+        "category": "vehicles",
+        "slug": "nomad-pickup",
+        "name": "Nomad Pickup",
+        "kind": "compatible"
+      },
+      {
+        "category": "vehicles",
+        "slug": "quad-bike",
+        "name": "Quad Bike",
+        "kind": "compatible"
+      },
+      {
+        "category": "vehicles",
+        "slug": "van",
+        "name": "Van",
+        "kind": "compatible"
+      },
+      {
+        "category": "vehicles",
+        "slug": "water-barrel",
+        "name": "Water Barrel",
+        "kind": "compatible"
+      }
+    ]
+  },
+  {
+    "id": "f4d0a2ca-87a5-4590-b470-aa224c010931",
+    "table": "vehicle_components",
+    "category": "vehicle-parts",
+    "slug": "car-battery",
+    "name": "Car Battery",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/vehicle_components/0.8859538945294324.png",
+    "attributes": {},
+    "relations": []
+  },
+  {
+    "id": "0b5aa174-c6fe-41e0-bae4-a9ee63904662",
+    "table": "vehicle_components",
+    "category": "vehicle-parts",
+    "slug": "front-lights",
+    "name": "Front Lights",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/vehicle_components/0.8456824797963757.png",
+    "attributes": {},
+    "relations": [
+      {
+        "category": "vehicles",
+        "slug": "construction-sign",
+        "name": "Construction Sign",
+        "kind": "compatible"
+      },
+      {
+        "category": "vehicles",
+        "slug": "motorcycle",
+        "name": "Motorcycle",
+        "kind": "compatible"
+      },
+      {
+        "category": "vehicles",
+        "slug": "nomad-pickup",
+        "name": "Nomad Pickup",
+        "kind": "compatible"
+      },
+      {
+        "category": "vehicles",
+        "slug": "quad-bike",
+        "name": "Quad Bike",
+        "kind": "compatible"
+      },
+      {
+        "category": "vehicles",
+        "slug": "van",
+        "name": "Van",
+        "kind": "compatible"
+      },
+      {
+        "category": "vehicles",
+        "slug": "water-barrel",
+        "name": "Water Barrel",
+        "kind": "compatible"
+      }
+    ]
+  },
+  {
+    "id": "f9fbc75b-4cd2-4324-a790-afdcd4d28f41",
+    "table": "vehicle_components",
+    "category": "vehicle-parts",
+    "slug": "heavy-duty-fuel-tank",
+    "name": "Heavy Duty Fuel Tank",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/vehicle_components/0.13218124571288203.png",
+    "attributes": {},
+    "relations": [
+      {
+        "category": "vehicles",
+        "slug": "go-kart",
+        "name": "Go Kart",
+        "kind": "compatible"
+      },
+      {
+        "category": "vehicles",
+        "slug": "motorcycle",
+        "name": "Motorcycle",
+        "kind": "compatible"
+      },
+      {
+        "category": "vehicles",
+        "slug": "nomad-pickup",
+        "name": "Nomad Pickup",
+        "kind": "compatible"
+      },
+      {
+        "category": "vehicles",
+        "slug": "quad-bike",
+        "name": "Quad Bike",
+        "kind": "compatible"
+      },
+      {
+        "category": "vehicles",
+        "slug": "van",
+        "name": "Van",
+        "kind": "compatible"
+      }
+    ]
+  },
+  {
+    "id": "7ffb9800-e789-4ff7-8d65-913208b41820",
+    "table": "vehicle_components",
+    "category": "vehicle-parts",
+    "slug": "oil-filter",
+    "name": "Oil Filter",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/vehicle_components/0.5777253772492882.png",
+    "attributes": {},
+    "relations": [
+      {
+        "category": "vehicles",
+        "slug": "go-kart",
+        "name": "Go Kart",
+        "kind": "compatible"
+      },
+      {
+        "category": "vehicles",
+        "slug": "go-kart-76e6b98f",
+        "name": "Go Kart",
+        "kind": "compatible"
+      },
+      {
+        "category": "vehicles",
+        "slug": "motorcycle",
+        "name": "Motorcycle",
+        "kind": "compatible"
+      },
+      {
+        "category": "vehicles",
+        "slug": "nomad-pickup",
+        "name": "Nomad Pickup",
+        "kind": "compatible"
+      },
+      {
+        "category": "vehicles",
+        "slug": "quad-bike",
+        "name": "Quad Bike",
+        "kind": "compatible"
+      },
+      {
+        "category": "vehicles",
+        "slug": "van",
+        "name": "Van",
+        "kind": "compatible"
+      }
+    ]
+  },
+  {
+    "id": "17ae6ddb-ee64-4580-82fb-f039830c12fe",
+    "table": "vehicle_components",
+    "category": "vehicle-parts",
+    "slug": "spark-plug",
+    "name": "Spark Plug",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/vehicle_components/0.47544126251724583.png",
+    "attributes": {},
+    "relations": [
+      {
+        "category": "vehicles",
+        "slug": "go-kart",
+        "name": "Go Kart",
+        "kind": "compatible"
+      },
+      {
+        "category": "vehicles",
+        "slug": "go-kart-76e6b98f",
+        "name": "Go Kart",
+        "kind": "compatible"
+      },
+      {
+        "category": "vehicles",
+        "slug": "motorcycle",
+        "name": "Motorcycle",
+        "kind": "compatible"
+      },
+      {
+        "category": "vehicles",
+        "slug": "nomad-pickup",
+        "name": "Nomad Pickup",
+        "kind": "compatible"
+      },
+      {
+        "category": "vehicles",
+        "slug": "quad-bike",
+        "name": "Quad Bike",
+        "kind": "compatible"
+      },
+      {
+        "category": "vehicles",
+        "slug": "van",
+        "name": "Van",
+        "kind": "compatible"
+      }
+    ]
+  },
+  {
+    "id": "819edb52-0bd3-452f-a49b-a984badcd801",
+    "table": "vehicle_components",
+    "category": "vehicle-parts",
+    "slug": "standard-battery",
+    "name": "Standard Battery",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/vehicle_components/0.5114653581615909.png",
+    "attributes": {},
+    "relations": [
+      {
+        "category": "vehicles",
+        "slug": "construction-sign",
+        "name": "Construction Sign",
+        "kind": "compatible"
+      },
+      {
+        "category": "vehicles",
+        "slug": "go-kart",
+        "name": "Go Kart",
+        "kind": "compatible"
+      },
+      {
+        "category": "vehicles",
+        "slug": "go-kart-76e6b98f",
+        "name": "Go Kart",
+        "kind": "compatible"
+      },
+      {
+        "category": "vehicles",
+        "slug": "nomad-pickup",
+        "name": "Nomad Pickup",
+        "kind": "compatible"
+      },
+      {
+        "category": "vehicles",
+        "slug": "van",
+        "name": "Van",
+        "kind": "compatible"
+      },
+      {
+        "category": "vehicles",
+        "slug": "water-barrel",
+        "name": "Water Barrel",
+        "kind": "compatible"
+      }
+    ]
+  },
+  {
+    "id": "9d3611ba-859a-4923-b5c3-6b1aba95a85e",
+    "table": "vehicle_components",
+    "category": "vehicle-parts",
+    "slug": "tire",
+    "name": "Tire",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/vehicles/1762253017743_Nomad%20Wheel.png",
+    "attributes": {},
+    "relations": [
+      {
+        "category": "vehicles",
+        "slug": "nomad-pickup",
+        "name": "Nomad Pickup",
+        "kind": "compatible"
+      }
+    ]
+  },
+  {
+    "id": "e8fa4766-eb70-43bf-91f0-3e0ba0c6cffe",
+    "table": "vehicles",
+    "category": "vehicles",
+    "slug": "ambulance",
+    "name": "Ambulance",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/vehicles/0.23689643942378946.png",
+    "attributes": {
+      "inventory_slots": 0,
+      "speed": 0,
+      "driving_handling": 0,
+      "subcategory": "Ground"
+    },
+    "relations": []
+  },
+  {
+    "id": "f54469fc-75a7-4e8e-9dfc-b364e89acf23",
+    "table": "vehicles",
+    "category": "vehicles",
+    "slug": "bicycle",
+    "name": "Bicycle",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/vehicles/0.42461348506478813.png",
+    "attributes": {
+      "health": 100,
+      "speed": 10,
+      "driving_handling": 12,
+      "occupants": 1,
+      "subcategory": "Ground"
+    },
+    "relations": []
+  },
+  {
+    "id": "4a998e7b-72c6-4dfc-bd9c-903e5f9987e8",
+    "table": "vehicles",
+    "category": "vehicles",
+    "slug": "camper-trailer",
+    "name": "Camper Trailer",
+    "description": "Mobile Home for Camping, Cook and Storage items.",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/vehicles/1775827418740_hazla_igual_mas_202604101722.png",
+    "attributes": {
+      "inventory_slots": 0,
+      "health": 0,
+      "speed": 0,
+      "driving_handling": 0,
+      "occupants": 0,
+      "fuel_capacity": 0,
+      "use_case": "Mobile Home for Camping, Cook and Storage items.",
+      "subcategory": "Towables"
+    },
+    "relations": []
+  },
+  {
+    "id": "671f8ed2-5691-4e8f-96ff-34d138b8c52a",
+    "table": "vehicles",
+    "category": "vehicles",
+    "slug": "construction-sign",
+    "name": "Construction Sign",
+    "description": "Move Customizable Led Sign",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/vehicles/1762360450536_AbqzVAu-removebg-preview-e1722250474476.webp",
+    "attributes": {
+      "inventory_slots": 0,
+      "health": 0,
+      "speed": 0,
+      "driving_handling": 0,
+      "occupants": 0,
+      "fuel_capacity": 0,
+      "use_case": "Move Customizable Led Sign",
+      "subcategory": "Towables"
+    },
+    "relations": [
+      {
+        "category": "vehicle-parts",
+        "slug": "back-lights",
+        "name": "Back Lights",
+        "kind": "components",
+        "quantity": 1
+      },
+      {
+        "category": "vehicle-parts",
+        "slug": "front-lights",
+        "name": "Front Lights",
+        "kind": "components",
+        "quantity": 1
+      },
+      {
+        "category": "vehicle-parts",
+        "slug": "standard-battery",
+        "name": "Standard Battery",
+        "kind": "components",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "7cb8ae59-02c7-4ccb-8c8f-64c2345860a7",
+    "table": "vehicles",
+    "category": "vehicles",
+    "slug": "gas-barrel",
+    "name": "Gas Barrel",
+    "description": "Transport Gasoline",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/vehicles/1762360148979_ezgif-7-8fb2a8ab96-removebg-preview.webp",
+    "attributes": {
+      "capacity": "2500L",
+      "inventory_slots": 0,
+      "health": 0,
+      "speed": 0,
+      "driving_handling": 0,
+      "occupants": 0,
+      "fuel_capacity": 0,
+      "use_case": "Transport Gasoline",
+      "subcategory": "Towables"
+    },
+    "relations": []
+  },
+  {
+    "id": "e983254e-0566-4159-9b98-071912c708c3",
+    "table": "vehicles",
+    "category": "vehicles",
+    "slug": "go-kart",
+    "name": "Go Kart",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/vehicles/1762255231178_kart.png",
+    "attributes": {
+      "inventory_slots": 0,
+      "health": 100,
+      "speed": 50,
+      "driving_handling": 30,
+      "occupants": 1,
+      "fuel_capacity": 5,
+      "subcategory": "Ground"
+    },
+    "relations": [
+      {
+        "category": "vehicle-parts",
+        "slug": "heavy-duty-fuel-tank",
+        "name": "Heavy Duty Fuel Tank",
+        "kind": "components",
+        "quantity": 1
+      },
+      {
+        "category": "vehicle-parts",
+        "slug": "oil-filter",
+        "name": "Oil Filter",
+        "kind": "components",
+        "quantity": 1
+      },
+      {
+        "category": "vehicle-parts",
+        "slug": "spark-plug",
+        "name": "Spark Plug",
+        "kind": "components",
+        "quantity": 1
+      },
+      {
+        "category": "vehicle-parts",
+        "slug": "standard-battery",
+        "name": "Standard Battery",
+        "kind": "components",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "76e6b98f-9dc7-4add-821e-1557fa4f7414",
+    "table": "vehicles",
+    "category": "vehicles",
+    "slug": "go-kart-76e6b98f",
+    "name": "Go Kart",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/vehicles/0.8738301521148548.png",
+    "attributes": {
+      "inventory_slots": 0,
+      "speed": 0,
+      "driving_handling": 0,
+      "occupants": 1,
+      "subcategory": "Ground"
+    },
+    "relations": [
+      {
+        "category": "vehicle-parts",
+        "slug": "oil-filter",
+        "name": "Oil Filter",
+        "kind": "components",
+        "quantity": 1
+      },
+      {
+        "category": "vehicle-parts",
+        "slug": "spark-plug",
+        "name": "Spark Plug",
+        "kind": "components",
+        "quantity": 8
+      },
+      {
+        "category": "vehicle-parts",
+        "slug": "standard-battery",
+        "name": "Standard Battery",
+        "kind": "components",
+        "quantity": 1
+      }
+    ],
+    "disambiguator": "76e6b98f"
+  },
+  {
+    "id": "f93877c4-e568-4390-a7c1-3a1b3e21b537",
+    "table": "vehicles",
+    "category": "vehicles",
+    "slug": "half-cage-trailer",
+    "name": "Half Cage Trailer",
+    "description": "Small Vehicle Transport",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/vehicles/1762360294492_ezgif-7-ba5f3f334a-removebg-preview.webp",
+    "attributes": {
+      "capacity": "1 Small Vehicle",
+      "inventory_slots": 0,
+      "health": 0,
+      "speed": 0,
+      "driving_handling": 0,
+      "occupants": 0,
+      "fuel_capacity": 0,
+      "use_case": "Small Vehicle Transport",
+      "subcategory": "Towables"
+    },
+    "relations": []
+  },
+  {
+    "id": "c1fc6832-5b0c-488c-8acc-fad7aac26298",
+    "table": "vehicles",
+    "category": "vehicles",
+    "slug": "motorcycle",
+    "name": "Motorcycle",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/vehicles/1762254223979_ChatGPT%20Image%204%20nov%202025,%2012_03_34.png",
+    "attributes": {
+      "inventory_slots": 0,
+      "health": 100,
+      "speed": 50,
+      "driving_handling": 30,
+      "occupants": 1,
+      "fuel_capacity": 10,
+      "subcategory": "Ground"
+    },
+    "relations": [
+      {
+        "category": "vehicle-parts",
+        "slug": "back-lights",
+        "name": "Back Lights",
+        "kind": "components",
+        "quantity": 1
+      },
+      {
+        "category": "vehicle-parts",
+        "slug": "front-lights",
+        "name": "Front Lights",
+        "kind": "components",
+        "quantity": 1
+      },
+      {
+        "category": "vehicle-parts",
+        "slug": "heavy-duty-fuel-tank",
+        "name": "Heavy Duty Fuel Tank",
+        "kind": "components",
+        "quantity": 1
+      },
+      {
+        "category": "vehicle-parts",
+        "slug": "oil-filter",
+        "name": "Oil Filter",
+        "kind": "components",
+        "quantity": 1
+      },
+      {
+        "category": "vehicle-parts",
+        "slug": "spark-plug",
+        "name": "Spark Plug",
+        "kind": "components",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "67fc97ba-1312-45bb-9c5f-96a23f24c5a0",
+    "table": "vehicles",
+    "category": "vehicles",
+    "slug": "nomad-pickup",
+    "name": "Nomad Pickup",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/vehicles/1762252314305_pickup.png",
+    "attributes": {
+      "inventory_slots": 150,
+      "health": 200,
+      "speed": 50,
+      "driving_handling": 30,
+      "occupants": 2,
+      "fuel_capacity": 60,
+      "subcategory": "Ground"
+    },
+    "relations": [
+      {
+        "category": "vehicle-parts",
+        "slug": "back-lights",
+        "name": "Back Lights",
+        "kind": "components",
+        "quantity": 2
+      },
+      {
+        "category": "vehicle-parts",
+        "slug": "front-lights",
+        "name": "Front Lights",
+        "kind": "components",
+        "quantity": 2
+      },
+      {
+        "category": "vehicle-parts",
+        "slug": "heavy-duty-fuel-tank",
+        "name": "Heavy Duty Fuel Tank",
+        "kind": "components",
+        "quantity": 1
+      },
+      {
+        "category": "vehicle-parts",
+        "slug": "oil-filter",
+        "name": "Oil Filter",
+        "kind": "components",
+        "quantity": 1
+      },
+      {
+        "category": "vehicle-parts",
+        "slug": "spark-plug",
+        "name": "Spark Plug",
+        "kind": "components",
+        "quantity": 1
+      },
+      {
+        "category": "vehicle-parts",
+        "slug": "standard-battery",
+        "name": "Standard Battery",
+        "kind": "components",
+        "quantity": 1
+      },
+      {
+        "category": "vehicle-parts",
+        "slug": "tire",
+        "name": "Tire",
+        "kind": "components",
+        "quantity": 4
+      }
+    ]
+  },
+  {
+    "id": "3e7157c5-fa7d-4996-8624-23027f2680da",
+    "table": "vehicles",
+    "category": "vehicles",
+    "slug": "quad-bike",
+    "name": "Quad Bike",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/vehicles/1762360113640_quad.png",
+    "attributes": {
+      "inventory_slots": 0,
+      "health": 0,
+      "speed": 0,
+      "driving_handling": 0,
+      "occupants": 0,
+      "fuel_capacity": 0,
+      "subcategory": "Ground"
+    },
+    "relations": [
+      {
+        "category": "vehicle-parts",
+        "slug": "back-lights",
+        "name": "Back Lights",
+        "kind": "components",
+        "quantity": 2
+      },
+      {
+        "category": "vehicle-parts",
+        "slug": "front-lights",
+        "name": "Front Lights",
+        "kind": "components",
+        "quantity": 2
+      },
+      {
+        "category": "vehicle-parts",
+        "slug": "heavy-duty-fuel-tank",
+        "name": "Heavy Duty Fuel Tank",
+        "kind": "components",
+        "quantity": 1
+      },
+      {
+        "category": "vehicle-parts",
+        "slug": "oil-filter",
+        "name": "Oil Filter",
+        "kind": "components",
+        "quantity": 1
+      },
+      {
+        "category": "vehicle-parts",
+        "slug": "spark-plug",
+        "name": "Spark Plug",
+        "kind": "components",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "d03c51e3-8d1e-4f1b-b9a4-b49db6b658c7",
+    "table": "vehicles",
+    "category": "vehicles",
+    "slug": "towable-lights",
+    "name": "Towable Lights",
+    "description": "Move light sources",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/vehicles/1762360233773_ezgif-7-ac7d79d408-removebg-preview.webp",
+    "attributes": {
+      "inventory_slots": 0,
+      "health": 0,
+      "speed": 0,
+      "driving_handling": 0,
+      "occupants": 0,
+      "fuel_capacity": 0,
+      "use_case": "Move light sources",
+      "subcategory": "Towables"
+    },
+    "relations": []
+  },
+  {
+    "id": "fdb0f56e-18e5-41ab-9ebe-0385cf234c46",
+    "table": "vehicles",
+    "category": "vehicles",
+    "slug": "van",
+    "name": "Van",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/vehicles/1762255307120_van.png",
+    "attributes": {
+      "inventory_slots": 200,
+      "health": 200,
+      "speed": 50,
+      "driving_handling": 30,
+      "occupants": 2,
+      "fuel_capacity": 70,
+      "subcategory": "Ground"
+    },
+    "relations": [
+      {
+        "category": "vehicle-parts",
+        "slug": "back-lights",
+        "name": "Back Lights",
+        "kind": "components",
+        "quantity": 2
+      },
+      {
+        "category": "vehicle-parts",
+        "slug": "front-lights",
+        "name": "Front Lights",
+        "kind": "components",
+        "quantity": 2
+      },
+      {
+        "category": "vehicle-parts",
+        "slug": "heavy-duty-fuel-tank",
+        "name": "Heavy Duty Fuel Tank",
+        "kind": "components",
+        "quantity": 1
+      },
+      {
+        "category": "vehicle-parts",
+        "slug": "oil-filter",
+        "name": "Oil Filter",
+        "kind": "components",
+        "quantity": 1
+      },
+      {
+        "category": "vehicle-parts",
+        "slug": "spark-plug",
+        "name": "Spark Plug",
+        "kind": "components",
+        "quantity": 1
+      },
+      {
+        "category": "vehicle-parts",
+        "slug": "standard-battery",
+        "name": "Standard Battery",
+        "kind": "components",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "25f8a781-a5d1-4619-b53b-262e5751d887",
+    "table": "vehicles",
+    "category": "vehicles",
+    "slug": "vehicle-tow",
+    "name": "Vehicle Tow",
+    "description": "Large vehicle transport",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/vehicles/1762360405274_ezgif-7-ccd30e9b5e-removebg-preview-e1721860286611.webp",
+    "attributes": {
+      "capacity": "1 Large Vehicle",
+      "inventory_slots": 0,
+      "health": 0,
+      "speed": 0,
+      "driving_handling": 0,
+      "occupants": 0,
+      "fuel_capacity": 0,
+      "use_case": "Large vehicle transport",
+      "subcategory": "Towables"
+    },
+    "relations": []
+  },
+  {
+    "id": "20d63c49-f74c-4880-a596-0aaf7b9b8da8",
+    "table": "vehicles",
+    "category": "vehicles",
+    "slug": "water-barrel",
+    "name": "Water Barrel",
+    "description": "Water transport with 200L",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/vehicles/1762255371540_ezgif-7-3c0ad130a6-removebg-preview.webp",
+    "attributes": {
+      "capacity": "2500L",
+      "inventory_slots": 0,
+      "health": 0,
+      "speed": 0,
+      "driving_handling": 0,
+      "occupants": 0,
+      "fuel_capacity": 0,
+      "use_case": "Transport Water",
+      "subcategory": "Towables"
+    },
+    "relations": [
+      {
+        "category": "vehicle-parts",
+        "slug": "back-lights",
+        "name": "Back Lights",
+        "kind": "components",
+        "quantity": 1
+      },
+      {
+        "category": "vehicle-parts",
+        "slug": "front-lights",
+        "name": "Front Lights",
+        "kind": "components",
+        "quantity": 1
+      },
+      {
+        "category": "vehicle-parts",
+        "slug": "standard-battery",
+        "name": "Standard Battery",
+        "kind": "components",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "bcf9c739-9159-44eb-8b65-4c00a9435998",
+    "table": "weapons",
+    "category": "weapons",
+    "slug": "1887",
+    "name": "1887",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762307132232_1887.png",
+    "attributes": {
+      "ammo": "12 Gauge",
+      "damage": 10,
+      "accuracy": 100,
+      "rate_of_fire": 20,
+      "capacity": 0,
+      "rarity": "Common",
+      "subcategory": "Shotguns"
+    },
+    "relations": [
+      {
+        "category": "ammo",
+        "slug": "12-gauge",
+        "name": "12 Gauge",
+        "kind": "ammo"
+      }
+    ]
+  },
+  {
+    "id": "0e250f0a-d101-4a02-9a29-642673fa3f32",
+    "table": "weapons",
+    "category": "weapons",
+    "slug": "1911",
+    "name": "1911",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762217325472_1911.png",
+    "attributes": {
+      "ammo": ".45ACP",
+      "damage": 30,
+      "accuracy": 100,
+      "rate_of_fire": 40,
+      "capacity": 0,
+      "rarity": "Uncommon",
+      "subcategory": "Pistols"
+    },
+    "relations": [
+      {
+        "category": "ammo",
+        "slug": "45acp",
+        "name": ".45ACP",
+        "kind": "ammo"
+      },
+      {
+        "category": "npcs",
+        "slug": "blackjack",
+        "name": "Blackjack",
+        "kind": "sellers"
+      }
+    ]
+  },
+  {
+    "id": "0508cb49-358c-46b6-9415-a72f5f756dd5",
+    "table": "weapons",
+    "category": "weapons",
+    "slug": "1911-tactical",
+    "name": "1911 Tactical",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762217389246_1911%20tactical.png",
+    "attributes": {
+      "ammo": ".45ACP",
+      "damage": 50,
+      "accuracy": 100,
+      "rate_of_fire": 40,
+      "capacity": 0,
+      "rarity": "Epic",
+      "subcategory": "Pistols"
+    },
+    "relations": [
+      {
+        "category": "ammo",
+        "slug": "45acp",
+        "name": ".45ACP",
+        "kind": "ammo"
+      }
+    ]
+  },
+  {
+    "id": "db5badd2-9915-4bd3-905d-2f7ef55d902d",
+    "table": "weapons",
+    "category": "weapons",
+    "slug": "ak-74",
+    "name": "AK-74",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762306596955_ak47.png",
+    "attributes": {
+      "ammo": "5.45x39",
+      "damage": 60,
+      "accuracy": 100,
+      "rate_of_fire": 40,
+      "capacity": 0,
+      "rarity": "Epic",
+      "subcategory": "Assault Rifles"
+    },
+    "relations": [
+      {
+        "category": "ammo",
+        "slug": "545x39",
+        "name": "5.45x39",
+        "kind": "ammo"
+      }
+    ]
+  },
+  {
+    "id": "6fdf6eb7-6247-43ac-8afd-b77d45991cc2",
+    "table": "weapons",
+    "category": "weapons",
+    "slug": "ak-74u",
+    "name": "AK-74u",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/weapons/0.9922093493184025.png",
+    "attributes": {
+      "ammo": "5.45x39",
+      "damage": 60,
+      "accuracy": 100,
+      "rate_of_fire": 40,
+      "capacity": 0,
+      "rarity": "Uncommon",
+      "subcategory": "Assault Rifles"
+    },
+    "relations": [
+      {
+        "category": "ammo",
+        "slug": "545x39",
+        "name": "5.45x39",
+        "kind": "ammo"
+      }
+    ]
+  },
+  {
+    "id": "5592aec0-1895-44ef-8c53-8d7be1488ec0",
+    "table": "weapons",
+    "category": "weapons",
+    "slug": "akm",
+    "name": "AKM",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762306763200_akm.png",
+    "attributes": {
+      "ammo": "7.62x39",
+      "damage": 60,
+      "accuracy": 100,
+      "rate_of_fire": 40,
+      "capacity": 0,
+      "rarity": "Rare",
+      "subcategory": "Assault Rifles"
+    },
+    "relations": [
+      {
+        "category": "ammo",
+        "slug": "762x39",
+        "name": "7.62x39",
+        "kind": "ammo"
+      }
+    ]
+  },
+  {
+    "id": "432e539b-cb42-4393-90ce-61ee29403023",
+    "table": "weapons",
+    "category": "weapons",
+    "slug": "as-val",
+    "name": "AS VAL",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/weapons/0.5926247425667329.png",
+    "attributes": {
+      "ammo": "9x39",
+      "damage": 90,
+      "accuracy": 100,
+      "rate_of_fire": 30,
+      "capacity": 0,
+      "rarity": "Legendary",
+      "subcategory": "Assault Rifles"
+    },
+    "relations": [
+      {
+        "category": "ammo",
+        "slug": "9x39",
+        "name": "9x39",
+        "kind": "ammo"
+      },
+      {
+        "category": "npcs",
+        "slug": "blackjack",
+        "name": "Blackjack",
+        "kind": "sellers"
+      }
+    ]
+  },
+  {
+    "id": "42deaf30-8c23-4560-9f29-5de2e907f5d7",
+    "table": "weapons",
+    "category": "weapons",
+    "slug": "c7a1",
+    "name": "C7A1",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762306717251_c7a1.png",
+    "attributes": {
+      "ammo": "5.56x45",
+      "damage": 80,
+      "accuracy": 100,
+      "rate_of_fire": 50,
+      "capacity": 0,
+      "rarity": "Legendary",
+      "subcategory": "Assault Rifles"
+    },
+    "relations": [
+      {
+        "category": "accessories",
+        "slug": "modern-grip",
+        "name": "Modern Grip",
+        "kind": "attachments"
+      },
+      {
+        "category": "npcs",
+        "slug": "blackjack",
+        "name": "Blackjack",
+        "kind": "sellers"
+      }
+    ]
+  },
+  {
+    "id": "6ceaaa5d-6503-49d7-bf6f-486c82e0b308",
+    "table": "weapons",
+    "category": "weapons",
+    "slug": "c8a2",
+    "name": "C8A2",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/weapons/0.33787090927399244.png",
+    "attributes": {
+      "ammo": "5.45x39",
+      "damage": 85,
+      "accuracy": 100,
+      "rate_of_fire": 50,
+      "capacity": 0,
+      "rarity": "Rare",
+      "subcategory": "Assault Rifles"
+    },
+    "relations": [
+      {
+        "category": "ammo",
+        "slug": "545x39",
+        "name": "5.45x39",
+        "kind": "ammo"
+      },
+      {
+        "category": "npcs",
+        "slug": "blackjack",
+        "name": "Blackjack",
+        "kind": "sellers"
+      }
+    ]
+  },
+  {
+    "id": "4558c826-0b93-46f5-895b-3805fa0c9722",
+    "table": "weapons",
+    "category": "weapons",
+    "slug": "crowbar",
+    "name": "Crowbar",
+    "description": "They're waiting for you, in the test chamber.",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/weapons/0.0809529879748293.png",
+    "attributes": {
+      "damage": 25,
+      "weight": 1.2,
+      "size": "3x9",
+      "melee_range": 45,
+      "attack_speed": 60,
+      "stamina_efficiency": 45,
+      "subcategory": "Melee"
+    },
+    "relations": []
+  },
+  {
+    "id": "92431324-500e-47b0-b765-9e97d52dda80",
+    "table": "weapons",
+    "category": "weapons",
+    "slug": "eder-17",
+    "name": "Eder-17",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762217292989_Eder17.png",
+    "attributes": {
+      "ammo": "9x19",
+      "damage": 60,
+      "accuracy": 100,
+      "rate_of_fire": 40,
+      "capacity": 0,
+      "rarity": "Rare",
+      "subcategory": "Pistols"
+    },
+    "relations": [
+      {
+        "category": "ammo",
+        "slug": "9x19",
+        "name": "9x19",
+        "kind": "ammo"
+      },
+      {
+        "category": "accessories",
+        "slug": "anpeq-15-laser",
+        "name": "ANPEQ-15 Laser",
+        "kind": "attachments"
+      },
+      {
+        "category": "accessories",
+        "slug": "front-sight",
+        "name": "front Sight",
+        "kind": "attachments"
+      },
+      {
+        "category": "accessories",
+        "slug": "tac-lightlaser",
+        "name": "Tac-Light/Laser",
+        "kind": "attachments"
+      },
+      {
+        "category": "npcs",
+        "slug": "blackjack",
+        "name": "Blackjack",
+        "kind": "sellers"
+      }
+    ]
+  },
+  {
+    "id": "e286c493-7629-473c-8253-b21899575876",
+    "table": "weapons",
+    "category": "weapons",
+    "slug": "eder-18c",
+    "name": "Eder-18c",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762217260874_Eder18c.png",
+    "attributes": {
+      "ammo": "9x19",
+      "damage": 90,
+      "accuracy": 100,
+      "rate_of_fire": 30,
+      "capacity": 0,
+      "rarity": "Rare",
+      "subcategory": "Pistols"
+    },
+    "relations": [
+      {
+        "category": "ammo",
+        "slug": "9x19",
+        "name": "9x19",
+        "kind": "ammo"
+      }
+    ]
+  },
+  {
+    "id": "6db18843-b051-4823-8c7c-df521a4eaf64",
+    "table": "weapons",
+    "category": "weapons",
+    "slug": "hammer",
+    "name": "Hammer",
+    "description": "Don't even need nails. Still hurts!",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/weapons/0.9575578162094269.png",
+    "attributes": {
+      "damage": 15,
+      "weight": 1.2,
+      "size": "3x6",
+      "melee_range": 45,
+      "attack_speed": 60,
+      "stamina_efficiency": 45,
+      "rarity": "Common",
+      "subcategory": "Melee"
+    },
+    "relations": []
+  },
+  {
+    "id": "d2feae98-2d31-456a-a1f3-ca905c210f8e",
+    "table": "weapons",
+    "category": "weapons",
+    "slug": "hk416",
+    "name": "HK416",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762257484415_ChatGPT%20Image%204%20nov%202025,%2012_57_53.png",
+    "attributes": {
+      "ammo": "5.56x45",
+      "damage": 50,
+      "accuracy": 100,
+      "rate_of_fire": 30,
+      "capacity": 0,
+      "rarity": "Legendary",
+      "subcategory": "Assault Rifles"
+    },
+    "relations": [
+      {
+        "category": "accessories",
+        "slug": "30-rnd-stanag",
+        "name": "30 RND Stanag",
+        "kind": "attachments"
+      },
+      {
+        "category": "accessories",
+        "slug": "60-rnd-stanag",
+        "name": "60 RND Stanag",
+        "kind": "attachments"
+      },
+      {
+        "category": "accessories",
+        "slug": "generic-suppressor",
+        "name": "Generic Suppressor",
+        "kind": "attachments"
+      },
+      {
+        "category": "accessories",
+        "slug": "standard-carabine-stock",
+        "name": "Standard Carabine Stock",
+        "kind": "attachments"
+      },
+      {
+        "category": "accessories",
+        "slug": "vertical-grip",
+        "name": "Vertical Grip",
+        "kind": "attachments"
+      }
+    ]
+  },
+  {
+    "id": "4af3a14e-877f-4664-8ff9-252e2e777716",
+    "table": "weapons",
+    "category": "weapons",
+    "slug": "intratec-9",
+    "name": "Intratec-9",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762210633589_tec.png",
+    "attributes": {
+      "ammo": "9x19",
+      "damage": 30,
+      "accuracy": 100,
+      "rate_of_fire": 40,
+      "rarity": "Rare",
+      "subcategory": "Pistols"
+    },
+    "relations": [
+      {
+        "category": "ammo",
+        "slug": "9x19",
+        "name": "9x19",
+        "kind": "ammo"
+      }
+    ]
+  },
+  {
+    "id": "e096bde0-3afb-4dac-9c38-603f91a61914",
+    "table": "weapons",
+    "category": "weapons",
+    "slug": "lee-enfield",
+    "name": "Lee Enfield",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762307214168_enfield.png",
+    "attributes": {
+      "ammo": ".303",
+      "damage": 50,
+      "accuracy": 100,
+      "rate_of_fire": 30,
+      "capacity": 0,
+      "rarity": "Uncommon",
+      "subcategory": "Snipers"
+    },
+    "relations": [
+      {
+        "category": "ammo",
+        "slug": "303",
+        "name": ".303",
+        "kind": "ammo"
+      }
+    ]
+  },
+  {
+    "id": "943216c8-0518-45d7-8f8f-1f8cd9128de6",
+    "table": "weapons",
+    "category": "weapons",
+    "slug": "m14",
+    "name": "M14",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762306684169_m16.png",
+    "attributes": {
+      "ammo": "5.56x45",
+      "damage": 5,
+      "accuracy": 100,
+      "rate_of_fire": 10,
+      "capacity": 0,
+      "rarity": "Legendary",
+      "subcategory": "Assault Rifles"
+    },
+    "relations": [
+      {
+        "category": "ammo",
+        "slug": "556x45",
+        "name": "5.56x45",
+        "kind": "ammo"
+      },
+      {
+        "category": "npcs",
+        "slug": "blackjack",
+        "name": "Blackjack",
+        "kind": "sellers"
+      }
+    ]
+  },
+  {
+    "id": "391e5831-b8fc-4764-8cd0-be2d08857a93",
+    "table": "weapons",
+    "category": "weapons",
+    "slug": "m1873",
+    "name": "M1873",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762307413940_000000070016000531d13a7eb9ebb1380000000000000000000000028250b485.webp",
+    "attributes": {
+      "ammo": ".357",
+      "damage": 5,
+      "accuracy": 100,
+      "rate_of_fire": 60,
+      "capacity": 0,
+      "rarity": "Uncommon",
+      "subcategory": "Snipers"
+    },
+    "relations": [
+      {
+        "category": "ammo",
+        "slug": "357",
+        "name": ".357",
+        "kind": "ammo"
+      }
+    ]
+  },
+  {
+    "id": "9b7d0b73-a45a-43cb-baf9-e4da5c7f4e2c",
+    "table": "weapons",
+    "category": "weapons",
+    "slug": "m2",
+    "name": "M2",
+    "description": "A modern hunting and trap shooting shotgun.",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762307094581_m2.png",
+    "attributes": {
+      "ammo": "12 Gauge",
+      "damage": 0,
+      "accuracy": 50,
+      "rate_of_fire": 60,
+      "capacity": 5,
+      "weight": 3.4,
+      "size": "18x4",
+      "handling": 45,
+      "rarity": "Uncommon",
+      "subcategory": "Shotguns"
+    },
+    "relations": [
+      {
+        "category": "ammo",
+        "slug": "12-gauge",
+        "name": "12 Gauge",
+        "kind": "ammo"
+      },
+      {
+        "category": "npcs",
+        "slug": "blackjack",
+        "name": "Blackjack",
+        "kind": "sellers"
+      }
+    ]
+  },
+  {
+    "id": "ddba8924-d802-44c1-b491-4cba3a375019",
+    "table": "weapons",
+    "category": "weapons",
+    "slug": "m9-bayonet",
+    "name": "M9 Bayonet",
+    "description": "22",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/weapons/0.9260917342343873.png",
+    "attributes": {
+      "damage": 20,
+      "weight": 2,
+      "size": "x",
+      "melee_range": 30,
+      "attack_speed": 100,
+      "stamina_efficiency": 60,
+      "rarity": "Rare",
+      "subcategory": "Melee"
+    },
+    "relations": []
+  },
+  {
+    "id": "44d3b657-e473-42c0-a776-cbfff2576633",
+    "table": "weapons",
+    "category": "weapons",
+    "slug": "mallet",
+    "name": "Mallet",
+    "description": "Don't even need nails. Still hurts!",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/weapons/0.8509387833185574.png",
+    "attributes": {
+      "damage": 15,
+      "weight": 1.2,
+      "size": "4x7",
+      "melee_range": 45,
+      "attack_speed": 60,
+      "stamina_efficiency": 45,
+      "rarity": "Uncommon",
+      "subcategory": "Melee"
+    },
+    "relations": []
+  },
+  {
+    "id": "f626b261-aa68-4ec5-a5ce-87f1808dc175",
+    "table": "weapons",
+    "category": "weapons",
+    "slug": "maxim-9",
+    "name": "Maxim 9",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762217177570_maxim.png",
+    "attributes": {
+      "ammo": "9x19",
+      "damage": 60,
+      "accuracy": 100,
+      "rate_of_fire": 30,
+      "capacity": 0,
+      "rarity": "Rare",
+      "subcategory": "Pistols"
+    },
+    "relations": [
+      {
+        "category": "ammo",
+        "slug": "9x19",
+        "name": "9x19",
+        "kind": "ammo"
+      }
+    ]
+  },
+  {
+    "id": "898d31e1-f8f4-4839-9a28-cc97900902a7",
+    "table": "weapons",
+    "category": "weapons",
+    "slug": "mkii",
+    "name": "MKII",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762217418599_22lr.png",
+    "attributes": {
+      "ammo": ".22LR",
+      "damage": 60,
+      "accuracy": 100,
+      "rate_of_fire": 20,
+      "capacity": 0,
+      "rarity": "Common",
+      "subcategory": "Pistols"
+    },
+    "relations": [
+      {
+        "category": "ammo",
+        "slug": "22lr",
+        "name": ".22LR",
+        "kind": "ammo"
+      },
+      {
+        "category": "npcs",
+        "slug": "blackjack",
+        "name": "Blackjack",
+        "kind": "sellers"
+      }
+    ]
+  },
+  {
+    "id": "1967d986-3827-41eb-8b93-02e0a0885007",
+    "table": "weapons",
+    "category": "weapons",
+    "slug": "mooseberg-500",
+    "name": "Mooseberg 500",
+    "description": "Big boom. Perfect for moose-hunting.",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762306993277_Mooseberg500.png",
+    "attributes": {
+      "ammo": "12 Gauge",
+      "damage": 10,
+      "accuracy": 100,
+      "rate_of_fire": 20,
+      "capacity": 0,
+      "weight": 0.25,
+      "size": "18x4",
+      "rarity": "Rare",
+      "subcategory": "Shotguns"
+    },
+    "relations": [
+      {
+        "category": "ammo",
+        "slug": "12-gauge",
+        "name": "12 Gauge",
+        "kind": "ammo"
+      },
+      {
+        "category": "npcs",
+        "slug": "blackjack",
+        "name": "Blackjack",
+        "kind": "sellers"
+      }
+    ]
+  },
+  {
+    "id": "5817ce58-9602-415a-9dac-17714816cc09",
+    "table": "weapons",
+    "category": "weapons",
+    "slug": "mossin-nagant",
+    "name": "Mossin Nagant",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762307266380_mossin.png",
+    "attributes": {
+      "ammo": "7.62X54",
+      "damage": 5,
+      "accuracy": 100,
+      "rate_of_fire": 60,
+      "capacity": 0,
+      "rarity": "Rare",
+      "subcategory": "Snipers"
+    },
+    "relations": [
+      {
+        "category": "ammo",
+        "slug": "762x54",
+        "name": "7.62X54",
+        "kind": "ammo"
+      }
+    ]
+  },
+  {
+    "id": "b5452d0f-848f-4a08-a019-f65d0ea01f06",
+    "table": "weapons",
+    "category": "weapons",
+    "slug": "mp5",
+    "name": "MP5",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762306581284_mp5.png",
+    "attributes": {
+      "ammo": "9x19",
+      "damage": 80,
+      "accuracy": 100,
+      "rate_of_fire": 30,
+      "capacity": 0,
+      "rarity": "Uncommon",
+      "subcategory": "SMGs"
+    },
+    "relations": [
+      {
+        "category": "ammo",
+        "slug": "9x19",
+        "name": "9x19",
+        "kind": "ammo"
+      },
+      {
+        "category": "npcs",
+        "slug": "blackjack",
+        "name": "Blackjack",
+        "kind": "sellers"
+      }
+    ]
+  },
+  {
+    "id": "954ace27-18a6-4cc5-9801-41730913a6fb",
+    "table": "weapons",
+    "category": "weapons",
+    "slug": "mp5k",
+    "name": "MP5K",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762306508040_mp5k.png",
+    "attributes": {
+      "ammo": "9x19",
+      "damage": 90,
+      "accuracy": 100,
+      "rate_of_fire": 30,
+      "capacity": 0,
+      "rarity": "Rare",
+      "subcategory": "SMGs"
+    },
+    "relations": [
+      {
+        "category": "ammo",
+        "slug": "9x19",
+        "name": "9x19",
+        "kind": "ammo"
+      }
+    ]
+  },
+  {
+    "id": "a2bac8ff-1eea-4706-a1ef-dbb75e0d3cbe",
+    "table": "weapons",
+    "category": "weapons",
+    "slug": "mp7",
+    "name": "MP7",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/weapons/0.47752000865285904.png",
+    "attributes": {
+      "ammo": "4.6x30",
+      "damage": 100,
+      "accuracy": 100,
+      "rate_of_fire": 20,
+      "capacity": 0,
+      "rarity": "Epic",
+      "subcategory": "SMGs"
+    },
+    "relations": [
+      {
+        "category": "ammo",
+        "slug": "46x30",
+        "name": "4.6x30",
+        "kind": "ammo"
+      },
+      {
+        "category": "npcs",
+        "slug": "blackjack",
+        "name": "Blackjack",
+        "kind": "sellers"
+      },
+      {
+        "category": "npcs",
+        "slug": "cowboy",
+        "name": "Cowboy",
+        "kind": "sellers"
+      }
+    ]
+  },
+  {
+    "id": "39fc7da0-90c4-45d4-836e-748e059c3054",
+    "table": "weapons",
+    "category": "weapons",
+    "slug": "p90",
+    "name": "P90",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762306375108_p90.png",
+    "attributes": {
+      "ammo": "5.7x28",
+      "damage": 90,
+      "accuracy": 100,
+      "rate_of_fire": 20,
+      "capacity": 0,
+      "rarity": "Epic",
+      "subcategory": "SMGs"
+    },
+    "relations": [
+      {
+        "category": "ammo",
+        "slug": "57x28",
+        "name": "5.7x28",
+        "kind": "ammo"
+      }
+    ]
+  },
+  {
+    "id": "1b02151e-6669-4053-b169-dd535b5cebed",
+    "table": "weapons",
+    "category": "weapons",
+    "slug": "pm",
+    "name": "PM",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/weapons/0.10199691975756353.png",
+    "attributes": {
+      "ammo": "9x18",
+      "damage": 60,
+      "accuracy": 100,
+      "rate_of_fire": 30,
+      "capacity": 0,
+      "rarity": "Common",
+      "subcategory": "Pistols"
+    },
+    "relations": [
+      {
+        "category": "ammo",
+        "slug": "9x18",
+        "name": "9x18",
+        "kind": "ammo"
+      },
+      {
+        "category": "npcs",
+        "slug": "blackjack",
+        "name": "Blackjack",
+        "kind": "sellers"
+      }
+    ]
+  },
+  {
+    "id": "5fb0e7ec-8570-4bac-a19d-b903205e3975",
+    "table": "weapons",
+    "category": "weapons",
+    "slug": "r700",
+    "name": "R700",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762307332487_r700.png",
+    "attributes": {
+      "ammo": "7.62x51",
+      "damage": 5,
+      "accuracy": 100,
+      "rate_of_fire": 60,
+      "capacity": 0,
+      "rarity": "Uncommon",
+      "subcategory": "Snipers"
+    },
+    "relations": [
+      {
+        "category": "ammo",
+        "slug": "762x51",
+        "name": "7.62x51",
+        "kind": "ammo"
+      },
+      {
+        "category": "accessories",
+        "slug": "r700-3-rnd-762-magazine",
+        "name": "R700 3 Rnd 7.62 Magazine",
+        "kind": "attachments"
+      },
+      {
+        "category": "accessories",
+        "slug": "r700-5-rnd-762-magazine",
+        "name": "R700 5 Rnd 7.62 Magazine",
+        "kind": "attachments"
+      },
+      {
+        "category": "npcs",
+        "slug": "blackjack",
+        "name": "Blackjack",
+        "kind": "sellers"
+      }
+    ]
+  },
+  {
+    "id": "e63f9768-f01f-4109-b110-c67990c65096",
+    "table": "weapons",
+    "category": "weapons",
+    "slug": "r870",
+    "name": "R870",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762307048250_R870.png",
+    "attributes": {
+      "ammo": "12 Gauge",
+      "damage": 10,
+      "accuracy": 35,
+      "rate_of_fire": 20,
+      "capacity": 0,
+      "rarity": "Common",
+      "subcategory": "Shotguns"
+    },
+    "relations": [
+      {
+        "category": "ammo",
+        "slug": "12-gauge",
+        "name": "12 Gauge",
+        "kind": "ammo"
+      },
+      {
+        "category": "npcs",
+        "slug": "blackjack",
+        "name": "Blackjack",
+        "kind": "sellers"
+      }
+    ]
+  },
+  {
+    "id": "01266af4-5280-4f55-ad5d-412e6e310c09",
+    "table": "weapons",
+    "category": "weapons",
+    "slug": "raging-bull",
+    "name": "Raging Bull",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762210570245_ragingbull.png",
+    "attributes": {
+      "ammo": ".357",
+      "damage": 0,
+      "accuracy": 100,
+      "rate_of_fire": 10,
+      "capacity": 7,
+      "weight": 10,
+      "size": "1x3",
+      "rarity": "Rare",
+      "subcategory": "Pistols"
+    },
+    "relations": [
+      {
+        "category": "ammo",
+        "slug": "357",
+        "name": ".357",
+        "kind": "ammo"
+      },
+      {
+        "category": "accessories",
+        "slug": "modern-grip",
+        "name": "Modern Grip",
+        "kind": "attachments"
+      },
+      {
+        "category": "accessories",
+        "slug": "speedloader",
+        "name": "Speedloader",
+        "kind": "attachments"
+      },
+      {
+        "category": "accessories",
+        "slug": "tactical-barrel",
+        "name": "Tactical Barrel",
+        "kind": "attachments"
+      },
+      {
+        "category": "accessories",
+        "slug": "wooden-grip",
+        "name": "Wooden Grip",
+        "kind": "attachments"
+      },
+      {
+        "category": "npcs",
+        "slug": "blackjack",
+        "name": "Blackjack",
+        "kind": "sellers"
+      }
+    ]
+  },
+  {
+    "id": "80e6ce4c-6739-40a8-a176-c3a2833841fa",
+    "table": "weapons",
+    "category": "weapons",
+    "slug": "ruger-1022",
+    "name": "Ruger 10/22",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/weapons/0.736533865572631.png",
+    "attributes": {
+      "ammo": ".22LR",
+      "damage": 50,
+      "accuracy": 100,
+      "rate_of_fire": 30,
+      "capacity": 0,
+      "rarity": "Uncommon",
+      "subcategory": "Assault Rifles"
+    },
+    "relations": [
+      {
+        "category": "ammo",
+        "slug": "22lr",
+        "name": ".22LR",
+        "kind": "ammo"
+      }
+    ]
+  },
+  {
+    "id": "6a5abd08-7d74-40db-8bab-11ec2476d4ce",
+    "table": "weapons",
+    "category": "weapons",
+    "slug": "saw",
+    "name": "Saw",
+    "description": "Bet you never saw this coming",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/weapons/0.3119763950144898.png",
+    "attributes": {
+      "damage": 20,
+      "weight": 0.79,
+      "size": "6x3",
+      "melee_range": 80,
+      "attack_speed": 60,
+      "rarity": "Common",
+      "subcategory": "Melee"
+    },
+    "relations": []
+  },
+  {
+    "id": "4bfc1881-4d75-4a85-8be3-5b8dff19ef5f",
+    "table": "weapons",
+    "category": "weapons",
+    "slug": "sledgehammer",
+    "name": "Sledgehammer",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762360948690_sledgehammer01.webp",
+    "attributes": {
+      "damage": 30,
+      "accuracy": 0,
+      "rate_of_fire": 0,
+      "capacity": 0,
+      "weight": 25,
+      "size": "1x3",
+      "melee_range": 5,
+      "attack_speed": 5,
+      "stamina_efficiency": 5,
+      "rarity": "Common",
+      "subcategory": "Melee"
+    },
+    "relations": []
+  },
+  {
+    "id": "09fc7943-1849-4cf1-b3be-8c5d11e71d28",
+    "table": "weapons",
+    "category": "weapons",
+    "slug": "svd-dragunov",
+    "name": "SVD Dragunov",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762307172219_svd%20dragunov.png",
+    "attributes": {
+      "ammo": "7.62X54",
+      "damage": 30,
+      "accuracy": 100,
+      "rate_of_fire": 60,
+      "capacity": 0,
+      "rarity": "Legendary",
+      "subcategory": "Snipers"
+    },
+    "relations": [
+      {
+        "category": "ammo",
+        "slug": "762x54",
+        "name": "7.62X54",
+        "kind": "ammo"
+      },
+      {
+        "category": "npcs",
+        "slug": "blackjack",
+        "name": "Blackjack",
+        "kind": "sellers"
+      }
+    ]
+  },
+  {
+    "id": "ab5a6535-1424-4fec-9219-0b92c736dac5",
+    "table": "weapons",
+    "category": "weapons",
+    "slug": "svt-40",
+    "name": "SVT-40",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762307305298_svt.png",
+    "attributes": {
+      "ammo": "7.62X54",
+      "damage": 25,
+      "accuracy": 100,
+      "rate_of_fire": 60,
+      "capacity": 0,
+      "rarity": "Uncommon",
+      "subcategory": "Snipers"
+    },
+    "relations": [
+      {
+        "category": "ammo",
+        "slug": "762x54",
+        "name": "7.62X54",
+        "kind": "ammo"
+      },
+      {
+        "category": "npcs",
+        "slug": "blackjack",
+        "name": "Blackjack",
+        "kind": "sellers"
+      }
+    ]
+  },
+  {
+    "id": "d78c7506-5da9-4db0-981b-5d0bfeab00a9",
+    "table": "weapons",
+    "category": "weapons",
+    "slug": "uzi",
+    "name": "UZI",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762306383859_uzi.png",
+    "attributes": {
+      "ammo": "9x19",
+      "damage": 60,
+      "accuracy": 100,
+      "rate_of_fire": 30,
+      "capacity": 0,
+      "rarity": "Rare",
+      "subcategory": "SMGs"
+    },
+    "relations": [
+      {
+        "category": "ammo",
+        "slug": "9x19",
+        "name": "9x19",
+        "kind": "ammo"
+      }
+    ]
+  },
+  {
+    "id": "13b24dcd-1f36-4b52-a650-303b7f14e8ec",
+    "table": "weapons",
+    "category": "weapons",
+    "slug": "vz58",
+    "name": "VZ58",
+    "description": "",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/public/1762306802964_vz58.png",
+    "attributes": {
+      "ammo": "7.62x39",
+      "damage": 80,
+      "accuracy": 100,
+      "rate_of_fire": 40,
+      "capacity": 0,
+      "rarity": "Uncommon",
+      "subcategory": "Assault Rifles"
+    },
+    "relations": [
+      {
+        "category": "ammo",
+        "slug": "762x39",
+        "name": "7.62x39",
+        "kind": "ammo"
+      }
+    ]
+  },
+  {
+    "id": "05f3f9cf-0a30-4bfc-87e2-990f9adfd4d1",
+    "table": "weapons",
+    "category": "weapons",
+    "slug": "wrench",
+    "name": "Wrench",
+    "description": "Useful for repairing structures that have been damaged, or as a bludgeon.",
+    "image": "https://facbshcmgrjexsvpuwgn.supabase.co/storage/v1/object/public/Items/weapons/0.9348944528358344.png",
+    "attributes": {
+      "damage": 25,
+      "weight": 1.1,
+      "size": "6x3",
+      "melee_range": 45,
+      "attack_speed": 60,
+      "rarity": "Common",
+      "subcategory": "Melee"
+    },
+    "relations": []
+  }
+]

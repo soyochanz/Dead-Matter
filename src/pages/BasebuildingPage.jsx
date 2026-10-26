@@ -7,7 +7,7 @@ import BasebuildingDetailModal from '@/components/wiki/BasebuildingDetailModal';
 import NpcDetailModal from '@/components/wiki/NpcDetailModal';
 import { AnimatePresence } from 'framer-motion';
 import WikiCategoryLayout from '@/components/wiki/WikiCategoryLayout';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { slugify } from '@/utils/slugify';
 
 const CATEGORIES = [
@@ -21,7 +21,10 @@ const CATEGORIES = [
 ];
 
 const BasebuildingPage = () => {
-    const { itemSlug: urlSlug } = useParams();
+    const { itemSlug: routeSlug } = useParams();
+    const location = useLocation();
+    const urlSlug = routeSlug || new URLSearchParams(location.search).get('item');
+    const recordId = new URLSearchParams(location.search).get('record');
     const navigate = useNavigate();
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -53,12 +56,12 @@ const BasebuildingPage = () => {
     // Handle initial selection from URL
     useEffect(() => {
         if (urlSlug && items.length > 0) {
-            const item = items.find(i => (i.slug || slugify(i.name) || String(i.id)) === urlSlug);
+            const item = items.find(i => recordId ? String(i.id) === recordId : (i.slug || slugify(i.name) || String(i.id)) === urlSlug);
             if (item) setSelectedItem(item);
         } else if (!urlSlug) {
             setSelectedItem(null);
         }
-    }, [urlSlug, items]);
+    }, [urlSlug, recordId, items]);
 
     const filteredItems = useMemo(() => {
         return items.filter(item => {

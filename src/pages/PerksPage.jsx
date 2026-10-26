@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet';
 import { motion } from 'framer-motion';
 import { supabase } from '@/lib/mySupabaseClient';
 import { Loader2, Save, Share2, Trash2, Check, ChevronLeft, Target, Shield, Zap, Skull, Brain } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
@@ -111,6 +111,7 @@ const PerkCard = ({ perk, isSelected, onSelect, type }) => {
 };
 
 const PerksPage = () => {
+    const location = useLocation();
     const [occupations, setOccupations] = useState([]);
     const [perks, setPerks] = useState([]);
     const [initialStats, setInitialStats] = useState({});
@@ -278,6 +279,15 @@ const PerksPage = () => {
             }
         }
     }, [occupations, perks]); // Added occupations and perks as dependencies
+
+    useEffect(() => {
+        const id = new URLSearchParams(location.search).get('record');
+        if (!id || loading) return;
+        const occupation = occupations.find(item => String(item.id) === id);
+        const perk = perks.find(item => String(item.id) === id);
+        if (occupation) setSelectedOccupation(occupation);
+        if (perk) setSelectedPerks([perk]);
+    }, [location.search, occupations, perks, loading]);
 
     if (loading) return (
         <div className="flex justify-center items-center h-screen bg-[#0a0a0c]">
