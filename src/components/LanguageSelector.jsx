@@ -7,6 +7,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Globe, Check } from 'lucide-react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const languages = [
     { code: 'en', label: 'English', flag: 'https://flagcdn.com/w40/us.png' },
@@ -16,6 +17,14 @@ const languages = [
 
 const LanguageSelector = () => {
     const { i18n } = useTranslation();
+    const { pathname, search } = useLocation();
+    const navigate = useNavigate();
+    const isNews = /^\/(es\/)?news(?:\/|$)/.test(pathname);
+    const availableLanguages = isNews ? languages.filter(language => language.code !== 'pt') : languages;
+    const changeLanguage = code => {
+        if (isNews) navigate(`${code === 'es' ? '/es' : ''}${pathname.replace(/^\/es(?=\/news)/, '')}${search}`);
+        i18n.changeLanguage(code);
+    };
 
     const currentLang = languages.find(l => l.code === i18n.language) || languages[0];
 
@@ -41,10 +50,10 @@ const LanguageSelector = () => {
                 align="end"
                 className="w-auto min-w-[3.5rem] bg-[#0a0a0c]/95 backdrop-blur-2xl border border-white/10 text-white shadow-2xl p-1.5 rounded-xl"
             >
-                {languages.map((lang) => (
+                {availableLanguages.map((lang) => (
                     <DropdownMenuItem
                         key={lang.code}
-                        onClick={() => i18n.changeLanguage(lang.code)}
+                        onClick={() => changeLanguage(lang.code)}
                         className={`
               cursor-pointer flex items-center justify-center px-2 py-2 rounded-lg transition-all mb-1 last:mb-0
               ${i18n.language === lang.code ? 'bg-white/10 border border-white/5' : 'hover:bg-white/5 border border-transparent'}

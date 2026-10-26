@@ -51,16 +51,6 @@ const PageLoader = () => (
 
 // Layout principal
 const MainLayout = () => {
-  const { loading, authLoaded } = useAuth();
-
-  if (loading && !authLoaded) {
-    return (
-      <Layout>
-        <PageLoader />
-      </Layout>
-    );
-  }
-
   return (
     <Layout>
       <Helmet>
@@ -178,6 +168,8 @@ function App() {
           <Route path="updates" element={<Updates />} />
           <Route path="news" element={<News />} />
           <Route path="news/:slug" element={<News />} />
+          <Route path="es/news" element={<News />} />
+          <Route path="es/news/:slug" element={<News />} />
           <Route path="updates/:slug" element={<UpdateDetailPage />} />
 
           {/* Map page - IMPORTANTE que cargue */}

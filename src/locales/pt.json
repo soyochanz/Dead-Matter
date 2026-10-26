@@ -1,4 +1,20 @@
 {
+    "category_descriptions": {
+      "weapons": "Armas, acessórios e os números por trás de cada disparo.",
+      "gear": "Roupas, proteção e armazenamento para seu sobrevivente.",
+      "toolbelts": "Leve ferramentas essenciais e organize seu equipamento.",
+      "consumables": "Comida, bebidas e suprimentos para o caminho.",
+      "meds": "Trate ferimentos e conheça doenças e recuperação.",
+      "keys": "Encontre a chave certa e descubra o que ela abre.",
+      "vehicles": "Compare veículos e prepare sua próxima viagem.",
+      "npcs": "Conheça os personagens e como interagir com eles.",
+      "perks": "Explore características e os pontos fortes do sobrevivente.",
+      "basebuilding": "Estruturas, materiais e os alicerces da sua base.",
+      "animals": "As informações sobre animais estão em preparação.",
+      "crafting": "Receitas e materiais de fabricação estão em preparação.",
+      "accessories": "Acessórios para completar seu equipamento.",
+      "default": "Explore a base de dados da comunidade de Dead Matter."
+    },
     "news": {
       "nav_description": "Jogo e comunidade",
       "commits_description": "Atividade de desenvolvimento",

@@ -2,80 +2,28 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet';
 import { motion } from 'framer-motion';
-import { Loader2, ArrowRight, Sword, Car, Backpack, Hammer, Soup, Stethoscope, Users, Package, HelpCircle } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { supabase } from '@/lib/mySupabaseClient';
 import * as Icons from 'lucide-react';
-import { Link } from 'react-router-dom';
+import CategoryTile from '@/components/CategoryTile';
 
-const WikiCategoryCard = ({ category, itemCount, index }) => {
+const WikiCategoryCard = ({ category, itemCount }) => {
   const { t } = useTranslation();
   const IconComponent = Icons[category.icon_name] || Icons.HelpCircle;
   const isTool = ['Perks', 'NPCs', 'Meds', 'Basebuilding'].includes(category.name);
   const isDisabled = itemCount === 0 && !isTool;
   const path = `/wiki/${category.name.toLowerCase().replace(' ', '-')}`;
 
-  const getCategoryColor = (name) => {
-    const colors = {
-      'Weapons': 'text-red-500',
-      'Vehicles': 'text-blue-500',
-      'Gear': 'text-emerald-500',
-      'Basebuilding': 'text-orange-500',
-      'Consumables': 'text-yellow-500',
-      'Meds': 'text-pink-500',
-      'NPCs': 'text-purple-500',
-      'Keys': 'text-slate-400',
-    };
-    return colors[name] || 'text-slate-400';
-  };
-
-  const cardContent = (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.05 }}
-      whileHover={!isDisabled ? { y: -5, scale: 1.02 } : {}}
-      className={`relative group flex flex-col h-full p-8 rounded-[2.5rem] bg-[#0a0a0c] border border-white/10 transition-all duration-500 ${isDisabled ? 'opacity-40 cursor-not-allowed' : 'hover:bg-white/5 hover:border-white/20 hover:shadow-[0_20px_50px_-15px_rgba(0,0,0,0.7)]'
-        }`}
-    >
-      <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-      <div className="flex flex-col items-center gap-4 text-center h-full">
-        <div className={`p-4 rounded-xl bg-white/5 group-hover:scale-110 transition-transform duration-300 ${getCategoryColor(category.name)}`}>
-          <IconComponent size={32} />
-        </div>
-
-        <div className="flex-1">
-          <h3 className="text-xl font-bold text-white mb-2 group-hover:text-red-500 transition-colors uppercase tracking-tight">
-            {t(`home.shortcuts.${category.name.toLowerCase()}`, category.name)}
-          </h3>
-
-          <div className={`text-xs font-bold uppercase tracking-wider ${isDisabled ? 'text-slate-500' : 'text-slate-400'}`}>
-            {isTool ? (
-              <span className="flex items-center justify-center gap-1.5">
-                <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                {t('wiki_page.available')}
-              </span>
-            ) : itemCount > 0 ? (
-              <span>{t('wiki_page.item_count_plural', { count: itemCount })}</span>
-            ) : (
-              t('wiki_page.coming_soon')
-            )}
-          </div>
-        </div>
-
-        {!isDisabled && (
-          <div className="mt-4 flex items-center gap-1.5 text-red-500 text-[10px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
-            {t('wiki_page.explore')} <ArrowRight size={10} />
-          </div>
-        )}
-      </div>
-    </motion.div>
-  );
-
-  return isDisabled ? (
-    <div className="h-full">{cardContent}</div>
-  ) : (
-    <Link to={path} className="h-full block">{cardContent}</Link>
-  );
+  return <CategoryTile
+    category={category.name}
+    title={t(`home.shortcuts.${category.name.toLowerCase()}`, category.name)}
+    icon={IconComponent}
+    to={path}
+    description={t(`category_descriptions.${category.name.toLowerCase()}`, t('category_descriptions.default'))}
+    status={isDisabled ? t('wiki_page.coming_soon') : itemCount > 0 ? t('wiki_page.item_count_plural', { count: itemCount }) : t('wiki_page.available')}
+    action={t('wiki_page.explore')}
+    disabled={isDisabled}
+  />;
 };
 
 const Wiki = () => {
@@ -210,7 +158,7 @@ const Wiki = () => {
           transition={{ duration: 0.6 }}
         >
           {/* Header estilo Home Hero */}
-          <div className="text-center mb-24 space-y-6">
+          <div className="text-center mb-14 space-y-6">
             <h1 className="text-5xl md:text-8xl font-black text-white tracking-tighter uppercase">
               {t('wiki_page.title')} <span className="text-red-500">{t('wiki_page.title_suffix')}</span>
             </h1>
@@ -229,12 +177,11 @@ const Wiki = () => {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {categories.map((category, index) => (
+              {categories.map(category => (
                 <WikiCategoryCard
                   key={category.id}
                   category={category}
                   itemCount={category.itemCount}
-                  index={index}
                 />
               ))}
             </div>

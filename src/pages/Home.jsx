@@ -8,6 +8,7 @@ import { supabase } from '@/lib/mySupabaseClient';
 import { Button } from '@/components/ui/button';
 import UpdateCard from '@/components/UpdateCard';
 import NewsCard from '@/components/NewsCard';
+import CategoryTile from '@/components/CategoryTile';
 import { news } from '@/data/news';
 import { mergeCommits } from '@/lib/commitFeed';
 import { loadFeed, readFeedCache, UPDATE_CARD_COLUMNS } from '@/lib/publicFeed';
@@ -213,35 +214,9 @@ const WikiShortcuts = () => {
 
   return (
     <section>
-      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 2xl:grid-cols-8 gap-4">
         {categories.map((cat, i) => (
-          <motion.div
-            key={cat.name}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.04 }}
-          >
-            <Link to={cat.path} className="group block">
-              <div 
-                className="flex flex-col items-center gap-3 p-6 rounded-[2rem] border transition-all duration-500 bg-white/[0.02] border-white/5 hover:border-white/10 hover:bg-white/[0.05]"
-              >
-                <div 
-                  className="p-3.5 rounded-2xl transition-all duration-500 group-hover:scale-110 group-hover:-translate-y-1"
-                  style={{ 
-                    color: cat.color,
-                    background: `${cat.color}10`,
-                    boxShadow: `0 0 20px ${cat.color}15`
-                  }}
-                >
-                  <cat.icon size={24} />
-                </div>
-
-                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 group-hover:text-white transition-colors">
-                  {cat.name}
-                </span>
-              </div>
-            </Link>
-          </motion.div>
+          <CategoryTile key={cat.path} title={cat.name} category={cat.path.split('/').pop()} icon={cat.icon} to={cat.path} compact />
         ))}
       </div>
     </section>
@@ -398,7 +373,7 @@ const Home = () => {
 
         {/* ── Updates + Commits ── */}
         <section>
-          <SectionHeader icon={Bell} iconGlow="#f97316" title="News" subtitle={t('news.home_subtitle')} action={<Link to="/news" className="text-red-400 text-sm font-bold flex items-center gap-1">{t('home.view_all')} <ArrowRight size={14} /></Link>} />
+          <SectionHeader icon={Bell} iconGlow="#f97316" title="News" subtitle={t('news.home_subtitle')} action={<Link to={i18n.language.startsWith('es') ? '/es/news' : '/news'} className="text-red-400 text-sm font-bold flex items-center gap-1">{t('home.view_all')} <ArrowRight size={14} /></Link>} />
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">{news.slice(0, 3).map(article => <NewsCard key={article.slug} article={article} />)}</div>
         </section>
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">

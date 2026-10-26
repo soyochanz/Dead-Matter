@@ -22,6 +22,16 @@ const Layout = ({ children }) => {
         <html lang={i18n.language} />
         <meta name="description" content={t('meta.description')} />
         <meta property="og:description" content={t('meta.description')} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={`https://deadmatterwiki.com${location.pathname}`} />
+        <meta property="og:title" content="Dead Matter Wiki | Map, Database & Survival Guides" />
+        <meta property="og:image" content="https://horizons-cdn.hostinger.com/783fa02e-1caf-48c3-baf6-d554d2d507fa/dead_matter_og_image.jpg" />
+        <meta property="og:site_name" content="Dead Matter Wiki" />
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content={`https://deadmatterwiki.com${location.pathname}`} />
+        <meta property="twitter:title" content="Dead Matter Wiki | Map, Database & Survival Guides" />
+        <meta property="twitter:description" content={t('meta.description')} />
+        <meta property="twitter:image" content="https://horizons-cdn.hostinger.com/783fa02e-1caf-48c3-baf6-d554d2d507fa/dead_matter_og_image.jpg" />
         <meta property="og:locale" content={i18n.language} />
         <link rel="canonical" href={`https://deadmatterwiki.com${location.pathname}`} />
       </Helmet>

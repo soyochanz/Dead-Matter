@@ -1,4 +1,20 @@
 {
+    "category_descriptions": {
+      "weapons": "Firearms, attachments and the numbers behind every shot.",
+      "gear": "Clothing, protection and storage for your survivor.",
+      "toolbelts": "Carry essential tools and keep your loadout organised.",
+      "consumables": "Food, drinks and supplies for the road ahead.",
+      "meds": "Treat injuries and understand diseases and recovery.",
+      "keys": "Find the right key and discover what it unlocks.",
+      "vehicles": "Compare vehicles and plan your next journey.",
+      "npcs": "Meet the characters and learn how to interact with them.",
+      "perks": "Explore traits and build your survivor's strengths.",
+      "basebuilding": "Structures, materials and the foundations of your base.",
+      "animals": "Wildlife information is being prepared.",
+      "crafting": "Crafting recipes and materials are being prepared.",
+      "accessories": "Attachments and equipment to complete your loadout.",
+      "default": "Explore the Dead Matter community database."
+    },
     "news": {
       "nav_description": "Game & community",
       "commits_description": "Development activity",

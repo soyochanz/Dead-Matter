@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
   const location = useLocation();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [discordUrl, setDiscordUrl] = useState('');
   const [isDevLive, setIsDevLive] = useState(false);
   const [streamData, setStreamData] = useState(null);
@@ -141,7 +141,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     { path: '/wiki', label: t('nav.wiki'), icon: 'Database', gradient: 'from-blue-500 to-indigo-600', description: t('nav.wiki_desc') },
     { path: '/guides', label: t('nav.guides'), icon: 'ShieldCheck', gradient: 'from-emerald-500 to-teal-600', description: t('nav.guides_desc') },
     { path: '/updates', label: t('nav.updates'), icon: 'Terminal', gradient: 'from-violet-500 to-fuchsia-600', description: t('nav.updates_desc') },
-    { path: '/news', label: 'News', icon: 'Newspaper', gradient: 'from-red-500 to-orange-600', description: t('news.nav_description') },
+    { path: i18n.language.startsWith('es') ? '/es/news' : '/news', label: 'News', icon: 'Newspaper', gradient: 'from-red-500 to-orange-600', description: t('news.nav_description') },
     { path: '/micro-changes', label: 'Commits', icon: 'GitCommit', gradient: 'from-blue-500 to-cyan-600', description: t('news.commits_description') },
     { path: '/map', label: t('nav.map'), icon: 'Compass', gradient: 'from-amber-400 to-orange-500', description: t('nav.map_desc') },
     { path: '/media', label: t('nav.media'), icon: 'Camera', gradient: 'from-rose-500 to-pink-600', description: t('nav.media_desc') },
@@ -237,9 +237,9 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         <div className="p-8 border-b border-white/5 relative overflow-hidden group">
           <div className="absolute inset-0 bg-gradient-to-br from-red-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
           <Link to="/" className="relative z-10 block">
-            <h1 className="text-3xl font-black text-white tracking-tight leading-none uppercase">
+            <p className="text-3xl font-black text-white tracking-tight leading-none uppercase">
               DEAD<span className="text-red-600">MATTER</span> WIKI
-            </h1>
+            </p>
             <div className="flex items-center gap-2 mt-1 px-1">
               <div className="h-[1px] flex-1 bg-gradient-to-r from-red-600/50 to-transparent" />
               <span className="text-[9px] text-gray-500 font-bold uppercase tracking-[0.3em]">{t('sidebar.community_resource')}</span>
@@ -251,7 +251,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         <nav className="flex-1 px-4 py-6 space-y-1.5 overflow-y-auto custom-scrollbar">
           {navItems.map((item) => {
             const IconComponent = Icons[item.icon] || Icons.HelpCircle;
-            const isActive = location.pathname === item.path;
+            const isActive = location.pathname === item.path || (item.path !== '/' && location.pathname.startsWith(item.path + '/'));
             return (
               <NavLink
                 key={item.path}
